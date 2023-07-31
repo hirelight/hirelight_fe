@@ -49,7 +49,7 @@ export default async function middleware(req: NextRequest) {
     hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN
   ) {
     return NextResponse.rewrite(
-      new URL(`/${path === '/' ? '' : path}`, req.url)
+      new URL(`${path}`, req.url)
     );
   }
   console.log('go');
