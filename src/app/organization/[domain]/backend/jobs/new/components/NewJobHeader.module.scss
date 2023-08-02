@@ -1,0 +1,21 @@
+.section__wrapper {
+  padding: 8px;
+  border-radius: 8px;
+  text-align: left;
+  &:hover {
+    cursor: pointer;
+    @apply bg-gray-200;
+  }
+  @apply transition-all;
+}
+.section__title {
+  color: black;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.section__description {
+  font-size: 12px;
+  max-width: 75%;
+  min-width: 180px;
+}
