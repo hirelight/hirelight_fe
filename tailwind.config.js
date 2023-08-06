@@ -11,11 +11,15 @@ module.exports = {
   ],
   theme: {
     extend: {
+      screens: {
+        sm: '480px',
+        md: '768px',
+        lg: '976px',
+        xl: '1440px',
+      },
       colors: {
         blue_primary_800: '#0048B3',
         blue_primary_600: '#097AFF',
-        neutral_900: '#343A4E',
-        neutral_700: '#5B607C',
       },
     },
   },
