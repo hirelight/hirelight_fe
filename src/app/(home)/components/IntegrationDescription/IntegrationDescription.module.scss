@@ -1,0 +1,22 @@
+.title__gradient {
+  background: linear-gradient(
+    79deg,
+    #1f94ff 0%,
+    #4759ff 33.33%,
+    #8c6fff 59.17%,
+    #c163fa 100%,
+    #e025ff 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.itegration__wrapper {
+  width: 100%;
+  aspect-ratio: 3/1;
+  background: url('../../../../../public/images/integration.png') no-repeat
+    center;
+  background-size: cover;
+  flex-shrink: 0;
+}

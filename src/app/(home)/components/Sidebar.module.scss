@@ -1,0 +1,65 @@
+.overlay {
+  @apply fixed inset-0 backdrop-brightness-50 z-30;
+  animation: fadeIn 100ms ease-in-out forwards;
+}
+
+.drawer__navigation {
+  @apply fixed top-0 -right-full md:-right-64 w-full md:w-64 h-screen px-4 py-8 md:py-4 overflow-y-auto  bg-white dark:bg-gray-800;
+  animation: slideIn 200ms ease-in-out 100ms forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@media (min-width: 768px) {
+  @keyframes slideIn {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-256px);
+    }
+  }
+
+  @keyframes slideOut {
+    from {
+      transform: translateX(-256px);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+}
