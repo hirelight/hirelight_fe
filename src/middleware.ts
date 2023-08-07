@@ -18,11 +18,8 @@ export default async function middleware(req: NextRequest) {
   // Get hostname of request (e.g. demo.vercel.pub, demo.localhost:3000)
   const hostname = req.headers.get('host')!;
   // .replace('.localhost:3000', `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
-  console.log(hostname);
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)
   const path = url.pathname;
-  console.log(path);
-  console.log(req.url);
   // rewrites for app pages
   // if (hostname == `app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
   //   const session = localStorage.getItem('token');
@@ -48,11 +45,10 @@ export default async function middleware(req: NextRequest) {
     hostname === 'localhost:3000' ||
     hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN
   ) {
-    return NextResponse.rewrite(
-      new URL(`${path}`, req.url)
-    );
+    return NextResponse.rewrite(new URL(`${path}`, req.url));
   }
-  console.log('go');
-  // rewrite everything else to organization folder `/organization/[domain]/[path] dynamic route 
-  return NextResponse.rewrite(new URL(`/organization/${hostname.split(".")[0]}${path}`, req.url));
+  // rewrite everything else to organization folder `/organization/[domain]/[path] dynamic route
+  return NextResponse.rewrite(
+    new URL(`/organization/${hostname.split('.')[0]}${path}`, req.url)
+  );
 }
