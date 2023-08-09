@@ -20,6 +20,9 @@ export default async function middleware(req: NextRequest) {
   // .replace('.localhost:3000', `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)
   const path = url.pathname;
+
+  console.log(hostname);
+
   // rewrites for app pages
   // if (hostname == `app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
   //   const session = localStorage.getItem('token');
@@ -46,6 +49,13 @@ export default async function middleware(req: NextRequest) {
     hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN
   ) {
     return NextResponse.rewrite(new URL(`${path}`, req.url));
+  }
+
+  if (
+    hostname === 'jobs.localhost:3000' ||
+    hostname === `jobs.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
+  ) {
+    return NextResponse.rewrite(new URL(`/interviewee${path}`, req.url));
   }
   // rewrite everything else to organization folder `/organization/[domain]/[path] dynamic route
   return NextResponse.rewrite(
