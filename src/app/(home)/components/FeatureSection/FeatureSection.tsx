@@ -1,10 +1,6 @@
 import React from 'react';
 import styles from './FeatureSection.module.scss';
 import Image from 'next/image';
-import feature1 from '/public/images/feature1.png';
-import feature2 from '/public/images/feature2.png';
-import feature3 from '/public/images/feature3.png';
-import feature4 from '/public/images/feature4.png';
 
 const FeatureSection = () => {
   return (
@@ -44,8 +40,10 @@ const FeatureSection = () => {
           <li className='flex flex-col items-center gap-4 md:gap-10'>
             <div className='w-44 md:w-40 lg:w-52 aspect-square flex items-center justify-center bg-sky-200 rounded-full drop-shadow-md'>
               <Image
-                src={feature1}
+                src={'/images/feature1.png'}
                 alt='Feature Image'
+                width={50}
+                height={112}
                 className='h-24 md:h-20 lg:h-28 w-auto object-contain'
               />
             </div>
@@ -56,8 +54,10 @@ const FeatureSection = () => {
           <li className='flex flex-col items-center gap-4 md:gap-10'>
             <div className='w-44 md:w-40 lg:w-52 aspect-square flex items-center justify-center bg-sky-200 rounded-full drop-shadow-md'>
               <Image
-                src={feature2}
+                src={'/images/feature2.png'}
                 alt='Feature Image'
+                width={50}
+                height={112}
                 className='h-24 md:h-20 lg:h-28 w-auto object-contain'
               />
             </div>
@@ -68,8 +68,10 @@ const FeatureSection = () => {
           <li className='flex flex-col items-center gap-4 md:gap-10'>
             <div className='w-44 md:w-40 lg:w-52 aspect-square flex items-center justify-center bg-sky-200 rounded-full drop-shadow-md'>
               <Image
-                src={feature3}
+                src={'/images/feature3.png'}
                 alt='Feature Image'
+                width={50}
+                height={112}
                 className='h-24 md:h-20 lg:h-28 w-auto object-contain'
               />
             </div>
@@ -80,8 +82,10 @@ const FeatureSection = () => {
           <li className='flex flex-col items-center gap-4 md:gap-10'>
             <div className='w-44 md:w-40 lg:w-52 aspect-square flex items-center justify-center bg-sky-200 rounded-full drop-shadow-md'>
               <Image
-                src={feature4}
+                src={'/images/feature4.png'}
                 alt='Feature Image'
+                width={50}
+                height={112}
                 className='h-24 md:h-20 lg:h-28 w-auto object-contain'
               />
             </div>
