@@ -3,6 +3,7 @@ import HeaderBar from './components/HeaderBar';
 import styles from './login.module.scss';
 import Link from 'next/link';
 import LoginForm from './components/LoginForm';
+import { Metadata } from 'next';
 
 const Login = () => {
   return (
