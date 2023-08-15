@@ -1,5 +1,7 @@
 'use client';
 
+import { Button } from '@/components';
+import Link from 'next/link';
 import React, { FormEvent, useState } from 'react';
 
 const LoginForm = () => {
@@ -62,12 +64,12 @@ const LoginForm = () => {
             Password
           </label>
           <div className='text-sm'>
-            <a
-              href='#'
+            <Link
+              href='forgot-password'
               className='font-semibold text-indigo-600 hover:text-indigo-500'
             >
               Forgot password?
-            </a>
+            </Link>
           </div>
         </div>
         <div className='mt-2'>
@@ -94,10 +96,7 @@ const LoginForm = () => {
       </div>
 
       <div>
-        <button
-          type='submit'
-          className='flex w-full justify-center items-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 '
-        >
+        <Button type='submit'>
           {isLoading && (
             <svg
               aria-hidden='true'
@@ -118,7 +117,7 @@ const LoginForm = () => {
             </svg>
           )}
           Sign in
-        </button>
+        </Button>
       </div>
     </form>
   );

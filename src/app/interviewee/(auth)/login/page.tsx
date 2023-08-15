@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 const IntervieweeLogin = () => {
   return (
-    <div className={styles.wrapper}>
+    <main className={styles.wrapper}>
       <div className='relative flex-1 flex justify-center items-center'>
         <div className='flex min-w-[500px] bg-white flex-col justify-center px-6 py-12 lg:px-8 drop-shadow-lg border border-gray-200 rounded-lg'>
           <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
@@ -84,7 +84,7 @@ const IntervieweeLogin = () => {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

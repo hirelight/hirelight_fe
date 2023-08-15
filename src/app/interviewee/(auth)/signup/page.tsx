@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 const IntervieweeSignup = () => {
   return (
-    <div className='flex-1 flex relative'>
+    <main className='flex-1 flex relative'>
       <div className='w-full lg:w-[45%] xl:flex-1 absolute inset-0 lg:relative opacity-20 lg:opacity-80'>
         <Image
           alt='Background'
@@ -38,7 +38,7 @@ const IntervieweeSignup = () => {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 
