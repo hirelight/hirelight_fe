@@ -11,7 +11,9 @@ const RadioCategory = ({ title, type, options, onChange }: IRadioCategory) => {
   return (
     <div className='relative group mb-6'>
       {title && (
-        <h3 className='text-base mb-2 lg:mb-4 peer cursor-pointer'>{title}</h3>
+        <button className='text-base mb-2 lg:mb-4 lg:disabled peer cursor-pointer'>
+          {title}
+        </button>
       )}
       <ul className='flex flex-col gap-4 opacity-0 group-hover:opacity-100 absolute top-full left-0 bg-white shadow-lg rounded-lg p-4 border border-slate-200 lg:relative lg:border-none lg:bg-transparent lg:opacity-100 lg:shadow-none lg:p-0 '>
         {options.map((option: string) => {
