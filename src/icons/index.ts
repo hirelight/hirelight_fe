@@ -3,5 +3,17 @@ import CloseIcon from './CloseIcon';
 import Bell from './Bell';
 import SearchIcon from './SearchIcon';
 import MapPin from './MapPin';
+import DollarCurrency from './DollarCurrency';
+import Clock from './Clock';
+import Calendar from './Calendar';
 
-export { MenuIcon, CloseIcon, Bell, SearchIcon, MapPin };
+export {
+  MenuIcon,
+  CloseIcon,
+  Bell,
+  SearchIcon,
+  MapPin,
+  DollarCurrency,
+  Clock,
+  Calendar,
+};

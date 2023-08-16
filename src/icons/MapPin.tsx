@@ -8,8 +8,10 @@ const MapPin = ({ id, className }: IIcon) => {
       fill='none'
       viewBox='0 0 24 24'
       strokeWidth={1.5}
+      width={24}
+      height={24}
       stroke='currentColor'
-      className={'w-6 h-6 ' + className}
+      className={className}
       id={id}
     >
       <path
