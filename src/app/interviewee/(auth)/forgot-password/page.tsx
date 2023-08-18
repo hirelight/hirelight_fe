@@ -3,14 +3,9 @@
 import React, { useRef, useState } from 'react';
 import styles from './forgot-password.module.scss';
 import ForgotPasswordForm from './ForgotPasswordForm';
-import { Metadata } from 'next';
 import Head from 'next/head';
 import ChangePassword from './ChangePassword';
 import EmailSent from './EmailSent';
-
-export const metadata: Metadata = {
-  title: 'Forgot Password',
-};
 
 const ForgotPassword = () => {
   const [stage, setStage] = useState(0);
