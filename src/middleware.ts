@@ -21,8 +21,6 @@ export default async function middleware(req: NextRequest) {
   // Get the pathname of the request (e.g. /, /about, /blog/first-post)
   const path = url.pathname;
 
-  console.log(hostname);
-
   // rewrites for app pages
   // if (hostname == `app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
   //   const session = localStorage.getItem('token');
