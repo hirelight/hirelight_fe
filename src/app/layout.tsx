@@ -1,6 +1,7 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter, Public_Sans, Roboto_Mono } from 'next/font/google';
+import Script from 'next/script';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -35,6 +36,7 @@ export default function RootLayout({
         className={`${inter.className} ${roboto_mono.className} ${publicSans.className}`}
       >
         {children}
+        <Script src='https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js' />
       </body>
     </html>
   );

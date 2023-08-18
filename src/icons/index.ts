@@ -6,6 +6,7 @@ import MapPin from './MapPin';
 import DollarCurrency from './DollarCurrency';
 import Clock from './Clock';
 import Calendar from './Calendar';
+import ChevronDown from './ChevronDown';
 
 export {
   MenuIcon,
@@ -16,4 +17,5 @@ export {
   DollarCurrency,
   Clock,
   Calendar,
+  ChevronDown,
 };

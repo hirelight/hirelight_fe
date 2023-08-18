@@ -1,9 +1,10 @@
 import React from 'react';
 import RadioCategory from './RadioCategory';
+import FilterDrawer from './FilterDrawer';
 
 const JobsCenterCategory = () => {
   return (
-    <aside className='w-full lg:max-w-xs h-fit flex gap-6 lg:gap-0 lg:block px-8 py-6 bg-white rounded-lg shadow-lg border border-slate-200'>
+    <aside className='w-full lg:max-w-xs flex gap-2 sm:gap-0 items-center justify-between px-8 py-6 bg-white rounded-lg shadow-lg border border-slate-200 lg:h-fit lg:gap-0 lg:block lg:overflow-auto'>
       <h3 className='hidden lg:block text-neutral-700 font-semibold text-xl mb-6'>
         Categories
       </h3>
@@ -45,28 +46,35 @@ const JobsCenterCategory = () => {
         type='radio'
         options={['All', '24 hours ago', '3 days ago', '7 days ago']}
       />
-      <RadioCategory
-        title='Experience level'
-        type='checkbox'
-        options={[
-          'Internship',
-          'Entry level',
-          'Associate',
-          'Mid-Senior level',
-          'Director',
-          'Executive',
-        ]}
-      />
-      <RadioCategory
-        title='Job type'
-        type='checkbox'
-        options={['Full-time', 'Contract', 'Part-time']}
-      />
-      <RadioCategory
-        title='On-site/remote'
-        type='checkbox'
-        options={['Remote', 'On-site', 'Hybrid']}
-      />
+      <div className='hidden semi-sm:block'>
+        <RadioCategory
+          title='Experience level'
+          type='checkbox'
+          options={[
+            'Internship',
+            'Entry level',
+            'Associate',
+            'Mid-Senior level',
+            'Director',
+            'Executive',
+          ]}
+        />
+      </div>
+      <div className='hidden md:block'>
+        <RadioCategory
+          title='Job type'
+          type='checkbox'
+          options={['Full-time', 'Contract', 'Part-time']}
+        />
+      </div>
+      <div className='hidden lg:block'>
+        <RadioCategory
+          title='On-site/remote'
+          type='checkbox'
+          options={['Remote', 'On-site', 'Hybrid']}
+        />
+      </div>
+      <FilterDrawer />
     </aside>
   );
 };

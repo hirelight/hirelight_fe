@@ -13,6 +13,7 @@ module.exports = {
     extend: {
       screens: {
         sm: '480px',
+        'semi-sm': '624px',
         md: '768px',
         lg: '976px',
         xl: '1440px',
