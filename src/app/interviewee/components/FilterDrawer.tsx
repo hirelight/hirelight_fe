@@ -1,12 +1,54 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import DrawerRadioSection from './DrawerRadioSection';
+import DrawerCheckboxSection from './DrawerCheckboxSection';
+import { useOutsideClick } from '@/hooks/useClickOutside';
 
 const FilterDrawer = () => {
   const [show, setShow] = React.useState(false);
+  const [filterFields, setFilterFields] = useState({
+    sortBy: 'Most Recent',
+    datePosted: 'any-time',
+    experienceLevel: [],
+    jobType: [],
+    workType: [],
+  });
+  const drawerRef = useOutsideClick<HTMLDivElement>(() =>
+    console.log('Click outside')
+  );
 
   const handleToggleFilterDrawer = () => {
     setShow(!show);
+  };
+
+  const handleShowResult = () => {
+    setShow(false);
+  };
+
+  const handleFieldsChange = (e: any, key: string, value: string) => {
+    if (e.target.type === 'radio') {
+      if (e.target.checked)
+        setFilterFields({
+          ...filterFields,
+          [key]: e.target.value,
+        });
+      else
+        setFilterFields({
+          ...filterFields,
+          [key]: '',
+        });
+    } else {
+      if (e.target.checked)
+        setFilterFields({
+          ...filterFields,
+        });
+      else
+        setFilterFields({
+          ...filterFields,
+          [key]: '',
+        });
+    }
   };
 
   return (
@@ -41,8 +83,8 @@ const FilterDrawer = () => {
         }
       > */}
       <div
-        id='filter-drawer'
-        className='fixed bottom-0 right-0 z-40 max-h-[85vh] max-w-xl w-full overflow-y-auto transition-transform translate-x-full bg-white dark:bg-gray-800 border border-slate-200 shadow-lg'
+        ref={drawerRef}
+        className='fixed bottom-0 right-0 z-[1000] h-screen md:h-auto md:max-h-[80vh] md:max-w-xl w-full flex flex-col overflow-hidden transition-transform translate-x-full bg-white dark:bg-gray-800 border border-slate-200 shadow-lg'
         tabIndex={-1}
         aria-labelledby='drawer-label'
         style={
@@ -71,8 +113,6 @@ const FilterDrawer = () => {
           </h3>
           <button
             type='button'
-            data-drawer-hide='drawer-example'
-            aria-controls='drawer-example'
             className='text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white'
             onClick={handleToggleFilterDrawer}
           >
@@ -94,82 +134,81 @@ const FilterDrawer = () => {
             <span className='sr-only'>Close menu</span>
           </button>
         </div>
-        <div className='p-4'>
-          <h3 className='text-lg font-medium mb-4 '>Sort by</h3>
-          <div className='grid grid-cols-2'>
-            <div className='flex items-center mb-4'>
-              <input
-                id='default-radio-1'
-                type='radio'
-                value=''
-                name='default-radio'
-                className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-              />
-              <label
-                htmlFor='default-radio-1'
-                className='ml-2 text-sm font-medium text-gray-900 dark:text-gray-300'
-              >
-                Default radio
-              </label>
-            </div>
-            <div className='flex items-center mb-4'>
-              <input
-                id='default-radio-1'
-                type='radio'
-                value=''
-                name='default-radio'
-                className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-              />
-              <label
-                htmlFor='default-radio-1'
-                className='ml-2 text-sm font-medium text-gray-900 dark:text-gray-300'
-              >
-                Default radio
-              </label>
-            </div>
-            <div className='flex items-center mb-4'>
-              <input
-                id='default-radio-1'
-                type='radio'
-                value=''
-                name='default-radio'
-                className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-              />
-              <label
-                htmlFor='default-radio-1'
-                className='ml-2 text-sm font-medium text-gray-900 dark:text-gray-300'
-              >
-                Default radio
-              </label>
-            </div>
-            <div className='flex items-center mb-4'>
-              <input
-                id='default-radio-1'
-                type='radio'
-                value=''
-                name='default-radio'
-                className='w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-              />
-              <label
-                htmlFor='default-radio-1'
-                className='ml-2 text-sm font-medium text-gray-900 dark:text-gray-300'
-              >
-                Default radio
-              </label>
-            </div>
-          </div>
+        <div className='p-4 h-full overflow-y-scroll '>
+          <DrawerRadioSection
+            title='Sort by'
+            options={['Most recent', 'Most relevant']}
+            handleCheckChange={(value: string, key = 'sortBy') => {
+              setFilterFields({
+                ...filterFields,
+                [key]: value,
+              });
+            }}
+          />
+          <DrawerRadioSection
+            title='Date posted'
+            options={['Any time', 'Past month', 'Past week', 'Past 24 hours']}
+            handleCheckChange={(value: string, key = 'datePosted') => {
+              setFilterFields({
+                ...filterFields,
+                [key]: value,
+              });
+              console.log(filterFields);
+            }}
+          />
+
+          <DrawerCheckboxSection
+            title='Experience level'
+            options={[
+              'Internship',
+              'Entry level',
+              'Associate',
+              'Mid-Senior level',
+              'Director',
+              'Executive',
+            ]}
+            handleCheckChange={(value: string[], key = 'experienceLevel') => {
+              setFilterFields({
+                ...filterFields,
+                [key]: value,
+              });
+            }}
+          />
+          <DrawerCheckboxSection
+            title='Job type'
+            options={['Full-time', 'Contract', 'Part-time']}
+            handleCheckChange={(value: string[], key = 'jobType') => {
+              setFilterFields({
+                ...filterFields,
+                [key]: value,
+              });
+            }}
+          />
+
+          <DrawerCheckboxSection
+            title='On-site/remote'
+            options={['Remote', 'On-site', 'Hybrid']}
+            underline={false}
+            handleCheckChange={(value: string[], key = 'workType') => {
+              setFilterFields({
+                ...filterFields,
+                [key]: value,
+              });
+            }}
+          />
         </div>
         <div className='border-t border-slate-200 p-4'>
-          <div className='grid grid-cols-2 gap-4'>
-            <a
-              href='#'
-              className='px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-200 roundedLg focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700'
+          <div className='flex justify-end gap-4'>
+            <button
+              type='button'
+              className='px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-200 rounded-full focus:outline-none hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700'
             >
               Reset
-            </a>
-            <a
-              href='#'
-              className='inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 roundedLg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'
+            </button>
+            <button
+              type='button'
+              className='inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-full hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'
+              onClick={handleShowResult}
             >
               Show results{' '}
               <svg
@@ -187,7 +226,7 @@ const FilterDrawer = () => {
                   d='M1 5h12m0 0L9 1m4 4L9 9'
                 />
               </svg>
-            </a>
+            </button>
           </div>
         </div>
       </div>
