@@ -3,7 +3,7 @@ import HeaderBar from './components/HeaderBar';
 
 const IntervieweeLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className='w-full min-h-screen'>
+    <div className='min-h-screen'>
       <HeaderBar />
       {children}
     </div>

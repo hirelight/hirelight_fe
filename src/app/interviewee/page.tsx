@@ -9,17 +9,17 @@ import JobsCenterCategory from './components/JobsCenterCategory';
 const JobsCenter = () => {
   return (
     <div className='w-full bg-slate-100'>
-      <div className='w-full py-20 relative shadow-md'>
+      <div className='w-full py-8 sm:py-10 md:py-16 lg:py-20 relative shadow-md'>
         <div className='absolute inset-0 opacity-20 overflow-hidden'>
           <Image
             alt='Background'
             src={background}
-            className='w-full h-auto object-cover'
+            className='w-full h-full object-cover'
           />
         </div>
         <div className='max-w-screen-xl mx-auto px-4 md:px-10 relative'>
           <section className='mb-10'>
-            <h1 className='text-4xl md:text-5xl font-semibold mb-6'>
+            <h1 className='text-2xl sm:text-4xl md:text-5xl font-semibold mb-6'>
               Find properly jobs for you
             </h1>
             <span className='text-gray-500'>
