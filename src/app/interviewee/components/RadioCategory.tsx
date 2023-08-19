@@ -1,3 +1,4 @@
+'use client';
 import { ChevronDown } from '@/icons';
 import React from 'react';
 
@@ -9,17 +10,30 @@ interface IRadioCategory {
 }
 
 const RadioCategory = ({ title, type, options, onChange }: IRadioCategory) => {
+  const [isShow, setIsShow] = React.useState(false);
+
   return (
     <div className='relative group lg:mb-6'>
       {title && (
-        <h3 className='flex items-center gap-1 text-base peer cursor-pointer border border-slate-300 px-4 py-1 rounded-full whitespace-nowrap lg:block lg:mb-4 lg:px-0 lg:py-0 lg:border-none'>
+        <h3 className='flex items-center gap-1 text-base peer cursor-pointer border border-slate-300 px-4 py-1 rounded-full whitespace-nowrap lg:block lg:mb-4 lg:px-0 lg:py-0 lg:border-none'  onClick={() => setIsShow(!isShow)}>
           {title}
           <span className='inline-block lg:hidden'>
             <ChevronDown className='w-4 h-4' />
           </span>
         </h3>
       )}
-      <ul className='flex flex-col gap-4 opacity-0 group-hover:opacity-100 absolute top-full left-1/2 -translate-x-1/2 z-50 bg-white shadow-lg rounded-lg p-4 border border-slate-200 lg:relative lg:border-none lg:bg-transparent lg:opacity-100 lg:shadow-none lg:p-0 '>
+      <ul
+        className='flex flex-col gap-4 invisible opacity-0 absolute top-[130%] left-1/2 -translate-x-1/2 z-20 bg-white shadow-lg rounded-lg p-4 border border-slate-200 lg:relative lg:border-none lg:bg-transparent lg:opacity-100 lg:shadow-none lg:p-0 transition-all'
+        style={
+          isShow
+            ? {
+              opacity: 1,
+                visibility: "visible",
+                top: "100%"
+              }
+            : {}
+        }
+      >
         {options.map((option: string) => {
           switch (type) {
             case 'radio':
