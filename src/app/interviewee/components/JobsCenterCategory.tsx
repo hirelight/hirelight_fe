@@ -4,7 +4,7 @@ import FilterDrawer from './FilterDrawer';
 
 const JobsCenterCategory = () => {
   return (
-    <aside className='w-full lg:max-w-xs flex gap-2 sm:gap-0 items-center justify-between px-8 py-6 bg-white rounded-lg shadow-lg border border-slate-200 lg:h-fit lg:gap-0 lg:block lg:overflow-auto'>
+    <aside className='w-full lg:max-w-xs overflow-visible flex gap-2 sm:gap-0 items-center justify-between px-8 py-6 bg-white rounded-lg shadow-lg border border-slate-200 lg:h-fit lg:gap-0 lg:block'>
       <h3 className='hidden lg:block text-neutral-700 font-semibold text-xl mb-6'>
         Categories
       </h3>
@@ -36,16 +36,20 @@ const JobsCenterCategory = () => {
         </button>
       </div>
 
-      <RadioCategory
-        title='Salary'
-        type='radio'
-        options={['> 1000 000', '> 3 000 000', '> 5 000 000', '> 10 000 000']}
-      />
-      <RadioCategory
-        title='Date posted'
-        type='radio'
-        options={['All', '24 hours ago', '3 days ago', '7 days ago']}
-      />
+      <div>
+        <RadioCategory
+          title='Salary'
+          type='radio'
+          options={['> 1000 000', '> 3 000 000', '> 5 000 000', '> 10 000 000']}
+        />
+      </div>
+      <div className='hidden sm:block'>
+        <RadioCategory
+          title='Date posted'
+          type='radio'
+          options={['All', '24 hours ago', '3 days ago', '7 days ago']}
+        />
+      </div>
       <div className='hidden semi-sm:block'>
         <RadioCategory
           title='Experience level'
