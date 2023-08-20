@@ -17,7 +17,7 @@ const DrawerRadioSection = ({
 
   return (
     <section>
-      <h3 className='text-lg font-medium mb-4 '>{title}</h3>
+      <h3 className='text-base sm:text-lg font-medium mb-4 '>{title}</h3>
       <div className='grid grid-cols-2'>
         {options.map((option: string, index: number) => (
           <div className='flex items-center mb-4' key={option}>
@@ -37,7 +37,7 @@ const DrawerRadioSection = ({
             />
             <label
               htmlFor={`${title}-${option}`}
-              className='ml-2 text-base font-light text-gray-900 dark:text-gray-300'
+              className='ml-2 text-sm sm:text-base font-light text-gray-900 dark:text-gray-300'
             >
               {option}
             </label>

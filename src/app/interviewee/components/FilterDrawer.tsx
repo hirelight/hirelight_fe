@@ -14,9 +14,7 @@ const FilterDrawer = () => {
     jobType: [],
     workType: [],
   });
-  const drawerRef = useOutsideClick<HTMLDivElement>(() =>
-    console.log('Click outside')
-  );
+  const drawerRef = useOutsideClick<HTMLDivElement>(() => setShow(false));
 
   const handleToggleFilterDrawer = () => {
     setShow(!show);
