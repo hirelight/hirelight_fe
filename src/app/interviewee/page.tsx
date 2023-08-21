@@ -5,6 +5,11 @@ import { MapPin, SearchIcon } from '@/icons';
 import JobCard from './components/JobCard';
 import JobsCenterPagination from './components/JobsCenterPagination';
 import JobsCenterCategory from './components/JobsCenterCategory';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Jobs by Hirelight',
+};
 
 const JobsCenter = () => {
   return (
