@@ -2,9 +2,9 @@ import Image from 'next/image';
 import React from 'react';
 import background from '/public/images/interviewee_auth_bg.png';
 import { MapPin, SearchIcon } from '@/icons';
-import JobCard from './(home)/components/JobCard';
-import JobsCenterPagination from './(home)/components/JobsCenterPagination';
-import JobsCenterCategory from './(home)/components/JobsCenterCategory';
+import JobCard from './components/JobCard';
+import JobsCenterPagination from './components/JobsCenterPagination';
+import JobsCenterCategory from './components/JobsCenterCategory';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
