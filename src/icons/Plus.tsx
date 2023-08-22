@@ -1,7 +1,7 @@
 import React from 'react';
 import { IIcon } from './icon.interface';
 
-const CloseIcon = ({ className, id }: IIcon) => {
+const Plus = ({ id, className }: IIcon) => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -17,10 +17,10 @@ const CloseIcon = ({ className, id }: IIcon) => {
       <path
         strokeLinecap='round'
         strokeLinejoin='round'
-        d='M6 18L18 6M6 6l12 12'
+        d='M12 4.5v15m7.5-7.5h-15'
       />
     </svg>
   );
 };
 
-export default CloseIcon;
+export default Plus;
