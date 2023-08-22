@@ -1,0 +1,6 @@
+.active {
+  color: #0048b3;
+  &::after {
+    width: 40%;
+  }
+}
