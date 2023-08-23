@@ -13,6 +13,7 @@ import UserCircle from './UserCircle';
 import Key from './Key';
 import Plus from './Plus';
 import Upload from './Upload';
+import EllipsisVertical from './EllipsisVertical';
 
 export {
   MenuIcon,
@@ -30,4 +31,5 @@ export {
   Key,
   Plus,
   Upload,
+  EllipsisVertical,
 };

@@ -20,6 +20,7 @@ module.exports = {
       },
       colors: {
         blue_primary_800: '#0048B3',
+        blue_primary_700: '#006AE5',
         blue_primary_600: '#097AFF',
       },
     },

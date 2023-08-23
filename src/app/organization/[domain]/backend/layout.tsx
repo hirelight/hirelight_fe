@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 const BackendLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <div className='w-full min-h-screen flex flex-col pt-16'>
+    <div className='w-full min-h-screen relative bg-slate-100'>
       <HeaderBar />
       {children}
     </div>
