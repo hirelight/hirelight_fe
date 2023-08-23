@@ -7,6 +7,7 @@ import { Plus } from '@/icons';
 import styles from './page.module.scss';
 import JobCard from './components/JobCard';
 import { useOutsideClick } from '@/hooks/useClickOutside';
+import Link from 'next/link';
 
 const Backend = () => {
   const [curStage, setCurStage] = React.useState('In Progress');
@@ -91,13 +92,13 @@ const Backend = () => {
               </li>
             </ul>
           </div>
-          <button
-            type='button'
+          <Link
+            href='/backend/jobs/new'
             className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm p-2 md:p-0 md:px-5 md:py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 ml-auto flex items-center gap-1'
           >
             <Plus className='w-6 h-6' />
             <span className='hidden md:inline-block'>Create a new job</span>
-          </button>
+          </Link>
         </div>
         <div>
           <JobCard

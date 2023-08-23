@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import HeaderBar from './components/HeaderBar';
 
 import { Metadata } from 'next';
@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: 'Backend',
 };
 
-const BackendLayout = ({ children }: { children: ReactNode }) => {
+const OrganizationLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className='w-full min-h-screen relative bg-slate-100'>
       <HeaderBar />
@@ -15,4 +15,4 @@ const BackendLayout = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default BackendLayout;
+export default OrganizationLayout;

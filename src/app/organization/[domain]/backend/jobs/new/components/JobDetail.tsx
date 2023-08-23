@@ -3,7 +3,13 @@
 import React from 'react';
 import styles from './JobDetail.module.scss';
 
-const JobDetail = ({ stage }: { stage: string }) => {
+const JobDetail = ({
+  stage,
+  onTitleChange,
+}: {
+  stage: string;
+  onTitleChange: any;
+}) => {
   return (
     <form>
       <div className='bg-white w-full drop-shadow-md rounded-md overflow-hidden'>
@@ -23,6 +29,7 @@ const JobDetail = ({ stage }: { stage: string }) => {
               id='job-title'
               className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
               placeholder='Example: Fullstack Developer'
+              onChange={(e) => onTitleChange(e.target.value)}
             />
           </div>
         </section>
