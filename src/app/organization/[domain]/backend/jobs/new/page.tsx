@@ -30,11 +30,8 @@ const NewJob = (props: any) => {
     <div className='flex-1 flex flex-col max-w-screen-xl mx-auto'>
       <NewJobHeader onChangeStage={handleChangeStage} title={title} />
       <div className='flex-1 flex bg-slate-100 '>
-        <div className='flex-1 max-w-screen-xl mx-auto'>
-          <div className='pt-6 pb-20'>
-            {/* {stage === 'job-detail' && <JobDetail stage={stage} />} */}
-            {handleGetFormStage(stage)}
-          </div>
+        <div className='flex-1 max-w-screen-xl mx-auto pb-20'>
+          {handleGetFormStage(stage)}
         </div>
       </div>
     </div>
