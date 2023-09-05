@@ -1,13 +1,13 @@
 import React from 'react';
 import { IIcon } from './icon.interface';
 
-const ChevronDown = ({ id, className }: IIcon) => {
+const ChevronDown = ({ id, className, strokeWidth }: IIcon) => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
       fill='none'
       viewBox='0 0 24 24'
-      strokeWidth={1.5}
+      strokeWidth={strokeWidth ?? 1.5}
       stroke='currentColor'
       width={24}
       height={24}
