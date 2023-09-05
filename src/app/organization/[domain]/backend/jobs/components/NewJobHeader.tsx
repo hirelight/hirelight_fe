@@ -2,26 +2,23 @@
 
 import React from 'react';
 import styles from './NewJobHeader.module.scss';
-import { CreateJobStage } from '../new/page';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 
 interface INewJobHeader {
-  onChangeStage?: any;
   title?: string;
-  currentStage: string;
 }
 
-const NewJobHeader = ({
-  onChangeStage,
-  title,
-  currentStage,
-}: INewJobHeader) => {
+const NewJobHeader = ({ title }: INewJobHeader) => {
   const router = useRouter();
   const pathname = usePathname();
   const { jobId } = useParams();
 
   console.log(pathname);
+
+  const handleSaveAndContinue = () => {
+    if (pathname.includes('jobs/new')) router.push('/backend/jobs/123/edit');
+  };
 
   return (
     <div
@@ -43,6 +40,7 @@ const NewJobHeader = ({
             <button
               type='button'
               className='text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'
+              onClick={handleSaveAndContinue}
             >
               Save & continue
             </button>
@@ -51,11 +49,7 @@ const NewJobHeader = ({
         <div className='grid grid-cols-4 gap-2'>
           <div className='flex items-start justify-between after:content-[""] after:h-4/5 after:w-[1px] after:bg-gray-400 after:ml-2 after:self-center'>
             <button
-              onClick={
-                jobId
-                  ? () => router.push('edit')
-                  : onChangeStage.bind(null, CreateJobStage.JOB_DETAIL)
-              }
+              onClick={jobId ? () => router.push('edit') : () => {}}
               className={`${styles.section__wrapper} ${
                 pathname.includes('edit') || pathname.includes('jobs/new')
                   ? styles.active
@@ -75,13 +69,7 @@ const NewJobHeader = ({
                 pathname.includes('app-form') ? styles.active : ''
               } ${pathname.includes('jobs/new') ? styles.disabled : ''}`}
             >
-              <Link
-                href={'app-form'}
-                // onClick={onChangeStage.bind(
-                //   null,
-                //   CreateJobStage.APPLICATION_FORM
-                // )}
-              >
+              <Link href={'app-form'}>
                 <h3 className={styles.section__title}>Application Form</h3>
                 <p className={`${styles.section__description}`}>
                   Design the application form for this role.
@@ -96,10 +84,7 @@ const NewJobHeader = ({
                 pathname.includes('members') ? styles.active : ''
               } ${pathname.includes('jobs/new') ? styles.disabled : ''}`}
             >
-              <Link
-                href={'members'}
-                // onClick={onChangeStage.bind(null, CreateJobStage.ADD_MEMBERS)}
-              >
+              <Link href={'members'}>
                 <h3 className={styles.section__title}>Team Members</h3>
                 <p className={`${styles.section__description}`}>
                   Invite or add co-workers to collaborate on this job.
@@ -113,10 +98,7 @@ const NewJobHeader = ({
                 pathname.includes('workflow') ? styles.active : ''
               } ${pathname.includes('jobs/new') ? styles.disabled : ''}`}
             >
-              <Link
-                href={'workflow/config-pipeline'}
-                // onClick={onChangeStage.bind(null, CreateJobStage.WORKFLOW)}
-              >
+              <Link href={'workflow/config-pipeline'}>
                 <h3 className={styles.section__title}>Workflow</h3>
                 <p className={`${styles.section__description}`}>
                   Create a kit or assessment test for a structured interview

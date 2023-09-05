@@ -4,6 +4,7 @@ import React from 'react';
 import styles from './JobDetail.module.scss';
 import { Selection } from '@/components';
 import FormInput from './FormInput';
+import { usePathname, useRouter } from 'next/navigation';
 
 const industries = [
   'Accounting',
@@ -20,13 +21,9 @@ const industries = [
   'Design',
 ];
 
-const JobDetail = ({
-  stage,
-  onTitleChange,
-}: {
-  stage: string;
-  onTitleChange: any;
-}) => {
+const JobDetail = ({ onTitleChange }: { onTitleChange: any }) => {
+  const pathname = usePathname();
+  const router = useRouter();
   const [formState, setFormState] = React.useState({
     title: '',
     location: '',
@@ -36,8 +33,15 @@ const JobDetail = ({
     },
   });
 
+  const handleSubmitJobDetail = (e: any) => {
+    e.preventDefault();
+    if (pathname.includes('jobs/new')) {
+      router.push('/backend/jobs/123/edit');
+    }
+  };
+
   return (
-    <form className='flex'>
+    <form className='flex' onSubmit={handleSubmitJobDetail}>
       <div className='bg-white w-3/4 drop-shadow-md rounded-md'>
         {/* ***********************Job Title Section*********************************** */}
         <section className='relative'>

@@ -17,9 +17,7 @@ const JobDetailEdit = (props: any) => {
   );
   const [title, setTitle] = React.useState('');
 
-  return (
-    <JobDetail stage={stage} onTitleChange={(text: string) => setTitle(text)} />
-  );
+  return <JobDetail onTitleChange={(text: string) => setTitle(text)} />;
 };
 
 export default JobDetailEdit;
