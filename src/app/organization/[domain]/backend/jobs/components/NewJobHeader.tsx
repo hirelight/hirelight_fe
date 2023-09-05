@@ -1,0 +1,134 @@
+'use client';
+
+import React from 'react';
+import styles from './NewJobHeader.module.scss';
+import { CreateJobStage } from '../new/page';
+import Link from 'next/link';
+import { useParams, usePathname, useRouter } from 'next/navigation';
+
+interface INewJobHeader {
+  onChangeStage?: any;
+  title?: string;
+  currentStage: string;
+}
+
+const NewJobHeader = ({
+  onChangeStage,
+  title,
+  currentStage,
+}: INewJobHeader) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  const { jobId } = useParams();
+
+  console.log(pathname);
+
+  return (
+    <div
+      className={[
+        'bg-white rounded-md drop-shadow-md  mt-8 mb-6',
+        styles.header__wrapper,
+      ].join(' ')}
+    >
+      <div className='max-w-screen-xl mx-auto py-5 px-6 flex-shrink-0'>
+        <div className='w-full flex items-center justify-between mb-4'>
+          <h4 className='text-2xl'>{title ? title : 'New Job'}</h4>
+          <div>
+            <button
+              type='button'
+              className='text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700'
+            >
+              Save draft
+            </button>
+            <button
+              type='button'
+              className='text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800'
+            >
+              Save & continue
+            </button>
+          </div>
+        </div>
+        <div className='grid grid-cols-4 gap-2'>
+          <div className='flex items-start justify-between after:content-[""] after:h-4/5 after:w-[1px] after:bg-gray-400 after:ml-2 after:self-center'>
+            <button
+              onClick={
+                jobId
+                  ? () => router.push('edit')
+                  : onChangeStage.bind(null, CreateJobStage.JOB_DETAIL)
+              }
+              className={`${styles.section__wrapper} ${
+                pathname.includes('edit') || pathname.includes('jobs/new')
+                  ? styles.active
+                  : ''
+              }`}
+            >
+              <h3 className={styles.section__title}>Job details</h3>
+              <p className={`${styles.section__description}`}>
+                Tells applicants about this role, including job title, location
+                and requirements.
+              </p>
+            </button>
+          </div>
+          <div className='flex items-start justify-between after:content-[""] after:h-4/5 after:w-[1px] after:bg-gray-400 after:ml-2 after:self-center'>
+            <div
+              className={`${styles.section__wrapper} ${
+                pathname.includes('app-form') ? styles.active : ''
+              } ${pathname.includes('jobs/new') ? styles.disabled : ''}`}
+            >
+              <Link
+                href={'app-form'}
+                // onClick={onChangeStage.bind(
+                //   null,
+                //   CreateJobStage.APPLICATION_FORM
+                // )}
+              >
+                <h3 className={styles.section__title}>Application Form</h3>
+                <p className={`${styles.section__description}`}>
+                  Design the application form for this role.
+                </p>
+              </Link>
+            </div>
+          </div>
+
+          <div className='flex items-start justify-between after:content-[""] after:h-4/5 after:w-[1px] after:bg-gray-400 after:ml-2 after:self-center'>
+            <div
+              className={`${styles.section__wrapper} ${
+                pathname.includes('members') ? styles.active : ''
+              } ${pathname.includes('jobs/new') ? styles.disabled : ''}`}
+            >
+              <Link
+                href={'members'}
+                // onClick={onChangeStage.bind(null, CreateJobStage.ADD_MEMBERS)}
+              >
+                <h3 className={styles.section__title}>Team Members</h3>
+                <p className={`${styles.section__description}`}>
+                  Invite or add co-workers to collaborate on this job.
+                </p>
+              </Link>
+            </div>
+          </div>
+          <div className=''>
+            <div
+              className={`${styles.section__wrapper} ${
+                pathname.includes('workflow') ? styles.active : ''
+              } ${pathname.includes('jobs/new') ? styles.disabled : ''}`}
+            >
+              <Link
+                href={'workflow/config-pipeline'}
+                // onClick={onChangeStage.bind(null, CreateJobStage.WORKFLOW)}
+              >
+                <h3 className={styles.section__title}>Workflow</h3>
+                <p className={`${styles.section__description}`}>
+                  Create a kit or assessment test for a structured interview
+                  process.
+                </p>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default NewJobHeader;

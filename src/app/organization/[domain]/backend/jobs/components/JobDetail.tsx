@@ -3,6 +3,22 @@
 import React from 'react';
 import styles from './JobDetail.module.scss';
 import { Selection } from '@/components';
+import FormInput from './FormInput';
+
+const industries = [
+  'Accounting',
+  'Airlines/Aviation',
+  'Alternative Dispute Resolution',
+  'Business Analyst',
+  'Financial Analyst',
+  'Data Analyst',
+  'Art/Creative',
+  'Business Development',
+  'Consulting',
+  'Customer Service',
+  'Distribution',
+  'Design',
+];
 
 const JobDetail = ({
   stage,
@@ -14,6 +30,10 @@ const JobDetail = ({
   const [formState, setFormState] = React.useState({
     title: '',
     location: '',
+    annualSalary: {
+      from: '',
+      to: '',
+    },
   });
 
   return (
@@ -24,17 +44,11 @@ const JobDetail = ({
           <h2 className={`${styles.form__section__title}`}>Job title</h2>
           <div className={`${styles.form__section__wrapper}`}>
             <div className='mb-6'>
-              <label
-                htmlFor='job-title'
-                className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
-              >
-                <span className='text-red-500 mr-1'>*</span>
-                Job title
-              </label>
-              <input
-                type='text'
+              <FormInput
+                title='Job title'
+                required={true}
                 id='job-title'
-                className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+                type='text'
                 placeholder='Example: Fullstack Developer'
                 value={formState.title}
                 onChange={(e) => {
@@ -58,26 +72,17 @@ const JobDetail = ({
           <h2 className={`${styles.form__section__title}`}>Location</h2>
           <div className={`${styles.form__section__wrapper}`}>
             <div className='mb-6'>
-              <label
-                htmlFor='job-location'
-                className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
-              >
-                <span className='text-red-500 mr-1'>*</span>
-                Job location
-              </label>
-              <div className='flex gap-8 items-center'>
-                <input
-                  type='text'
-                  id='job-location'
-                  className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-                  placeholder='Example: District 7, Ho Chi Minh'
-                  value={formState.location}
-                  onChange={(e) =>
-                    setFormState({ ...formState, location: e.target.value })
-                  }
-                />
-                <span className='flex-shrink-0'>Fully remote</span>
-              </div>
+              <FormInput
+                title='Job location'
+                required={true}
+                id='job-location'
+                type='text'
+                placeholder='Example: District 7, Ho Chi Minh'
+                value={formState.location}
+                onChange={(e) =>
+                  setFormState({ ...formState, location: e.target.value })
+                }
+              />
             </div>
           </div>
           <div className='absolute left-full top-1/2 -translate-y-1/2 ml-8 w-1/3'>
@@ -161,24 +166,84 @@ const JobDetail = ({
         </section>
 
         {/* ***********************Company industry and Job function Section*********************************** */}
-        <h2 className={`${styles.form__section__title}`}>
-          Company industry and Job function
-        </h2>
-        <section className={`${styles.form__section__wrapper}`}>
-          <Selection
-            title='Company industry'
-            required={true}
-            datas={[
-              'Accounting',
-              'Airlines/Aviation',
-              'Alternative Dispute Resolution',
-            ]}
-          />
+        <section className='relative'>
+          <h2 className={`${styles.form__section__title}`}>
+            Company industry and Job function
+          </h2>
+          <div className={`${styles.form__section__wrapper}`}>
+            <div className='grid grid-cols-2 gap-8'>
+              <Selection title='Company industry' datas={industries} />
+              <Selection title='Job function' datas={industries} />
+            </div>
+          </div>
         </section>
+
+        {/* ***********************Employment Details*********************************** */}
+        <section className='relative'>
+          <h2 className={`${styles.form__section__title}`}>
+            Employment details
+          </h2>
+          <div className={`${styles.form__section__wrapper}`}>
+            <div className='grid grid-cols-2 gap-x-8 gap-y-4'>
+              <Selection title='Employment type' datas={industries} />
+              <Selection title='Experience' datas={industries} />
+              <Selection title='Education' datas={industries} />
+              <Selection title='Keywords' datas={industries} />
+            </div>
+          </div>
+        </section>
+
+        {/* ***********************Annual salary*********************************** */}
+        <section className='relative'>
+          <h2 className={`${styles.form__section__title}`}>Annual salary</h2>
+          <div className={`${styles.form__section__wrapper}`}>
+            <div className='grid grid-cols-4 gap-x-8'>
+              <FormInput
+                title='From'
+                required={true}
+                id='annual-salary-from'
+                type='text'
+                value={formState.annualSalary.from}
+                onChange={(e) =>
+                  setFormState({
+                    ...formState,
+                    annualSalary: {
+                      ...formState.annualSalary,
+                      from: e.target.value,
+                    },
+                  })
+                }
+              />
+              <FormInput
+                title='To'
+                required={true}
+                id='annual-salary-to'
+                type='text'
+                value={formState.annualSalary.to}
+                onChange={(e) =>
+                  setFormState({
+                    ...formState,
+                    annualSalary: {
+                      ...formState.annualSalary,
+                      to: e.target.value,
+                    },
+                  })
+                }
+              />
+              <div className='col-span-2'>
+                <Selection title='Currency' datas={industries} />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div className='w-full h-8'></div>
+
+        {/* ****************Bottom Button********************* */}
         <div className='p-5 border-t border-t-slate-300'>
           <button
             type='submit'
-            className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 mr-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
+            className='text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 mr-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
           >
             Save & continue
           </button>
