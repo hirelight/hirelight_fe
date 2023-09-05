@@ -4,7 +4,7 @@ import React from 'react';
 import JobDetail from '../../components/JobDetail';
 import NewJobHeader from '../../components/NewJobHeader';
 
-export enum CreateJobStage {
+enum HiringPipelineStage {
   JOB_DETAIL = 'job-detail',
   APPLICATION_FORM = 'application-form',
   ADD_MEMBERS = 'add-members',
@@ -12,8 +12,8 @@ export enum CreateJobStage {
 }
 
 const JobDetailEdit = (props: any) => {
-  const [stage, setStage] = React.useState<CreateJobStage>(
-    CreateJobStage.JOB_DETAIL
+  const [stage, setStage] = React.useState<HiringPipelineStage>(
+    HiringPipelineStage.JOB_DETAIL
   );
   const [title, setTitle] = React.useState('');
 
