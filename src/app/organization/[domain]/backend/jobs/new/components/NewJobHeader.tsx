@@ -2,13 +2,13 @@ import React from 'react';
 import styles from './NewJobHeader.module.scss';
 
 interface INewJobHeader {
-  onChangeStage: any;
+  onChangeStage?: any;
   title?: string;
 }
 
 const NewJobHeader = ({ onChangeStage, title }: INewJobHeader) => {
   return (
-    <div className='bg-white rounded-md drop-shadow-md  mt-8'>
+    <div className='bg-white rounded-md drop-shadow-md  mt-8 mb-6'>
       <div className='max-w-screen-xl h-[200px] mx-auto py-5 px-6 flex-shrink-0'>
         <div className='w-full flex items-center justify-between mb-4'>
           <h4 className='text-2xl'>{title ? title : 'New Job'}</h4>
@@ -28,7 +28,7 @@ const NewJobHeader = ({ onChangeStage, title }: INewJobHeader) => {
           </div>
         </div>
         <div className='grid grid-cols-5 gap-2'>
-          <div className='flex items-start after:content-[""] after:h-[60%] after:w-[1px] after:bg-gray-400 after:ml-2 after:self-center'>
+          <div className='flex items-start justify-between after:content-[""] after:h-4/5 after:w-[1px] after:bg-gray-400 after:ml-2 after:self-center'>
             <button
               onClick={onChangeStage.bind(null, 'job-detail')}
               className={`${styles.section__wrapper}`}
@@ -40,7 +40,7 @@ const NewJobHeader = ({ onChangeStage, title }: INewJobHeader) => {
               </p>
             </button>
           </div>
-          <div className='flex items-start after:content-[""] after:h-[60%] after:w-[1px] after:bg-gray-400 after:ml-2 after:self-center'>
+          <div className='flex items-start justify-between after:content-[""] after:h-4/5 after:w-[1px] after:bg-gray-400 after:ml-2 after:self-center'>
             <button
               className={`${styles.section__wrapper}`}
               onClick={onChangeStage.bind(null, 'application-form')}
@@ -51,7 +51,7 @@ const NewJobHeader = ({ onChangeStage, title }: INewJobHeader) => {
               </p>
             </button>
           </div>
-          <div className='flex items-start after:content-[""] after:h-[60%] after:w-[1px] after:bg-gray-400 after:ml-2 after:self-center'>
+          <div className='flex items-start justify-between after:content-[""] after:h-4/5 after:w-[1px] after:bg-gray-400 after:ml-2 after:self-center'>
             <button
               className={`${styles.section__wrapper}`}
               onClick={onChangeStage.bind(null, 'find-candidates')}
@@ -62,7 +62,7 @@ const NewJobHeader = ({ onChangeStage, title }: INewJobHeader) => {
               </p>
             </button>
           </div>
-          <div className='flex items-start after:content-[""] after:h-[60%] after:w-[1px] after:bg-gray-400 after:ml-2 after:self-center'>
+          <div className='flex items-start justify-between after:content-[""] after:h-4/5 after:w-[1px] after:bg-gray-400 after:ml-2 after:self-center'>
             <button
               className={`${styles.section__wrapper}`}
               onClick={onChangeStage.bind(null, 'team-members')}
