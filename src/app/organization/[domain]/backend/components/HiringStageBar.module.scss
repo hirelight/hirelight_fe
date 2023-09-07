@@ -1,0 +1,81 @@
+@import '/src/utils/colors/baseColor';
+
+.stageButton {
+  color: $blue-primary-600;
+  position: relative;
+  white-space: nowrap;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: $blue-primary-800;
+    height: 2px;
+    width: 0;
+    border-radius: 100%;
+  }
+  &:hover {
+    color: $blue-primary-800;
+    &::after {
+      width: 70%;
+      transition: all ease 150ms;
+    }
+  }
+  &.active {
+    color: $blue-primary-800;
+    font-weight: 500;
+    &::after {
+      width: 70%;
+      transition: all ease 150ms;
+    }
+  }
+}
+
+.stageButtonBadge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(100%, -50%);
+  font-size: 0.75rem;
+  color: white;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @apply bg-red-500;
+  border-radius: 100%;
+}
+
+.stageButtonWrapper {
+  display: flex;
+  flex-direction: column;
+  max-height: 0;
+  visibility: hidden;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: white;
+  z-index: 50;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  @apply border border-slate-200 shadow-sm;
+}
+
+@media screen and (max-width: 480px) {
+  .stageButton {
+    &::after {
+      height: 0;
+    }
+    &.active {
+      color: $blue-primary-600;
+      &:hover {
+        color: $blue-primary-800;
+      }
+    }
+  }
+  .stageButtonBadge {
+    display: none;
+  }
+}

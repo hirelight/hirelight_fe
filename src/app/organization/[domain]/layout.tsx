@@ -2,9 +2,6 @@ import React from 'react';
 import HeaderBar from './components/HeaderBar';
 
 import { Metadata } from 'next';
-export const metadata: Metadata = {
-  title: 'Backend',
-};
 
 const OrganizationLayout = ({ children }: { children: React.ReactNode }) => {
   return (

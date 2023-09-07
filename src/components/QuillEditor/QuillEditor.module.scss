@@ -1,0 +1,7 @@
+.editor__container {
+}
+.toolbar__container {
+  height: 0;
+  overflow: hidden;
+  @apply w-full border border-gray-400 transition-all duration-500;
+}

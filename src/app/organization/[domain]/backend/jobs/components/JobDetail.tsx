@@ -1,10 +1,63 @@
 'use client';
 
-import React from 'react';
-import styles from './JobDetail.module.scss';
+import React, { useState } from 'react';
 import { Selection } from '@/components';
 import FormInput from './FormInput';
 import { usePathname, useRouter } from 'next/navigation';
+import styles from './JobDetail.module.scss';
+import { useAppDispatch, useAppSelector } from '@/redux/reduxHooks';
+import { setJob } from '@/redux/slices/job.slice';
+import { IJobSlice, ISetJob } from '@/interfaces/job.interface';
+import dynamic from 'next/dynamic';
+const QuillEditorNoSSR = dynamic(() => import('@/components/QuillEditor'), {
+  ssr: false,
+  loading: () => <p>Loading ...</p>,
+});
+
+const QuillNoSSRWrapper = dynamic(() => import('react-quill'), {
+  ssr: false,
+  loading: () => <p>Loading ...</p>,
+});
+
+const modules = {
+  toolbar: [
+    [{ header: '1' }, { header: '2' }, { font: [] }],
+    [{ size: [] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [
+      { list: 'ordered' },
+      { list: 'bullet' },
+      { indent: '-1' },
+      { indent: '+1' },
+    ],
+    ['link', 'image', 'video'],
+    ['clean'],
+  ],
+  clipboard: {
+    // toggle to add extra line breaks when pasting HTML:
+    matchVisual: false,
+  },
+};
+/*
+ * Quill editor formats
+ * See https://quilljs.com/docs/formats/
+ */
+const formats = [
+  'header',
+  'font',
+  'size',
+  'bold',
+  'italic',
+  'underline',
+  'strike',
+  'blockquote',
+  'list',
+  'bullet',
+  'indent',
+  'link',
+  'image',
+  'video',
+];
 
 const industries = [
   'Accounting',
@@ -21,21 +74,34 @@ const industries = [
   'Design',
 ];
 
-const JobDetail = ({ onTitleChange }: { onTitleChange: any }) => {
+const JobDetail = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const [formState, setFormState] = React.useState({
-    title: '',
-    location: '',
-    annualSalary: {
-      from: '',
-      to: '',
-    },
-  });
+  const [description, setDescription] = useState('');
+
+  const dispatch = useAppDispatch();
+  const job = useAppSelector((state) => state.job.data);
+
+  const [formState, setFormState] = React.useState<ISetJob>(
+    job ?? {
+      title: '',
+      location: '',
+      description: {
+        description: '',
+        requirements: '',
+        benefits: '',
+      },
+      annualSalary: {
+        from: '',
+        to: '',
+      },
+    }
+  );
 
   const handleSubmitJobDetail = (e: any) => {
     e.preventDefault();
     if (pathname.includes('jobs/new')) {
+      dispatch(setJob(formState));
       router.push('/backend/jobs/123/edit');
     }
   };
@@ -54,10 +120,11 @@ const JobDetail = ({ onTitleChange }: { onTitleChange: any }) => {
                 id='job-title'
                 type='text'
                 placeholder='Example: Fullstack Developer'
-                value={formState.title}
+                autoComplete='organization-title'
+                value={job.title ? job.title : formState.title}
                 onChange={(e) => {
                   setFormState({ ...formState, title: e.target.value });
-                  onTitleChange(e.target.value);
+                  dispatch(setJob({ ...job, title: e.target.value }));
                 }}
               />
             </div>
@@ -82,7 +149,8 @@ const JobDetail = ({ onTitleChange }: { onTitleChange: any }) => {
                 id='job-location'
                 type='text'
                 placeholder='Example: District 7, Ho Chi Minh'
-                value={formState.location}
+                autoComplete='street-address'
+                value={job.location ? job.location : formState.location}
                 onChange={(e) =>
                   setFormState({ ...formState, location: e.target.value })
                 }
@@ -110,26 +178,28 @@ const JobDetail = ({ onTitleChange }: { onTitleChange: any }) => {
                 <span className='text-red-500 mr-1'>*</span>
                 About this role
               </label>
-              <div className='border border-slate-600 rounded-lg min-h-[600px] p-6 relative overflow-hidden'>
-                <div className='mb-6 min-h-[220px]'>
+              <div className='border border-slate-600 rounded-lg min-h-[600px] p-6 relative '>
+                <div className='mb-6 '>
                   <label
                     htmlFor='job-location'
                     className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
                   >
                     Description
                   </label>
-                  <p className='text-sm text-gray-600'>
+                  {/* <p className='text-sm text-gray-600'>
                     Enter the job description here; include key areas of
                     responsibility and what the candidate might do on a typical
                     day.
-                  </p>
+                  </p> */}
+                  <QuillEditorNoSSR />
+                  <QuillNoSSRWrapper theme='snow' />
                 </div>
                 <div className='mb-6 min-h-[220px]'>
                   <label
                     htmlFor='job-location'
                     className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
                   >
-                    Requirments
+                    Requirements
                   </label>
                   <p className='text-sm text-gray-600'>
                     Enter the job description here; include key areas of
@@ -176,8 +246,22 @@ const JobDetail = ({ onTitleChange }: { onTitleChange: any }) => {
           </h2>
           <div className={`${styles.form__section__wrapper}`}>
             <div className='grid grid-cols-2 gap-8'>
-              <Selection title='Company industry' datas={industries} />
-              <Selection title='Job function' datas={industries} />
+              <Selection
+                title='Company industry'
+                datas={industries}
+                value={job.industry ?? ''}
+                onChange={(value: string) =>
+                  setFormState({ ...formState, industry: value })
+                }
+              />
+              <Selection
+                title='Job function'
+                datas={industries}
+                value={job.jobFunction ?? ''}
+                onChange={(value: string) =>
+                  setFormState({ ...formState, jobFunction: value })
+                }
+              />
             </div>
           </div>
         </section>
@@ -189,10 +273,50 @@ const JobDetail = ({ onTitleChange }: { onTitleChange: any }) => {
           </h2>
           <div className={`${styles.form__section__wrapper}`}>
             <div className='grid grid-cols-2 gap-x-8 gap-y-4'>
-              <Selection title='Employment type' datas={industries} />
-              <Selection title='Experience' datas={industries} />
-              <Selection title='Education' datas={industries} />
-              <Selection title='Keywords' datas={industries} />
+              <Selection
+                title='Employment type'
+                datas={industries}
+                value={job.employment?.type ?? ''}
+                onChange={(value: string) =>
+                  setFormState({
+                    ...formState,
+                    employment: { ...formState.employment, type: value },
+                  })
+                }
+              />
+              <Selection
+                title='Experience'
+                datas={industries}
+                value={job.employment?.experience ?? ''}
+                onChange={(value: string) =>
+                  setFormState({
+                    ...formState,
+                    employment: { ...formState.employment, experience: value },
+                  })
+                }
+              />
+              <Selection
+                title='Education'
+                datas={industries}
+                value={job.employment?.education ?? ''}
+                onChange={(value: string) =>
+                  setFormState({
+                    ...formState,
+                    employment: { ...formState.employment, education: value },
+                  })
+                }
+              />
+              <Selection
+                title='Keywords'
+                datas={industries}
+                value={job.employment?.keywords ?? ''}
+                onChange={(value: string) =>
+                  setFormState({
+                    ...formState,
+                    employment: { ...formState.employment, keywords: value },
+                  })
+                }
+              />
             </div>
           </div>
         </section>
@@ -204,10 +328,9 @@ const JobDetail = ({ onTitleChange }: { onTitleChange: any }) => {
             <div className='grid grid-cols-4 gap-x-8'>
               <FormInput
                 title='From'
-                required={true}
                 id='annual-salary-from'
                 type='text'
-                value={formState.annualSalary.from}
+                value={job.annualSalary?.from || formState.annualSalary?.from}
                 onChange={(e) =>
                   setFormState({
                     ...formState,
@@ -220,10 +343,9 @@ const JobDetail = ({ onTitleChange }: { onTitleChange: any }) => {
               />
               <FormInput
                 title='To'
-                required={true}
                 id='annual-salary-to'
                 type='text'
-                value={formState.annualSalary.to}
+                value={job.annualSalary?.to || formState.annualSalary?.to}
                 onChange={(e) =>
                   setFormState({
                     ...formState,
@@ -235,7 +357,20 @@ const JobDetail = ({ onTitleChange }: { onTitleChange: any }) => {
                 }
               />
               <div className='col-span-2'>
-                <Selection title='Currency' datas={industries} />
+                <Selection
+                  title='Currency'
+                  datas={industries}
+                  value={job.annualSalary?.currency ?? ''}
+                  onChange={(value: string) =>
+                    setFormState({
+                      ...formState,
+                      annualSalary: {
+                        ...formState.annualSalary,
+                        currency: value,
+                      },
+                    })
+                  }
+                />
               </div>
             </div>
           </div>

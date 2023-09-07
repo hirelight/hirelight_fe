@@ -1,4 +1,7 @@
+import ReduxProvider from '@/components/ReduxProvider/ReduxProvider';
 import './globals.css';
+import 'react-quill/dist/quill.snow.css';
+import 'react-quill/dist/quill.bubble.css';
 import type { Metadata } from 'next';
 import { Inter, Public_Sans, Roboto_Mono } from 'next/font/google';
 import Script from 'next/script';
@@ -35,7 +38,7 @@ export default function RootLayout({
       <body
         className={`${inter.className} ${roboto_mono.className} ${publicSans.className}`}
       >
-        {children}
+        <ReduxProvider>{children}</ReduxProvider>
         <Script src='https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js' />
       </body>
     </html>

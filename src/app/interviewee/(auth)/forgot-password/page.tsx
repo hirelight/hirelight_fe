@@ -27,10 +27,10 @@ const ForgotPassword = () => {
 
   return (
     <>
-      <Head>
-        <title>Forgot Password</title>
-      </Head>
       <main className={styles.wrapper}>
+        <Head>
+          <title>Forgot Password</title>
+        </Head>
         <div
           ref={wrapperRef}
           className='w-full md:w-[500px] bg-white rounded-lg border border-slate-200 drop-shadow-md p-10 px-14 text-center overflow-hidden relative'

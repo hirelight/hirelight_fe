@@ -4,15 +4,15 @@ import React from 'react';
 import styles from './NewJobHeader.module.scss';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
+import { useAppSelector } from '@/redux/reduxHooks';
 
-interface INewJobHeader {
-  title?: string;
-}
+interface INewJobHeader {}
 
-const NewJobHeader = ({ title }: INewJobHeader) => {
+const NewJobHeader = ({}: INewJobHeader) => {
   const router = useRouter();
   const pathname = usePathname();
   const { jobId } = useParams();
+  const title = useAppSelector((state) => state.job.data.title);
 
   console.log(pathname);
 

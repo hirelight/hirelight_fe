@@ -7,25 +7,30 @@ import React from 'react';
 interface ISelection {
   title: string;
   placeholder?: string;
+  value?: string;
   datas: string[];
   required?: boolean;
+  onChange: any;
 }
 
 const Selection = ({
   title,
   placeholder = 'Select...',
   datas,
+  value = '',
   required = false,
+  onChange,
 }: ISelection) => {
   const [show, setShow] = React.useState(false);
   const [search, setSearch] = React.useState('');
-  const [selected, setSelected] = React.useState('');
+  const [selected, setSelected] = React.useState(value);
   const dropdownRef = useOutsideClick<HTMLDivElement>(() => setShow(false));
 
   const expandSelection = () => {};
 
   const handleSelectItem = (value: any) => {
     setSelected(value);
+    onChange(value);
     setShow(false);
   };
 
