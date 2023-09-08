@@ -19,46 +19,6 @@ const QuillNoSSRWrapper = dynamic(() => import('react-quill'), {
   loading: () => <p>Loading ...</p>,
 });
 
-const modules = {
-  toolbar: [
-    [{ header: '1' }, { header: '2' }, { font: [] }],
-    [{ size: [] }],
-    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-    [
-      { list: 'ordered' },
-      { list: 'bullet' },
-      { indent: '-1' },
-      { indent: '+1' },
-    ],
-    ['link', 'image', 'video'],
-    ['clean'],
-  ],
-  clipboard: {
-    // toggle to add extra line breaks when pasting HTML:
-    matchVisual: false,
-  },
-};
-/*
- * Quill editor formats
- * See https://quilljs.com/docs/formats/
- */
-const formats = [
-  'header',
-  'font',
-  'size',
-  'bold',
-  'italic',
-  'underline',
-  'strike',
-  'blockquote',
-  'list',
-  'bullet',
-  'indent',
-  'link',
-  'image',
-  'video',
-];
-
 const industries = [
   'Accounting',
   'Airlines/Aviation',
@@ -77,11 +37,11 @@ const industries = [
 const JobDetail = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const [description, setDescription] = useState('');
 
   const dispatch = useAppDispatch();
   const job = useAppSelector((state) => state.job.data);
 
+  const [description, setDescription] = React.useState('');
   const [formState, setFormState] = React.useState<ISetJob>(
     job ?? {
       title: '',
@@ -124,7 +84,7 @@ const JobDetail = () => {
                 value={job.title ? job.title : formState.title}
                 onChange={(e) => {
                   setFormState({ ...formState, title: e.target.value });
-                  dispatch(setJob({ ...job, title: e.target.value }));
+                  dispatch(setJob({ ...formState, title: e.target.value }));
                 }}
               />
             </div>
@@ -178,47 +138,80 @@ const JobDetail = () => {
                 <span className='text-red-500 mr-1'>*</span>
                 About this role
               </label>
-              <div className='border border-slate-600 rounded-lg min-h-[600px] p-6 relative '>
-                <div className='mb-6 '>
-                  <label
-                    htmlFor='job-location'
-                    className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
-                  >
+              <div className='border border-slate-600 rounded-lg min-h-[600px] p-6 relative overflow-hidden'>
+                <div className='mb-6 flex flex-col min-h-[220px]'>
+                  <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>
                     Description
+                  </label>
+                  <QuillEditorNoSSR
+                    value={formState.description.description}
+                    placeholder='Enter the job description here; include key areas of
+                    responsibility and what the candidate might do on a typical
+                    day.'
+                    onChange={(value: string) => {
+                      setFormState({
+                        ...formState,
+                        description: {
+                          ...formState.description,
+                          description: value,
+                        },
+                      });
+                    }}
+                    className='flex-1'
+                  />
+                </div>
+                <div className='mb-6 flex flex-col min-h-[220px]'>
+                  <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>
+                    Requirements
                   </label>
                   {/* <p className='text-sm text-gray-600'>
                     Enter the job description here; include key areas of
                     responsibility and what the candidate might do on a typical
                     day.
                   </p> */}
-                  <QuillEditorNoSSR />
-                  <QuillNoSSRWrapper theme='snow' />
-                </div>
-                <div className='mb-6 min-h-[220px]'>
-                  <label
-                    htmlFor='job-location'
-                    className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
-                  >
-                    Requirements
-                  </label>
-                  <p className='text-sm text-gray-600'>
-                    Enter the job description here; include key areas of
+                  <QuillEditorNoSSR
+                    value={formState.description.requirements}
+                    placeholder='Enter the job description here; include key areas of
                     responsibility and what the candidate might do on a typical
-                    day.
-                  </p>
+                    day.'
+                    onChange={(value: string) => {
+                      console.log(formState);
+                      setFormState({
+                        ...formState,
+                        description: {
+                          ...formState.description,
+                          requirements: value,
+                        },
+                      });
+                    }}
+                    className='flex-1'
+                  />
                 </div>
-                <div className='mb-6 min-h-[220px]'>
-                  <label
-                    htmlFor='job-location'
-                    className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'
-                  >
+                <div className='mb-6 flex flex-col min-h-[220px]'>
+                  <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>
                     Benefits
                   </label>
-                  <p className='text-sm text-gray-600'>
+                  {/* <p className='text-sm text-gray-600'>
                     Enter the job description here; include key areas of
                     responsibility and what the candidate might do on a typical
                     day.
-                  </p>
+                  </p> */}
+                  <QuillEditorNoSSR
+                    value={formState.description.benefits}
+                    placeholder='Enter the job description here; include key areas of
+                    responsibility and what the candidate might do on a typical
+                    day.'
+                    onChange={(value: string) =>
+                      setFormState({
+                        ...formState,
+                        description: {
+                          ...formState.description,
+                          benefits: value,
+                        },
+                      })
+                    }
+                    className='flex-1'
+                  />
                 </div>
 
                 <div className='absolute bottom-0 right-0 left-0 p-1 bg-gray-200'>

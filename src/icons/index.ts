@@ -14,6 +14,12 @@ import Key from './Key';
 import Plus from './Plus';
 import Upload from './Upload';
 import EllipsisVertical from './EllipsisVertical';
+import Bold from './Bold';
+import Italic from './Italic';
+import ListOL from './ListOL';
+import ListUL from './ListUL';
+import LinkIcon from './Link';
+import ImageIcon from './ImageIcon';
 
 export {
   MenuIcon,
@@ -32,4 +38,10 @@ export {
   Plus,
   Upload,
   EllipsisVertical,
+  Bold,
+  Italic,
+  ListOL,
+  ListUL,
+  LinkIcon,
+  ImageIcon,
 };

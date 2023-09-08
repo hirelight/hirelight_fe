@@ -7,3 +7,15 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+.ql-active {
+  @apply bg-slate-200 text-blue_primary_800;
+}
+
+.ql-editor {
+  /* padding-inline: 0; */
+}
+
+.ql-blank::before {
+  /* left: 0 !important; */
+}
