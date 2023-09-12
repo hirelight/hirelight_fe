@@ -10,9 +10,9 @@ const DomainPage = () => {
 
   React.useEffect(() => {
     router.push(`backend`);
-  }, []);
+  }, [router]);
 
-  return <div></div>;
+  return null;
 };
 
 export default DomainPage;
