@@ -1,5 +1,5 @@
 import ReduxProvider from '@/components/ReduxProvider/ReduxProvider';
-import './globals.css';
+import './globals.scss';
 import 'react-quill/dist/quill.snow.css';
 import 'react-quill/dist/quill.bubble.css';
 import type { Metadata } from 'next';
