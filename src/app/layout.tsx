@@ -3,7 +3,13 @@ import './globals.css';
 import 'react-quill/dist/quill.snow.css';
 import 'react-quill/dist/quill.bubble.css';
 import type { Metadata } from 'next';
-import { Inter, Public_Sans, Roboto_Mono } from 'next/font/google';
+import {
+  Inter,
+  Montserrat,
+  Poppins,
+  Public_Sans,
+  Roboto_Mono,
+} from 'next/font/google';
 import Script from 'next/script';
 
 const inter = Inter({
@@ -17,10 +23,23 @@ const roboto_mono = Roboto_Mono({
   display: 'swap',
   variable: '--font-roboto-mono',
 });
-const publicSans = Public_Sans({
+// const publicSans = Public_Sans({
+//   subsets: ['latin'],
+//   display: 'swap',
+//   variable: '--font-public-sans',
+// });
+
+const montserrat = Montserrat({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-public-sans',
+  variable: '--font-montserrat',
+});
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-poppins',
+  weight: ['300', '400', '500', '600', '700', '800'],
 });
 
 export const metadata: Metadata = {
@@ -36,7 +55,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${inter.className} ${roboto_mono.className} ${publicSans.className}`}
+        className={`${inter.className} ${roboto_mono.className} ${montserrat.className} ${poppins.className}`}
       >
         <ReduxProvider>{children}</ReduxProvider>
         <Script src='https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js' />
