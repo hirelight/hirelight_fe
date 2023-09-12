@@ -10,7 +10,7 @@ import { usePathname } from 'next/navigation';
 const HeaderBar = () => {
   const pathname = usePathname();
   const cite = pathname.split('/')[1];
-  console.log(cite);
+  // console.log(cite);
 
   return (
     <div className='bg-white shadow-md relative z-10'>
