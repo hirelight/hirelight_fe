@@ -40,7 +40,7 @@ export default async function middleware(req: NextRequest) {
   //     'https://vercel.com/blog/platforms-starter-kit'
   //   );
   // }
-
+  // console.log(hostname, path);
   // rewrite root application to `/app` folder
   if (
     hostname === 'localhost:3000' ||
@@ -55,6 +55,7 @@ export default async function middleware(req: NextRequest) {
   ) {
     return NextResponse.rewrite(new URL(`/interviewee${path}`, req.url));
   }
+
   // rewrite everything else to organization folder `/organization/[domain]/[path] dynamic route
   return NextResponse.rewrite(
     new URL(`/organization/${hostname.split('.')[0]}${path}`, req.url)
