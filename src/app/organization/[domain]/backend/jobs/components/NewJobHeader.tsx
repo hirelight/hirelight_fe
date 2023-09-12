@@ -14,8 +14,6 @@ const NewJobHeader = ({}: INewJobHeader) => {
   const { jobId } = useParams();
   const title = useAppSelector((state) => state.job.data.title);
 
-  console.log(pathname);
-
   const handleSaveAndContinue = () => {
     if (pathname.includes('jobs/new')) router.push('/backend/jobs/123/edit');
   };
@@ -23,11 +21,11 @@ const NewJobHeader = ({}: INewJobHeader) => {
   return (
     <div
       className={[
-        'bg-white rounded-md drop-shadow-md  mt-8 mb-6',
+        'bg-white rounded-md drop-shadow-md mt-8 mb-6',
         styles.header__wrapper,
       ].join(' ')}
     >
-      <div className='max-w-screen-xl mx-auto py-5 px-6 flex-shrink-0'>
+      <div className='max-w-screen-xl mx-auto py-5 px-4 xl:px-6 flex-shrink-0'>
         <div className='w-full flex items-center justify-between mb-4'>
           <h4 className='text-2xl'>{title ? title : 'New Job'}</h4>
           <div>
