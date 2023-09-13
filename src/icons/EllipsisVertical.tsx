@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { IIcon } from './icon.interface';
 
 const EllipsisVertical = ({ id, className }: IIcon) => {

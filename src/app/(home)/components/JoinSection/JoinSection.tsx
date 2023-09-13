@@ -1,5 +1,7 @@
 import React from 'react';
+
 import styles from './JoinSection.module.scss';
+
 import Image from 'next/image';
 
 import joinPoster from '/public/images/join_poster.jpg';

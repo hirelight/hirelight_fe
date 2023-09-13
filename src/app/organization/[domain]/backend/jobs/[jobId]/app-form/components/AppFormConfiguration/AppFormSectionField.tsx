@@ -1,10 +1,12 @@
 'use client';
 
 import React from 'react';
-import styles from './AppFormSectionField.module.scss';
+
 import { EAppFormOption } from '@/interfaces';
 import { useAppDispatch } from '@/redux/reduxHooks';
 import { setField } from '@/redux/slices/app-form.slice';
+
+import styles from './AppFormSectionField.module.scss';
 
 interface IAppFormSectionField {
   sectionTitle: string;

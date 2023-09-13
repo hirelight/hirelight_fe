@@ -1,7 +1,8 @@
 import React from 'react';
+import { Metadata } from 'next';
+
 import JobDetail from '../components/JobDetail';
 import NewJobHeader from '../components/NewJobHeader';
-import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Create new hiring pipeline',

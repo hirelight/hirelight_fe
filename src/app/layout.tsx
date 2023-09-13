@@ -1,4 +1,3 @@
-import ReduxProvider from '@/components/ReduxProvider/ReduxProvider';
 import './globals.scss';
 import 'react-quill/dist/quill.snow.css';
 import 'react-quill/dist/quill.bubble.css';
@@ -11,6 +10,8 @@ import {
   Roboto_Mono,
 } from 'next/font/google';
 import Script from 'next/script';
+
+import ReduxProvider from '@/components/ReduxProvider/ReduxProvider';
 
 const inter = Inter({
   subsets: ['latin'],

@@ -1,10 +1,12 @@
 'use client';
 
 import React from 'react';
-import styles from './NewJobHeader.module.scss';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
+
 import { useAppSelector } from '@/redux/reduxHooks';
+
+import styles from './NewJobHeader.module.scss';
 
 interface INewJobHeader {}
 

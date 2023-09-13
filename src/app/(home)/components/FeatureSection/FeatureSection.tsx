@@ -1,6 +1,7 @@
 import React from 'react';
-import styles from './FeatureSection.module.scss';
 import Image from 'next/image';
+
+import styles from './FeatureSection.module.scss';
 
 const FeatureSection = () => {
   return (

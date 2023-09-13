@@ -1,5 +1,6 @@
-import { EllipsisVertical } from '@/icons';
 import React from 'react';
+
+import { EllipsisVertical } from '@/icons';
 
 interface IStage {
   name: string;

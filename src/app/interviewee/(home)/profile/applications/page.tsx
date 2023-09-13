@@ -3,7 +3,6 @@
 import React from 'react';
 
 import styles from './page.module.scss';
-import ApplicationCard from './components/ApplicationCard';
 import WaitingResponseSection from './components/WaitingResponseSection';
 import InInterviewProgressSection from './components/InInterviewProgressSection';
 import EndSection from './components/EndSection';

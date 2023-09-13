@@ -1,6 +1,7 @@
 import React from 'react';
-import JobDetail from '../../components/JobDetail';
 import { Metadata } from 'next';
+
+import JobDetail from '../../components/JobDetail';
 
 export const metadata: Metadata = {
   title: 'Edit job detail',

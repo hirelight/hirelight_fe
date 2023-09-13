@@ -1,7 +1,10 @@
 import React from 'react';
+
 import featureDescription from '/public/images/feature_description.png';
-import styles from './FeatureDescription.module.scss';
+
 import Image from 'next/image';
+
+import styles from './FeatureDescription.module.scss';
 
 const FeatureDescription = () => {
   return (

@@ -1,10 +1,11 @@
 'use client';
 
 import React from 'react';
+import { TrashIcon } from '@heroicons/react/24/outline';
+
+import { useAppSelector } from '@/redux/reduxHooks';
 
 import styles from './AppFormMobileView.module.scss';
-import { useAppSelector } from '@/redux/reduxHooks';
-import { TrashIcon } from '@heroicons/react/24/outline';
 import AppFormMobileSection from './AppFormMobileSection';
 
 const AppFormMobileView = () => {

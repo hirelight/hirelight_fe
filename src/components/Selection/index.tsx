@@ -1,8 +1,9 @@
 'use client';
 
+import React from 'react';
+
 import { useOutsideClick } from '@/hooks/useClickOutside';
 import { ChevronDown, SearchIcon } from '@/icons';
-import React from 'react';
 
 interface ISelection {
   title: string;

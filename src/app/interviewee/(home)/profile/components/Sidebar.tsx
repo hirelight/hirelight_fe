@@ -1,10 +1,12 @@
 'use client';
 
-import { Briefcase, Key, Newspaper, UserCircle } from '@/icons';
 import React from 'react';
-import styles from './Sidebar.module.scss';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
+import { Briefcase, Key, Newspaper, UserCircle } from '@/icons';
+
+import styles from './Sidebar.module.scss';
 
 const Sidebar = () => {
   const pathname = usePathname();

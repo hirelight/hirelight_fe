@@ -1,10 +1,10 @@
 import { Metadata } from 'next';
 import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 
 import styles from './login.module.scss';
 import LoginForm from './components/LoginForm';
-import Link from 'next/link';
-import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Create an account or log in | Jobs on Hirelight',

@@ -1,9 +1,9 @@
+import { TrashIcon } from '@heroicons/react/24/solid';
+import React from 'react';
+
 import { CustomInput, CustomTextArea } from '@/components';
 import { EAppFormOption, IAppFormField } from '@/interfaces';
 import { useAppSelector } from '@/redux/reduxHooks';
-import { TrashIcon } from '@heroicons/react/24/solid';
-import { Button } from 'flowbite-react';
-import React from 'react';
 
 import styles from './AppFormMobileSection.module.scss';
 

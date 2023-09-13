@@ -1,11 +1,15 @@
 import Image from 'next/image';
 import React from 'react';
+
 import background from '/public/images/interviewee_auth_bg.png';
+
+import { Metadata } from 'next';
+
 import { MapPin, SearchIcon } from '@/icons';
+
 import JobCard from './components/JobCard';
 import JobsCenterPagination from './components/JobsCenterPagination';
 import JobsCenterCategory from './components/JobsCenterCategory';
-import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Jobs by Hirelight',

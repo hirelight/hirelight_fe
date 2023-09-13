@@ -1,14 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Selection } from '@/components';
-import FormInput from './FormInput';
 import { usePathname, useRouter } from 'next/navigation';
-import styles from './JobDetail.module.scss';
+import dynamic from 'next/dynamic';
+
+import { Selection } from '@/components';
 import { useAppDispatch, useAppSelector } from '@/redux/reduxHooks';
 import { setJob } from '@/redux/slices/job.slice';
 import { IJobSlice, ISetJob } from '@/interfaces/job.interface';
-import dynamic from 'next/dynamic';
+
+import styles from './JobDetail.module.scss';
+import FormInput from './FormInput';
+
 const QuillEditorNoSSR = dynamic(() => import('@/components/QuillEditor'), {
   ssr: false,
   loading: () => <p>Loading ...</p>,

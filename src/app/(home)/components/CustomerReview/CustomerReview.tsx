@@ -2,7 +2,9 @@ import React from 'react';
 
 import globe from '/public/images/globe_outline.png';
 import appstore from '/public/images/appstore.png';
+
 import Image from 'next/image';
+
 import downloads from '/public/images/downloads.png';
 import review1 from '/public/images/review1.png';
 import review2 from '/public/images/review2.png';

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { IIcon } from './icon.interface';
 
 const Briefcase = ({ className, id }: IIcon) => {

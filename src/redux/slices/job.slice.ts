@@ -1,5 +1,6 @@
-import { ISetJob, IJob, IJobSlice } from '@/interfaces/job.interface';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+import { ISetJob, IJob, IJobSlice } from '@/interfaces/job.interface';
 
 export interface IJobSliceInitialState {
   data: IJobSlice;

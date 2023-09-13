@@ -1,11 +1,12 @@
 import React from 'react';
-import AppFormSection from './AppFormSection';
-import { EAppFormOption, IAppFormFields } from '@/interfaces';
+
 import {
   detailsFields,
   personalInfoFields,
   profileFields,
 } from '@/utils/shared/initialDatas';
+
+import AppFormSection from './AppFormSection';
 
 const AppFormConfiguration = () => {
   return (

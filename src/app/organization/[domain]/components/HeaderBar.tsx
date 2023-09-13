@@ -2,10 +2,13 @@
 
 import Image from 'next/image';
 import React from 'react';
+
 import logo from '/public/images/logo.png';
+
 import Link from 'next/link';
-import { Bell } from '@/icons';
 import { usePathname } from 'next/navigation';
+
+import { Bell } from '@/icons';
 
 const HeaderBar = () => {
   const pathname = usePathname();

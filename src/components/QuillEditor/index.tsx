@@ -1,12 +1,13 @@
 'use client';
 
 import React from 'react';
-
 import Quill, { QuillOptionsStatic } from 'quill';
-import styles from './QuillEditor.module.scss';
+
 import { Bold, ImageIcon, Italic, LinkIcon, ListOL, ListUL } from '@/icons';
 import { debounce } from '@/helpers/shareHelpers';
 import { useOutsideClick } from '@/hooks/useClickOutside';
+
+import styles from './QuillEditor.module.scss';
 
 interface IQuillEditor {
   value?: string;

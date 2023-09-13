@@ -1,4 +1,5 @@
 import React from 'react';
+
 import HeaderBar from './components/HeaderBar';
 
 const IntervieweeAuthLayout = ({ children }: { children: React.ReactNode }) => {

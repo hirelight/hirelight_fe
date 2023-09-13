@@ -1,11 +1,12 @@
 import React from 'react';
 
 import background from '/public/images/interviewee_auth_bg.png';
-import Image from 'next/image';
-import SignupForm from './components/SignupForm';
 
-import styles from './signup.module.scss';
+import Image from 'next/image';
 import Link from 'next/link';
+
+import SignupForm from './components/SignupForm';
+import styles from './signup.module.scss';
 
 const IntervieweeSignup = () => {
   return (

@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+
+import { useOutsideClick } from '@/hooks/useClickOutside';
+
 import DrawerRadioSection from './DrawerRadioSection';
 import DrawerCheckboxSection from './DrawerCheckboxSection';
-import { useOutsideClick } from '@/hooks/useClickOutside';
 
 const FilterDrawer = () => {
   const [show, setShow] = React.useState(false);

@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+
 import jobReducer from './slices/job.slice';
 import appFormReducer from './slices/app-form.slice';
 

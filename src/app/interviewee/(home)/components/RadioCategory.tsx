@@ -1,7 +1,8 @@
 'use client';
+import React from 'react';
+
 import { useOutsideClick } from '@/hooks/useClickOutside';
 import { ChevronDown } from '@/icons';
-import React from 'react';
 
 interface IRadioCategory {
   title?: string;

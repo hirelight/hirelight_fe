@@ -1,7 +1,8 @@
 'use client';
 
-import { CloseIcon, Plus, Upload } from '@/icons';
 import React, { FormEvent, useState } from 'react';
+
+import { CloseIcon, Plus, Upload } from '@/icons';
 
 const ApplicationForm = () => {
   const [fileName, setFileName] = useState('');

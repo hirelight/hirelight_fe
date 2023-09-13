@@ -1,12 +1,6 @@
 import React from 'react';
-import integration from '/public/images/integration.png';
-import integration2 from '/public/images/integration2.png';
-import integration3 from '/public/images/integration3.png';
-import integration4 from '/public/images/integration4.png';
-import integration5 from '/public/images/integration5.png';
 
 import styles from './IntegrationDescription.module.scss';
-import Image from 'next/image';
 
 const IntegrationDescription = () => {
   return (

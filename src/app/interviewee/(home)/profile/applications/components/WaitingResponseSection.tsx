@@ -1,4 +1,5 @@
 import React from 'react';
+
 import ApplicationCard from './ApplicationCard';
 
 const WaitingResponseSection = () => {

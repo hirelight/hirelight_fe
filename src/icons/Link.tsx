@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { IIcon } from './icon.interface';
 
 const LinkIcon = ({ id, className, onClick }: IIcon) => {

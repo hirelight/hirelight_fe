@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
@@ -31,8 +33,18 @@
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "autoprefixer": "^10.4.14",
+    "husky": "^8.0.0",
+    "lint-staged": "^14.0.1",
     "postcss": "^8.4.27",
     "sass": "^1.64.1",
     "tailwindcss": "^3.3.3"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx}": [
+      "eslint --cache"
+    ],
+    "styled.ts": [
+      "stylelint --cache"
+    ]
   }
 }

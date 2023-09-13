@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import styles from './LoginForm.module.scss';
 import Link from 'next/link';
+
+import styles from './LoginForm.module.scss';
 
 const LoginForm = () => {
   const handleLogin = (e: React.FormEvent) => {

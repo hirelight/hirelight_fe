@@ -1,8 +1,9 @@
 'use client';
 
 import React, { FormEvent } from 'react';
-import styles from './forgot-password.module.scss';
 import Link from 'next/link';
+
+import styles from './forgot-password.module.scss';
 
 const ForgotPasswordForm = ({ onSwipe }: any) => {
   const handleForgotPassword = (e: FormEvent) => {

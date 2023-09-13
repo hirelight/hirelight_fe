@@ -1,6 +1,8 @@
 import Image from 'next/image';
 import React from 'react';
+
 import background from '/public/images/interviewee_auth_bg.png';
+
 import Sidebar from './components/Sidebar';
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {

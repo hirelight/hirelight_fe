@@ -1,7 +1,7 @@
 import React from 'react';
+
 import AppFormConfiguration from './AppFormConfiguration/AppFormConfiguration';
 import AppFormMobileView from './AppFormMobileView/AppFormMobileView';
-import { ButtonOutline } from '@/components';
 import AppFormFooter from './AppFormFooter/AppFormFooter';
 
 const AppForm = () => {

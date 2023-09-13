@@ -1,9 +1,11 @@
 'use client';
 
 import React from 'react';
+
+import { EAppFormOption, IAppFormFields } from '@/interfaces';
+
 import styles from './AppFormSection.module.scss';
 import AppFormSectionField from './AppFormSectionField';
-import { EAppFormOption, IAppFormFields } from '@/interfaces';
 
 interface IAppFormSection {
   title: string;

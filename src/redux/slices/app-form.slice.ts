@@ -1,6 +1,7 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
 import { EAppFormOption, IAppFormField, ISetAppFormField } from '@/interfaces';
 import { appFormSections } from '@/utils/shared/initialDatas';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface IAppFormSection {
   title: string;

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { IIcon } from './icon.interface';
 
 const Italic = ({ id, className, onClick }: IIcon) => {

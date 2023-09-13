@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import styles from './Sidebar.module.scss';
 import Link from 'next/link';
+
+import styles from './Sidebar.module.scss';
 
 const Sidebar = ({ closeMenu }: any) => {
   const asideRef = React.useRef<HTMLElement>(null);

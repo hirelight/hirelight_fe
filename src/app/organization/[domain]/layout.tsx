@@ -1,7 +1,6 @@
 import React from 'react';
-import HeaderBar from './components/HeaderBar';
 
-import { Metadata } from 'next';
+import HeaderBar from './components/HeaderBar';
 
 const OrganizationLayout = ({ children }: { children: React.ReactNode }) => {
   return (

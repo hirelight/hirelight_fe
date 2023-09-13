@@ -1,11 +1,12 @@
 'use client';
 
-import { useOutsideClick } from '@/hooks/useClickOutside';
 import React from 'react';
+import Link from 'next/link';
+
+import { useOutsideClick } from '@/hooks/useClickOutside';
+import { Plus } from '@/icons';
 
 import styles from './HiringStageBar.module.scss';
-import Link from 'next/link';
-import { Plus } from '@/icons';
 
 const HiringStageBar = () => {
   const [curStage, setCurStage] = React.useState('In Progress');

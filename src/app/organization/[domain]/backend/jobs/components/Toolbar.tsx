@@ -1,4 +1,5 @@
 import React from 'react';
+
 const CustomButton = () => <span className='octicon octicon-star' />;
 const Toolbar = () => {
   return (
@@ -12,8 +13,8 @@ const Toolbar = () => {
         <option value='2'></option>
         <option selected></option>
       </select>
-      <button className='ql-bold'></button>
-      <button className='ql-italic'></button>
+      <button type='button' className='ql-bold'></button>
+      <button type='button' className='ql-italic'></button>
       <select className='ql-color'>
         <option value='red'></option>
         <option value='green'></option>
@@ -23,7 +24,7 @@ const Toolbar = () => {
         <option value='#d0d1d2'></option>
         <option selected></option>
       </select>
-      <button className='ql-insertStar'>
+      <button type='button' className='ql-insertStar'>
         <CustomButton />
       </button>
     </div>

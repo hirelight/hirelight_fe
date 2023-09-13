@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
+import Head from 'next/head';
+
 import styles from './forgot-password.module.scss';
 import ForgotPasswordForm from './ForgotPasswordForm';
-import Head from 'next/head';
 import ChangePassword from './ChangePassword';
 import EmailSent from './EmailSent';
 

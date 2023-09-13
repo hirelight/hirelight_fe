@@ -1,6 +1,7 @@
 import React from 'react';
-import NewJobHeader from '../components/NewJobHeader';
 import { Metadata } from 'next';
+
+import NewJobHeader from '../components/NewJobHeader';
 
 export const metadata: Metadata = {
   title: 'Hirelight - Backend',
