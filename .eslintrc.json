@@ -19,7 +19,12 @@
       }
     ],
     "import/newline-after-import": 1,
-    "prettier/prettier": "warn",
+    "prettier/prettier": [
+      "warn",
+      {
+        "endOfLine": "auto"
+      }
+    ],
     "no-console": "warn"
   }
 }
