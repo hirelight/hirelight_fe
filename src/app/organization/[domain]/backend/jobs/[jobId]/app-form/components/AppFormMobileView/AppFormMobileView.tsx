@@ -4,6 +4,8 @@ import React from 'react';
 
 import styles from './AppFormMobileView.module.scss';
 import { useAppSelector } from '@/redux/reduxHooks';
+import { TrashIcon } from '@heroicons/react/24/outline';
+import AppFormMobileSection from './AppFormMobileSection';
 
 const AppFormMobileView = () => {
   const [show, setShow] = React.useState(false);
@@ -40,7 +42,7 @@ const AppFormMobileView = () => {
                   Hirelight
                 </h1>
                 <h2 className='text-xl text-neutral-800 font-medium'>
-                  Job title
+                  {job.title || 'Job title'}
                 </h2>
               </div>
               <div className='w-full drop-shadow-md bg-white'>
@@ -51,7 +53,7 @@ const AppFormMobileView = () => {
                   </span>
                 </div>
               </div>
-              <div className='bg-slate-200 h-full'></div>
+              <AppFormMobileSection />
             </div>
           </div>
         </div>

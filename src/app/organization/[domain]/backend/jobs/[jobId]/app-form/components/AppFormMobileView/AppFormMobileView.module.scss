@@ -44,6 +44,7 @@
   height: 100%;
   width: 100%;
   overflow-y: auto;
+  @apply bg-slate-200;
   /* width */
   &::-webkit-scrollbar {
     width: 12px;
