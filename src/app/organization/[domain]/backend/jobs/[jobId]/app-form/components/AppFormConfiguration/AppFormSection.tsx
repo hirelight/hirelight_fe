@@ -3,15 +3,11 @@
 import React from 'react';
 import styles from './AppFormSection.module.scss';
 import AppFormSectionField from './AppFormSectionField';
-
-interface IAppFormSectionField {
-  label: string;
-  options: string[];
-}
+import { EAppFormOption, IAppFormFields } from '@/interfaces';
 
 interface IAppFormSection {
   title: string;
-  fields: IAppFormSectionField[];
+  fields: IAppFormFields[];
 }
 
 const AppFormSection = ({ title, fields }: IAppFormSection) => {
@@ -26,7 +22,11 @@ const AppFormSection = ({ title, fields }: IAppFormSection) => {
             key={field.label}
             className='border-b last-of-type:border-none border-gray-300'
           >
-            <AppFormSectionField label={field.label} options={field.options} />
+            <AppFormSectionField
+              sectionTitle={title}
+              label={field.label}
+              options={field.options}
+            />
           </li>
         ))}
       </ul>
