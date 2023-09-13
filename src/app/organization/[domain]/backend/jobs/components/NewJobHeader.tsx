@@ -47,6 +47,7 @@ const NewJobHeader = ({}: INewJobHeader) => {
         <div className='grid grid-cols-4 gap-2'>
           <div className='flex items-start justify-between after:content-[""] after:h-4/5 after:w-[1px] after:bg-gray-400 after:ml-2 after:self-center'>
             <button
+              type='button'
               onClick={jobId ? () => router.push('edit') : () => {}}
               className={`${styles.section__wrapper} ${
                 pathname.includes('edit') || pathname.includes('jobs/new')

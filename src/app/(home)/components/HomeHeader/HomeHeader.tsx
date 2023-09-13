@@ -47,7 +47,10 @@ const HomeHeader = () => {
         </ul>
       </nav>
       <div className='hidden lg:flex gap-4'>
-        <button className='relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-base font-medium text-gray-900 rounded-full group bg-gradient-to-br from-cyan-600 to-blue-700 group-hover:from-cyan-600 group-hover:to-blue-700 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800'>
+        <button
+          type='button'
+          className='relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-base font-medium text-gray-900 rounded-full group bg-gradient-to-br from-cyan-600 to-blue-700 group-hover:from-cyan-600 group-hover:to-blue-700 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800'
+        >
           <span className='relative px-6 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-full group-hover:bg-opacity-0'>
             Sign in
           </span>

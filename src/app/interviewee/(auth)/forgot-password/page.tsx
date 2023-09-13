@@ -51,6 +51,7 @@ const ForgotPassword = () => {
           </div>
           <button
             ref={backBtnRef}
+            type='button'
             className={`opacity-0 absolute left-2 top-1/2 -translate-y-1/2 `}
             disabled={stage <= 0}
             onClick={() => swipeRight()}

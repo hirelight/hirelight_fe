@@ -30,6 +30,7 @@ const jobSlice = createSlice({
     setJob: (state, action: PayloadAction<ISetJob>) => {
       state.data = action.payload;
     },
+    deleteJob: (state, action) => {},
   },
 });
 

@@ -64,7 +64,7 @@ const JobCard = ({
           >
             Publish
           </button>
-          <button className='group'>
+          <button type='button' className='group'>
             <EllipsisVertical className='w-5 h-5 group-hover:w-6 group-hover:h-6 transition-all' />
           </button>
         </div>

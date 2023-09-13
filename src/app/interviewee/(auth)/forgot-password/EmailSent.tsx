@@ -18,7 +18,9 @@ const EmailSent = ({ onSwipe, stage }: any) => {
         className='w-60 h-auto object-contain my-2'
       />
       <p className='text-sm text-gray-500'>Link is available in 150 seconds</p>
-      <button onClick={() => onSwipe()}>Next</button>
+      <button type='button' onClick={() => onSwipe()}>
+        Next
+      </button>
     </div>
   );
 };

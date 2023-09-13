@@ -93,7 +93,10 @@ const CustomerReview = () => {
             See Reviews on app store
           </button>
 
-          <button className='flex items-center gap-1 group font-medium hover:font-semibold'>
+          <button
+            type='button'
+            className='flex items-center gap-1 group font-medium hover:font-semibold'
+          >
             <div className='text-blue-500 group-hover:text-blue-800'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'

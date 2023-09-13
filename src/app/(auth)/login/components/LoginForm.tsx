@@ -14,13 +14,13 @@ const LoginForm = () => {
     <form onSubmit={handleLogin}>
       <div className='min-w-[360px] min-h-[400px] flex flex-col gap-4 bg-white border border-gray-300 rounded-md p-6 text-center'>
         <h1 className='text-2xl mb-5 text-slate-700'>Sign in to Hirelight</h1>
-        <button className={styles.button__signin__with}>
+        <button type='button' className={styles.button__signin__with}>
           Sign in with Google
         </button>
-        <button className={styles.button__signin__with}>
+        <button type='button' className={styles.button__signin__with}>
           Sign in with Microsoft
         </button>
-        <button className={styles.button__signin__with}>
+        <button type='button' className={styles.button__signin__with}>
           Sign in with LinkedIn
         </button>
         <div className='flex items-center justify-between gap-2'>

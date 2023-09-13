@@ -40,8 +40,12 @@ const appFormSlice = createSlice({
         return item;
       });
     },
+
+    clearAppForm: (state, action) => {
+      state = initialState;
+    },
   },
 });
 
-export const { setField } = appFormSlice.actions;
+export const { setField, clearAppForm } = appFormSlice.actions;
 export default appFormSlice.reducer;

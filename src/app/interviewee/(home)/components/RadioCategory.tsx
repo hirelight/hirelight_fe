@@ -18,6 +18,7 @@ const RadioCategory = ({ title, type, options, onChange }: IRadioCategory) => {
     <div className='relative group lg:mb-6'>
       {title && (
         <button
+          type='button'
           className='flex items-center gap-1 text-base peer cursor-pointer border border-slate-300 px-4 py-1 rounded-full whitespace-nowrap lg:block lg:mb-4 lg:px-0 lg:py-0 lg:cursor-default lg:border-none'
           onClick={() => setIsShow(!isShow)}
         >

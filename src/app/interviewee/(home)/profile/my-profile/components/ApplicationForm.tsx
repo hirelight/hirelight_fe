@@ -174,7 +174,7 @@ const ApplicationForm = () => {
               <span className='max-w-[70%] text-ellipsis whitespace-nowrap overflow-hidden'>
                 {fileName}
               </span>
-              <button onClick={() => setFileName('')}>
+              <button type='button' onClick={() => setFileName('')}>
                 <CloseIcon className='w-4 h-4' />
               </button>
             </div>

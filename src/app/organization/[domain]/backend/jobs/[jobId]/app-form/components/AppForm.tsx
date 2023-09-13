@@ -2,6 +2,7 @@ import React from 'react';
 import AppFormConfiguration from './AppFormConfiguration/AppFormConfiguration';
 import AppFormMobileView from './AppFormMobileView/AppFormMobileView';
 import { ButtonOutline } from '@/components';
+import AppFormFooter from './AppFormFooter/AppFormFooter';
 
 const AppForm = () => {
   return (
@@ -10,9 +11,7 @@ const AppForm = () => {
         <AppFormConfiguration />
         <AppFormMobileView />
       </div>
-      <div className='w-full bg-white px-3 py-6 border-t border-gray-300 rounded-bl-lg rounded-br-lg relative z-[2]'>
-        <ButtonOutline>Save draft</ButtonOutline>
-      </div>
+      <AppFormFooter />
     </form>
   );
 };
