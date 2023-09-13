@@ -1,5 +1,6 @@
 {
-  "extends": "next/core-web-vitals",
+  "extends": ["next", "next/core-web-vitals", "prettier"],
+  "plugins": ["prettier"],
   "rules": {
     "react/button-has-type": "error",
     "react/react-in-jsx-scope": "off",
@@ -17,6 +18,8 @@
         "newlines-between": "always"
       }
     ],
-    "import/newline-after-import": 1
+    "import/newline-after-import": 1,
+    "prettier/prettier": "warn",
+    "no-console": "warn"
   }
 }
