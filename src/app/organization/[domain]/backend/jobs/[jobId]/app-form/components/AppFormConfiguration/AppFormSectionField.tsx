@@ -2,16 +2,39 @@
 
 import React from 'react';
 import styles from './AppFormSectionField.module.scss';
+import { EAppFormOption } from '@/interfaces';
+import { useAppDispatch } from '@/redux/reduxHooks';
+import { setField } from '@/redux/slices/app-form.slice';
 
 interface IAppFormSectionField {
+  sectionTitle: string;
   label: string;
-  options: string[];
+  options: EAppFormOption[];
 }
 
-const AppFormSectionField = ({ label, options }: IAppFormSectionField) => {
+const AppFormSectionField = ({
+  sectionTitle,
+  label,
+  options,
+}: IAppFormSectionField) => {
   const [selected, setSelected] = React.useState(
     options[Math.floor(options.length / 2)]
   );
+  const dispatch = useAppDispatch();
+
+  const handleSelectType = (option: EAppFormOption) => {
+    setSelected(option);
+    setTimeout(() => {
+      dispatch(
+        setField({
+          sectionTitle: sectionTitle,
+          label,
+          option,
+        })
+      );
+    }, 500);
+  };
+
   return (
     <div className={`pt-3 pb-4 flex justify-between items-center `}>
       <span className=''>{label}</span>
@@ -23,7 +46,7 @@ const AppFormSectionField = ({ label, options }: IAppFormSectionField) => {
             className={`${styles.option__wrapper} ${
               selected === option ? styles.active : ''
             }`}
-            onClick={() => setSelected(option)}
+            onClick={handleSelectType.bind(null, option)}
           >
             {option}
           </button>
