@@ -1,58 +1,11 @@
 import React from 'react';
 import AppFormSection from './AppFormSection';
-
-const personalInfoFields = [
-  {
-    label: 'Name',
-    options: ['Mandatory'],
-  },
-  {
-    label: 'Email',
-    options: ['Mandatory'],
-  },
-  {
-    label: 'Headline',
-    options: ['Mandatory', 'Optional', 'Off'],
-  },
-  {
-    label: 'Phone',
-    options: ['Mandatory', 'Optional', 'Off'],
-  },
-  {
-    label: 'Address',
-    options: ['Mandatory', 'Optional', 'Off'],
-  },
-  {
-    label: 'Photo',
-    options: ['Mandatory', 'Optional', 'Off'],
-  },
-];
-
-const profileFields = [
-  {
-    label: 'Education',
-    options: ['Optional', 'Off'],
-  },
-  {
-    label: 'Experience',
-    options: ['Optional', 'Off'],
-  },
-  {
-    label: 'Summary',
-    options: ['Mandatory', 'Optional', 'Off'],
-  },
-  {
-    label: 'Resume',
-    options: ['Mandatory', 'Optional', 'Off'],
-  },
-];
-
-const detailsFields = [
-  {
-    label: 'Cover letter',
-    options: ['Mandatory', 'Optional', 'Off'],
-  },
-];
+import { EAppFormOption, IAppFormFields } from '@/interfaces';
+import {
+  detailsFields,
+  personalInfoFields,
+  profileFields,
+} from '@/utils/shared/initialDatas';
 
 const AppFormConfiguration = () => {
   return (
