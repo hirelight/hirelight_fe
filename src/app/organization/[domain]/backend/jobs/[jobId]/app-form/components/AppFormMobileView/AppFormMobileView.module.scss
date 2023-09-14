@@ -1,63 +1,64 @@
 .wrapper {
-  flex: 1 1 0%;
-  flex-shrink: 0;
-  //   padding: 0.75rem 1rem;
+    flex: 1 1 0%;
+    flex-shrink: 0;
+    //   padding: 0.75rem 1rem;
 }
 
 .container {
-  position: relative;
-  height: 840px;
-  width: 406px;
-  padding: 22px 20px 24px;
-  border-radius: 64px;
-  margin: 0 auto;
-  box-shadow: 0 3px 10px -4px rgba(51, 62, 73, 0.18),
-    0 6px 17px 2px rgba(51, 62, 73, 0.08);
-  &::before {
-    content: '';
-    display: block;
-    width: 426px;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: -10px;
-    background-position: 0 0;
-    background-size: 426px 840px;
-    background-repeat: no-repeat;
-    background-image: url('../../../../../../../../../../public/images/mobile-frame.png');
-    pointer-events: none;
-    opacity: 1;
-    z-index: 2;
-  }
+    position: relative;
+    height: 840px;
+    width: 406px;
+    padding: 22px 20px 24px;
+    border-radius: 64px;
+    margin: 0 auto;
+    box-shadow:
+        0 3px 10px -4px rgba(51, 62, 73, 0.18),
+        0 6px 17px 2px rgba(51, 62, 73, 0.08);
+    &::before {
+        content: "";
+        display: block;
+        width: 426px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: -10px;
+        background-position: 0 0;
+        background-size: 426px 840px;
+        background-repeat: no-repeat;
+        background-image: url("../../../../../../../../../../public/images/mobile-frame.png");
+        pointer-events: none;
+        opacity: 1;
+        z-index: 2;
+    }
 }
 
 .preview__wrapper {
-  height: 100%;
-  width: 100%;
-  background-color: white;
-  overflow: hidden;
-  padding-top: 33px;
-  border-radius: 40px;
+    height: 100%;
+    width: 100%;
+    background-color: white;
+    overflow: hidden;
+    padding-top: 33px;
+    border-radius: 40px;
 }
 
 .preview__container {
-  height: 100%;
-  width: 100%;
-  overflow-y: auto;
-  @apply bg-slate-200;
-  /* width */
-  &::-webkit-scrollbar {
-    width: 12px;
-  }
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    @apply bg-slate-200;
+    /* width */
+    &::-webkit-scrollbar {
+        width: 12px;
+    }
 
-  /* Track */
-  &::-webkit-scrollbar-track {
-    background: rgb(222, 222, 222);
-  }
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: rgb(222, 222, 222);
+    }
 
-  /* Handle */
-  &::-webkit-scrollbar-thumb {
-    background: rgb(151, 151, 151);
-    border-radius: 12px;
-  }
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: rgb(151, 151, 151);
+        border-radius: 12px;
+    }
 }
