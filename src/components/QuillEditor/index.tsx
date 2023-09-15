@@ -25,7 +25,7 @@ const QuillEditor = ({
     className = "",
 }: IQuillEditor) => {
     const wrapperRef = useOutsideClick<HTMLDivElement>(
-        () => resizeRef.current?.removeAttribute("style")
+        () => toolbarRef.current?.removeAttribute("style")
     );
     const editorRef = React.useRef<HTMLDivElement>(null);
     const quillInstance = React.useRef<Quill | null>(null);

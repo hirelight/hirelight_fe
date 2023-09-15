@@ -65,7 +65,7 @@ const AppFormMobileSection = () => {
                             .map(field => {
                                 if (field.label.toLowerCase() === "name") {
                                     return (
-                                        <>
+                                        <React.Fragment key={field.label}>
                                             {inputFieldOnType({
                                                 label: "First name",
                                                 selectedOption:
@@ -78,7 +78,7 @@ const AppFormMobileSection = () => {
                                                     field.selectedOption,
                                                 inputType: "text",
                                             })}
-                                        </>
+                                        </React.Fragment>
                                     );
                                 }
 

@@ -1,7 +1,11 @@
 "use client";
 
 import React from "react";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import {
+    DevicePhoneMobileIcon,
+    EyeSlashIcon,
+    TrashIcon,
+} from "@heroicons/react/24/solid";
 
 import { useAppSelector } from "@/redux/reduxHooks";
 
@@ -18,7 +22,7 @@ const AppFormMobileView = () => {
                 className="block absolute top-4 right-4 lg:hidden peer"
                 onClick={() => setShow(true)}
             >
-                See
+                <DevicePhoneMobileIcon className="h-6 w-auto text-neutral-700" />
             </button>
 
             <div
@@ -33,7 +37,7 @@ const AppFormMobileView = () => {
                     className="lg:hidden absolute top-4 right-4"
                     onClick={() => setShow(false)}
                 >
-                    Hide
+                    <EyeSlashIcon className="w-6 h-auto text-neutral-700" />
                 </button>
                 <div className={styles.container}>
                     <div className={styles.preview__wrapper}>
