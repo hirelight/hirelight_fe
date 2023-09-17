@@ -1,2 +1,1 @@
-declare module '@heroicons/*';
-declare module '*.png';
+declare module "@heroicons/*";
