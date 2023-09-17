@@ -20,7 +20,9 @@ export default async function middleware(req: NextRequest) {
     // .replace('.localhost:3000', `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
     // Get the pathname of the request (e.g. /, /about, /blog/first-post)
     const path = url.pathname;
-    console.log(hostname, url, path);
+    console.log("url: ", url);
+    console.log("hostname: ", hostname);
+    console.log("path: ", path);
     // rewrites for app pages
     // if (hostname == `app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
     //   const session = localStorage.getItem('token');
