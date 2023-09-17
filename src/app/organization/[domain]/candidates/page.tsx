@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const OrganizationCandidates = () => {
-  return <div>OrganizationCandidates</div>;
+    return <div>OrganizationCandidates</div>;
 };
 
 export default OrganizationCandidates;

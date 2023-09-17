@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 const IntervieweeProfileChangePassword = () => {
-  return <div>IntervieweeProfileChangePassword</div>;
+    return <div>IntervieweeProfileChangePassword</div>;
 };
 
 export default IntervieweeProfileChangePassword;

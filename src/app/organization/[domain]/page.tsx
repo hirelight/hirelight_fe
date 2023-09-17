@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import React from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 const DomainPage = () => {
-  const router = useRouter();
-  const pathname = usePathname();
-  const hostname = window.location.hostname;
+    const router = useRouter();
+    const pathname = usePathname();
+    const hostname = window.location.hostname;
 
-  React.useEffect(() => {
-    router.push(`backend`);
-  }, [router]);
+    React.useEffect(() => {
+        router.push(`backend`);
+    }, [router]);
 
-  return null;
+    return null;
 };
 
 export default DomainPage;

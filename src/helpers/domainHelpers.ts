@@ -1,3 +1,3 @@
 export async function getSubdomainPaths(domain: string) {
-  return domain.split('/')[2];
+    return domain.split("/")[2];
 }

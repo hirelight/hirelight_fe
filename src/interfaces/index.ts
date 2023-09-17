@@ -1,2 +1,2 @@
-export * from './app-form.interface';
-export * from './job.interface';
+export * from "./app-form.interface";
+export * from "./job.interface";

@@ -1,38 +1,38 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { ISetJob, IJob, IJobSlice } from '@/interfaces/job.interface';
+import { ISetJob, IJob, IJobSlice } from "@/interfaces/job.interface";
 
 export interface IJobSliceInitialState {
-  data: IJobSlice;
-  loading: boolean;
+    data: IJobSlice;
+    loading: boolean;
 }
 
 const initialState: IJobSliceInitialState = {
-  data: {
-    title: '',
-    location: '',
-    description: {
-      description: '',
-      requirements: '',
-      benefits: '',
+    data: {
+        title: "",
+        location: "",
+        description: {
+            description: "",
+            requirements: "",
+            benefits: "",
+        },
+        annualSalary: {
+            from: "",
+            to: "",
+        },
     },
-    annualSalary: {
-      from: '',
-      to: '',
-    },
-  },
-  loading: false,
+    loading: false,
 };
 
 const jobSlice = createSlice({
-  name: 'job',
-  initialState,
-  reducers: {
-    setJob: (state, action: PayloadAction<ISetJob>) => {
-      state.data = action.payload;
+    name: "job",
+    initialState,
+    reducers: {
+        setJob: (state, action: PayloadAction<ISetJob>) => {
+            state.data = action.payload;
+        },
+        deleteJob: (state, action) => {},
     },
-    deleteJob: (state, action) => {},
-  },
 });
 
 export const { setJob } = jobSlice.actions;

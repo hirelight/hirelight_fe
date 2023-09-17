@@ -1,12 +1,12 @@
-import { Metadata } from 'next';
-import React from 'react';
+import { Metadata } from "next";
+import React from "react";
 
 export const metadata: Metadata = {
-  title: 'Calendar',
+    title: "Calendar",
 };
 
 const OrganizationCalendar = () => {
-  return <div>OrganizationCalendar</div>;
+    return <div>OrganizationCalendar</div>;
 };
 
 export default OrganizationCalendar;
