@@ -10,9 +10,9 @@ export const metadata: Metadata = {
 
 const HiringPipelineMembers = () => {
     return (
-        <div className="w-full bg-white shadow-lg">
+        <div className="w-full bg-white shadow-lg rounded-md">
             <div className="p-6">
-                <h1 className="text-xl font-medium text-neutral-800 flex items-center mb-8">
+                <h1 className="text-lg font-medium text-neutral-800 flex items-center mb-8">
                     Team members
                     <span className="relative group">
                         <QuestionMarkCircleIcon className="w-6 h-6 ml-2 text-neutral-400 cursor-pointer" />

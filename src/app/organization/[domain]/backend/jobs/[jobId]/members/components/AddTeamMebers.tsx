@@ -81,9 +81,9 @@ const AddTeamMebers = () => {
                         />
                     </div>
                     <div>
-                        <Button className="w-fit">Add to team</Button>
+                        <Button>Add to team</Button>
                     </div>
-                    <ButtonOutline className="ml-auto w-fit">
+                    <ButtonOutline className="ml-auto">
                         Invite a new member
                     </ButtonOutline>
                 </div>
