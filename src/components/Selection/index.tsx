@@ -42,9 +42,10 @@ const Selection = ({
     const [show, setShow] = React.useState(false);
     const [search, setSearch] = React.useState("");
     const [selected, setSelected] = React.useState(value);
-    const dropdownWrapperRef = useOutsideClick<HTMLDivElement>(() =>
-        setShow(false)
-    );
+    const dropdownWrapperRef = useOutsideClick<HTMLDivElement>(() => {
+        setShow(false);
+        dropdownRef.current!!.removeAttribute("style");
+    });
 
     const dropdownRef = React.useRef<HTMLDivElement>(null);
 
