@@ -219,3 +219,126 @@ export const teamMembers: {
             "https://robohash.org/etsimiliquenecessitatibus.png?size=50x50&set=set1",
     },
 ];
+
+export const pipelineStages: {
+    id: number;
+    stageName: string;
+    iconUrl: string;
+}[] = [
+    {
+        id: 1,
+        stageName: "Perth/Scone Airport",
+        iconUrl: "http://dummyimage.com/115x100.png/cc0000/ffffff",
+    },
+    {
+        id: 2,
+        stageName: "Orinduik Airport",
+        iconUrl: "http://dummyimage.com/122x100.png/cc0000/ffffff",
+    },
+    {
+        id: 3,
+        stageName: "Bram Fischer International Airport",
+        iconUrl: "http://dummyimage.com/142x100.png/cc0000/ffffff",
+    },
+    {
+        id: 4,
+        stageName: "Jérémie Airport",
+        iconUrl: "http://dummyimage.com/173x100.png/cc0000/ffffff",
+    },
+    {
+        id: 5,
+        stageName: "Beloyarskiy Airport",
+        iconUrl: "http://dummyimage.com/117x100.png/5fa2dd/ffffff",
+    },
+    {
+        id: 6,
+        stageName: "Menorca Airport",
+        iconUrl: "http://dummyimage.com/197x100.png/ff4444/ffffff",
+    },
+];
+
+export const pipelineTemplates = [
+    {
+        id: 0,
+        name: "Default pipeline",
+        pipelineStages: [
+            {
+                id: 1,
+                stageName: "Perth/Scone Airport",
+                iconUrl: "http://dummyimage.com/115x100.png/cc0000/ffffff",
+            },
+            {
+                id: 2,
+                stageName: "Orinduik Airport",
+                iconUrl: "http://dummyimage.com/122x100.png/cc0000/ffffff",
+            },
+            {
+                id: 3,
+                stageName: "Bram Fischer International Airport",
+                iconUrl: "http://dummyimage.com/142x100.png/cc0000/ffffff",
+            },
+            {
+                id: 4,
+                stageName: "Jérémie Airport",
+                iconUrl: "http://dummyimage.com/173x100.png/cc0000/ffffff",
+            },
+            {
+                id: 5,
+                stageName: "Beloyarskiy Airport",
+                iconUrl: "http://dummyimage.com/117x100.png/5fa2dd/ffffff",
+            },
+            {
+                id: 6,
+                stageName: "Menorca Airport",
+                iconUrl: "http://dummyimage.com/197x100.png/ff4444/ffffff",
+            },
+        ],
+    },
+    {
+        id: 1,
+        name: "Custom pipeline",
+        pipelineStages: [
+            {
+                id: 1,
+                stageName: "Perth/Scone Airport",
+                iconUrl: "http://dummyimage.com/115x100.png/cc0000/ffffff",
+            },
+            {
+                id: 2,
+                stageName: "Orinduik Airport",
+                iconUrl: "http://dummyimage.com/122x100.png/cc0000/ffffff",
+            },
+            {
+                id: 3,
+                stageName: "Bram Fischer International Airport",
+                iconUrl: "http://dummyimage.com/142x100.png/cc0000/ffffff",
+            },
+            {
+                id: 4,
+                stageName: "Jérémie Airport",
+                iconUrl: "http://dummyimage.com/173x100.png/cc0000/ffffff",
+            },
+        ],
+    },
+    {
+        id: 2,
+        name: "Frontend Pipeline",
+        pipelineStages: [
+            {
+                id: 1,
+                stageName: "Perth/Scone Airport",
+                iconUrl: "http://dummyimage.com/115x100.png/cc0000/ffffff",
+            },
+            {
+                id: 2,
+                stageName: "Orinduik Airport",
+                iconUrl: "http://dummyimage.com/122x100.png/cc0000/ffffff",
+            },
+            {
+                id: 3,
+                stageName: "Bram Fischer International Airport",
+                iconUrl: "http://dummyimage.com/142x100.png/cc0000/ffffff",
+            },
+        ],
+    },
+];
