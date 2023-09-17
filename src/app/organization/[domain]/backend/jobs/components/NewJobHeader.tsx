@@ -151,10 +151,10 @@ const NewJobHeader = ({}: INewJobHeader) => {
                             }`}
                         >
                             <Link
-                                href={`/backend/jobs/${jobId}/workflow/config-pipeline`}
+                                href={`/backend/jobs/${jobId}/pipeline/config-pipeline`}
                                 tabIndex={-1}
                                 className={`h-full ${
-                                    pathname.includes("workflow")
+                                    pathname.includes("pipeline")
                                         ? "pointer-events-none"
                                         : ""
                                 }`}
