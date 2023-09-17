@@ -69,7 +69,7 @@ const JobDetail = () => {
     return (
         <>
             <form className="flex" onSubmit={handleSubmitJobDetail}>
-                <div className="bg-white w-3/4 drop-shadow-md rounded-md">
+                <div className="bg-white w-3/4 shadow-md rounded-md">
                     {/* ***********************Job Title Section*********************************** */}
                     <section className="relative">
                         <h2 className={`${styles.form__section__title}`}>
