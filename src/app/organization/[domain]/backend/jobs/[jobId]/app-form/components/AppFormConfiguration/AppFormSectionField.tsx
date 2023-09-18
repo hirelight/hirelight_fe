@@ -38,7 +38,7 @@ const AppFormSectionField = ({
     };
 
     return (
-        <div className={`pt-3 pb-4 flex justify-between items-center `}>
+        <div className={`py-6 flex justify-between items-center `}>
             <span className="">{label}</span>
             <div className="flex gap-2">
                 {options.map(option => (

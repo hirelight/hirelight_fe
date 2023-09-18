@@ -8,6 +8,7 @@ import {
 } from "@heroicons/react/24/solid";
 
 import { useAppSelector } from "@/redux/reduxHooks";
+import { debounce } from "@/helpers/shareHelpers";
 
 import styles from "./AppFormMobileView.module.scss";
 import AppFormMobileSection from "./AppFormMobileSection";
@@ -15,6 +16,37 @@ import AppFormMobileSection from "./AppFormMobileSection";
 const AppFormMobileView = () => {
     const [show, setShow] = React.useState(false);
     const job = useAppSelector(state => state.job.data);
+    const containerRef = React.useRef<HTMLDivElement>(null);
+    const wrapperRef = React.useRef<HTMLDivElement>(null);
+    const [translateY, setTranslateY] = React.useState(0);
+
+    React.useEffect(() => {
+        document.addEventListener("scroll", e => {
+            if (containerRef.current) {
+                const rect = containerRef.current.getBoundingClientRect();
+                if (rect.top < 0) {
+                    let dy = rect.top * -1;
+                    if (
+                        dy + rect.height >
+                        wrapperRef.current!!.getBoundingClientRect().height
+                    ) {
+                        dy =
+                            dy -
+                            (dy +
+                                rect.height -
+                                wrapperRef.current!!.getBoundingClientRect()
+                                    .height);
+                    }
+                    debounce(() => setTranslateY(dy), 500)();
+                }
+            }
+        });
+
+        return () => {
+            document.removeEventListener("scroll", () => {});
+        };
+    }, []);
+
     return (
         <>
             <button
@@ -26,6 +58,7 @@ const AppFormMobileView = () => {
             </button>
 
             <div
+                ref={wrapperRef}
                 className={`${
                     styles.wrapper
                 } absolute top-0 right-0 bottom-0 bg-white w-0 p-0 overflow-hidden lg:w-auto lg:bg-transparent lg:block lg:relative transition-all ${
@@ -39,7 +72,13 @@ const AppFormMobileView = () => {
                 >
                     <EyeSlashIcon className="w-6 h-auto text-neutral-700" />
                 </button>
-                <div className={styles.container}>
+                <div
+                    ref={containerRef}
+                    className={styles.container}
+                    style={{
+                        transform: `translateY(${translateY}px)`,
+                    }}
+                >
                     <div className={styles.preview__wrapper}>
                         <div className={styles.preview__container}>
                             <div className="flex flex-col items-center py-6 border-b border-gray-300 bg-white">

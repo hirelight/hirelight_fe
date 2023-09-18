@@ -9,7 +9,7 @@ import AppFormDesktopSection from "./AppFormDesktopSection";
 const AppFormDesktopView = () => {
     const job = useAppSelector(state => state.job.data);
     return (
-        <div className="w-full max-h-[600px] shadow-lg overflow-y-auto">
+        <div className="w-full max-h-screen shadow-lg overflow-y-auto">
             <div className="bg-white flex flex-col gap-6 items-center py-16">
                 <h1 className="text-4xl font-medium text-blue_primary_800">
                     Hirelight

@@ -28,8 +28,8 @@ const AppForm = () => {
             {previewDesktop ? (
                 <AppFormDesktopView />
             ) : (
-                <form className="drop-shadow-lg relative">
-                    <div className="flex relative">
+                <form className="drop-shadow-lg">
+                    <div className="flex">
                         <AppFormConfiguration />
                         <AppFormMobileView />
                     </div>
