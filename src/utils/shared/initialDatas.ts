@@ -1,16 +1,18 @@
-import { EAppFormOption, IAppFormFields } from "@/interfaces";
+import { EAppFormOption, IAppFormField } from "@/interfaces";
 import { IAppFormState } from "@/redux/slices/app-form.slice";
 
-export const personalInfoFields: IAppFormFields[] = [
+export const personalInfoFields: IAppFormField[] = [
     {
         label: "Name",
         options: [EAppFormOption.MANDATORY],
         inputType: "text",
+        selectedOption: EAppFormOption.MANDATORY,
     },
     {
         label: "Email",
         options: [EAppFormOption.MANDATORY],
         inputType: "text",
+        selectedOption: EAppFormOption.MANDATORY,
     },
     {
         label: "Headline",
@@ -20,6 +22,7 @@ export const personalInfoFields: IAppFormFields[] = [
             EAppFormOption.OFF,
         ],
         inputType: "text",
+        selectedOption: EAppFormOption.OPTIONAL,
     },
     {
         label: "Phone",
@@ -29,6 +32,7 @@ export const personalInfoFields: IAppFormFields[] = [
             EAppFormOption.OFF,
         ],
         inputType: "tel",
+        selectedOption: EAppFormOption.OPTIONAL,
     },
     {
         label: "Address",
@@ -38,6 +42,7 @@ export const personalInfoFields: IAppFormFields[] = [
             EAppFormOption.OFF,
         ],
         inputType: "text",
+        selectedOption: EAppFormOption.OPTIONAL,
     },
     {
         label: "Photo",
@@ -47,19 +52,22 @@ export const personalInfoFields: IAppFormFields[] = [
             EAppFormOption.OFF,
         ],
         inputType: "file",
+        selectedOption: EAppFormOption.OPTIONAL,
     },
 ];
 
-export const profileFields: IAppFormFields[] = [
+export const profileFields: IAppFormField[] = [
     {
         label: "Education",
         options: [EAppFormOption.OPTIONAL, EAppFormOption.OFF],
         inputType: "add-file",
+        selectedOption: EAppFormOption.OPTIONAL,
     },
     {
         label: "Experience",
         options: [EAppFormOption.OPTIONAL, EAppFormOption.OFF],
         inputType: "add-file",
+        selectedOption: EAppFormOption.OPTIONAL,
     },
     {
         label: "Summary",
@@ -69,6 +77,7 @@ export const profileFields: IAppFormFields[] = [
             EAppFormOption.OFF,
         ],
         inputType: "text-area",
+        selectedOption: EAppFormOption.OPTIONAL,
     },
     {
         label: "Resume",
@@ -78,10 +87,11 @@ export const profileFields: IAppFormFields[] = [
             EAppFormOption.OFF,
         ],
         inputType: "file",
+        selectedOption: EAppFormOption.OPTIONAL,
     },
 ];
 
-export const detailsFields: IAppFormFields[] = [
+export const detailsFields: IAppFormField[] = [
     {
         label: "Cover letter",
         options: [
@@ -90,6 +100,7 @@ export const detailsFields: IAppFormFields[] = [
             EAppFormOption.OFF,
         ],
         inputType: "text-area",
+        selectedOption: EAppFormOption.OPTIONAL,
     },
 ];
 
@@ -97,30 +108,15 @@ export const appFormSections: IAppFormState = {
     datas: [
         {
             title: "Personal information",
-            fields: personalInfoFields.map(item => ({
-                label: item.label,
-                selectedOption:
-                    item.options[Math.floor(item.options.length / 2)],
-                inputType: item.inputType,
-            })),
+            fields: personalInfoFields,
         },
         {
             title: "Profile",
-            fields: profileFields.map(item => ({
-                label: item.label,
-                selectedOption:
-                    item.options[Math.floor(item.options.length / 2)],
-                inputType: item.inputType,
-            })),
+            fields: profileFields,
         },
         {
             title: "Details",
-            fields: detailsFields.map(item => ({
-                label: item.label,
-                selectedOption:
-                    item.options[Math.floor(item.options.length / 2)],
-                inputType: item.inputType,
-            })),
+            fields: detailsFields,
         },
     ],
 };

@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { EAppFormOption } from "@/interfaces";
+import { EAppFormOption, IAppFormField } from "@/interfaces";
 import { useAppDispatch } from "@/redux/reduxHooks";
 import { setField } from "@/redux/slices/app-form.slice";
 
@@ -10,18 +10,11 @@ import styles from "./AppFormSectionField.module.scss";
 
 interface IAppFormSectionField {
     sectionTitle: string;
-    label: string;
-    options: EAppFormOption[];
+    field: IAppFormField;
 }
 
-const AppFormSectionField = ({
-    sectionTitle,
-    label,
-    options,
-}: IAppFormSectionField) => {
-    const [selected, setSelected] = React.useState(
-        options[Math.floor(options.length / 2)]
-    );
+const AppFormSectionField = ({ sectionTitle, field }: IAppFormSectionField) => {
+    const [selected, setSelected] = React.useState(field.selectedOption);
     const dispatch = useAppDispatch();
 
     const handleSelectType = (option: EAppFormOption) => {
@@ -30,7 +23,7 @@ const AppFormSectionField = ({
             dispatch(
                 setField({
                     sectionTitle: sectionTitle,
-                    label,
+                    label: field.label,
                     option,
                 })
             );
@@ -39,9 +32,9 @@ const AppFormSectionField = ({
 
     return (
         <div className={`py-6 flex justify-between items-center `}>
-            <span className="">{label}</span>
+            <span className="">{field.label}</span>
             <div className="flex gap-2">
-                {options.map(option => (
+                {field.options.map(option => (
                     <button
                         key={option}
                         type="button"

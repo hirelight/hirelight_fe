@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM, { createPortal } from "react-dom";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
 
 import {
@@ -9,30 +9,31 @@ import {
     personalInfoFields,
     profileFields,
 } from "@/utils/shared/initialDatas";
+import Portal from "@/components/Portal";
+import { useAppSelector } from "@/redux/reduxHooks";
 
 import AppFormSection from "./AppFormSection";
 import AddQuestionModal from "./AddQuestionModal";
 
 const AppFormConfiguration = () => {
-    React.useEffect(() => {
-        const portalContainer = document.createElement("div"); // Create a container element
-        document.body.appendChild(portalContainer);
-        ReactDOM.createPortal(<AddQuestionModal />, portalContainer);
-
-        return () => {};
-    }, []);
-
+    const [show, setShow] = React.useState(false);
+    const appFormSections = useAppSelector(state => state.appForm.datas);
     return (
         <React.Fragment>
+            <Portal>
+                {show && <AddQuestionModal closeModal={() => setShow(false)} />}
+            </Portal>
             <div className="flex-1 flex-shrink-0 bg-white drop-shadow-lg pb-4 rounded-tr-md rounded-tl-md overflow-hidden">
                 <div>
-                    <AppFormSection
-                        title="Personal information"
-                        fields={personalInfoFields}
-                    />
-                    <AppFormSection title="Profile" fields={profileFields} />
-                    <AppFormSection title="Details" fields={detailsFields} />
-                    <div className="px-4">
+                    {appFormSections.map(section => (
+                        <AppFormSection
+                            key={section.title}
+                            title={section.title}
+                            fields={section.fields}
+                        />
+                    ))}
+
+                    <div className="px-4" onClick={() => setShow(true)}>
                         <button
                             type="button"
                             className="flex items-center text-blue_primary_800 hover:underline font-medium"

@@ -28,7 +28,8 @@ interface ISelection {
     value?: string;
     datas: string[];
     required?: boolean;
-    onChange: any;
+    onChange: (value: string) => void;
+    className?: string;
 }
 
 const Selection = ({
@@ -38,6 +39,7 @@ const Selection = ({
     value = "",
     required = false,
     onChange,
+    className,
 }: ISelection) => {
     const [show, setShow] = React.useState(false);
     const [search, setSearch] = React.useState("");
@@ -84,14 +86,17 @@ const Selection = ({
     };
 
     return (
-        <div ref={dropdownWrapperRef} className="min-w-[300px] w-full">
+        <div
+            ref={dropdownWrapperRef}
+            className={"min-w-[300px] w-full " + className}
+        >
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 {required && <span className="text-red-500 mr-1">*</span>}
                 {title}
             </label>
             <div className="relative ">
                 <label
-                    className="flex items-center justify-between mb-2 text-sm font-medium text-gray-900 dark:text-white px-5 py-2.5 cursor-pointer border border-gray-300 rounded-md"
+                    className="flex items-center justify-between mb-2 text-sm font-medium text-gray-900 dark:text-white p-2.5 cursor-pointer border border-gray-300 rounded-md"
                     onClick={expandSelection}
                 >
                     {selected ? selected : placeholder ? placeholder : title}
@@ -124,7 +129,7 @@ const Selection = ({
                             .map((item: any, index: number) => (
                                 <li
                                     key={index}
-                                    className="py-2.5 px-5 text-sm text-neutral-700 cursor-pointer hover:bg-slate-200"
+                                    className="p-2.5 text-sm text-neutral-700 cursor-pointer hover:bg-slate-200"
                                     onClick={handleSelectItem.bind(null, item)}
                                 >
                                     <span>{item}</span>

@@ -22,6 +22,38 @@ const appFormSlice = createSlice({
         setJob: (state, action) => {
             state.datas = action.payload;
         },
+        addSection: (state, action) => {
+            state.datas = state.datas.concat([action.payload]);
+        },
+
+        addField: (state, action) => {
+            state.datas = state.datas.map(item => {
+                if (
+                    item.title.toLowerCase() ===
+                    action.payload.title.toLowerCase()
+                ) {
+                    return {
+                        ...item,
+                        fields: [...item.fields, action.payload.field],
+                    };
+                }
+                return item;
+            });
+        },
+
+        removeField: (state, action) => {
+            state.datas = state.datas.map(item => {
+                if (item.title === action.payload.title) {
+                    return {
+                        ...item,
+                        fields: item.fields.filter(
+                            field => field.label === action.payload.field.label
+                        ),
+                    };
+                }
+                return item;
+            });
+        },
 
         setField: (state, action: PayloadAction<ISetAppFormField>) => {
             const { sectionTitle, label, option } = action.payload;
@@ -48,5 +80,6 @@ const appFormSlice = createSlice({
     },
 });
 
-export const { setField, clearAppForm } = appFormSlice.actions;
+export const { setField, clearAppForm, addSection, addField, removeField } =
+    appFormSlice.actions;
 export default appFormSlice.reducer;

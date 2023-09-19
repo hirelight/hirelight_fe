@@ -18,7 +18,7 @@ const AppFormFooter = () => {
             <ButtonOutline>Save draft</ButtonOutline>
             <button
                 type="button"
-                className="text-xs font-medium text-red-800"
+                className="text-xs font-medium text-red-600 hover:text-red-800 hover:font-semibold hover:underline"
                 onClick={handleDeleteJob}
             >
                 Delete job

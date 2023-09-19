@@ -12,14 +12,9 @@ export enum EAppFormOption {
     OFF = "Off",
 }
 
-export interface IAppFormFields {
-    label: string;
-    options: EAppFormOption[];
-    inputType: HTMLInputTypeAttribute;
-}
-
 export interface IAppFormField {
     label: string;
     selectedOption: EAppFormOption;
+    options: EAppFormOption[];
     inputType: "text-area" | "add-file" | HTMLInputTypeAttribute;
 }

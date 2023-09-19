@@ -1,7 +1,7 @@
 import { TrashIcon } from "@heroicons/react/24/solid";
 import React from "react";
 
-import { CustomInput, CustomTextArea } from "@/components";
+import { CustomFileInput, CustomInput, CustomTextArea } from "@/components";
 import { EAppFormOption, IAppFormField } from "@/interfaces";
 import { useAppSelector } from "@/redux/reduxHooks";
 
@@ -16,6 +16,19 @@ const AppFormMobileSection = () => {
                 return (
                     <div key={field.label} className=" mb-6">
                         <CustomTextArea
+                            title={field.label}
+                            type={field.inputType}
+                            required={
+                                field.selectedOption ===
+                                EAppFormOption.MANDATORY
+                            }
+                        />
+                    </div>
+                );
+            case "file":
+                return (
+                    <div key={field.label} className=" mb-6">
+                        <CustomFileInput
                             title={field.label}
                             type={field.inputType}
                             required={
@@ -62,21 +75,17 @@ const AppFormMobileSection = () => {
                                 field =>
                                     field.selectedOption !== EAppFormOption.OFF
                             )
-                            .map(field => {
+                            .map((field, index) => {
                                 if (field.label.toLowerCase() === "name") {
                                     return (
                                         <React.Fragment key={field.label}>
                                             {inputFieldOnType({
+                                                ...field,
                                                 label: "First name",
-                                                selectedOption:
-                                                    field.selectedOption,
-                                                inputType: "text",
                                             })}
                                             {inputFieldOnType({
+                                                ...field,
                                                 label: "Last name",
-                                                selectedOption:
-                                                    field.selectedOption,
-                                                inputType: "text",
                                             })}
                                         </React.Fragment>
                                     );

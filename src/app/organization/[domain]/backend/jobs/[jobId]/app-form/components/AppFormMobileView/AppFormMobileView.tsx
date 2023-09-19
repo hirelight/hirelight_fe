@@ -97,7 +97,7 @@ const AppFormMobileView = () => {
                                     </span>
                                 </div>
                             </div>
-                            <div className="pointer-events-none">
+                            <div>
                                 <AppFormMobileSection />
                             </div>
                         </div>

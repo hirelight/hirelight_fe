@@ -2,7 +2,7 @@ import React from "react";
 import { TrashIcon } from "@heroicons/react/24/solid";
 
 import { useAppSelector } from "@/redux/reduxHooks";
-import { CustomInput, CustomTextArea } from "@/components";
+import { CustomFileInput, CustomInput, CustomTextArea } from "@/components";
 import { EAppFormOption, IAppFormField } from "@/interfaces";
 
 const AppFormDesktopSection = () => {
@@ -14,6 +14,19 @@ const AppFormDesktopSection = () => {
                 return (
                     <div key={field.label} className=" mb-6">
                         <CustomTextArea
+                            title={field.label}
+                            type={field.inputType}
+                            required={
+                                field.selectedOption ===
+                                EAppFormOption.MANDATORY
+                            }
+                        />
+                    </div>
+                );
+            case "file":
+                return (
+                    <div key={field.label} className=" mb-6">
+                        <CustomFileInput
                             title={field.label}
                             type={field.inputType}
                             required={
@@ -68,16 +81,12 @@ const AppFormDesktopSection = () => {
                                             className="grid gap-6 md:grid-cols-2"
                                         >
                                             {inputFieldOnType({
+                                                ...field,
                                                 label: "First name",
-                                                selectedOption:
-                                                    field.selectedOption,
-                                                inputType: "text",
                                             })}
                                             {inputFieldOnType({
+                                                ...field,
                                                 label: "Last name",
-                                                selectedOption:
-                                                    field.selectedOption,
-                                                inputType: "text",
                                             })}
                                         </div>
                                     );

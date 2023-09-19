@@ -2,14 +2,14 @@
 
 import React from "react";
 
-import { EAppFormOption, IAppFormFields } from "@/interfaces";
+import { IAppFormField } from "@/interfaces";
 
 import styles from "./AppFormSection.module.scss";
 import AppFormSectionField from "./AppFormSectionField";
 
 interface IAppFormSection {
     title: string;
-    fields: IAppFormFields[];
+    fields: IAppFormField[];
 }
 
 const AppFormSection = ({ title, fields }: IAppFormSection) => {
@@ -26,8 +26,7 @@ const AppFormSection = ({ title, fields }: IAppFormSection) => {
                     >
                         <AppFormSectionField
                             sectionTitle={title}
-                            label={field.label}
-                            options={field.options}
+                            field={field}
                         />
                     </li>
                 ))}

@@ -59,6 +59,7 @@ export default function RootLayout({
                 className={`${inter.className} ${roboto_mono.className} ${montserrat.className} ${poppins.className}`}
             >
                 <ReduxProvider>{children}</ReduxProvider>
+                <div id="hirelight__portal"></div>
                 <Script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js" />
             </body>
         </html>
