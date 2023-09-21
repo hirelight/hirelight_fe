@@ -4,7 +4,6 @@ import React from "react";
 import Quill, { QuillOptionsStatic } from "quill";
 
 import { Bold, ImageIcon, Italic, LinkIcon, ListOL, ListUL } from "@/icons";
-import { debounce } from "@/helpers/shareHelpers";
 import { useOutsideClick } from "@/hooks/useClickOutside";
 
 import styles from "./QuillEditor.module.scss";
@@ -25,7 +24,9 @@ const QuillEditor = ({
     className = "",
 }: IQuillEditor) => {
     const wrapperRef = useOutsideClick<HTMLDivElement>(
-        () => toolbarRef.current?.removeAttribute("style")
+        theme === "bubble"
+            ? () => toolbarRef.current?.removeAttribute("style")
+            : () => {}
     );
     const editorRef = React.useRef<HTMLDivElement>(null);
     const quillInstance = React.useRef<Quill | null>(null);
@@ -123,12 +124,11 @@ const QuillEditor = ({
             if (quillInstance.current)
                 quillInstance.current.off("text-change", () => {});
         };
-    }, [customImageHandler, handleTextChange, placeholder, theme, value]);
+    }, [customImageHandler, handleTextChange, placeholder, value]);
 
     React.useEffect(() => {
         if (quillInstance.current) {
             const imgEls = editorRef.current?.querySelectorAll("img");
-            console.log(imgEls);
             imgEls?.forEach((imgEl: HTMLImageElement) => {
                 const {
                     x: editorX,
@@ -182,7 +182,15 @@ const QuillEditor = ({
                     quillInstance.current?.focus();
                 }}
             >
-                <div ref={toolbarRef} className={styles.toolbar__container}>
+                <div
+                    ref={toolbarRef}
+                    className={[
+                        theme === "bubble"
+                            ? "h-0 invisible"
+                            : "h-[42px] visible",
+                        styles.toolbar__container,
+                    ].join(" ")}
+                >
                     <ul className="h-full flex relative">
                         <li className="border-r border-gray-300 hover:bg-slate-200 cursor-pointer">
                             <button
@@ -273,6 +281,7 @@ const QuillEditor = ({
                     <div
                         ref={editorRef}
                         className={styles.editor__container}
+                        style={theme === "snow" ? { margin: "0px 0px" } : {}}
                         onClick={e => {
                             const { x, y } =
                                 e.currentTarget.getBoundingClientRect();
