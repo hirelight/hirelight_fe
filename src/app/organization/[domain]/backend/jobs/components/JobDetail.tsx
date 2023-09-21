@@ -170,6 +170,7 @@ const JobDetail = () => {
                                             Description
                                         </label>
                                         <QuillEditorNoSSR
+                                            theme="bubble"
                                             value={
                                                 formState.description
                                                     .description
@@ -199,6 +200,7 @@ const JobDetail = () => {
                     day.
                   </p> */}
                                         <QuillEditorNoSSR
+                                            theme="bubble"
                                             value={
                                                 formState.description
                                                     .requirements
@@ -228,6 +230,7 @@ const JobDetail = () => {
                     day.
                   </p> */}
                                         <QuillEditorNoSSR
+                                            theme="bubble"
                                             value={
                                                 formState.description.benefits
                                             }
