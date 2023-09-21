@@ -9,18 +9,22 @@ interface ICustomInput extends React.HTMLProps<HTMLInputElement> {
 const CustomInput = (props: ICustomInput) => {
     return (
         <div className="w-full">
-            <label
-                htmlFor={props.id}
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-                {props.required && <span className="text-red-500 mr-1">*</span>}
-                {props.title}
-                {!props.required && (
-                    <span className="text-neutral-500 text-sm ml-1">
-                        (Optional)
-                    </span>
-                )}
-            </label>
+            {props.title && (
+                <label
+                    htmlFor={props.id}
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                    {props.required && (
+                        <span className="text-red-500 mr-1">*</span>
+                    )}
+                    {props.title}
+                    {!props.required && (
+                        <span className="text-neutral-500 text-sm ml-1">
+                            (Optional)
+                        </span>
+                    )}
+                </label>
+            )}
             <input
                 {...props}
                 className={[

@@ -30,6 +30,7 @@ interface ISelection {
     required?: boolean;
     onChange: (value: string) => void;
     className?: string;
+    labelClassName?: string;
 }
 
 const Selection = ({
@@ -40,6 +41,7 @@ const Selection = ({
     required = false,
     onChange,
     className,
+    labelClassName,
 }: ISelection) => {
     const [show, setShow] = React.useState(false);
     const [search, setSearch] = React.useState("");
@@ -90,13 +92,17 @@ const Selection = ({
             ref={dropdownWrapperRef}
             className={"min-w-[300px] w-full " + className}
         >
-            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                {required && <span className="text-red-500 mr-1">*</span>}
-                {title}
-            </label>
+            {title && (
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    {required && <span className="text-red-500 mr-1">*</span>}
+                    {title}
+                </label>
+            )}
             <div className="relative ">
                 <label
-                    className="flex items-center justify-between mb-2 text-sm font-medium text-gray-900 dark:text-white p-2.5 cursor-pointer border border-gray-300 rounded-md"
+                    className={`flex items-center justify-between mb-2 text-sm font-medium  dark:text-white p-2.5 cursor-pointer border border-gray-300 rounded-md ${
+                        !selected ? "text-gray-600" : "text-gray-900"
+                    } ${labelClassName}`}
                     onClick={expandSelection}
                 >
                     {selected ? selected : placeholder ? placeholder : title}
@@ -129,7 +135,7 @@ const Selection = ({
                             .map((item: any, index: number) => (
                                 <li
                                     key={index}
-                                    className="p-2.5 text-sm text-neutral-700 cursor-pointer hover:bg-slate-200"
+                                    className={`p-2.5 text-sm cursor-pointer hover:bg-slate-200 text-neutral-700`}
                                     onClick={handleSelectItem.bind(null, item)}
                                 >
                                     <span>{item}</span>
