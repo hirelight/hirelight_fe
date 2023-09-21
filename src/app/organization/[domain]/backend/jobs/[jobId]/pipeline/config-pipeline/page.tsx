@@ -12,7 +12,7 @@ const PipelineConfigurationHome = () => {
     return (
         <div>
             <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium text-neutral-700 mb-4">
+                <h3 className="text-lg font-medium text-neutral-700 mb-4 px-6">
                     Default pipeline
                 </h3>
                 <Link
