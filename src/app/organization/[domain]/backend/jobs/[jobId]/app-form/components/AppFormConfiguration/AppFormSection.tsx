@@ -15,10 +15,10 @@ interface IAppFormSection {
 const AppFormSection = ({ title, fields }: IAppFormSection) => {
     return (
         <section>
-            <div className="px-4 py-4 mb-4 flex items-center bg-slate-300 bg-opacity-20 text-lg font-medium">
+            <div className="px-4 xl:px-6 py-4 mb-4 flex items-center bg-slate-300 bg-opacity-20 text-lg font-medium">
                 <h2>{title}</h2>
             </div>
-            <ul className="px-4 text-neutral-700 font-medium text-sm">
+            <ul className="px-4 xl:px-6 text-neutral-700 font-medium text-sm">
                 {fields.map(field => (
                     <li
                         key={field.label}
