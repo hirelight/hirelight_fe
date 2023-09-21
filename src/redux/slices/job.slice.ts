@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { ISetJob, IJob, IJobSlice } from "@/interfaces/job.interface";
+import { IJobDetail, INewJobDto } from "@/services/job/job.interface";
 
 export interface IJobSliceInitialState {
-    data: IJobSlice;
+    data: IJobDetail;
     loading: boolean;
 }
 
@@ -11,14 +11,10 @@ const initialState: IJobSliceInitialState = {
     data: {
         title: "",
         location: "",
-        description: {
+        content: {
             description: "",
             requirements: "",
             benefits: "",
-        },
-        annualSalary: {
-            from: "",
-            to: "",
         },
     },
     loading: false,
@@ -28,7 +24,7 @@ const jobSlice = createSlice({
     name: "job",
     initialState,
     reducers: {
-        setJob: (state, action: PayloadAction<ISetJob>) => {
+        setJob: (state, action: PayloadAction<INewJobDto>) => {
             state.data = action.payload;
         },
         deleteJob: (state, action) => {},

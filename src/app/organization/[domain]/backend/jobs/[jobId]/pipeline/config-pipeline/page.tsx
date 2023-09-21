@@ -2,6 +2,8 @@ import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
 
+import LoadingIndicator from "@/components/LoadingIndicator";
+
 import PipelineConfig from "./components/PipelineConfig";
 
 export const metadata: Metadata = {
@@ -24,6 +26,7 @@ const PipelineConfigurationHome = () => {
             </div>
             <div className="p-6 w-full bg-white shadow-lg rounded-md">
                 <PipelineConfig />
+                <LoadingIndicator className="w-32 h-32" />
             </div>
         </div>
     );

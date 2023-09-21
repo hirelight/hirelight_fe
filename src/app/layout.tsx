@@ -10,6 +10,9 @@ import {
     Roboto_Mono,
 } from "next/font/google";
 import Script from "next/script";
+import { ToastContainer } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 
 import ReduxProvider from "@/components/ReduxProvider/ReduxProvider";
 
@@ -24,23 +27,10 @@ const roboto_mono = Roboto_Mono({
     display: "swap",
     variable: "--font-roboto-mono",
 });
-// const publicSans = Public_Sans({
-//   subsets: ['latin'],
-//   display: 'swap',
-//   variable: '--font-public-sans',
-// });
-
-const montserrat = Montserrat({
+const publicSans = Public_Sans({
     subsets: ["latin"],
     display: "swap",
-    variable: "--font-montserrat",
-});
-
-const poppins = Poppins({
-    subsets: ["latin"],
-    display: "swap",
-    variable: "--font-poppins",
-    weight: ["300", "400", "500", "600", "700", "800"],
+    variable: "--font-public-sans",
 });
 
 export const metadata: Metadata = {
@@ -56,8 +46,20 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${inter.className} ${roboto_mono.className} ${montserrat.className} ${poppins.className}`}
+                className={`${inter.className} ${roboto_mono.className} ${publicSans.className}`}
             >
+                <ToastContainer
+                    position="top-center"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="light"
+                />
                 <ReduxProvider>{children}</ReduxProvider>
                 <div id="hirelight__portal"></div>
                 <Script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js" />

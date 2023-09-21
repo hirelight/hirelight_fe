@@ -67,6 +67,11 @@ const AddQuestionModal = ({ closeModal }: IAddQuestionModal) => {
                     inputType: "text",
                 });
                 break;
+            case "File upload":
+                setQuestionField({
+                    ...questionField,
+                    inputType: "file",
+                });
         }
     };
 

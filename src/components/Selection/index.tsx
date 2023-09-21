@@ -37,7 +37,7 @@ const Selection = ({
     title,
     placeholder = "Select...",
     datas,
-    value = "",
+    value,
     required = false,
     onChange,
     className,
@@ -45,12 +45,12 @@ const Selection = ({
 }: ISelection) => {
     const [show, setShow] = React.useState(false);
     const [search, setSearch] = React.useState("");
-    const [selected, setSelected] = React.useState(value);
+
+    const [selected, setSelected] = React.useState<string>("");
     const dropdownWrapperRef = useOutsideClick<HTMLDivElement>(() => {
         setShow(false);
         dropdownRef.current!!.removeAttribute("style");
     });
-
     const dropdownRef = React.useRef<HTMLDivElement>(null);
 
     const expandSelection = (
@@ -58,7 +58,7 @@ const Selection = ({
     ) => {
         setShow(!show);
         if (
-            e.currentTarget.getBoundingClientRect().bottom + 208 >
+            e.currentTarget.getBoundingClientRect().bottom + 252 >
                 window.innerHeight &&
             !show
         ) {
@@ -67,7 +67,7 @@ const Selection = ({
                 "top: auto;bottom: 100%;border-top-width: 1px;border-bottom: 0; margin-top: 0;margin-bottom: -0.25rem;border-radius: 0.375rem 0.375rem 0 0;flex-direction: column-reverse;height: auto;visibility: visible;"
             );
         } else if (
-            e.currentTarget.getBoundingClientRect().bottom + 208 <
+            e.currentTarget.getBoundingClientRect().bottom + 252 <
                 window.innerHeight &&
             !show
         ) {
@@ -87,20 +87,26 @@ const Selection = ({
         dropdownRef.current!!.removeAttribute("style");
     };
 
+    React.useEffect(() => {
+        if (value) {
+            setSelected(value);
+        }
+    }, [value]);
+
     return (
         <div
             ref={dropdownWrapperRef}
             className={"min-w-[300px] w-full " + className}
         >
             {title && (
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <label className="block mb-2 font-medium text-gray-900 dark:text-white">
                     {required && <span className="text-red-500 mr-1">*</span>}
                     {title}
                 </label>
             )}
             <div className="relative ">
                 <label
-                    className={`flex items-center justify-between mb-2 text-sm font-medium  dark:text-white p-2.5 cursor-pointer border border-gray-300 rounded-md ${
+                    className={`flex items-center justify-between mb-2 font-medium dark:text-white p-2.5 cursor-pointer border border-gray-300 rounded-md ${
                         !selected ? "text-gray-600" : "text-gray-900"
                     } ${labelClassName}`}
                     onClick={expandSelection}
@@ -124,7 +130,7 @@ const Selection = ({
                             type="text"
                             name="price"
                             id="price"
-                            className="block w-full rounded-md border-0 py-2.5 pl-8 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue_primary_700 sm:text-sm sm:leading-6"
+                            className="block w-full rounded-md border-0 py-2.5 pl-8 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue_primary_700 sm:sm:leading-6"
                             value={search}
                             onChange={e => setSearch(e.target.value)}
                         />
@@ -133,12 +139,17 @@ const Selection = ({
                         {["Select...", ...datas]
                             .filter(item => item.includes(search))
                             .map((item: any, index: number) => (
-                                <li
-                                    key={index}
-                                    className={`p-2.5 text-sm cursor-pointer hover:bg-slate-200 text-neutral-700`}
-                                    onClick={handleSelectItem.bind(null, item)}
-                                >
-                                    <span>{item}</span>
+                                <li key={index}>
+                                    <button
+                                        type="button"
+                                        className={`w-full text-left p-2.5 cursor-pointer hover:bg-slate-200 text-neutral-700`}
+                                        onClick={handleSelectItem.bind(
+                                            null,
+                                            item
+                                        )}
+                                    >
+                                        <span>{item}</span>
+                                    </button>
                                 </li>
                             ))}
                     </ul>

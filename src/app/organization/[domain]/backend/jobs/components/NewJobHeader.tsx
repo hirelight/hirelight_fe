@@ -30,7 +30,9 @@ const NewJobHeader = ({}: INewJobHeader) => {
         >
             <div className="max-w-screen-xl mx-auto py-5 px-4 xl:px-6 flex-shrink-0">
                 <div className="w-full flex items-center justify-between mb-4">
-                    <h4 className="text-2xl">{title ? title : "New Job"}</h4>
+                    <h4 className="text-2xl text-neutral-700 font-medium">
+                        {title ? title : "New Job"}
+                    </h4>
                     <div>
                         <button
                             type="button"

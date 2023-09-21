@@ -1,13 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import React from "react";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { toast } from "react-toastify";
 
 import { Selection } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setJob } from "@/redux/slices/job.slice";
-import { IJobSlice, ISetJob } from "@/interfaces/job.interface";
+import {
+    createNewJob,
+    getJobById,
+    updateJobDetail,
+} from "@/services/job/job.service";
 
 import styles from "./JobDetail.module.scss";
 import FormInput from "./FormInput";
@@ -32,39 +37,50 @@ const industries = [
     "Design",
 ];
 
-const JobDetail = () => {
+interface IJobDetailSection {}
+
+const JobDetailSection = ({}: IJobDetailSection) => {
     const pathname = usePathname();
     const router = useRouter();
+    const params = useParams();
 
     const dispatch = useAppDispatch();
     const job = useAppSelector(state => state.job.data);
 
-    const [formState, setFormState] = React.useState<ISetJob>(
-        job
-            ? job
-            : {
-                  title: "",
-                  location: "",
-                  description: {
-                      description: "",
-                      requirements: "",
-                      benefits: "",
-                  },
-                  annualSalary: {
-                      from: "",
-                      to: "",
-                  },
-              }
-    );
-
-    const handleSubmitJobDetail = (e: any) => {
+    const handleSubmitJobDetail = async (e: any) => {
         e.preventDefault();
-        if (pathname.includes("jobs/new")) {
-            console.log(formState);
-            dispatch(setJob(formState));
-            router.push("/backend/jobs/123/edit");
-        }
+        try {
+            if (pathname.includes("jobs/new")) {
+                const res = await createNewJob(job);
+                if (res.data.status === 200) {
+                    dispatch(setJob(job));
+                    router.push("/backend/jobs/123/edit");
+                }
+            } else {
+                if (job.id !== undefined) {
+                    const res = await updateJobDetail({ id: job.id, ...job });
+                    if (res.data.status === 200) {
+                        toast.success("Update successfully!");
+                        dispatch(setJob(res.data.data));
+                    }
+                }
+            }
+        } catch (error) {}
     };
+
+    React.useEffect(() => {
+        const fetchJobDetail = async () => {
+            if (params.jobId) {
+                try {
+                    const res = await getJobById(params.jobId as string);
+                    console.log(res);
+                    if (res.data.status === 200)
+                        dispatch(setJob(res.data.data));
+                } catch (error) {}
+            }
+        };
+        fetchJobDetail();
+    }, []);
 
     return (
         <>
@@ -84,17 +100,11 @@ const JobDetail = () => {
                                     type="text"
                                     placeholder="Example: Fullstack Developer"
                                     autoComplete="organization-title"
-                                    value={
-                                        job.title ? job.title : formState.title
-                                    }
+                                    value={job.title ? job.title : ""}
                                     onChange={e => {
-                                        setFormState({
-                                            ...formState,
-                                            title: e.target.value,
-                                        });
                                         dispatch(
                                             setJob({
-                                                ...formState,
+                                                ...job,
                                                 title: e.target.value,
                                             })
                                         );
@@ -126,17 +136,15 @@ const JobDetail = () => {
                                     type="text"
                                     placeholder="Example: District 7, Ho Chi Minh"
                                     autoComplete="street-address"
-                                    value={
-                                        job.location
-                                            ? job.location
-                                            : formState.location
-                                    }
-                                    onChange={e =>
-                                        setFormState({
-                                            ...formState,
-                                            location: e.target.value,
-                                        })
-                                    }
+                                    value={job?.location ? job.location : ""}
+                                    onChange={e => {
+                                        dispatch(
+                                            setJob({
+                                                ...job,
+                                                location: e.target.value,
+                                            })
+                                        );
+                                    }}
                                 />
                             </div>
                         </div>
@@ -171,21 +179,20 @@ const JobDetail = () => {
                                         </label>
                                         <QuillEditorNoSSR
                                             theme="bubble"
-                                            value={
-                                                formState.description
-                                                    .description
-                                            }
+                                            value={job.content.description}
                                             placeholder="Enter the job description here; include key areas of
                     responsibility and what the candidate might do on a typical
                     day."
                                             onChange={(value: string) => {
-                                                setFormState(prev => ({
-                                                    ...prev,
-                                                    description: {
-                                                        ...prev.description,
-                                                        description: value,
-                                                    },
-                                                }));
+                                                dispatch(
+                                                    setJob({
+                                                        ...job,
+                                                        content: {
+                                                            ...job.content,
+                                                            description: value,
+                                                        },
+                                                    })
+                                                );
                                             }}
                                             className="flex-1"
                                         />
@@ -194,28 +201,22 @@ const JobDetail = () => {
                                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                             Requirements
                                         </label>
-                                        {/* <p className='text-sm text-gray-600'>
-                    Enter the job description here; include key areas of
-                    responsibility and what the candidate might do on a typical
-                    day.
-                  </p> */}
                                         <QuillEditorNoSSR
                                             theme="bubble"
-                                            value={
-                                                formState.description
-                                                    .requirements
-                                            }
+                                            value={job.content.requirements}
                                             placeholder="Enter the job description here; include key areas of
                     responsibility and what the candidate might do on a typical
                     day."
                                             onChange={(value: string) => {
-                                                setFormState({
-                                                    ...formState,
-                                                    description: {
-                                                        ...formState.description,
-                                                        requirements: value,
-                                                    },
-                                                });
+                                                dispatch(
+                                                    setJob({
+                                                        ...job,
+                                                        content: {
+                                                            ...job.content,
+                                                            requirements: value,
+                                                        },
+                                                    })
+                                                );
                                             }}
                                             className="flex-1"
                                         />
@@ -224,28 +225,23 @@ const JobDetail = () => {
                                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                             Benefits
                                         </label>
-                                        {/* <p className='text-sm text-gray-600'>
-                    Enter the job description here; include key areas of
-                    responsibility and what the candidate might do on a typical
-                    day.
-                  </p> */}
                                         <QuillEditorNoSSR
                                             theme="bubble"
-                                            value={
-                                                formState.description.benefits
-                                            }
+                                            value={job.content.benefits}
                                             placeholder="Enter the job description here; include key areas of
                     responsibility and what the candidate might do on a typical
                     day."
-                                            onChange={(value: string) =>
-                                                setFormState({
-                                                    ...formState,
-                                                    description: {
-                                                        ...formState.description,
-                                                        benefits: value,
-                                                    },
-                                                })
-                                            }
+                                            onChange={(value: string) => {
+                                                dispatch(
+                                                    setJob({
+                                                        ...job,
+                                                        content: {
+                                                            ...job.content,
+                                                            benefits: value,
+                                                        },
+                                                    })
+                                                );
+                                            }}
                                             className="flex-1"
                                         />
                                     </div>
@@ -270,39 +266,6 @@ const JobDetail = () => {
                         </div>
                     </section>
 
-                    {/* ***********************Company industry and Job function Section*********************************** */}
-                    <section className="relative">
-                        <h2 className={`${styles.form__section__title}`}>
-                            Company industry and Job function
-                        </h2>
-                        <div className={`${styles.form__section__wrapper}`}>
-                            <div className="grid grid-cols-2 gap-8">
-                                <Selection
-                                    title="Company industry"
-                                    datas={industries}
-                                    value={job.industry ?? ""}
-                                    onChange={(value: string) =>
-                                        setFormState({
-                                            ...formState,
-                                            industry: value,
-                                        })
-                                    }
-                                />
-                                <Selection
-                                    title="Job function"
-                                    datas={industries}
-                                    value={job.jobFunction ?? ""}
-                                    onChange={(value: string) =>
-                                        setFormState({
-                                            ...formState,
-                                            jobFunction: value,
-                                        })
-                                    }
-                                />
-                            </div>
-                        </div>
-                    </section>
-
                     {/* ***********************Employment Details*********************************** */}
                     <section className="relative">
                         <h2 className={`${styles.form__section__title}`}>
@@ -313,58 +276,28 @@ const JobDetail = () => {
                                 <Selection
                                     title="Employment type"
                                     datas={industries}
-                                    value={job.employment?.type ?? ""}
-                                    onChange={(value: string) =>
-                                        setFormState({
-                                            ...formState,
-                                            employment: {
-                                                ...formState.employment,
-                                                type: value,
-                                            },
-                                        })
-                                    }
+                                    value={job.workModality}
+                                    onChange={(value: string) => {
+                                        dispatch(
+                                            setJob({
+                                                ...job,
+                                                workModality: value,
+                                            })
+                                        );
+                                    }}
                                 />
                                 <Selection
                                     title="Experience"
                                     datas={industries}
-                                    value={job.employment?.experience ?? ""}
-                                    onChange={(value: string) =>
-                                        setFormState({
-                                            ...formState,
-                                            employment: {
-                                                ...formState.employment,
+                                    value={job.experience}
+                                    onChange={(value: string) => {
+                                        dispatch(
+                                            setJob({
+                                                ...job,
                                                 experience: value,
-                                            },
-                                        })
-                                    }
-                                />
-                                <Selection
-                                    title="Education"
-                                    datas={industries}
-                                    value={job.employment?.education ?? ""}
-                                    onChange={(value: string) =>
-                                        setFormState({
-                                            ...formState,
-                                            employment: {
-                                                ...formState.employment,
-                                                education: value,
-                                            },
-                                        })
-                                    }
-                                />
-                                <Selection
-                                    title="Keywords"
-                                    datas={industries}
-                                    value={job.employment?.keywords ?? ""}
-                                    onChange={(value: string) =>
-                                        setFormState({
-                                            ...formState,
-                                            employment: {
-                                                ...formState.employment,
-                                                keywords: value,
-                                            },
-                                        })
-                                    }
+                                            })
+                                        );
+                                    }}
                                 />
                             </div>
                         </div>
@@ -381,51 +314,54 @@ const JobDetail = () => {
                                     title="From"
                                     id="annual-salary-from"
                                     type="text"
-                                    value={
-                                        job.annualSalary?.from ||
-                                        formState.annualSalary?.from
-                                    }
-                                    onChange={e =>
-                                        setFormState({
-                                            ...formState,
-                                            annualSalary: {
-                                                ...formState.annualSalary,
-                                                from: e.target.value,
-                                            },
-                                        })
+                                    // value={
+                                    //     job.annualSalary?.from ||
+                                    //     formState.annualSalary?.from
+                                    // }
+                                    onChange={
+                                        e => {}
+                                        // setFormState({
+                                        //     ...formState,
+                                        //     annualSalary: {
+                                        //         ...formState.annualSalary,
+                                        //         from: e.target.value,
+                                        //     },
+                                        // })
                                     }
                                 />
                                 <FormInput
                                     title="To"
                                     id="annual-salary-to"
                                     type="text"
-                                    value={
-                                        job.annualSalary?.to ||
-                                        formState.annualSalary?.to
-                                    }
-                                    onChange={e =>
-                                        setFormState({
-                                            ...formState,
-                                            annualSalary: {
-                                                ...formState.annualSalary,
-                                                to: e.target.value,
-                                            },
-                                        })
+                                    // value={
+                                    //     job.annualSalary?.to ||
+                                    //     formState.annualSalary?.to
+                                    // }
+                                    onChange={
+                                        e => {}
+                                        // setFormState({
+                                        //     ...formState,
+                                        //     annualSalary: {
+                                        //         ...formState.annualSalary,
+                                        //         to: e.target.value,
+                                        //     },
+                                        // })
                                     }
                                 />
                                 <div className="col-span-2">
                                     <Selection
                                         title="Currency"
                                         datas={industries}
-                                        value={job.annualSalary?.currency ?? ""}
-                                        onChange={(value: string) =>
-                                            setFormState({
-                                                ...formState,
-                                                annualSalary: {
-                                                    ...formState.annualSalary,
-                                                    currency: value,
-                                                },
-                                            })
+                                        // value={job.annualSalary?.currency ?? ""}
+                                        onChange={
+                                            (value: string) => {}
+                                            // setFormState({
+                                            //     ...formState,
+                                            //     annualSalary: {
+                                            //         ...formState.annualSalary,
+                                            //         currency: value,
+                                            //     },
+                                            // })
                                         }
                                     />
                                 </div>
@@ -456,4 +392,4 @@ const JobDetail = () => {
     );
 };
 
-export default JobDetail;
+export default JobDetailSection;
