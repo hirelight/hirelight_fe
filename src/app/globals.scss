@@ -14,7 +14,9 @@
 
 .ql-editor {
     font-family: inherit;
+    padding: 12px 16px;
 }
 
-.ql-blank::before {
+.ql-editor.ql-blank::before {
+    left: 16px;
 }
