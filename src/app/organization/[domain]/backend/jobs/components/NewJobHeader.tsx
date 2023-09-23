@@ -143,7 +143,7 @@ const NewJobHeader = ({}: INewJobHeader) => {
                     <div>
                         <div
                             className={`${styles.section__wrapper} ${
-                                pathname.includes("workflow")
+                                pathname.includes("pipeline")
                                     ? styles.active
                                     : ""
                             } ${
