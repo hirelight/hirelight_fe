@@ -1,14 +1,13 @@
 .quill__wrapper {
-    min-height: 100px;
     display: flex;
     flex-direction: column;
 }
 
 .editor__container {
-    margin: 0 -15px;
     cursor: pointer;
     flex-grow: 1;
     position: relative;
+    font-size: 14px;
     & .ql-editor.ql-blank::before {
         font-size: 32px;
     }

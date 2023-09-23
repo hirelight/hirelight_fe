@@ -2,11 +2,29 @@
 
 import React from "react";
 import Quill, { QuillOptionsStatic } from "quill";
+import { Inter, Public_Sans, Roboto_Mono } from "next/font/google";
 
 import { Bold, ImageIcon, Italic, LinkIcon, ListOL, ListUL } from "@/icons";
 import { useOutsideClick } from "@/hooks/useClickOutside";
 
 import styles from "./QuillEditor.module.scss";
+
+const inter = Inter({
+    subsets: ["latin"],
+    display: "swap",
+    variable: "--font-inter",
+});
+
+const roboto_mono = Roboto_Mono({
+    subsets: ["latin"],
+    display: "swap",
+    variable: "--font-roboto-mono",
+});
+const publicSans = Public_Sans({
+    subsets: ["latin"],
+    display: "swap",
+    variable: "--font-public-sans",
+});
 
 interface IQuillEditor {
     value?: string;
@@ -14,6 +32,7 @@ interface IQuillEditor {
     onChange: (content: string) => void;
     theme?: "snow" | "bubble";
     className?: string;
+    readOnly?: boolean;
 }
 
 const QuillEditor = ({
@@ -22,6 +41,7 @@ const QuillEditor = ({
     placeholder,
     onChange,
     className = "",
+    readOnly = false,
 }: IQuillEditor) => {
     const wrapperRef = useOutsideClick<HTMLDivElement>(
         theme === "bubble"
@@ -110,6 +130,7 @@ const QuillEditor = ({
                         },
                     },
                     placeholder: placeholder,
+                    readOnly,
                 };
                 const quill = new Quill(editorRef.current, options);
                 quillInstance.current = quill;
@@ -190,6 +211,9 @@ const QuillEditor = ({
                             : "h-[42px] visible",
                         styles.toolbar__container,
                     ].join(" ")}
+                    style={{
+                        display: !readOnly ? "block" : "none",
+                    }}
                 >
                     <ul className="h-full flex relative">
                         <li className="border-r border-gray-300 hover:bg-slate-200 cursor-pointer">
@@ -280,8 +304,17 @@ const QuillEditor = ({
                 <div className="relative">
                     <div
                         ref={editorRef}
-                        className={styles.editor__container}
-                        style={theme === "snow" ? { margin: "0px 0px" } : {}}
+                        className={[
+                            styles.editor__container,
+                            inter.className,
+                            roboto_mono.className,
+                            publicSans.className,
+                        ].join(" ")}
+                        style={
+                            theme === "snow"
+                                ? { margin: "0px 0px" }
+                                : { margin: "0px -16px" }
+                        }
                         onClick={e => {
                             const { x, y } =
                                 e.currentTarget.getBoundingClientRect();
