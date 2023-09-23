@@ -6,8 +6,14 @@ import {
     TrashIcon,
 } from "@heroicons/react/24/solid";
 import React from "react";
+import dynamic from "next/dynamic";
 
 import AddNewQuestionSection from "../../components/AddNewQuestionSection";
+
+const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
+    ssr: false,
+    loading: () => <p>Loading ...</p>,
+});
 
 interface IQuestionSection {
     data: {
@@ -81,9 +87,13 @@ const QuestionSection = ({ data, onUpdate }: IQuestionSection) => {
                             <span>{index + 1}</span>
                         </div>
                         <div className="flex-1 flex items-center justify-between gap-8 p-4">
-                            <p className="inline-block w-3/5">
-                                {question.description}
-                            </p>
+                            <div className="inline-block w-3/5">
+                                <QuillEditorNoSSR
+                                    value={question.description}
+                                    onChange={() => {}}
+                                    readOnly
+                                />
+                            </div>
                             <div className="flex-1 flex-shrink-0 flex items-center justify-end gap-2 w-fit ml-auto text-sm uppercase font-semibold whitespace-nowrap">
                                 <span className="py-1 px-2.5 rounded-full bg-green-200 text-green-700">
                                     {question.thinkLength}
