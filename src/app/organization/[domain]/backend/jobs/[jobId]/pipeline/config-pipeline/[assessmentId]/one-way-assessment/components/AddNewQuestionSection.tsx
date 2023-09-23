@@ -125,7 +125,18 @@ const AddNewQuestionSection = ({
                 <div className="min-w-[400px] flex-1 flex flex-shrink-0">
                     <QuillEditorNoSSR
                         placeholder={"Question number " + item}
-                        onChange={(value: string) => {}}
+                        onChange={(value: string) =>
+                            setQuestionSection(prev => ({
+                                ...prev,
+                                questions: prev.questions.map(i => {
+                                    if (i.id === item.id) {
+                                        return { ...item, description: value };
+                                    }
+
+                                    return i;
+                                }),
+                            }))
+                        }
                         value={item.description || ""}
                         className="flex-1 border border-slate-400 rounded-md overflow-hidden bg-white"
                     />
@@ -143,20 +154,38 @@ const AddNewQuestionSection = ({
                             "3 minutes",
                             "10 minutes",
                         ]}
-                        onChange={() => {}}
+                        onChange={value =>
+                            setQuestionSection({
+                                ...questionSection,
+                                questions: questionSection.questions.map(i => {
+                                    if (i.id === item.id) {
+                                        return { ...item, thinkLength: value };
+                                    }
+
+                                    return i;
+                                }),
+                            })
+                        }
                         labelClassName="bg-white"
-                        value={item.thinkLength || ""}
+                        value={item.thinkLength ? item.thinkLength : ""}
                     />
                     <Selection
                         title=""
-                        datas={[
-                            "3 minutes to answer",
-                            "10 minutes to answer",
-                            "30 minutes to answer",
-                        ]}
-                        onChange={() => {}}
+                        datas={["3", "10", "30"]}
                         labelClassName="bg-white"
-                        value={item.answerLength || ""}
+                        value={item.answerLength ? item.answerLength : ""}
+                        onChange={value =>
+                            setQuestionSection({
+                                ...questionSection,
+                                questions: questionSection.questions.map(i => {
+                                    if (i.id === item.id) {
+                                        return { ...item, answerLength: value };
+                                    }
+
+                                    return i;
+                                }),
+                            })
+                        }
                     />
                     <Selection
                         title=""
