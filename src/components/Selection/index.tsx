@@ -99,14 +99,14 @@ const Selection = ({
             className={"min-w-[300px] w-full " + className}
         >
             {title && (
-                <label className="block mb-2 font-medium text-gray-900 dark:text-white">
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                     {required && <span className="text-red-500 mr-1">*</span>}
                     {title}
                 </label>
             )}
             <div className="relative ">
                 <label
-                    className={`flex items-center justify-between mb-2 font-medium dark:text-white p-2.5 cursor-pointer border border-gray-300 rounded-md ${
+                    className={`flex items-center justify-between mb-2 font-medium dark:text-white p-2.5 cursor-pointer border border-gray-300 rounded-md text-sm ${
                         !selected ? "text-gray-600" : "text-gray-900"
                     } ${labelClassName}`}
                     onClick={expandSelection}
