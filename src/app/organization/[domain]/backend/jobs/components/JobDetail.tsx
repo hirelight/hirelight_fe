@@ -304,7 +304,7 @@ const JobDetailSection = ({}: IJobDetailSection) => {
                     </section>
 
                     {/* ***********************Annual salary*********************************** */}
-                    <section className="relative">
+                    {/* <section className="relative">
                         <h2 className={`${styles.form__section__title}`}>
                             Annual salary
                         </h2>
@@ -367,7 +367,7 @@ const JobDetailSection = ({}: IJobDetailSection) => {
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </section> */}
 
                     <div className="w-full h-8"></div>
 
