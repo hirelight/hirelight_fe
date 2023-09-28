@@ -271,10 +271,7 @@ const AddNewQuestionSection = ({
     };
 
     return (
-        <form
-            onSubmit={handleAddNewQuestion}
-            className="border border-gray-300 rounded-md"
-        >
+        <div className="border border-gray-300 rounded-md">
             <div className="border-b border-gray-300 p-4 text-xl text-neutral-700">
                 <h4>
                     {questionSection.topic
@@ -302,7 +299,7 @@ const AddNewQuestionSection = ({
                     className={`flex flex-col gap-[${padding}px] items-start relative transition-all duration-200`}
                     style={{
                         height: `${
-                            questionSection?.questions.length * (220 + 24)
+                            questionSection?.questions.length * (220 + 24) - 24
                         }px`,
                     }}
                     onMouseMove={handleMouseMove}
@@ -312,7 +309,7 @@ const AddNewQuestionSection = ({
                         let y = index * (itemHeight + padding);
                         let scale = 1;
 
-                        let isActive = index === selected && isPressing;
+                        let isActive = item.id === selected && isPressing;
                         if (isActive) {
                             x = mousePos.x;
                             y = mousePos.y;
@@ -334,6 +331,7 @@ const AddNewQuestionSection = ({
                                     transition: isActive
                                         ? ""
                                         : "transform 200ms ease-in-out",
+                                    height: `${itemHeight}px`,
                                 }}
                             >
                                 {QuestionItem(item, isActive, x, y)}
@@ -361,7 +359,7 @@ const AddNewQuestionSection = ({
             </div>
             <div className="border-t border-gray-300 px-4 py-6 flex items-center justify-between">
                 <div className="inline-flex items-center gap-2">
-                    <Button type="submit" onClick={handleAddNewSection}>
+                    <Button type="button" onClick={handleAddNewSection}>
                         Save topic
                     </Button>
                     <button
@@ -380,7 +378,7 @@ const AddNewQuestionSection = ({
                     <TrashIcon className="w-6 h-6 text-red-400 group-hover:text-red-600" />
                 </button>
             </div>
-        </form>
+        </div>
     );
 };
 
