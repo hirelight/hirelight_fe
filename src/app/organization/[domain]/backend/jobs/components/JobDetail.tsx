@@ -85,14 +85,14 @@ const JobDetailSection = ({}: IJobDetailSection) => {
     return (
         <>
             <form className="flex" onSubmit={handleSubmitJobDetail}>
-                <div className="bg-white w-3/4 shadow-md rounded-md">
+                <div className={styles.form__container}>
                     {/* ***********************Job Title Section*********************************** */}
                     <section className="relative">
                         <h2 className={`${styles.form__section__title}`}>
                             Job title
                         </h2>
                         <div className={`${styles.form__section__wrapper}`}>
-                            <div className="mb-6">
+                            <div className="mb-4 md:mb-6">
                                 <FormInput
                                     title="Job title"
                                     required={true}
@@ -112,13 +112,16 @@ const JobDetailSection = ({}: IJobDetailSection) => {
                                 />
                             </div>
                         </div>
-                        <div className="absolute left-full top-1/2 -translate-y-1/2 ml-8 w-1/3">
-                            <span className="text-sm text-neutral-500">
-                                Sử dụng chức danh công việc phổ biến cho khả
-                                năng tìm kiếm Chỉ quảng cáo cho một công việc,
-                                ví dụ: &apos;Y tá&apos;, không phải &apos;y
-                                tá&apos; Không có cơ hội hoặc sự kiện chung
-                            </span>
+                        <div className="hidden md:block absolute -right-8 top-1/2 translate-x-full -translate-y-1/2 w-screen">
+                            <div className={styles.instruction__text}>
+                                <span className="text-sm text-neutral-500">
+                                    Sử dụng chức danh công việc phổ biến cho khả
+                                    năng tìm kiếm Chỉ quảng cáo cho một công
+                                    việc, ví dụ: &apos;Y tá&apos;, không phải
+                                    &apos;y tá&apos; Không có cơ hội hoặc sự
+                                    kiện chung
+                                </span>
+                            </div>
                         </div>
                     </section>
 
@@ -128,7 +131,7 @@ const JobDetailSection = ({}: IJobDetailSection) => {
                             Location
                         </h2>
                         <div className={`${styles.form__section__wrapper}`}>
-                            <div className="mb-6">
+                            <div className="mb-4 md:mb-6">
                                 <FormInput
                                     title="Job location"
                                     required={true}
@@ -148,13 +151,15 @@ const JobDetailSection = ({}: IJobDetailSection) => {
                                 />
                             </div>
                         </div>
-                        <div className="absolute left-full top-1/2 -translate-y-1/2 ml-8 w-1/3">
-                            <span className="text-sm text-neutral-500">
-                                Sử dụng vị trí để thu hút các ứng viên phù hợp
-                                nhất Nếu bạn chọn hộp &quot;hoàn toàn từ
-                                xa&quot;, hãy thêm ít nhất một quốc gia. Một số
-                                bảng công việc yêu cầu một vị trí
-                            </span>
+                        <div className="hidden md:block absolute -right-8 top-1/2 translate-x-full -translate-y-1/2 w-screen">
+                            <div className={styles.instruction__text}>
+                                <span className="text-sm text-neutral-500">
+                                    Sử dụng vị trí để thu hút các ứng viên phù
+                                    hợp nhất Nếu bạn chọn hộp &quot;hoàn toàn từ
+                                    xa&quot;, hãy thêm ít nhất một quốc gia. Một
+                                    số bảng công việc yêu cầu một vị trí
+                                </span>
+                            </div>
                         </div>
                     </section>
 
@@ -164,7 +169,7 @@ const JobDetailSection = ({}: IJobDetailSection) => {
                             Description
                         </h2>
                         <div className={`${styles.form__section__wrapper}`}>
-                            <div className="mb-6">
+                            <div className="mb-4 md:mb-6">
                                 <label
                                     htmlFor="job-location"
                                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -172,7 +177,7 @@ const JobDetailSection = ({}: IJobDetailSection) => {
                                     <span className="text-red-500 mr-1">*</span>
                                     About this role
                                 </label>
-                                <div className="border border-slate-600 rounded-lg min-h-[600px] p-6 relative overflow-hidden">
+                                <div className="border border-slate-600 rounded-lg min-h-[600px] p-3 md:p-6 relative overflow-hidden">
                                     <div className="mb-6 flex flex-col min-h-[220px]">
                                         <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                             Description
@@ -255,14 +260,16 @@ const JobDetailSection = ({}: IJobDetailSection) => {
                                 </div>
                             </div>
                         </div>
-                        <div className="absolute left-full top-1/2 -translate-y-1/2 ml-8 w-1/3">
-                            <span className="text-sm text-neutral-500">
-                                Định dạng thành các phần và danh sách để cải
-                                thiện khả năng đọc Tránh nhắm mục tiêu nhân khẩu
-                                học cụ thể, ví dụ: giới tính, quốc tịch và độ
-                                tuổi Không cần thêm liên kết để đăng ký (một
-                                liên kết được thêm tự động)
-                            </span>
+                        <div className="hidden md:block absolute -right-8 top-1/2 translate-x-full -translate-y-1/2 w-screen">
+                            <div className={styles.instruction__text}>
+                                <span className="text-sm text-neutral-500">
+                                    Định dạng thành các phần và danh sách để cải
+                                    thiện khả năng đọc Tránh nhắm mục tiêu nhân
+                                    khẩu học cụ thể, ví dụ: giới tính, quốc tịch
+                                    và độ tuổi Không cần thêm liên kết để đăng
+                                    ký (một liên kết được thêm tự động)
+                                </span>
+                            </div>
                         </div>
                     </section>
 
@@ -272,7 +279,7 @@ const JobDetailSection = ({}: IJobDetailSection) => {
                             Employment details
                         </h2>
                         <div className={`${styles.form__section__wrapper}`}>
-                            <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                                 <Selection
                                     title="Employment type"
                                     datas={industries}
