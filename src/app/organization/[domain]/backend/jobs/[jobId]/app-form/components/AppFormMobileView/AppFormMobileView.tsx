@@ -6,6 +6,7 @@ import {
     EyeSlashIcon,
     TrashIcon,
 } from "@heroicons/react/24/solid";
+import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
 
 import { useAppSelector } from "@/redux/reduxHooks";
 import { debounce } from "@/helpers/shareHelpers";
@@ -70,7 +71,7 @@ const AppFormMobileView = () => {
                     className="lg:hidden absolute top-4 right-4"
                     onClick={() => setShow(false)}
                 >
-                    <EyeSlashIcon className="w-6 h-auto text-neutral-700" />
+                    <ClipboardDocumentListIcon className="w-6 h-auto text-neutral-700" />
                 </button>
                 <div
                     ref={containerRef}
