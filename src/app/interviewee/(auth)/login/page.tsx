@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 
 import styles from "./login.module.scss";
 import LoginForm from "./components/LoginForm";
@@ -10,7 +9,7 @@ export const metadata: Metadata = {
     title: "Create an account or log in | Jobs on Hirelight",
 };
 
-const IntervieweeLogin = () => {
+const IntervieweeLogin = async () => {
     return (
         <main className={styles.wrapper}>
             <div className="relative flex-1 flex justify-center items-center">
