@@ -133,6 +133,7 @@ const QuillEditor = ({
                     readOnly,
                 };
                 const quill = new Quill(editorRef.current, options);
+                quill.root.setAttribute("spellcheck", "false");
                 quillInstance.current = quill;
 
                 quill.root.innerHTML = value;
@@ -145,7 +146,7 @@ const QuillEditor = ({
             if (quillInstance.current)
                 quillInstance.current.off("text-change", () => {});
         };
-    }, [customImageHandler, handleTextChange, placeholder, value]);
+    }, [customImageHandler, handleTextChange, placeholder, readOnly, value]);
 
     React.useEffect(() => {
         if (quillInstance.current) {
