@@ -4,7 +4,7 @@ import { PlusCircleIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { Button, CustomInput } from "@/components";
 import { DragIndicatorIcon } from "@/icons";
 
-import KitRequirement from "./KitRequirement";
+import KitRequirementList from "./KitRequirementList";
 
 interface INewKitSection {
     data: {
@@ -42,28 +42,28 @@ const NewKitSection = ({ data, onChange }: INewKitSection) => {
                         }))
                     }
                 />
-                {kit.contents.map((content, contentNo) => (
-                    <KitRequirement
-                        key={contentNo}
-                        data={content}
-                        contents={kit.contents}
-                    />
-                ))}
+
+                <KitRequirementList
+                    contents={kit.contents}
+                    onSave={contents =>
+                        setKit(prev => ({ ...prev, contents: contents }))
+                    }
+                />
 
                 <button
                     type="button"
                     className="flex items-center gap-1 text-base font-medium text-blue_primary_800 hover:underline"
                     onClick={() => {
-                        setKit(prev => ({
-                            ...prev,
+                        setKit({
+                            ...kit,
                             contents: [
-                                ...prev.contents,
+                                ...kit.contents,
                                 {
                                     name: "",
                                     requirements: "",
                                 },
                             ],
-                        }));
+                        });
                     }}
                 >
                     <PlusCircleIcon className="w-6 h-6" />
