@@ -12,3 +12,7 @@ export const debounce = <T extends (...args: any[]) => void>(
         }, delay);
     };
 };
+
+export const delayFunc = (ms: number) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+};
