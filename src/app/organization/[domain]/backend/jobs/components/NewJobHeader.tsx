@@ -3,8 +3,11 @@
 import React from "react";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
-import { useAppSelector } from "@/redux/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
+import { createNewJob, updateJobDetail } from "@/services/job/job.service";
+import { setJob } from "@/redux/slices/job.slice";
 
 import styles from "./NewJobHeader.module.scss";
 
@@ -15,10 +18,28 @@ const NewJobHeader = ({}: INewJobHeader) => {
     const pathname = usePathname();
     const { jobId } = useParams();
     const title = useAppSelector(state => state.job.data.title);
+    const dispatch = useAppDispatch();
+    const job = useAppSelector(state => state.job.data);
 
-    const handleSaveAndContinue = () => {
-        if (pathname.includes("jobs/new"))
-            router.push("/backend/jobs/123/edit");
+    const handleSaveAndContinue = async (e: any) => {
+        e.preventDefault();
+        try {
+            if (pathname.includes("jobs/new")) {
+                const res = await createNewJob(job);
+                if (res.data.status === 200) {
+                    dispatch(setJob(job));
+                    router.push("/backend/jobs/123/edit");
+                }
+            } else {
+                if (job.id !== undefined) {
+                    const res = await updateJobDetail({ id: job.id, ...job });
+                    if (res.data.status === 200) {
+                        toast.success("Update successfully!");
+                        dispatch(setJob(res.data.data));
+                    }
+                }
+            }
+        } catch (error) {}
     };
 
     return (
@@ -33,24 +54,24 @@ const NewJobHeader = ({}: INewJobHeader) => {
                     <h4 className="text-2xl text-neutral-700 font-medium">
                         {title ? title : "New Job"}
                     </h4>
-                    <div>
+                    <div className="hidden md:block">
                         <button
                             type="button"
-                            className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                            className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                         >
                             Save draft
                         </button>
                         <button
                             type="button"
-                            className="text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                            className="text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
                             onClick={handleSaveAndContinue}
                         >
                             Save & continue
                         </button>
                     </div>
                 </div>
-                <div className="grid grid-cols-4 gap-2">
-                    <div className='flex items-start justify-between after:content-[""] after:h-4/5 after:w-[1px] after:bg-gray-400 after:ml-2 after:self-center'>
+                <div className={styles.stage__wrapper}>
+                    <div className={styles.section__wrapper}>
                         <button
                             type="button"
                             onClick={
@@ -61,7 +82,7 @@ const NewJobHeader = ({}: INewJobHeader) => {
                                           )
                                     : () => {}
                             }
-                            className={`${styles.section__wrapper} ${
+                            className={`${styles.section__container} ${
                                 pathname.includes("edit") ||
                                 pathname.includes("jobs/new")
                                     ? styles.active
@@ -78,9 +99,9 @@ const NewJobHeader = ({}: INewJobHeader) => {
                             </p>
                         </button>
                     </div>
-                    <div className='flex items-start justify-between after:content-[""] after:h-4/5 after:w-[1px] after:bg-gray-400 after:ml-2 after:self-center'>
+                    <div className={styles.section__wrapper}>
                         <div
-                            className={`${styles.section__wrapper} ${
+                            className={`${styles.section__container} ${
                                 pathname.includes("app-form")
                                     ? styles.active
                                     : ""
@@ -109,9 +130,9 @@ const NewJobHeader = ({}: INewJobHeader) => {
                         </div>
                     </div>
 
-                    <div className='flex items-start justify-between after:content-[""] after:h-4/5 after:w-[1px] after:bg-gray-400 after:ml-2 after:self-center'>
+                    <div className={styles.section__wrapper}>
                         <div
-                            className={`${styles.section__wrapper} ${
+                            className={`${styles.section__container} ${
                                 pathname.includes("members")
                                     ? styles.active
                                     : ""
@@ -142,7 +163,7 @@ const NewJobHeader = ({}: INewJobHeader) => {
                     </div>
                     <div>
                         <div
-                            className={`${styles.section__wrapper} ${
+                            className={`${styles.section__container} ${
                                 pathname.includes("pipeline")
                                     ? styles.active
                                     : ""
