@@ -5,6 +5,7 @@ import CustomInput from "./CustomInput";
 import CustomTextArea from "./CustomTextArea";
 import CustomFileInput from "./CustomFileInput";
 import Portal from "./Portal";
+import DeleteModal from "./DeleteModal";
 
 export {
     Button,
@@ -14,4 +15,5 @@ export {
     CustomTextArea,
     CustomFileInput,
     Portal,
+    DeleteModal,
 };
