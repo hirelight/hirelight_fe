@@ -21,6 +21,7 @@ import ListUL from "./ListUL";
 import LinkIcon from "./Link";
 import ImageIcon from "./ImageIcon";
 import DragIndicatorIcon from "./DragIndicatorIcon";
+import SpinLoading from "./SpinLoading";
 
 export {
     MenuIcon,
@@ -46,4 +47,5 @@ export {
     LinkIcon,
     ImageIcon,
     DragIndicatorIcon,
+    SpinLoading,
 };
