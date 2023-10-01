@@ -45,25 +45,29 @@ const HomeHeader = () => {
                         <Link href={"#"}>About us</Link>
                     </li>
                     <li className="hover:text-blue_primary_800">
-                        <Link href={"#"}>Career Center</Link>
+                        <Link
+                            href={`http://jobs.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`}
+                        >
+                            Career Center
+                        </Link>
                     </li>
                 </ul>
             </nav>
             <div className="hidden lg:flex gap-4">
-                <button
-                    type="button"
+                <Link
+                    href={`login`}
                     className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-base font-medium text-gray-900 rounded-full group bg-gradient-to-br from-cyan-600 to-blue-700 group-hover:from-cyan-600 group-hover:to-blue-700 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800"
                 >
                     <span className="relative px-6 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-full group-hover:bg-opacity-0">
                         Sign in
                     </span>
-                </button>
-                <button
-                    type="button"
+                </Link>
+                <Link
+                    href={"signup"}
                     className="text-white bg-gradient-to-r from-cyan-600 to-blue-700 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-full text-base px-6 py-2.5 text-center mr-2 mb-2"
                 >
                     Sign up
-                </button>
+                </Link>
             </div>
 
             <div className="block lg:hidden">

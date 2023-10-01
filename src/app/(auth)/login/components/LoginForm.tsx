@@ -3,6 +3,8 @@
 import React from "react";
 import Link from "next/link";
 
+import { GoogleIcon, LinkedInIcon } from "@/icons";
+
 import styles from "./LoginForm.module.scss";
 
 const LoginForm = () => {
@@ -17,15 +19,25 @@ const LoginForm = () => {
                 <h1 className="text-2xl mb-5 text-slate-700">
                     Sign in to Hirelight
                 </h1>
-                <button type="button" className={styles.button__signin__with}>
-                    Sign in with Google
-                </button>
-                <button type="button" className={styles.button__signin__with}>
-                    Sign in with Microsoft
-                </button>
-                <button type="button" className={styles.button__signin__with}>
-                    Sign in with LinkedIn
-                </button>
+                <Link
+                    href={
+                        process.env.NEXT_PUBLIC_CANDIDATE_LOGIN_GOOGLE as string
+                    }
+                    className={styles.button__signin__with}
+                >
+                    <GoogleIcon className="w-6 h-6 mr-2" />
+                    <span>Sign in with Google</span>
+                </Link>
+                <Link
+                    href={
+                        process.env
+                            .NEXT_PUBLIC_CANDIDATE_LOGIN_LINKEDIN as string
+                    }
+                    className={styles.button__signin__with}
+                >
+                    <LinkedInIcon className="w-8 h-8 mr-1" />
+                    <span>Sign in with LinkedIn</span>
+                </Link>
                 <div className="flex items-center justify-between gap-2">
                     <hr className="flex-1 h-[1.5px] bg-gray-300" />
                     <span className="text-gray-500 font-medium">OR</span>
