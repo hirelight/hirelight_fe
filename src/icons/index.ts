@@ -20,6 +20,8 @@ import ListOL from "./ListOL";
 import ListUL from "./ListUL";
 import LinkIcon from "./Link";
 import ImageIcon from "./ImageIcon";
+import GoogleIcon from "./GoogleIcon";
+import LinkedInIcon from "./LinkedInIcon";
 
 export {
     MenuIcon,
@@ -44,4 +46,6 @@ export {
     ListUL,
     LinkIcon,
     ImageIcon,
+    GoogleIcon,
+    LinkedInIcon,
 };
