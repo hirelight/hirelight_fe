@@ -20,9 +20,7 @@ const LoginForm = () => {
                     Sign in to Hirelight
                 </h1>
                 <Link
-                    href={
-                        process.env.NEXT_PUBLIC_CANDIDATE_LOGIN_GOOGLE as string
-                    }
+                    href={process.env.NEXT_PUBLIC_CANDIDATE_LOGIN_GOOGLE || ""}
                     className={styles.button__signin__with}
                 >
                     <GoogleIcon className="w-6 h-6 mr-2" />
@@ -30,8 +28,7 @@ const LoginForm = () => {
                 </Link>
                 <Link
                     href={
-                        process.env
-                            .NEXT_PUBLIC_CANDIDATE_LOGIN_LINKEDIN as string
+                        process.env.NEXT_PUBLIC_CANDIDATE_LOGIN_LINKEDIN || ""
                     }
                     className={styles.button__signin__with}
                 >
