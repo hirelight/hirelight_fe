@@ -22,6 +22,8 @@ import LinkIcon from "./Link";
 import ImageIcon from "./ImageIcon";
 import DragIndicatorIcon from "./DragIndicatorIcon";
 import SpinLoading from "./SpinLoading";
+import GoogleIcon from "./GoogleIcon";
+import LinkedInIcon from "./LinkedInIcon";
 
 export {
     MenuIcon,
@@ -48,4 +50,6 @@ export {
     ImageIcon,
     DragIndicatorIcon,
     SpinLoading,
+    GoogleIcon,
+    LinkedInIcon,
 };
