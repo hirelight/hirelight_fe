@@ -59,7 +59,7 @@ export default function RootLayout({
                 className={`${inter.className} ${roboto_mono.className} ${montserrat.className} ${poppins.className}`}
             >
                 <ReduxProvider>{children}</ReduxProvider>
-                <Script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js" />
+                <Script src="../../node_modules/flowbite/dist/flowbite.min.js"></Script>
             </body>
         </html>
     );
