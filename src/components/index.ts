@@ -6,6 +6,7 @@ import CustomTextArea from "./CustomTextArea";
 import CustomFileInput from "./CustomFileInput";
 import Portal from "./Portal";
 import DeleteModal from "./DeleteModal";
+import LocationAutocomplete from "./LocationAutocomplete";
 
 export {
     Button,
@@ -16,4 +17,5 @@ export {
     CustomFileInput,
     Portal,
     DeleteModal,
+    LocationAutocomplete,
 };

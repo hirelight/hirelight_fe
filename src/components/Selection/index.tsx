@@ -54,7 +54,7 @@ const Selection = ({
     const dropdownRef = React.useRef<HTMLDivElement>(null);
 
     const expandSelection = (
-        e: React.MouseEvent<HTMLLabelElement, MouseEvent>
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => {
         setShow(!show);
         if (
@@ -99,14 +99,15 @@ const Selection = ({
             className={"min-w-[300px] w-full " + className}
         >
             {title && (
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <h4 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                     {required && <span className="text-red-500 mr-1">*</span>}
                     {title}
-                </label>
+                </h4>
             )}
             <div className="relative ">
-                <label
-                    className={`flex items-center justify-between mb-2 font-medium dark:text-white p-2.5 cursor-pointer border border-gray-300 rounded-md text-sm ${
+                <button
+                    type="button"
+                    className={`w-full flex items-center justify-between font-medium dark:text-white p-2.5 cursor-pointer border border-gray-300 rounded-md text-sm ${
                         !selected ? "text-gray-600" : "text-gray-900"
                     } ${labelClassName}`}
                     onClick={expandSelection}
@@ -115,7 +116,7 @@ const Selection = ({
                     <div>
                         <ChevronDown className="w-4 h-4" strokeWidth={2} />
                     </div>
-                </label>
+                </button>
                 <div
                     ref={dropdownRef}
                     className="absolute top-full left-0 right-0 z-[1000] flex flex-col -mt-1 bg-white border border-t-0 border-gray-300 rounded-bl-md rounded-br-md h-0 overflow-hidden invisible"
@@ -128,8 +129,6 @@ const Selection = ({
                         </div>
                         <input
                             type="text"
-                            name="price"
-                            id="price"
                             className="block w-full rounded-md border-0 py-2.5 pl-8 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue_primary_700 sm:sm:leading-6"
                             value={search}
                             onChange={e => setSearch(e.target.value)}
