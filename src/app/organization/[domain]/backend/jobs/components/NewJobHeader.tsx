@@ -21,14 +21,34 @@ const NewJobHeader = ({}: INewJobHeader) => {
     const dispatch = useAppDispatch();
     const job = useAppSelector(state => state.job.data);
 
+    const stage = pathname.split("/")[4];
+
     const handleSaveAndContinue = async (e: any) => {
         e.preventDefault();
+        let redirectLink = "";
+        if (pathname.includes("jobs/new")) {
+            redirectLink = `/backend/jobs/${123}/edit`;
+        } else {
+            const stage = pathname.split("/")[4];
+            switch (stage.toLowerCase()) {
+                case "edit":
+                    redirectLink = `/backend/jobs/${jobId}/app-form`;
+                    break;
+                case "app-form":
+                    redirectLink = `/backend/jobs/${jobId}/members`;
+                    break;
+                case "members":
+                    redirectLink = `/backend/jobs/${jobId}/pipeline/config-pipeline`;
+                    break;
+            }
+        }
+
         try {
             if (pathname.includes("jobs/new")) {
                 const res = await createNewJob(job);
                 if (res.data.status === 200) {
                     dispatch(setJob(job));
-                    router.push("/backend/jobs/123/edit");
+                    router.push(redirectLink);
                 }
             } else {
                 if (job.id !== undefined) {
@@ -37,6 +57,8 @@ const NewJobHeader = ({}: INewJobHeader) => {
                         toast.success("Update successfully!");
                         dispatch(setJob(res.data.data));
                     }
+
+                    router.push(redirectLink);
                 }
             }
         } catch (error) {}

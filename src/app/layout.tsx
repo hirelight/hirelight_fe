@@ -2,6 +2,7 @@ import "./globals.scss";
 import "react-quill/dist/quill.snow.css";
 import "react-quill/dist/quill.bubble.css";
 import type { Metadata } from "next";
+import Script from "next/script";
 import {
     Inter,
     Montserrat,
@@ -9,12 +10,19 @@ import {
     Public_Sans,
     Roboto_Mono,
 } from "next/font/google";
-import Script from "next/script";
-import { ToastContainer } from "react-toastify";
-
 import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import dynamic from "next/dynamic";
+import "nprogress/nprogress.css";
 
 import ReduxProvider from "@/components/ReduxProvider/ReduxProvider";
+
+const TopProgressBar = dynamic(
+    () => import("@/components/TopProgressBar/TopProgressBar"),
+    {
+        ssr: false,
+    }
+);
 
 const inter = Inter({
     subsets: ["latin"],
@@ -60,6 +68,7 @@ export default function RootLayout({
                     pauseOnHover
                     theme="light"
                 />
+                <TopProgressBar />
                 <ReduxProvider>{children}</ReduxProvider>
                 <div id="hirelight__portal"></div>
                 <Script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js" />

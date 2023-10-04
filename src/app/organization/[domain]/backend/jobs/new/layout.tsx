@@ -1,17 +1,8 @@
 import React from "react";
-import { Metadata } from "next";
 
 import NewJobHeader from "../components/NewJobHeader";
 
-export const metadata: Metadata = {
-    title: "Hirelight - Backend",
-};
-
-const HiringPipelineDetailLayout = ({
-    children,
-}: {
-    children: React.ReactNode;
-}) => {
+const NewJobLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <div className="flex-1 flex flex-col max-w-screen-xl mx-auto">
             <NewJobHeader />
@@ -24,4 +15,4 @@ const HiringPipelineDetailLayout = ({
     );
 };
 
-export default HiringPipelineDetailLayout;
+export default NewJobLayout;

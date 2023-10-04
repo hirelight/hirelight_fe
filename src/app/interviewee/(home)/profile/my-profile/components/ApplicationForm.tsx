@@ -29,6 +29,7 @@ const ApplicationForm = () => {
                     <input
                         type="text"
                         id="first_name"
+                        name="first_name"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="John"
                         required
@@ -44,6 +45,7 @@ const ApplicationForm = () => {
                     <input
                         type="text"
                         id="last_name"
+                        name="last_name"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="John"
                         required
@@ -59,6 +61,7 @@ const ApplicationForm = () => {
                     <input
                         type="email"
                         id="email"
+                        name="email"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="john.doe@company.com"
                         required
@@ -74,6 +77,7 @@ const ApplicationForm = () => {
                     <input
                         type="tel"
                         id="phone"
+                        name="phone"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="123-45-678"
                         pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
@@ -92,6 +96,7 @@ const ApplicationForm = () => {
                 <input
                     type="text"
                     id="headline"
+                    name="headline"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="john.doe@company.com"
                     required
@@ -109,6 +114,7 @@ const ApplicationForm = () => {
                     <input
                         type="text"
                         id="city"
+                        name="city"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Ho Chi Minh"
                         required
@@ -124,6 +130,7 @@ const ApplicationForm = () => {
                     <input
                         type="text"
                         id="district"
+                        name="district"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Tan Binh"
                         required
@@ -171,6 +178,8 @@ const ApplicationForm = () => {
                     <input
                         ref={resumeRef}
                         type="file"
+                        id="resume"
+                        name="resume"
                         className="invisible absolute"
                         onChange={handleUploadFile}
                     />
@@ -201,12 +210,13 @@ const ApplicationForm = () => {
                 <div className="relative">
                     <textarea
                         id="self_description"
+                        name="self_description"
                         rows={4}
                         className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Write your information here..."
                     ></textarea>
                     <label
-                        htmlFor="headline"
+                        htmlFor="self_description"
                         className="block mb-2 text-xs font-medium text-gray-500 dark:text-white absolute top-0 left-3 -translate-y-1/2 bg-white px-1"
                     >
                         Self Description(not required)
@@ -217,13 +227,14 @@ const ApplicationForm = () => {
 
             <div className="mb-6 relative">
                 <textarea
-                    id="self_description"
+                    id="cover_letter"
+                    name="cover_letter"
                     rows={4}
                     className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Write something you want express to the company..."
                 ></textarea>
                 <label
-                    htmlFor="headline"
+                    htmlFor="cover_letter"
                     className="block mb-2 text-xs font-medium text-gray-500 dark:text-white absolute top-0 left-3 -translate-y-1/2 bg-white px-1"
                 >
                     Cover letter(not required)

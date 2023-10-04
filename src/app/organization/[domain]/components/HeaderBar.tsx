@@ -18,7 +18,7 @@ const HeaderBar = () => {
     return (
         <div className="bg-white shadow-md relative z-10">
             <div className="max-w-screen-xl mx-auto px-4 xl:px-6 flex items-center justify-between py-4">
-                <div className="flex gap-2 items-center">
+                <Link href={`/backend`} className="flex gap-2 items-center">
                     <Image
                         alt="Logo"
                         src={logo}
@@ -27,7 +27,7 @@ const HeaderBar = () => {
                     <span className="text-xl font-semibold text-neutral-700">
                         Hirelight
                     </span>
-                </div>
+                </Link>
                 <nav>
                     <ul className="hidden md:flex gap-6 text-lg">
                         <li>

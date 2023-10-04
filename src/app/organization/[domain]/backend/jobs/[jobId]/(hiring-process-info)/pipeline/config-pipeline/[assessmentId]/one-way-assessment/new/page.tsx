@@ -44,6 +44,8 @@ const NewOneWayInterview = () => {
                     <div className="flex items-start gap-6 mb-6 px-4 xl:px-6">
                         <CustomInput
                             title="Title"
+                            id="one-way-assessment__title"
+                            name="one-way-assessment__title"
                             type="text"
                             placeholder="One-way interview - UX researcher at 123"
                             required

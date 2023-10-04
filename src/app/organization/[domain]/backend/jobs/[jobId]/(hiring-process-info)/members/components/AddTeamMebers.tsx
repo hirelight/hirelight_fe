@@ -7,6 +7,11 @@ import { teamMembers } from "@/utils/shared/initialDatas";
 import { Button, ButtonOutline, Selection } from "@/components";
 
 const AddTeamMebers = () => {
+    const [datas, setDatas] = React.useState(teamMembers);
+    const handleRemoveMember = (memberId: any) => {
+        setDatas(prev => prev.filter(member => member.id !== memberId));
+    };
+
     return (
         <div className="relative rounded-md border border-slate-200 overflow-hidden">
             <div className="relative">
@@ -29,7 +34,7 @@ const AddTeamMebers = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {teamMembers.map(member => (
+                        {datas.map(member => (
                             <tr
                                 key={member.id}
                                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
@@ -56,7 +61,13 @@ const AddTeamMebers = () => {
                                     {member.status} <div></div>
                                 </td>
                                 <td>
-                                    <ButtonOutline className="text-red-500 border-red-500 hover:bg-red-700 hover:border-red-700">
+                                    <ButtonOutline
+                                        onClick={handleRemoveMember.bind(
+                                            null,
+                                            member.id
+                                        )}
+                                        className="text-red-500 border-red-500 hover:bg-red-700 hover:border-red-700"
+                                    >
                                         Delete
                                     </ButtonOutline>
                                 </td>
@@ -66,12 +77,16 @@ const AddTeamMebers = () => {
                 </table>
             </div>
             <div className="p-6">
-                <h1 className="text-neutral-800 font-medium">New Memebers</h1>
-                <p className="text-sm text-neutral-500">
-                    Bạn có thể thêm các thành viên tài khoản khác vào nhóm của
-                    mình hoặc mời mọi người tham gia Workable để cộng tác trong
-                    công việc này.
-                </p>
+                <div className="mb-4">
+                    <h1 className="text-neutral-800 font-medium">
+                        New Memebers
+                    </h1>
+                    <p className="text-sm text-neutral-500">
+                        Bạn có thể thêm các thành viên tài khoản khác vào nhóm
+                        của mình hoặc mời mọi người tham gia Workable để cộng
+                        tác trong công việc này.
+                    </p>
+                </div>
                 <div className="w-full flex items-center gap-2">
                     <div>
                         <Selection
