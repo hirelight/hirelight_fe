@@ -1,0 +1,29 @@
+.title {
+    background: linear-gradient(
+        90deg,
+        #1f94ff 2.93%,
+        #4759ff 33.81%,
+        #8c6fff 57.74%,
+        #c163fa 95.56%,
+        #e025ff 95.56%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-background-clip: text;
+    @apply text-3xl font-bold mb-5 text-slate-700;
+}
+
+.button__signin__with {
+    width: 100%;
+    border: 1px solid gray;
+    border-radius: 4px;
+    padding: 8px 0;
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgb(87, 87, 87);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
