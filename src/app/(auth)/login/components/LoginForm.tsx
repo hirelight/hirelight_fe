@@ -3,12 +3,17 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useRouter, useSearchParams } from "next/navigation";
+import Cookies from "js-cookie";
 
 import { GoogleIcon, LinkedInIcon } from "@/icons";
 
 import styles from "./LoginForm.module.scss";
 
 const LoginForm = () => {
+    const router = useRouter();
+    const code = useSearchParams().get("code");
+
     const [loginFormErr, setLoginFormErr] = React.useState({
         emailErr: "",
         passwordErr: "",
@@ -21,35 +26,32 @@ const LoginForm = () => {
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
         if (loginForm.email === "")
-            setLoginFormErr(prev => ({ ...prev, emailErr: "Must not empty!" }));
-        console.log("Handle Login: ", loginForm);
+            return setLoginFormErr(prev => ({
+                ...prev,
+                emailErr: "Email must not empty!",
+            }));
+
+        Cookies.set("hirelight_access_token", "tokenasdkajsdnkas", {
+            domain: `fpt.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+        });
+        console.log(
+            `${window.location.protocol}//fpt.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?code=123`
+        );
+        router.push(
+            `${window.location.protocol}//fpt.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?code=123`
+        );
     };
+
+    React.useEffect(() => {
+        if (code) {
+            console.log("Call api get token", code);
+        }
+    }, [code]);
 
     return (
         <form onSubmit={handleLogin}>
-            <div className="min-w-[360px] min-h-[400px] flex flex-col gap-4 bg-white border border-gray-300 rounded-md p-6 text-center">
-                <h1 className="text-2xl mb-5 text-slate-700">
-                    Sign in to Hirelight
-                </h1>
-                <Link
-                    href={process.env.NEXT_PUBLIC_EMPLOYEE_LOGIN_GOOGLE || ""}
-                    className={styles.button__signin__with}
-                >
-                    <GoogleIcon className="w-6 h-6 mr-2" />
-                    <span>Sign in with Google</span>
-                </Link>
-                <Link
-                    href={process.env.NEXT_PUBLIC_EMPLOYEE_LOGIN_LINKEDIN || ""}
-                    className={styles.button__signin__with}
-                >
-                    <LinkedInIcon className="w-8 h-8 mr-1" />
-                    <span>Sign in with LinkedIn</span>
-                </Link>
-                <div className="flex items-center justify-between gap-2">
-                    <hr className="flex-1 h-[1.5px] bg-gray-300" />
-                    <span className="text-gray-500 font-medium">OR</span>
-                    <hr className="flex-1 h-[1.5px] bg-gray-300" />
-                </div>
+            <div className="flex flex-col gap-4">
+                <h1 className={styles.title}>Sign in to Hirelight</h1>
                 <div className="mb-2 text-left">
                     <label
                         htmlFor="email"
@@ -72,7 +74,7 @@ const LoginForm = () => {
                         }}
                     />
                 </div>
-                <div className="mb-2 text-left">
+                <div className="text-left">
                     <label
                         htmlFor="password"
                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -104,6 +106,11 @@ const LoginForm = () => {
                         <p>{loginFormErr.emailErr}</p>
                     </motion.div>
                 )}
+                <Link href={"/signup"}>
+                    <p className="text-right text-xs text-blue_primary_600 font-semibold underline mb-4">
+                        Forgot your password?
+                    </p>
+                </Link>
                 <button
                     type="submit"
                     className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -111,10 +118,25 @@ const LoginForm = () => {
                     Sign in
                 </button>
 
-                <Link href={"/signup"}>
-                    <p className="text-xs text-gray-500 mt-4 mb-2 underline">
-                        Forgot your password?
-                    </p>
+                <div className="flex items-center justify-between gap-2">
+                    <hr className="flex-1 h-[1.5px] bg-gray-300" />
+                    <span className="text-gray-500 font-medium">OR</span>
+                    <hr className="flex-1 h-[1.5px] bg-gray-300" />
+                </div>
+
+                <Link
+                    href={process.env.NEXT_PUBLIC_EMPLOYER_LOGIN_GOOGLE || ""}
+                    className={styles.button__signin__with}
+                >
+                    <GoogleIcon className="w-6 h-6 mr-2" />
+                    <span>Sign in with Google</span>
+                </Link>
+                <Link
+                    href={process.env.NEXT_PUBLIC_EMPLOYER_LOGIN_LINKEDIN || ""}
+                    className={styles.button__signin__with}
+                >
+                    <LinkedInIcon className="w-8 h-8 mr-1" />
+                    <span>Sign in with LinkedIn</span>
                 </Link>
             </div>
         </form>
