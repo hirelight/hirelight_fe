@@ -6,14 +6,27 @@ import React from "react";
 import logo from "/public/images/logo.png";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 
 import { Bell } from "@/icons";
+import { delayFunc } from "@/helpers/shareHelpers";
 
 const HeaderBar = () => {
     const pathname = usePathname();
+    const router = useRouter();
     const cite = pathname.split("/")[1];
-    // console.log(cite);
+
+    const handleLogout = async () => {
+        Cookies.remove("hirelight_access_token");
+        toast.success("Logout success!");
+        await delayFunc(1000);
+
+        router.push(
+            `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`
+        );
+    };
 
     return (
         <div className="bg-white shadow-md relative z-10">
@@ -82,10 +95,11 @@ const HeaderBar = () => {
                 </nav>
                 <div className="flex gap-8 items-center">
                     <Bell className="text-blue_primary_800 w-8 h-8" />
-                    <Link
-                        href={"/settings"}
+                    <button
+                        type="button"
                         className="rounded-full w-10 aspect-square border-2 border-blue_primary_800"
-                    ></Link>
+                        onClick={handleLogout}
+                    ></button>
                 </div>
             </div>
         </div>

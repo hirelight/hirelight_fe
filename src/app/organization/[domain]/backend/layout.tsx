@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 
 const BackendLayout = ({ children }: { children: React.ReactNode }) => {
     const cookieStore = cookies();
-    const accessToken = cookieStore.get("hirelight_acess_token");
+    const accessToken = cookieStore.get("hirelight_access_token");
     const headersList = headers();
     console.log(headersList.get("referer"));
     if (!accessToken) {

@@ -14,9 +14,12 @@ const DomainPage = ({
     const { code } = searchParams;
 
     React.useEffect(() => {
-        if (!Cookies.get("hirelight_acess_token"))
+        if (!Cookies.get("hirelight_access_token"))
             if (code) {
-                Cookies.set("hirelight_acess_token", code as string);
+                Cookies.set("hirelight_access_token", code as string, {
+                    sameSite: "strict",
+                    expires: 1,
+                });
             } else {
                 redirect(
                     `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`
