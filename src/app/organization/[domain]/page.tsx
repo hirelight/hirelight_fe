@@ -4,6 +4,8 @@ import React from "react";
 import { redirect } from "next/navigation";
 import Cookies from "js-cookie";
 
+import LoadingIndicator from "@/components/LoadingIndicator";
+
 const DomainPage = ({
     params,
     searchParams,
@@ -28,7 +30,11 @@ const DomainPage = ({
         redirect(`backend`);
     }, [code]);
 
-    return null;
+    return (
+        <div className="w-full flex items-center justify-center py-60">
+            <LoadingIndicator />
+        </div>
+    );
 };
 
 export default DomainPage;
