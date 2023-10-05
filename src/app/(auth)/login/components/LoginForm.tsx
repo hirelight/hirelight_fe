@@ -5,8 +5,10 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 
 import { GoogleIcon, LinkedInIcon } from "@/icons";
+import { delayFunc } from "@/helpers/shareHelpers";
 
 import styles from "./LoginForm.module.scss";
 
@@ -23,7 +25,7 @@ const LoginForm = () => {
         password: "",
     });
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         if (loginForm.email === "")
             return setLoginFormErr(prev => ({
@@ -32,11 +34,13 @@ const LoginForm = () => {
             }));
 
         Cookies.set("hirelight_access_token", "tokenasdkajsdnkas", {
-            domain: `fpt.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+            domain: `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
         });
-        console.log(
-            `${window.location.protocol}//fpt.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?code=123`
-        );
+        Cookies.set("hirelight_access_token", "tokenasdkajsdnkas");
+
+        toast.success("Sign in  success");
+        await delayFunc(2000);
+
         router.push(
             `${window.location.protocol}//fpt.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?code=123`
         );
@@ -55,7 +59,7 @@ const LoginForm = () => {
                 <div className="mb-2 text-left">
                     <label
                         htmlFor="email"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
                     >
                         Email address
                     </label>
@@ -77,7 +81,7 @@ const LoginForm = () => {
                 <div className="text-left">
                     <label
                         htmlFor="password"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
                     >
                         Password
                     </label>
@@ -107,13 +111,13 @@ const LoginForm = () => {
                     </motion.div>
                 )}
                 <Link href={"/signup"}>
-                    <p className="text-right text-xs text-blue_primary_600 font-semibold underline mb-4">
+                    <p className="text-right text-xs text-blue_primary_600 font-semibold underline">
                         Forgot your password?
                     </p>
                 </Link>
                 <button
                     type="submit"
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-full px-5 py-2.5 mt-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >
                     Sign in
                 </button>
