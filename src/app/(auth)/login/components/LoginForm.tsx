@@ -39,14 +39,14 @@ const LoginForm = () => {
 
         Cookies.set("hirelight_access_token", "tokenasdkajsdnkas", {
             domain: `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+            secure: true,
         });
-        Cookies.set("hirelight_access_token", "tokenasdkajsdnkas");
 
         await delayFunc(2000);
         toast.success("Sign in  success");
         await delayFunc(500);
         setLoading(false);
-        router.push(
+        router.replace(
             `${window.location.protocol}//fpt.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?code=123`
         );
     };

@@ -5,7 +5,7 @@ const { parse } = require("url");
 const { default: next } = require("next");
 
 const dev = process.env.NODE_ENV !== "production";
-const app = next({ dev });
+const app = next({ dev, hostname: "sub1.localhost", port: 3000 });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {

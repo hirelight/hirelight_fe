@@ -20,6 +20,10 @@ const HeaderBar = () => {
 
     const handleLogout = async () => {
         Cookies.remove("hirelight_access_token");
+        Cookies.remove("hirelight_access_token", {
+            domain: `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+            path: "/login",
+        });
         toast.success("Logout success!");
         await delayFunc(1000);
 
