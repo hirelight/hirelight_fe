@@ -41,23 +41,28 @@ export default async function middleware(req: NextRequest) {
     // }
     // console.log(hostname, path);
     // rewrite root application to `/app` folder
-    console.log(hostname);
     if (
         hostname === "localhost:3000" ||
         hostname === process.env.NEXT_PUBLIC_ROOT_DOMAIN
     ) {
-        return NextResponse.rewrite(new URL(`${path}`, req.url));
+        return NextResponse.rewrite(new URL(`${path}${url.search}`, req.url));
     }
 
     if (
         hostname === "jobs.localhost:3000" ||
         hostname === `jobs.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
     ) {
-        return NextResponse.rewrite(new URL(`/interviewee${path}`, req.url));
+        return NextResponse.rewrite(
+            new URL(`/interviewee${path}${url.search}`, req.url)
+        );
     }
+    // console.log(url);
 
     // rewrite everything else to organization folder `/organization/[domain]/[path] dynamic route
     return NextResponse.rewrite(
-        new URL(`/organization/${hostname.split(".")[0]}${path}`, req.url)
+        new URL(
+            `/organization/${hostname.split(".")[0]}${path}${url.search}`,
+            req.url
+        )
     );
 }
