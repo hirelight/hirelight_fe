@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { toast } from "react-toastify";
 
-import { GoogleIcon, LinkedInIcon } from "@/icons";
+import { GoogleIcon, LinkedInIcon, SpinLoading } from "@/icons";
 import { delayFunc } from "@/helpers/shareHelpers";
 
 import styles from "./NewOrganizationForm.module.scss";
@@ -25,6 +25,7 @@ const NewOrganizationForm = () => {
         name: "",
         subdomain: "",
     });
+    const [loading, setLoading] = React.useState(false);
 
     const handleCreateNewOrg = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -33,10 +34,13 @@ const NewOrganizationForm = () => {
                 ...prev,
                 nameErr: "Email must not empty!",
             }));
+        setLoading(true);
 
-        toast.success("Create new org success");
         await delayFunc(2000);
+        toast.success("Create new org success");
+        await delayFunc(500);
 
+        setLoading(false);
         router.push(
             `${window.location.protocol}//${newOrgForm.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?code=123`
         );
@@ -145,8 +149,9 @@ const NewOrganizationForm = () => {
                     )}
                     <button
                         type="submit"
-                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-full px-5 py-2.5 mt-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        className="flex items-center gap-1 justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-full px-5 py-2.5 mt-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
+                        {loading && <SpinLoading />}
                         Start a 15-day trial
                     </button>
                 </form>
