@@ -46,7 +46,7 @@ const Selection = ({
     const [show, setShow] = React.useState(false);
     const [search, setSearch] = React.useState("");
 
-    const [selected, setSelected] = React.useState<string>("");
+    const [selected, setSelected] = React.useState<string>(placeholder);
     const dropdownWrapperRef = useOutsideClick<HTMLDivElement>(() => {
         setShow(false);
         dropdownRef.current!!.removeAttribute("style");
@@ -88,15 +88,13 @@ const Selection = ({
     };
 
     React.useEffect(() => {
-        if (value) {
-            setSelected(value);
-        }
-    }, [value]);
+        setSelected(value ? value : placeholder);
+    }, [value, placeholder]);
 
     return (
         <div
             ref={dropdownWrapperRef}
-            className={"min-w-[300px] w-full " + className}
+            className={"min-w-[200px] md:min-w-[300px] w-full " + className}
         >
             {title && (
                 <h4 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -108,11 +106,13 @@ const Selection = ({
                 <button
                     type="button"
                     className={`w-full flex items-center justify-between font-medium dark:text-white p-2.5 cursor-pointer border border-gray-300 rounded-md text-sm ${
-                        !selected ? "text-gray-600" : "text-gray-900"
+                        selected === placeholder
+                            ? "text-gray-600"
+                            : "text-gray-900"
                     } ${labelClassName}`}
                     onClick={expandSelection}
                 >
-                    {selected ? selected : placeholder ? placeholder : title}
+                    {selected}
                     <div>
                         <ChevronDown className="w-4 h-4" strokeWidth={2} />
                     </div>
@@ -141,7 +141,7 @@ const Selection = ({
                                 <li key={index}>
                                     <button
                                         type="button"
-                                        className={`w-full text-left p-2.5 cursor-pointer hover:bg-slate-200 text-neutral-700`}
+                                        className={`w-full text-left text-neutral-700 p-2.5 cursor-pointer hover:bg-slate-200 `}
                                         onClick={handleSelectItem.bind(
                                             null,
                                             item

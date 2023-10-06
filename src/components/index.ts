@@ -7,8 +7,10 @@ import CustomFileInput from "./CustomFileInput";
 import Portal from "./Portal";
 import DeleteModal from "./DeleteModal";
 import LocationAutocomplete from "./LocationAutocomplete";
+import Modal from "./Modal";
 
 export {
+    Modal,
     Button,
     Selection,
     ButtonOutline,
