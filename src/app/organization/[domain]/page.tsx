@@ -18,14 +18,14 @@ const DomainPage = ({
     React.useEffect(() => {
         if (!Cookies.get("hirelight_access_token"))
             if (code) {
-                // Cookies.set("hirelight_access_token", code as string, {
-                //     sameSite: "strict",
-                //     expires: 1,
-                // });
+                Cookies.set("hirelight_access_token", code as string, {
+                    sameSite: "strict",
+                    expires: 1,
+                });
                 console.log(Cookies.get("hirelight_access_token"));
             } else {
                 redirect(
-                    `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`
+                    `www.${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`
                 );
             }
         redirect(`backend`);

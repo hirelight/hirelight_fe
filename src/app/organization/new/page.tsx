@@ -10,7 +10,7 @@ const NewOrganization = () => {
             <div className="mt-2 mb-8 text-sm text-center relative">
                 <span className="text-gray-500 mr-1">Make a mistake?</span>
                 <Link
-                    href={"/login"}
+                    href={"/signup"}
                     className="font-semibold text-blue-600 hover:cursor-pointer hover:underline"
                 >
                     Start again
