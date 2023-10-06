@@ -13,9 +13,33 @@ export interface INewJobDto {
     workModality?: string;
     area?: string;
     experience?: string;
+    minSalary?: string;
+    maxSalary?: string;
+    currency?: string;
     status?: string;
+    startTime?: Date;
+    endTime?: Date;
     createdTime?: Date;
     updatedTime?: Date;
+}
+
+export interface IJobDetailError {
+    titleErr: string;
+    locationErr: string;
+    contentErr: {
+        descriptionErr?: string;
+        requirementsErr?: string;
+        benefitsErr?: string;
+    };
+    workModalityErr?: string;
+    areaErr?: string;
+    experienceErr?: string;
+    minSalaryErr?: string;
+    maxSalaryErr?: string;
+    currencyErr?: string;
+    statusErr?: string;
+    startTimeErr?: Date;
+    endTimeErr?: Date;
 }
 
 export interface IUpdateJobDto {

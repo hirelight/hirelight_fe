@@ -19,10 +19,9 @@ const LocationAutocomplete = (props: ILocationAutocomplete) => {
         (place: any) => {
             // Handle the selected place data here
             // console.log("Selected Place:", place);
-
+            console.log(place);
             // You can access various details about the selected place, for example:
-            const { formatted_address, geometry } = place;
-            const { location } = geometry;
+            const { formatted_address } = place;
 
             // console.log("Formatted Address:", formatted_address);
             // console.log("Latitude:", location.lat());
@@ -34,36 +33,36 @@ const LocationAutocomplete = (props: ILocationAutocomplete) => {
     );
 
     React.useEffect(() => {
-        const loader = new Loader({
-            apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY as string, // Replace with your API key
-            version: "weekly", // Use the latest version
-            libraries: ["places"],
-        });
-
-        loader.load().then(google => {
-            if (inputRef.current) {
-                const autocomplete = new google.maps.places.Autocomplete(
-                    inputRef.current,
-                    {
-                        types: ["geocode"], // Restrict to geocoding results,
-
-                        fields: [
-                            "place_id",
-                            "geometry",
-                            "name",
-                            "address_component",
-                            "formatted_address",
-                        ],
-                    }
-                );
-
-                // Listen for the place selected event
-                autocomplete.addListener("place_changed", () => {
-                    const place = autocomplete.getPlace();
-                    handlePlaceSelect(place);
-                });
-            }
-        });
+        // const loader = new Loader({
+        //     apiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY as string, // Replace with your API key
+        //     version: "weekly", // Use the latest version
+        //     libraries: ["places"],
+        // });
+        // loader
+        //     .load()
+        //     .then(google => {
+        //         if (inputRef.current) {
+        //             const autocomplete = new google.maps.places.Autocomplete(
+        //                 inputRef.current,
+        //                 {
+        //                     types: ["geocode"], // Restrict to geocoding results,
+        //                     fields: [
+        //                         "place_id",
+        //                         "geometry",
+        //                         "name",
+        //                         "address_component",
+        //                         "formatted_address",
+        //                     ],
+        //                 }
+        //             );
+        //             // Listen for the place selected event
+        //             autocomplete.addListener("place_changed", () => {
+        //                 const place = autocomplete.getPlace();
+        //                 handlePlaceSelect(place);
+        //             });
+        //         }
+        //     })
+        //     .catch(err => {});
     }, [handlePlaceSelect]);
 
     return (

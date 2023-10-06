@@ -7,12 +7,19 @@ import { toast } from "react-toastify";
 
 import { LocationAutocomplete, Selection } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
-import { setJob } from "@/redux/slices/job.slice";
+import { setJob, setJobError } from "@/redux/slices/job.slice";
 import {
     createNewJob,
     getJobById,
     updateJobDetail,
 } from "@/services/job/job.service";
+import {
+    currencyList,
+    experienceLevels,
+    workModalities,
+} from "@/utils/shared/initialDatas";
+import { SpinLoading } from "@/icons";
+import { delayFunc } from "@/helpers/shareHelpers";
 
 import styles from "./JobDetail.module.scss";
 import FormInput from "./FormInput";
@@ -44,7 +51,7 @@ const JobDetail = ({}: IJobDetail) => {
     const router = useRouter();
     const params = useParams();
 
-    const locationInputRef = React.useRef<HTMLInputElement>(null);
+    const [loading, setLoading] = React.useState(false);
 
     const [descriptionLength, setDescriptionLength] = React.useState({
         description: 0,
@@ -54,23 +61,38 @@ const JobDetail = ({}: IJobDetail) => {
 
     const dispatch = useAppDispatch();
     const job = useAppSelector(state => state.job.data);
+    const jobErr = useAppSelector(state => state.job.error);
 
     const handleSubmitJobDetail = async (e: any) => {
         e.preventDefault();
+
+        if (job.maxSalary && job.minSalary && job.minSalary > job.maxSalary)
+            dispatch(
+                setJobError({
+                    status: true,
+                    content: {
+                        ...jobErr.content,
+                        maxSalaryErr:
+                            "Make sure that 'To' has larger amount than 'From'",
+                    },
+                })
+            );
+        if (jobErr.status) {
+            return;
+        }
+
+        setLoading(true);
+        await delayFunc(2000);
+        setLoading(false);
         try {
             if (pathname.includes("jobs/new")) {
-                const res = await createNewJob(job);
-                if (res.data.status === 200) {
-                    dispatch(setJob(job));
-                    router.push("/backend/jobs/123/edit");
-                }
+                dispatch(setJob(job));
+                router.push("/backend/jobs/123/edit");
             } else {
-                if (job.id !== undefined) {
-                    const res = await updateJobDetail({ id: job.id, ...job });
-                    if (res.data.status === 200) {
-                        toast.success("Update successfully!");
-                        dispatch(setJob(res.data.data));
-                    }
+                if (params.jobId !== undefined) {
+                    toast.success("Update successfully!");
+                    // dispatch(setJob(res.data.data));
+                    router.push(`/backend/jobs/${params.jobId}/app-form`);
                 }
             }
         } catch (error) {}
@@ -81,8 +103,8 @@ const JobDetail = ({}: IJobDetail) => {
             if (params.jobId) {
                 try {
                     const res = await getJobById(params.jobId as string);
-                    if (res.data.status === 200)
-                        dispatch(setJob(res.data.data));
+                    // if (res.data.status === 200)
+                    // dispatch(setJob(res.data.data));
                 } catch (error) {}
             }
         };
@@ -329,7 +351,9 @@ const JobDetail = ({}: IJobDetail) => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                                 <Selection
                                     title="Employment type"
-                                    datas={industries}
+                                    datas={workModalities.map(
+                                        item => item.name
+                                    )}
                                     value={job.workModality}
                                     onChange={(value: string) => {
                                         dispatch(
@@ -342,7 +366,9 @@ const JobDetail = ({}: IJobDetail) => {
                                 />
                                 <Selection
                                     title="Experience"
-                                    datas={industries}
+                                    datas={experienceLevels.map(
+                                        item => item.name
+                                    )}
                                     value={job.experience}
                                     onChange={(value: string) => {
                                         dispatch(
@@ -364,51 +390,74 @@ const JobDetail = ({}: IJobDetail) => {
                         </h2>
                         <div className={`${styles.form__section__wrapper}`}>
                             <div className="grid grid-cols-4 gap-x-8">
-                                <FormInput
-                                    title="From"
-                                    id="annual-salary-from"
-                                    type="text"
-                                    // value={
-                                    //     job.annualSalary?.from ||
-                                    //     formState.annualSalary?.from
-                                    // }
-                                    onChange={
-                                        e => {}
-                                        // setFormState({
-                                        //     ...formState,
-                                        //     annualSalary: {
-                                        //         ...formState.annualSalary,
-                                        //         from: e.target.value,
-                                        //     },
-                                        // })
-                                    }
-                                />
-                                <FormInput
-                                    title="To"
-                                    id="annual-salary-to"
-                                    type="text"
-                                    // value={
-                                    //     job.annualSalary?.to ||
-                                    //     formState.annualSalary?.to
-                                    // }
-                                    onChange={
-                                        e => {}
-                                        // setFormState({
-                                        //     ...formState,
-                                        //     annualSalary: {
-                                        //         ...formState.annualSalary,
-                                        //         to: e.target.value,
-                                        //     },
-                                        // })
-                                    }
-                                />
+                                <div>
+                                    <FormInput
+                                        title="From"
+                                        id="min-salary"
+                                        type="number"
+                                        step={1000}
+                                        value={
+                                            job.minSalary ? job.minSalary : ""
+                                        }
+                                        onChange={e => {
+                                            dispatch(
+                                                setJob({
+                                                    ...job,
+                                                    minSalary: e.target.value,
+                                                })
+                                            );
+                                        }}
+                                    />
+                                </div>
+                                <div>
+                                    <FormInput
+                                        title="To"
+                                        id="max-salary"
+                                        type="number"
+                                        step={1000}
+                                        value={
+                                            job.maxSalary ? job.maxSalary : ""
+                                        }
+                                        onChange={e => {
+                                            {
+                                                dispatch(
+                                                    setJob({
+                                                        ...job,
+                                                        maxSalary:
+                                                            e.target.value,
+                                                    })
+                                                );
+                                                dispatch(
+                                                    setJobError({
+                                                        ...jobErr,
+                                                        content: {
+                                                            ...jobErr.content,
+                                                            maxSalaryErr: "",
+                                                        },
+                                                    })
+                                                );
+                                            }
+                                        }}
+                                        errorText={jobErr.content.maxSalaryErr}
+                                    />
+                                </div>
                                 <div className="col-span-2">
                                     <Selection
                                         title="Currency"
-                                        datas={industries}
-                                        // value={job.annualSalary?.currency ?? ""}
+                                        datas={currencyList.map(
+                                            item =>
+                                                `${item.name} (${item.code})`
+                                        )}
+                                        value={job.currency ? job.currency : ""}
                                         onChange={
-                                            (value: string) => {}
+                                            (value: string) => {
+                                                dispatch(
+                                                    setJob({
+                                                        ...job,
+                                                        currency: value,
+                                                    })
+                                                );
+                                            }
                                             // setFormState({
                                             //     ...formState,
                                             //     annualSalary: {
@@ -429,8 +478,9 @@ const JobDetail = ({}: IJobDetail) => {
                     <div className="p-5 border-t border-t-slate-300">
                         <button
                             type="submit"
-                            className="text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 mr-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            className="inline-flex items-center justify-center gap-1 text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 mr-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                         >
+                            {loading && <SpinLoading />}
                             Save & continue
                         </button>
                         <button

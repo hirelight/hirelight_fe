@@ -8,10 +8,11 @@ interface IFormInput
     title: string;
     required?: boolean;
     placeholder?: string;
+    errorText?: string;
 }
 
 const FormInput = (props: IFormInput) => {
-    const { id, className, required, title, ...rest } = props;
+    const { id, className, required, title, errorText, ...rest } = props;
     return (
         <div className="w-full">
             <label
@@ -29,6 +30,11 @@ const FormInput = (props: IFormInput) => {
                     className,
                 ].join(" ")}
             />
+            {errorText && (
+                <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                    {errorText}
+                </p>
+            )}
         </div>
     );
 };

@@ -51,8 +51,11 @@ const NewJobHeader = ({}: INewJobHeader) => {
                     router.push(redirectLink);
                 }
             } else {
-                if (job.id !== undefined) {
-                    const res = await updateJobDetail({ id: job.id, ...job });
+                if (jobId !== undefined) {
+                    const res = await updateJobDetail({
+                        id: jobId as string,
+                        ...job,
+                    });
                     if (res.data.status === 200) {
                         toast.success("Update successfully!");
                         dispatch(setJob(res.data.data));

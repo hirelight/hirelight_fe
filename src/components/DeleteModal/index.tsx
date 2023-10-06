@@ -144,7 +144,9 @@ const DeleteModal = ({
                                 onClick={handleConfirm}
                             >
                                 {loading && <SpinLoading className="mr-3" />}
-                                Deactivate
+                                {title?.includes("Delete")
+                                    ? "Delete"
+                                    : "Deactivate"}
                             </button>
                             <button
                                 type="button"
