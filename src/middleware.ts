@@ -42,7 +42,9 @@ export default async function middleware(req: NextRequest) {
     // console.log(hostname, path);
     // rewrite root application to `/app` folder
     if (
+        hostname === "localhost:3000" ||
         hostname === "www.localhost:3000" ||
+        hostname === `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}` ||
         hostname === `www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
     ) {
         return NextResponse.rewrite(new URL(`${path}${url.search}`, req.url));
