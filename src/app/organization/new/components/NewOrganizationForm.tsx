@@ -47,8 +47,10 @@ const NewOrganizationForm = () => {
     };
 
     React.useEffect(() => {
-        if (code) {
-            console.log("Call api get token", code);
+        if (!Cookies.get("hirelight_access_token")) {
+            if (code) {
+                console.log("Call api get token", code);
+            }
         }
     }, [code]);
 
