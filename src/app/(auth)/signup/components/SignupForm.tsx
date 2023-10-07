@@ -45,10 +45,16 @@ const SignupForm = () => {
 
         setLoading(true);
 
-        Cookies.set("hirelight_access_token", "tokenasdkajsdnkas", {
-            domain: `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-        });
-        Cookies.set("hirelight_access_token", "tokenasdkajsdnkas");
+        if (process.env.NODE_ENV === "production")
+            Cookies.set("hirelight_access_token", "tokenasdkajsdnkas", {
+                domain: `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+                secure: true,
+            });
+        else
+            Cookies.set("hirelight_access_token", "tokenasdkajsdnkas", {
+                domain: `.local`,
+                secure: true,
+            });
 
         await delayFunc(2000);
         toast.success("Sign up  success");
