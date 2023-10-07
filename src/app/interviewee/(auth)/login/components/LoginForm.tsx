@@ -45,9 +45,7 @@ const LoginForm = () => {
         toast.success("Sign in  success");
         await delayFunc(500);
         setLoading(false);
-        router.replace(
-            `${window.location.protocol}//fpt.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?code=123`
-        );
+        router.push("/");
     };
     return (
         <form className="space-y-6" onSubmit={handleSubmitLogin}>
