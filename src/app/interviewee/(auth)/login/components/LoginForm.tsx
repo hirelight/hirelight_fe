@@ -2,30 +2,52 @@
 
 import Link from "next/link";
 import React, { FormEvent, useState } from "react";
+import Cookies from "js-cookie";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components";
 import { SpinLoading } from "@/icons";
+import { delayFunc } from "@/helpers/shareHelpers";
 
 const LoginForm = () => {
     // document.cookie =
     //     "hirelight_access_token=asdasdasdasd; domain:jobs.locahost:3000; path=/";
+    const router = useRouter();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [isLoading, setIsLoading] = useState(true);
+    const [loading, setLoading] = React.useState(false);
 
     const [formErr, setFormErr] = useState({
         emailError: "",
         passwordError: "",
     });
 
-    const handleSubmitLogin = (e: FormEvent) => {
+    const handleSubmitLogin = async (e: FormEvent) => {
         e.preventDefault();
         setFormErr({
             ...formErr,
             passwordError: "Password incorrect!",
         });
-        console.log("Login");
+
+        if (process.env.NODE_ENV === "production")
+            Cookies.set("hirelight_access_token", "tokenasdkajsdnkas", {
+                domain: `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+                secure: true,
+            });
+        else
+            Cookies.set("hirelight_access_token", "tokenasdkajsdnkas", {
+                domain: `.local`,
+                secure: true,
+            });
+        await delayFunc(2000);
+        toast.success("Sign in  success");
+        await delayFunc(500);
+        setLoading(false);
+        router.replace(
+            `${window.location.protocol}//fpt.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?code=123`
+        );
     };
     return (
         <form className="space-y-6" onSubmit={handleSubmitLogin}>
@@ -102,7 +124,7 @@ const LoginForm = () => {
 
             <div>
                 <Button type="submit" className="w-full">
-                    {isLoading && <SpinLoading className="mr-3" />}
+                    {loading && <SpinLoading className="mr-3" />}
                     Sign in
                 </Button>
             </div>
