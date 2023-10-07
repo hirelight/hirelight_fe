@@ -35,3 +35,17 @@
     font-size: 32px;
     font-weight: 600;
 }
+
+.button__signin__with {
+    width: 100%;
+    border: 1px solid gray;
+    border-radius: 4px;
+    padding: 8px 0;
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgb(87, 87, 87);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
