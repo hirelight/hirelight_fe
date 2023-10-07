@@ -360,36 +360,43 @@ export const teamMembers: {
 export const pipelineStages: {
     id: number;
     stageName: string;
+    type: string;
     iconUrl: string;
 }[] = [
     {
         id: 1,
-        stageName: "Perth/Scone Airport",
+        stageName: "Sourced",
+        type: "default",
         iconUrl: "http://dummyimage.com/115x100.png/cc0000/ffffff",
     },
     {
         id: 2,
-        stageName: "Orinduik Airport",
+        stageName: "Review CV",
+        type: "default",
         iconUrl: "http://dummyimage.com/122x100.png/cc0000/ffffff",
     },
     {
         id: 3,
-        stageName: "Bram Fischer International Airport",
+        stageName: "Multiple choice",
+        type: "multiple-choice",
         iconUrl: "http://dummyimage.com/142x100.png/cc0000/ffffff",
     },
     {
         id: 4,
-        stageName: "Jérémie Airport",
+        stageName: "One-way assessment",
+        type: "one-way",
         iconUrl: "http://dummyimage.com/173x100.png/cc0000/ffffff",
     },
     {
         id: 5,
-        stageName: "Beloyarskiy Airport",
+        stageName: "Technical interview",
+        type: "face-to-face",
         iconUrl: "http://dummyimage.com/117x100.png/5fa2dd/ffffff",
     },
     {
         id: 6,
-        stageName: "Menorca Airport",
+        stageName: "Hired",
+        type: "default",
         iconUrl: "http://dummyimage.com/197x100.png/ff4444/ffffff",
     },
 ];

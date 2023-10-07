@@ -18,9 +18,12 @@ const PipelineStages = ({ selectedId, onSelect }: IPipelineStages) => {
                     <li key={stage.id}>
                         <button
                             type="button"
+                            disabled={stage.type === "default"}
                             className={`${styles.stage__btn} ${
-                                selectedId === stage.id ? styles.active : ""
-                            }`}
+                                stage.type === "default"
+                                    ? "cursor-not-allowed opacity-70"
+                                    : "hover:bg-gray-400 hover:text-neutral-700"
+                            } ${selectedId === stage.id ? styles.active : ""}`}
                             onClick={onSelect.bind(null, stage.id)}
                         >
                             <Image

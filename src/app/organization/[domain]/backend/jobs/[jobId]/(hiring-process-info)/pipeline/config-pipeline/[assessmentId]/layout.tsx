@@ -1,5 +1,7 @@
 import React from "react";
 
+import TitleHeader from "./components/TitleHeader";
+
 const PipelineAssessmentLayout = ({
     children,
 }: {
@@ -7,9 +9,7 @@ const PipelineAssessmentLayout = ({
 }) => {
     return (
         <div>
-            <h3 className="text-lg font-medium text-neutral-700 mb-4 px-6">
-                Default pipeline
-            </h3>
+            <TitleHeader />
             <div>{children}</div>
         </div>
     );

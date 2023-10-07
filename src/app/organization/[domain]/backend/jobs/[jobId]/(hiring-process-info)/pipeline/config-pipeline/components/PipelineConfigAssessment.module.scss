@@ -1,5 +1,5 @@
 .assessment__wrapper {
-    @apply flex-1 flex-shrink-0 w-0 min-w-0 border-2 border-neutral-300 py-4 px-6 rounded-lg text-center flex flex-col items-center;
+    @apply flex-1 flex-shrink-0 min-w-0 border-2 border-neutral-300 py-4 px-6 rounded-lg text-center flex flex-col items-center;
 }
 .assessment__title {
     @apply text-sm font-medium text-neutral-700 mb-2;

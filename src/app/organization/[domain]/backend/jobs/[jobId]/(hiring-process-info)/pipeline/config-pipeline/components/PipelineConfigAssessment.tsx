@@ -12,7 +12,7 @@ import styles from "./PipelineConfigAssessment.module.scss";
 const PipelineConfigAssessment = () => {
     return (
         <div className="w-full px-6">
-            <div className="flex gap-8">
+            <div className="flex flex-col lg:flex-row gap-8">
                 <Link
                     href={"config-pipeline/123/face-to-face-assessment/new"}
                     className={styles.assessment__wrapper}

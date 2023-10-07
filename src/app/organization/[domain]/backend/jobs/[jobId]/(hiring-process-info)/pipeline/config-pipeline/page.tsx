@@ -19,14 +19,13 @@ const PipelineConfigurationHome = () => {
                 </h3>
                 <Link
                     href={"select-pipeline"}
-                    className="text-sm font-medium text-blue_primary_800 hover:underline"
+                    className="text-sm font-medium text-blue_primary_800 hover:underline mr-4 xl:mr-6"
                 >
                     Change pipeline
                 </Link>
             </div>
             <div className="p-6 w-full bg-white shadow-lg rounded-md">
                 <PipelineConfig />
-                <LoadingIndicator className="w-32 h-32" />
             </div>
         </div>
     );

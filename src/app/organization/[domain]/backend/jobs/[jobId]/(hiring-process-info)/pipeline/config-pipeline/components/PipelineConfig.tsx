@@ -9,7 +9,7 @@ import PipelineConfigAssessment from "./PipelineConfigAssessment";
 
 const PipelineConfig = () => {
     const [selectedStage, setSelectedStage] = React.useState(
-        pipelineStages[0].id
+        pipelineStages.find(item => item.type !== "default")!!.id
     );
 
     return (

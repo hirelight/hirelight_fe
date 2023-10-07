@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 import { EllipsisVertical } from "@/icons";
 
@@ -51,9 +52,12 @@ const JobCard = ({
         <div className="w-full p-6 bg-white shadow-md rounded-lg">
             <div className="w-full flex  items-center justify-between mb-6">
                 <div className="flex  flex-wrap sm:flex-nowrap items-start sm:items-center sm:flex-row gap-3">
-                    <h3 className="text-blue_primary_700 text-xl font-medium whitespace-nowrap">
+                    <Link
+                        href={`backend/jobs/${123}/hiring-process/applied`}
+                        className="text-blue_primary_700 text-xl font-medium whitespace-nowrap hover:underline"
+                    >
                         {title}
-                    </h3>
+                    </Link>
                     <span className="text-sm text-neutral-500 whitespace-nowrap">
                         {location}
                     </span>

@@ -1,0 +1,39 @@
+.sidebar__wrapper {
+    width: 440px;
+    height: fit-content;
+    position: sticky;
+    top: 0.5rem;
+    background-color: white;
+    @apply shadow-md rounded-md overflow-hidden;
+}
+
+.sidebar__tab {
+    @apply flex-1 relative text-center cursor-pointer text-sm text-neutral-500 font-semibold uppercase;
+    &::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        width: 0px;
+        height: 2px;
+        transform-origin: right;
+        @apply bg-neutral-800 transition-all;
+    }
+
+    &:first-of-type {
+        &::after {
+            right: 0;
+        }
+    }
+    &:nth-of-type(2) {
+        &::after {
+            left: 0;
+        }
+    }
+
+    &.active {
+        @apply text-neutral-700;
+        &::after {
+            width: 100%;
+        }
+    }
+}

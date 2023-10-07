@@ -395,6 +395,7 @@ const JobDetail = ({}: IJobDetail) => {
                                         title="From"
                                         id="min-salary"
                                         type="number"
+                                        min={0}
                                         step={1000}
                                         value={
                                             job.minSalary ? job.minSalary : ""
@@ -415,6 +416,7 @@ const JobDetail = ({}: IJobDetail) => {
                                         id="max-salary"
                                         type="number"
                                         step={1000}
+                                        min={0}
                                         value={
                                             job.maxSalary ? job.maxSalary : ""
                                         }
