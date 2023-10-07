@@ -2,6 +2,8 @@ import { Metadata } from "next";
 import React from "react";
 import Link from "next/link";
 
+import { GoogleIcon, LinkedInIcon } from "@/icons";
+
 import styles from "./login.module.scss";
 import LoginForm from "./components/LoginForm";
 
@@ -41,7 +43,7 @@ const IntervieweeLogin = async () => {
                             </span>
                             <div className="flex-1 h-[1px] bg-gray-400" />
                         </div>
-                        <div className="w-full flex justify-center gap-6">
+                        {/* <div className="w-full flex justify-center gap-6">
                             <button
                                 type="button"
                                 className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -78,7 +80,28 @@ const IntervieweeLogin = async () => {
                                     />
                                 </svg>
                             </button>
-                        </div>
+                        </div> */}
+
+                        <Link
+                            href={
+                                process.env
+                                    .NEXT_PUBLIC_CANDIDATE_LOGIN_GOOGLE || ""
+                            }
+                            className={styles.button__signin__with}
+                        >
+                            <GoogleIcon className="w-6 h-6 mr-2" />
+                            <span>Sign in with Google</span>
+                        </Link>
+                        <Link
+                            href={
+                                process.env
+                                    .NEXT_PUBLIC_CANDIDATE_LOGIN_LINKEDIN || ""
+                            }
+                            className={styles.button__signin__with}
+                        >
+                            <LinkedInIcon className="w-8 h-8 mr-1" />
+                            <span>Sign in with LinkedIn</span>
+                        </Link>
 
                         <div className="mt-10 text-center text-sm text-gray-500">
                             <p>Don&apos;t have a Workable account?</p>
