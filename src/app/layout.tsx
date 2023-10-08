@@ -71,7 +71,7 @@ export default function RootLayout({
                 <TopProgressBar />
                 <ReduxProvider>{children}</ReduxProvider>
                 <div id="hirelight__portal"></div>
-                <Script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js" />
+                <Script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></Script>
             </body>
         </html>
     );
