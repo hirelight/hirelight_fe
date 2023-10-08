@@ -1,0 +1,30 @@
+.sidebar__wrapper {
+    @apply absolute top-0 bottom-0 max-h-screen z-10 visible opacity-100;
+
+    &.hide .sidebar__container {
+        @apply opacity-0 invisible pointer-events-none;
+    }
+    &.hide .sidebar__toggle__btn {
+        right: unset;
+        @apply left-6 -translate-x-1/2;
+    }
+    &.hide + .content__wrapper {
+        padding-left: 0;
+    }
+}
+
+.sidebar__toggle__btn {
+    position: absolute;
+    top: 2rem;
+    right: 0;
+    transform: translateX(50%) rotate(180deg);
+    @apply p-2 bg-white hover:bg-slate-200 border border-gray-300 rounded-md text-neutral-700 shadow-md transition-all duration-75;
+}
+
+.sidebar__container {
+    @apply h-full opacity-100 visible shadow-lg;
+}
+
+.content__wrapper {
+    @apply flex-1 mx-6 pl-0 lg:pl-[440px];
+}

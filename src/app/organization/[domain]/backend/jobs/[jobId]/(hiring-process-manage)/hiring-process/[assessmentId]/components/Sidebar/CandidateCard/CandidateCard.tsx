@@ -21,12 +21,12 @@ const CandidateCard = ({ index }: any) => {
             <div className="p-4 xl:px-6">
                 <div className="flex items-start gap-3">
                     <label
-                        htmlFor="select-all-candidates"
+                        htmlFor={`select-candidate-${index}`}
                         className="pt-3 mr-4 text-sm font-medium text-gray-900 dark:text-gray-300"
                         onClick={e => e.stopPropagation()}
                     >
                         <input
-                            id="select-all-candidates"
+                            id={`select-candidate-${index}`}
                             type="checkbox"
                             value="all"
                             className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer"

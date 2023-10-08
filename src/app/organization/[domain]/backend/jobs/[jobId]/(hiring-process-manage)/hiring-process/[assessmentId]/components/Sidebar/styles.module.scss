@@ -1,10 +1,15 @@
+.sidebar__toggle__btn {
+    @apply absolute top-32 left-[440px] -translate-x-1/2 z-[2000] p-2 bg-white shadow-md text-neutral-700 border border-gray-300 rounded-md hover:bg-slate-200 transition-all;
+    &.hide__sidebar {
+        right: unset;
+        @apply left-6;
+    }
+}
+
 .sidebar__wrapper {
     width: 440px;
-    height: fit-content;
-    position: sticky;
-    top: 0.5rem;
     background-color: white;
-    @apply shadow-md rounded-md overflow-hidden;
+    @apply h-full shadow-lg overflow-hidden lg:relative lg:shadow-md lg:rounded-md;
 }
 
 .sidebar__tab {

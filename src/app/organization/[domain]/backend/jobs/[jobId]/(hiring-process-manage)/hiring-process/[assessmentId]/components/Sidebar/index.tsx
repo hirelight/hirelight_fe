@@ -6,17 +6,24 @@ import {
     MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { useParams } from "next/navigation";
-import { ArrowDownIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
+import {
+    ArrowDownIcon,
+    ChevronDownIcon,
+    PlayIcon,
+} from "@heroicons/react/24/solid";
 
 import { useAppDispatch } from "@/redux/reduxHooks";
 import { setSelectAllCandidates } from "@/redux/slices/candidates.slice";
+import { Portal } from "@/components";
 
 import styles from "./styles.module.scss";
 import CandidateList from "./CandidateList/CandidateList";
 
 const Sidebar = () => {
-    const [selectedTab, setSelectedTab] = React.useState(0);
     const dispatch = useAppDispatch();
+
+    const [selectedTab, setSelectedTab] = React.useState(0);
+    const [showSidebar, setShowSidebar] = React.useState(true);
 
     return (
         <div className={styles.sidebar__wrapper}>
