@@ -1,8 +1,8 @@
 "use client";
 
+import React from "react";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/solid";
 import { Tooltip } from "flowbite-react";
-import React from "react";
 
 const Heading = () => {
     return (
