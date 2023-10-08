@@ -11,11 +11,10 @@ import { ArrowDownIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import { useAppDispatch } from "@/redux/reduxHooks";
 import { setSelectAllCandidates } from "@/redux/slices/candidates.slice";
 
-import styles from "./Sidebar.module.scss";
+import styles from "./styles.module.scss";
 import CandidateList from "./CandidateList/CandidateList";
 
 const Sidebar = () => {
-    const { jobId, assessmentId } = useParams();
     const [selectedTab, setSelectedTab] = React.useState(0);
     const dispatch = useAppDispatch();
 

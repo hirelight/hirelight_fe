@@ -17,12 +17,14 @@ import React from "react";
 
 import { Selection } from "@/components";
 
+import styles from "./AssessmentInfoHeader.module.scss";
+
 const AssessmentInfoHeader = () => {
-    const { jobId } = useParams();
+    const { jobId, assessmentId } = useParams();
 
     return (
         <div className="bg-white shadow-md mt-8 mb-12">
-            <div className="max-w-screen-xl mx-auto p-4 xl:px-6">
+            <div className="max-w-screen-xl mx-auto py-6 px-4 xl:px-6">
                 <div className="flex items-center justify-between mb-4">
                     <div>
                         <h1 className="inline text-blue-800 text-4xl font-medium mr-2">
@@ -71,7 +73,7 @@ const AssessmentInfoHeader = () => {
                         />
                     </div>
                 </div>
-                <div>
+                <div className="mb-8">
                     <span className="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-4 py-1 rounded dark:bg-blue-900 dark:text-blue-300">
                         Num of candidates: <span>7</span>
                     </span>
@@ -95,7 +97,51 @@ const AssessmentInfoHeader = () => {
                 </div>
 
                 <div className="w-full">
-                    <div className="flex justify-between"></div>
+                    <div role="tablist" className="flex">
+                        {[
+                            "All",
+                            "Sourced",
+                            "Applied",
+                            "Phone screen",
+                            "Assessment",
+                            "Interview",
+                            "Offer",
+                            "Hired",
+                        ].map((item, index) => (
+                            <div
+                                role="tab"
+                                key={item}
+                                className="flex-1 text-center"
+                            >
+                                <Link
+                                    href={`/backend/jobs/${jobId}/hiring-process/${item
+                                        .toLowerCase()
+                                        .replace(" ", "-")}`}
+                                    className={styles.assessment__btn}
+                                >
+                                    <span
+                                        className={`${
+                                            styles.assessment__btn__text
+                                        } ${
+                                            item
+                                                .toLowerCase()
+                                                .replace(" ", "-") ===
+                                            (assessmentId as string)
+                                                .toLowerCase()
+                                                .replace(" ", "-")
+                                                ? styles.active
+                                                : ""
+                                        }`}
+                                    >
+                                        {item}{" "}
+                                        <span className="ml-1 text-neutral-400">
+                                            {index === 0 ? "-" : index}
+                                        </span>
+                                    </span>
+                                </Link>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,0 +1,11 @@
+.candidate__action__btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @apply rounded-md;
+    &:hover {
+        @apply bg-slate-300;
+    }
+}

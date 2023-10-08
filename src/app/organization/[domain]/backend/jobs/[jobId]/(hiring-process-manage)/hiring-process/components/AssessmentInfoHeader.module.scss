@@ -1,0 +1,26 @@
+.assessment__btn {
+    &:hover .assessment__btn__text {
+        @apply bg-gray-300;
+    }
+    &:hover .assessment__btn__text.active {
+        color: white;
+        @apply bg-blue_primary_700;
+        span {
+            color: white;
+        }
+    }
+}
+
+.assessment__btn__text {
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
+    @apply rounded-md text-sm font-semibold text-neutral-600;
+
+    &.active {
+        color: white;
+        @apply bg-blue_primary_700;
+        span {
+            color: white;
+        }
+    }
+}

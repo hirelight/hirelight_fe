@@ -1,0 +1,18 @@
+.move__candidate__dialog {
+    min-width: 220px;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: unset;
+    bottom: unset;
+    margin-top: 0.25rem;
+    background-color: white;
+    opacity: 0;
+    visibility: hidden;
+    transform-origin: top right;
+    @apply transition-all ease-in duration-75 shadow-md border border-gray-300 rounded-md transform scale-95;
+
+    &.entering {
+        @apply ease-out duration-100  opacity-100 scale-100 visible;
+    }
+}
