@@ -1,6 +1,7 @@
 import React from "react";
 
 import Sidebar from "./components/Sidebar";
+import ContentWrapper from "./components/ContentWrapper";
 
 const HiringProcessAssessmentInfoLayout = ({
     children,
@@ -10,10 +11,7 @@ const HiringProcessAssessmentInfoLayout = ({
     return (
         <div>
             <div className="max-w-screen-xl mx-auto">
-                <div className="flex gap-6 justify-between">
-                    <Sidebar />
-                    <div className="flex-1">{children}</div>
-                </div>
+                <ContentWrapper>{children}</ContentWrapper>
             </div>
         </div>
     );
