@@ -1,11 +1,15 @@
-"use client";
-
-import { useParams } from "next/navigation";
 import React from "react";
+import { Metadata } from "next";
+
+import { delayFunc } from "@/helpers/shareHelpers";
 
 import ProfileHeader from "./components/ProfileHeader";
 import CandidateActionTabs from "./components/CandidateActionTab/CandidateActionTabs";
 import ProfileSection from "./components/ProfileSections";
+
+export const metadata: Metadata = {
+    title: "Hirelight - FPT",
+};
 
 const HiringProcessCandidate = () => {
     return (

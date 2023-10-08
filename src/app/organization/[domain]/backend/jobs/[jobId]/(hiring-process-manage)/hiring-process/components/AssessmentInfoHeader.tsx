@@ -10,20 +10,31 @@ import {
     PencilIcon,
     TrashIcon,
 } from "@heroicons/react/24/outline";
-import { Tooltip } from "flowbite-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React from "react";
+import dynamic from "next/dynamic";
 
 import { Selection } from "@/components";
+import { SpinLoading } from "@/icons";
 
 import styles from "./AssessmentInfoHeader.module.scss";
+
+const Tooltip = dynamic(
+    () => import("flowbite-react").then(mod => mod.Tooltip),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="w-8 h-8 rounded-md animate-pulse bg-slate-200"></div>
+        ),
+    }
+);
 
 const AssessmentInfoHeader = () => {
     const { jobId, assessmentId } = useParams();
 
     return (
-        <div className="bg-white shadow-md mt-8 mb-12">
+        <div className="bg-white shadow-md mt-8 mb-6">
             <div className="max-w-screen-xl mx-auto py-6 px-4 xl:px-6">
                 <div className="flex items-center justify-between mb-4">
                     <div>

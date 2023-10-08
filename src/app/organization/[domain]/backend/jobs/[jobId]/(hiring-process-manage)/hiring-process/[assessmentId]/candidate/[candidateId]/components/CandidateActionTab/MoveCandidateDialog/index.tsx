@@ -4,16 +4,19 @@ import React from "react";
 import { useParams } from "next/navigation";
 
 import { ChevronDown } from "@/icons";
+import { useOutsideClick } from "@/hooks/useClickOutside";
 
 import styles from "./styles.module.scss";
 
 const MoveCandidateDialog = () => {
     const { assessmentId, candidateId } = useParams();
-
+    const dialogRef = useOutsideClick<HTMLDivElement>(() =>
+        setShowDialog(false)
+    );
     const [showDialog, setShowDialog] = React.useState(false);
 
     return (
-        <div className="relative">
+        <div className="relative" ref={dialogRef}>
             <button
                 type="button"
                 className="p-2 bg-blue-700 hover:bg-blue-800 group transition-all duration-300 rounded-tr-md rounded-br-md"
@@ -21,7 +24,9 @@ const MoveCandidateDialog = () => {
             >
                 <ChevronDown
                     strokeWidth={2}
-                    className="w-4 h-4 text-white transition-all duration-200 group-hover:rotate-180"
+                    className={`w-4 h-4 text-white transition-all duration-200 ${
+                        showDialog ? "rotate-180" : ""
+                    }`}
                 />
             </button>
             {/* <!--
