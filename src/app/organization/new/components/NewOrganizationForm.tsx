@@ -10,49 +10,61 @@ import { toast } from "react-toastify";
 
 import { GoogleIcon, LinkedInIcon, SpinLoading } from "@/icons";
 import { delayFunc } from "@/helpers/shareHelpers";
+import organizationsServices from "@/services/organizations/organizations.service";
+import { ICreateOrgDto } from "@/services/organizations/organizations.interface";
 
 import styles from "./NewOrganizationForm.module.scss";
 
 const NewOrganizationForm = () => {
     const router = useRouter();
-    const code = useSearchParams().get("code");
+    const loginId = useSearchParams().get("loginId");
 
     const [newOrgFormErr, setNewOrgFormErr] = React.useState({
         nameErr: "",
-        subdomainErr: "",
+        domainErr: "",
     });
-    const [newOrgForm, setNewOrgForm] = React.useState({
+    const [newOrgForm, setNewOrgForm] = React.useState<ICreateOrgDto>({
         name: "",
-        subdomain: "",
+        domain: "",
     });
     const [loading, setLoading] = React.useState(false);
 
     const handleCreateNewOrg = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (newOrgForm.name === "")
-            return setNewOrgFormErr(prev => ({
+
+        if (validateFormInput()) return;
+
+        setLoading(true);
+        try {
+            const data =
+                await organizationsServices.createNewOrganization(newOrgForm);
+            console.log(data);
+        } catch (error) {
+            console.log(error);
+        }
+        setLoading(false);
+    };
+
+    const validateFormInput = () => {
+        let valid = false;
+        if (newOrgForm.name === "") {
+            setNewOrgFormErr(prev => ({
                 ...prev,
                 nameErr: "Email must not empty!",
             }));
-        setLoading(true);
+            valid = true;
+        }
 
-        await delayFunc(2000);
-        toast.success("Create new org success");
-        await delayFunc(500);
-
-        setLoading(false);
-        router.push(
-            `${window.location.protocol}//${newOrgForm.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?code=123`
-        );
+        return valid;
     };
 
     React.useEffect(() => {
-        if (!Cookies.get("hirelight_access_token")) {
-            if (code) {
-                console.log("Call api get token", code);
+        if (Cookies.get("hirelight_access_token")) {
+            if (loginId) {
+                console.log("Call api get token", loginId);
             }
         }
-    }, [code]);
+    }, [loginId]);
 
     return (
         <div>
@@ -108,33 +120,33 @@ const NewOrganizationForm = () => {
                                 });
                                 setNewOrgFormErr({
                                     nameErr: "",
-                                    subdomainErr: "",
+                                    domainErr: "",
                                 });
                             }}
                         />
                     </div>
                     <div className="text-left">
                         <label
-                            htmlFor="subdomain"
+                            htmlFor="domain"
                             className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
                         >
                             Subdomain
                         </label>
                         <input
                             type="text"
-                            id="subdomain"
+                            id="domain"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            value={newOrgForm.subdomain}
+                            value={newOrgForm.domain}
                             placeholder="hirelight-co"
                             required
                             onChange={e => {
                                 setNewOrgForm({
                                     ...newOrgForm,
-                                    subdomain: e.target.value,
+                                    domain: e.target.value,
                                 });
                                 setNewOrgFormErr({
                                     nameErr: "",
-                                    subdomainErr: "",
+                                    domainErr: "",
                                 });
                             }}
                         />
