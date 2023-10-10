@@ -1,15 +1,11 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
-import Cookies from "js-cookie";
 import { UserIcon } from "@heroicons/react/24/solid";
-import { toast } from "react-toastify";
 
-import { GoogleIcon, LinkedInIcon, SpinLoading } from "@/icons";
-import { delayFunc } from "@/helpers/shareHelpers";
+import { SpinLoading } from "@/icons";
 import organizationsServices from "@/services/organizations/organizations.service";
 import { ICreateOrgDto } from "@/services/organizations/organizations.interface";
 
@@ -59,10 +55,8 @@ const NewOrganizationForm = () => {
     };
 
     React.useEffect(() => {
-        if (Cookies.get("hirelight_access_token")) {
-            if (loginId) {
-                console.log("Call api get token", loginId);
-            }
+        if (loginId) {
+            console.log("Call api get token", loginId);
         }
     }, [loginId]);
 
