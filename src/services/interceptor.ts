@@ -1,23 +1,56 @@
-import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import axios, {
+    AxiosError,
+    InternalAxiosRequestConfig,
+    AxiosResponse,
+} from "axios";
+import Cookies from "js-cookie";
 
 const interceptor = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_NODE_RED_URL,
+    baseURL: process.env.NEXT_PUBLIC_SERVER_API,
+    headers: {
+        "Access-Control-Allow-Origin": "*",
+    },
 });
 
 interceptor.interceptors.request.use((req: InternalAxiosRequestConfig<any>) => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("hirelight_access_token");
     if (token && req.headers) req.headers.Authorization = `Bearer ${token}`;
 
     return req;
 });
 
 interceptor.interceptors.response.use(
-    res => res,
+    (res: AxiosResponse) => {
+        const { code, auto } = res.data;
+
+        if (code === 401) {
+            if (auto === "yes") {
+                console.log("Get new token");
+                // console.log('get new token using refresh token', getLocalRefreshToken())
+                // return refreshToken().then(rs => {
+                //     console.log('get token refreshToken>>', rs.data)
+                //     const { token } = rs.data
+                //     instance.setToken(token);
+                //     const config = response.config
+                //     config.headers\['x-access-token'\] = token
+                //     config.baseURL = 'http://localhost:3000/'
+                //     return instance(config)
+
+                // })
+            }
+        }
+
+        return res;
+    },
     (error: AxiosError) => {
         if (error.response?.status === 401) {
-            localStorage.removeItem("token");
+            Cookies.remove("hirelight_access_token");
         }
-        return Promise.reject(error.response);
+        if (error.response) {
+            return error.response.data;
+        } else {
+            return Promise.reject(error);
+        }
     }
 );
 
