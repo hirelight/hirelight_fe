@@ -27,7 +27,11 @@ const DomainPage = ({
                     if (process.env.NODE_ENV !== "production")
                         Cookies.set(
                             "hirelight_access_token",
-                            res.data.accessToken
+                            res.data.accessToken,
+                            {
+                                sameSite: "strict",
+                                secure: true,
+                            }
                         );
 
                     router.push("/backend");
@@ -47,7 +51,11 @@ const DomainPage = ({
                 if (process.env.NODE_ENV !== "production")
                     Cookies.set(
                         "hirelight_access_token",
-                        accessToken as string
+                        accessToken as string,
+                        {
+                            sameSite: "strict",
+                            secure: true,
+                        }
                     );
 
                 router.push("/backend");

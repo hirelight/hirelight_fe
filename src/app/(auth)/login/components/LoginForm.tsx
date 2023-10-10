@@ -40,23 +40,15 @@ const LoginForm = () => {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (loginForm.email === "")
-            return setLoginFormErr(prev => ({
-                ...prev,
-                emailErr: "Email must not empty!",
-            }));
-
         setLoading(true);
-        if (process.env.NODE_ENV === "production")
-            Cookies.set("hirelight_access_token", "tokenasdkajsdnkas", {
-                domain: `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-                secure: true,
-            });
-        else
-            Cookies.set("hirelight_access_token", "tokenasdkajsdnkas", {
-                domain: `.local`,
-                secure: true,
-            });
+        Cookies.set("hirelight_access_token", "ATOken", {
+            domain:
+                process.env.NODE_ENV === "production"
+                    ? `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
+                    : ".localhost",
+            sameSite: "strict",
+            secure: true,
+        });
 
         await delayFunc(2000);
         toast.success("Sign in  success");
@@ -160,6 +152,8 @@ const LoginForm = () => {
                                 process.env.NODE_ENV === "production"
                                     ? `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
                                     : ".localhost",
+                            sameSite: "strict",
+                            secure: true,
                         }
                     );
 
@@ -220,11 +214,12 @@ const LoginForm = () => {
                         id="email"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="example@gmail.com"
+                        required
                         value={loginForm.email}
                         onChange={e => {
                             setLoginForm(prev => ({
                                 ...prev,
-                                password: e.target.value,
+                                email: e.target.value,
                             }));
                             setLoginFormErr({
                                 emailErr: "",
@@ -245,8 +240,8 @@ const LoginForm = () => {
                         type="password"
                         id="password"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        value={loginForm.password}
                         required
+                        value={loginForm.password}
                         onChange={e => {
                             setLoginForm(prev => ({
                                 ...prev,
