@@ -6,25 +6,36 @@ import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
+import jwt_decode from "jwt-decode";
 
 import { GoogleIcon, LinkedInIcon, SpinLoading } from "@/icons";
 import { delayFunc } from "@/helpers/shareHelpers";
+import authServices from "@/services/auth/auth.service";
+import organizationsServices from "@/services/organizations/organizations.service";
+import { Portal } from "@/components";
+import { validWorkEmail } from "@/helpers/validateHelpers";
 
 import styles from "./LoginForm.module.scss";
 
 const LoginForm = () => {
     const router = useRouter();
-    const code = useSearchParams().get("code");
+    const loginStatus = useSearchParams().get("status");
+    const loginId = useSearchParams().get("loginId");
+    const isOrgOwner = useSearchParams().get("is_org_owner");
+    const isOrgMember = useSearchParams().get("is_org_member");
 
     const [loginFormErr, setLoginFormErr] = React.useState({
         emailErr: "",
         passwordErr: "",
+        errMessage: "",
     });
     const [loginForm, setLoginForm] = React.useState({
         email: "",
         password: "",
     });
     const [loading, setLoading] = React.useState(false);
+
+    const [pageLoading, setPageLoading] = React.useState(false);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -56,17 +67,147 @@ const LoginForm = () => {
         );
     };
 
-    React.useEffect(() => {
-        if (!Cookies.get("hirelight_access_token"))
-            if (code) {
-                console.log("Call api get token", code);
+    const handleRedirect = React.useCallback(
+        (domain: string) => {
+            if (process.env.NODE_ENV === "development")
+                router.replace(
+                    `${window.location.protocol}//${domain}.${
+                        process.env.NEXT_PUBLIC_ROOT_DOMAIN
+                    }?loginId=${loginId}&accessToken=${Cookies.get(
+                        "hirelight_access_token"
+                    )}`
+                );
+            else
+                router.replace(
+                    `${window.location.protocol}//${domain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend`
+                );
+        },
+        [loginId, router]
+    );
+
+    const handleRedirectOrgBased = React.useCallback(
+        async (token: string) => {
+            setPageLoading(true);
+            try {
+                const userData: any = jwt_decode(token);
+
+                if (isOrgMember === null && isOrgOwner === null) {
+                    const [ownedOrgRes, joinedOrgRes] = await Promise.all([
+                        organizationsServices.getOwnedOrganizations(),
+                        organizationsServices.getJoinedOrganizations(),
+                    ]);
+                    if (
+                        ownedOrgRes.statusCode === 200 &&
+                        ownedOrgRes.data !== null
+                    )
+                        handleRedirect(ownedOrgRes.data[0].domain);
+
+                    if (
+                        joinedOrgRes.statusCode === 200 &&
+                        joinedOrgRes.data !== null
+                    )
+                        handleRedirect(joinedOrgRes.data[0].domain);
+
+                    if (!validWorkEmail(userData.email)) {
+                        setLoginFormErr(prev => ({
+                            ...prev,
+                            errMessage:
+                                "You are using personal email. And you are not belong to any organizations. You need to use work email to create your own organization or being invited by others.",
+                        }));
+                        setPageLoading(false);
+                    } else router.push("/organization/new");
+                } else if (isOrgMember === "false" && isOrgOwner === "false") {
+                    if (!validWorkEmail(userData.email)) {
+                        setLoginFormErr(prev => ({
+                            ...prev,
+                            errMessage:
+                                "You are using personal email. And you are not belong to any organizations. You need to use work email to create your own organization or being invited by others.",
+                        }));
+                        setPageLoading(false);
+                    } else router.push("/organization/new");
+                } else {
+                    let res;
+                    if (isOrgOwner === "true")
+                        res =
+                            await organizationsServices.getOwnedOrganizations();
+                    else
+                        res =
+                            await organizationsServices.getJoinedOrganizations();
+
+                    if (res.statusCode === 200) {
+                        const { domain } = res.data[0];
+                        handleRedirect(domain);
+                    }
+                }
+            } catch (error) {
+                console.log(error);
             }
-    }, [code]);
+        },
+        [handleRedirect, isOrgMember, isOrgOwner, router]
+    );
+
+    const fetchAccessToken = React.useCallback(
+        async (loginId: string) => {
+            setPageLoading(true);
+            try {
+                const res = await authServices.getAccessToken(loginId);
+                if (res.statusCode === 200) {
+                    Cookies.set(
+                        "hirelight_access_token",
+                        res.data.accessToken,
+                        {
+                            domain:
+                                process.env.NODE_ENV === "production"
+                                    ? `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
+                                    : ".localhost",
+                        }
+                    );
+
+                    handleRedirectOrgBased(res.data.accessToken);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        [handleRedirectOrgBased]
+    );
+
+    React.useEffect(() => {
+        const accessToken = Cookies.get("hirelight_access_token");
+        if (!accessToken) {
+            if (loginStatus && loginId) {
+                fetchAccessToken(loginId);
+            }
+        } else {
+            handleRedirectOrgBased(accessToken);
+        }
+    }, [handleRedirectOrgBased, fetchAccessToken, loginId, loginStatus]);
 
     return (
         <form onSubmit={handleLogin}>
+            <Portal>
+                {pageLoading && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="fixed inset-0 z-[2000] w-full h-screen backdrop-brightness-50 backdrop-blur-sm flex items-center justify-center"
+                    >
+                        <SpinLoading className="w-32 h-32 text-blue_primary_600" />
+                    </motion.div>
+                )}
+            </Portal>
             <div className="flex flex-col gap-4">
                 <h1 className={styles.title}>Sign in to Hirelight</h1>
+                {loginFormErr.errMessage && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        className="w-full border-2 border-red-500 bg-red-50 p-6 rounded-md text-center text-red-700 text-sm font-medium max-w-full"
+                    >
+                        <p>Opps! Something went wrong!!!</p>
+                        <p>{loginFormErr.errMessage}</p>
+                    </motion.div>
+                )}
                 <div className="mb-2 text-left">
                     <label
                         htmlFor="email"
@@ -81,11 +222,15 @@ const LoginForm = () => {
                         placeholder="example@gmail.com"
                         value={loginForm.email}
                         onChange={e => {
-                            setLoginForm({
-                                ...loginForm,
-                                email: e.target.value,
+                            setLoginForm(prev => ({
+                                ...prev,
+                                password: e.target.value,
+                            }));
+                            setLoginFormErr({
+                                emailErr: "",
+                                passwordErr: "",
+                                errMessage: "",
                             });
-                            setLoginFormErr({ emailErr: "", passwordErr: "" });
                         }}
                     />
                 </div>
@@ -103,11 +248,15 @@ const LoginForm = () => {
                         value={loginForm.password}
                         required
                         onChange={e => {
-                            setLoginForm({
-                                ...loginForm,
+                            setLoginForm(prev => ({
+                                ...prev,
                                 password: e.target.value,
+                            }));
+                            setLoginFormErr({
+                                emailErr: "",
+                                passwordErr: "",
+                                errMessage: "",
                             });
-                            setLoginFormErr({ emailErr: "", passwordErr: "" });
                         }}
                     />
                 </div>
