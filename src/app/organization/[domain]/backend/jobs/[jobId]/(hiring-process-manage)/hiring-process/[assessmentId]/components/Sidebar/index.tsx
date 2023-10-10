@@ -9,10 +9,11 @@ import { useParams } from "next/navigation";
 import {
     ArrowDownIcon,
     ChevronDownIcon,
+    MinusSmallIcon,
     PlayIcon,
 } from "@heroicons/react/24/solid";
 
-import { useAppDispatch } from "@/redux/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setSelectAllCandidates } from "@/redux/slices/candidates.slice";
 import { Portal } from "@/components";
 
@@ -21,9 +22,11 @@ import CandidateList from "./CandidateList/CandidateList";
 
 const Sidebar = () => {
     const dispatch = useAppDispatch();
+    const selectedCandidates = useAppSelector(
+        state => state.candidates.selectedCandidates
+    );
 
     const [selectedTab, setSelectedTab] = React.useState(0);
-    const [showSidebar, setShowSidebar] = React.useState(true);
 
     return (
         <div className={styles.sidebar__wrapper}>
@@ -71,17 +74,19 @@ const Sidebar = () => {
                     <div className="flex items-center justify-between mb-4">
                         <label
                             htmlFor="select-all-candidates"
-                            className="text-sm font-medium text-gray-900 dark:text-gray-300"
+                            className="text-sm font-medium text-gray-900 dark:text-gray-300 relative"
                         >
                             <input
                                 id="select-all-candidates"
                                 type="checkbox"
                                 value="all"
-                                className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer"
+                                checked={selectedCandidates.length > 0}
+                                className="absolute w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600 cursor-pointer "
                                 onChange={e => {
                                     dispatch(setSelectAllCandidates());
                                 }}
                             />
+                            <MinusSmallIcon className="absolute w-5 h-5 bg-blue-600 border border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600 cursor-pointer" />
                         </label>
 
                         <div>

@@ -1,11 +1,16 @@
 .sidebar__wrapper {
     @apply absolute top-0 bottom-0 max-h-screen z-10 visible opacity-100;
+    &.hide {
+        pointer-events: none;
+    }
 
     &.hide .sidebar__container {
         @apply opacity-0 invisible pointer-events-none;
     }
+
     &.hide .sidebar__toggle__btn {
         right: unset;
+        pointer-events: auto;
         @apply left-6 -translate-x-1/2;
     }
     &.hide + .content__wrapper {
@@ -22,6 +27,7 @@
 }
 
 .sidebar__container {
+    min-height: 800px;
     @apply h-full opacity-100 visible shadow-lg;
 }
 
