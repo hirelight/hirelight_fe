@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
 import LoadingIndicator from "@/components/LoadingIndicator";
+import authServices from "@/services/auth/auth.service";
 
 const DomainPage = ({
     params,
@@ -13,23 +14,50 @@ const DomainPage = ({
     params: { domain: string };
     searchParams: { [key: string]: string | string[] | undefined };
 }) => {
-    const { code } = searchParams;
+    const { loginId, accessToken } = searchParams;
+
+    const router = useRouter();
+
+    const fetchAccessToken = React.useCallback(
+        async (loginId: string) => {
+            try {
+                const res = await authServices.getAccessToken(loginId);
+                if (res.statusCode === 200) {
+                    console.log(res);
+                    if (process.env.NODE_ENV !== "production")
+                        Cookies.set(
+                            "hirelight_access_token",
+                            res.data.accessToken
+                        );
+
+                    router.push("/backend");
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        [router]
+    );
 
     React.useEffect(() => {
-        if (!Cookies.get("hirelight_access_token"))
-            if (code) {
-                Cookies.set("hirelight_access_token", code as string, {
-                    sameSite: "strict",
-                    expires: 1,
-                });
-                console.log(Cookies.get("hirelight_access_token"));
+        if (!Cookies.get("hirelight_access_token")) {
+            if (loginId !== "null") {
+                fetchAccessToken(loginId as string);
+            } else if (accessToken) {
+                if (process.env.NODE_ENV !== "production")
+                    Cookies.set(
+                        "hirelight_access_token",
+                        accessToken as string
+                    );
+
+                router.push("/backend");
             } else {
-                redirect(
-                    `www.${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`
+                router.replace(
+                    `${window.location.protocol}//www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`
                 );
             }
-        redirect(`backend`);
-    }, [code]);
+        } else router.push("/backend");
+    }, [accessToken, fetchAccessToken, loginId, router]);
 
     return (
         <div className="w-full flex items-center justify-center py-80">

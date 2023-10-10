@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 const Login = () => {
     return (
-        <div className="min-w-[500px] min-h-[400px] relative bg-white shadow-lg rounded-md p-8 mx-0 md:mx-6 text-center">
+        <div className="min-w-[500px] max-w-[500px] min-h-[400px] relative bg-white shadow-lg rounded-md p-8 mx-0 md:mx-6 text-center">
             <LoginForm />
             <div className="mt-8 text-sm text-center relative">
                 <p className="text-gray-500">
