@@ -8,6 +8,7 @@ import Portal from "./Portal";
 import DeleteModal from "./DeleteModal";
 import LocationAutocomplete from "./LocationAutocomplete";
 import Modal from "./Modal";
+import PdfViewer from "./PdfViewer";
 
 export {
     Modal,
@@ -20,4 +21,5 @@ export {
     Portal,
     DeleteModal,
     LocationAutocomplete,
+    PdfViewer,
 };
