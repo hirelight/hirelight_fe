@@ -21,7 +21,10 @@ const ProfileSections = () => {
 
     return (
         <div className="rounded-md border border-gray-300 bg-white">
-            <div role="tablist" className="p-4 xl:px-6 flex items-center gap-8">
+            <div
+                role="tablist"
+                className="p-4 xl:px-6 flex items-center gap-8 bg-slate-200"
+            >
                 {(Object.keys(ProfileTab) as (keyof typeof ProfileTab)[]).map(
                     key => (
                         <button

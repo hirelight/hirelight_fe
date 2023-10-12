@@ -7,7 +7,7 @@
 .profile__tab__text {
     display: block;
     padding: 0.5rem 1rem;
-    @apply text-blue_primary_800 text-sm font-semibold rounded-md;
+    @apply text-blue_primary_600 text-sm font-semibold rounded-md;
 
     &.active {
         @apply bg-blue_primary_700 text-white;

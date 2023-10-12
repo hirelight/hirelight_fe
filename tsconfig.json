@@ -23,6 +23,13 @@
             "@/*": ["./src/*"]
         }
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+    "include": [
+        "next-env.d.ts",
+        "**/*.ts",
+        "**/*.tsx",
+        ".next/types/**/*.ts",
+        "src/components/PdfViewer/index.jsx",
+        "src/components/PdfViewer/CanvasWrapper.jsx"
+    ],
     "exclude": ["node_modules"]
 }

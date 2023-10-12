@@ -1,6 +1,7 @@
 import React from "react";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { RedirectType } from "next/dist/client/components/redirect";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -12,15 +13,10 @@ const BackendLayout = ({ children }: { children: React.ReactNode }) => {
 
     if (!token)
         redirect(
-            `${referer?.split("/")[0]}//www.${
-                process.env.NEXT_PUBLIC_ROOT_DOMAIN
-            }/login`
+            `http://www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`,
+            RedirectType.replace
         );
-    return (
-        <div>
-            <ProtectedRoute>{children}</ProtectedRoute>
-        </div>
-    );
+    return <div>{children}</div>;
 };
 
 export default BackendLayout;
