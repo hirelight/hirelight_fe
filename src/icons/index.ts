@@ -24,6 +24,7 @@ import DragIndicatorIcon from "./DragIndicatorIcon";
 import SpinLoading from "./SpinLoading";
 import GoogleIcon from "./GoogleIcon";
 import LinkedInIcon from "./LinkedInIcon";
+import MinusBigIcon from "./MinusBigIcon";
 
 export {
     MenuIcon,
@@ -52,4 +53,5 @@ export {
     SpinLoading,
     GoogleIcon,
     LinkedInIcon,
+    MinusBigIcon,
 };

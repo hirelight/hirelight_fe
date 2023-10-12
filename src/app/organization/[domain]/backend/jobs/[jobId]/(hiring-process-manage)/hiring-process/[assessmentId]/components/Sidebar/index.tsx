@@ -6,16 +6,11 @@ import {
     MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { useParams } from "next/navigation";
-import {
-    ArrowDownIcon,
-    ChevronDownIcon,
-    MinusSmallIcon,
-    PlayIcon,
-} from "@heroicons/react/24/solid";
+import { ChevronDownIcon, MinusIcon } from "@heroicons/react/24/solid";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setSelectAllCandidates } from "@/redux/slices/candidates.slice";
-import { Portal } from "@/components";
+import { MinusBigIcon } from "@/icons";
 
 import styles from "./styles.module.scss";
 import CandidateList from "./CandidateList/CandidateList";
@@ -29,7 +24,7 @@ const Sidebar = () => {
     const [selectedTab, setSelectedTab] = React.useState(0);
 
     return (
-        <div className={styles.sidebar__wrapper}>
+        <aside className={styles.sidebar__wrapper}>
             <div className="border-b border-gray-300">
                 <div role="tablist" className="px-6 mt-6 h-9 flex">
                     <button
@@ -86,7 +81,13 @@ const Sidebar = () => {
                                     dispatch(setSelectAllCandidates());
                                 }}
                             />
-                            <MinusSmallIcon className="absolute w-5 h-5 bg-blue-600 border border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600 cursor-pointer" />
+                            {selectedCandidates.length > 0 &&
+                                selectedCandidates.length < 3 && (
+                                    <MinusBigIcon
+                                        strokeWidth={2.2}
+                                        className="absolute w-5 h-5 text-white bg-blue-600 border border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600 cursor-pointer"
+                                    />
+                                )}
                         </label>
 
                         <div>
@@ -104,7 +105,7 @@ const Sidebar = () => {
                 </div>
                 <CandidateList />
             </div>
-        </div>
+        </aside>
     );
 };
 
