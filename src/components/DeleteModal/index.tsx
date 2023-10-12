@@ -83,7 +83,10 @@ const DeleteModal = ({
                 className={`${styles.backdrop} ${styles.entering}`}
             ></div>
 
-            <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+            <div
+                className="fixed inset-0 z-10 w-screen overflow-y-auto"
+                onClick={closeModal}
+            >
                 <div className="flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0">
                     {/* <!--
         Modal panel, show/hide based on modal state.
@@ -98,6 +101,7 @@ const DeleteModal = ({
                     <div
                         ref={panelRef}
                         className={`${styles.modal__panel} ${styles.entering}`}
+                        onClick={e => e.stopPropagation()}
                     >
                         <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                             <div className="sm:flex sm:items-start">
