@@ -48,7 +48,7 @@ const ProfileSections = () => {
                 )}
             </div>
             <div className="p-4 xl:p-6">
-                <ProfileSection />
+                {profileTab === ProfileTab.PROFILE && <ProfileSection />}
             </div>
         </div>
     );
