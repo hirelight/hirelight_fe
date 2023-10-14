@@ -16,11 +16,7 @@ const BackendLayout = ({ children }: { children: React.ReactNode }) => {
                 process.env.NEXT_PUBLIC_ROOT_DOMAIN
             }/login`
         );
-    return (
-        <div>
-            <ProtectedRoute>{children}</ProtectedRoute>
-        </div>
-    );
+    return <div>{children}</div>;
 };
 
 export default BackendLayout;
