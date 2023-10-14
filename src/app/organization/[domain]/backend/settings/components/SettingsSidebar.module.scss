@@ -7,7 +7,7 @@
     width: 100%;
     padding: 0.75rem 1rem;
     position: relative;
-    @apply hover:bg-gray-300 text-neutral-500 text-sm font-medium;
+    @apply hover:bg-gray-200 text-neutral-500 text-sm font-medium;
     &.active {
         &::after {
             content: "";
@@ -17,6 +17,8 @@
             width: 4px;
             height: 100%;
             background-color: $blue-primary-600;
+            border-top-right-radius: 0.375rem;
+            border-bottom-right-radius: 0.375rem;
         }
 
         color: $blue-primary-600;
