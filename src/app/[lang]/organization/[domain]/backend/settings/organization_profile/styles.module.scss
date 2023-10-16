@@ -1,0 +1,11 @@
+.section__title {
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    @apply text-neutral-700 text-sm font-bold;
+}
+
+.section__content__wrapper {
+    background-color: white;
+    border-radius: 0.375rem;
+    @apply shadow-md border border-gray-200;
+}
