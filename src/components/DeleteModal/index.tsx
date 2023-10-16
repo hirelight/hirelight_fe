@@ -3,8 +3,8 @@
 import { resolve } from "path";
 
 import React from "react";
-import { delayFunc } from "@/helpers/shareHelpers";
 
+import { delayFunc } from "@/helpers/shareHelpers";
 import { SpinLoading } from "@/icons";
 
 import styles from "./styles.module.scss";

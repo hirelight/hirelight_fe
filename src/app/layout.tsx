@@ -1,16 +1,16 @@
 import "./globals.scss";
 import "react-quill/dist/quill.snow.css";
 import "react-quill/dist/quill.bubble.css";
+
 import type { Metadata } from "next";
+import { ToastContainer } from "react-toastify";
+import { Inter, Public_Sans, Roboto_Mono } from "next/font/google";
 import Script from "next/script";
+import dynamic from "next/dynamic";
+
 import "react-toastify/dist/ReactToastify.css";
 
-import { Inter, Public_Sans, Roboto_Mono } from "next/font/google";
-import { ToastContainer } from "react-toastify";
-
 import "nprogress/nprogress.css";
-
-import dynamic from "next/dynamic";
 
 import { ThemeProvider } from "@/components";
 import ReduxProvider from "@/components/ReduxProvider/ReduxProvider";
@@ -81,7 +81,6 @@ export default function RootLayout({
                         <div id="hirelight__portal"></div>
                     </ReduxProvider>
                 </ThemeProvider>
-                light{" "}
                 <Script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></Script>
             </body>
         </html>
