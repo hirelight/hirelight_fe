@@ -9,6 +9,7 @@ module.exports = {
         "./src/**/*.{js,ts,jsx,tsx,mdx}",
     ],
     plugins: [require("flowbite/plugin")],
+    darkMode: ["class", '[data-mode="dark"]'],
     theme: {
         extend: {
             screens: {

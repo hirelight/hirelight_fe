@@ -17,7 +17,7 @@ import {
 import { toast } from "react-toastify";
 import ReactToPrint, { PrintContextConsumer } from "react-to-print";
 
-import { PdfViewer, Portal, Selection } from "@/components";
+import Selection from "../Selection";
 
 import CanvasWrapper from "./CanvasWrapper";
 

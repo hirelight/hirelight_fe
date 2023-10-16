@@ -1,4 +1,78 @@
 import { NextRequest, NextResponse } from "next/server";
+import { match as matchLocale } from "@formatjs/intl-localematcher";
+import Negotiator from "negotiator";
+
+import { i18n } from "../i18n.config";
+
+function getLocale(request: NextRequest): string | undefined {
+    const negotiatorHeaders: Record<string, string> = {};
+    request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
+
+    // @ts-ignore locales are readonly
+    const locales: string[] = i18n.locales;
+    const languages = new Negotiator({
+        headers: negotiatorHeaders,
+    }).languages();
+
+    const locale = matchLocale(languages, locales, i18n.defaultLocale);
+    return locale;
+}
+
+export default async function middleware(req: NextRequest) {
+    const url = req.nextUrl;
+    const hostname = req.headers.get("host")!;
+    const pathname = url.pathname;
+
+    const pathnameIsMissingLocale = i18n.locales.every(
+        locale =>
+            !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
+    );
+
+    const locale = getLocale(req);
+    // Redirect if there is no locale
+    if (pathnameIsMissingLocale) {
+        return NextResponse.redirect(
+            new URL(
+                `/${locale}${pathname.startsWith("/") ? "" : "/"}${pathname}`,
+                req.url
+            )
+        );
+    }
+
+    if (
+        hostname === "localhost:3000" ||
+        hostname === "www.localhost:3000" ||
+        hostname === `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}` ||
+        hostname === `www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
+    ) {
+        return NextResponse.rewrite(
+            new URL(`${pathname}${url.search}`, req.url)
+        );
+    }
+
+    if (
+        hostname === "jobs.localhost:3000" ||
+        hostname === `jobs.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
+    ) {
+        return NextResponse.rewrite(
+            new URL(
+                `/${locale}/interviewee${pathname.replace(`/${locale}`, "")}${
+                    url.search
+                }`,
+                req.url
+            )
+        );
+    }
+
+    return NextResponse.rewrite(
+        new URL(
+            `/${locale}/organization/${
+                hostname.split(".")[0]
+            }${pathname.replace(`/${locale}`, "")}${url.search}`,
+            req.url
+        )
+    );
+}
 
 export const config = {
     matcher: [
@@ -12,59 +86,3 @@ export const config = {
         "/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)",
     ],
 };
-
-export default async function middleware(req: NextRequest) {
-    const url = req.nextUrl;
-    // Get hostname of request (e.g. demo.vercel.pub, demo.localhost:3000)
-    const hostname = req.headers.get("host")!;
-    // .replace('.localhost:3000', `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`);
-    // Get the pathname of the request (e.g. /, /about, /blog/first-post)
-    const path = url.pathname;
-    // rewrites for app pages
-    // if (hostname == `app.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`) {
-    //   const session = localStorage.getItem('token');
-    //   if (!session && path !== '/login') {
-    //     return NextResponse.redirect(new URL('/login', req.url));
-    //   } else if (session && path == '/login') {
-    //     return NextResponse.redirect(new URL('/', req.url));
-    //   }
-    //   return NextResponse.rewrite(
-    //     new URL(`/app${path === '/' ? '' : path}`, req.url)
-    //   );
-    // }
-
-    // special case for `vercel.pub` domain
-    // if (hostname === 'vercel.pub') {
-    //   return NextResponse.redirect(
-    //     'https://vercel.com/blog/platforms-starter-kit'
-    //   );
-    // }
-    // console.log(hostname, path);
-    // rewrite root application to `/app` folder
-    if (
-        hostname === "localhost:3000" ||
-        hostname === "www.localhost:3000" ||
-        hostname === `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}` ||
-        hostname === `www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
-    ) {
-        return NextResponse.rewrite(new URL(`${path}${url.search}`, req.url));
-    }
-
-    if (
-        hostname === "jobs.localhost:3000" ||
-        hostname === `jobs.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
-    ) {
-        return NextResponse.rewrite(
-            new URL(`/interviewee${path}${url.search}`, req.url)
-        );
-    }
-    // console.log(url);
-
-    // rewrite everything else to organization folder `/organization/[domain]/[path] dynamic route
-    return NextResponse.rewrite(
-        new URL(
-            `/organization/${hostname.split(".")[0]}${path}${url.search}`,
-            req.url
-        )
-    );
-}

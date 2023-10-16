@@ -1,0 +1,190 @@
+{
+    "common": {
+        "header": {
+            "title": "Trang chủ"
+        },
+        "test": "Xin chào",
+        "error": {
+            "noti": "Có lỗi xảy ra!!!",
+            "internal_server": "Lỗi máy chủ"
+        },
+        "notification": {
+            "success": {
+                "login": "Đăng nhập thành công!",
+                "signup": "Đăng ký thành công!",
+                "create_new_org": "Tạo tài khoản công ty thành công!"
+            }
+        }
+    },
+
+    "home": {
+        "header": {
+            "nav": {
+                "home": "Trang chủ",
+                "pricing": "Giá cả",
+                "about_us": "Về chúng tôi",
+                "career_center": "Trung tâm nghề nghiệp"
+            },
+
+            "btn": {
+                "sign_in": "Đăng nhập",
+                "sign_up": "Đăng ký"
+            }
+        },
+        "overview_section": {
+            "get_started": "Bắt đầu",
+            "free_trials": "{{days}} ngày dùng thử miễn phí",
+            "easy_payment": "Dễ dàng thanh toán"
+        },
+        "feature_section": {
+            "title": {
+                "normal": "Các ",
+                "highlight": "Tính Năng"
+            },
+            "feature_1_description": "Tìm và tiếp cận đến các ứng viên nhanh chóng",
+            "feature_2_description": "Ưu tiên những ứng cử viên phù hợp cho công việc",
+            "feature_3_description": "Giảm nửa thời gian so với tuyển dụng truyền thống",
+            "feature_4_description": "Giúp ứng viên trở thành nhân viên tuyệt vời"
+        },
+        "feature_description_section": {
+            "title": {
+                "normal": "Tính năng nổi bật {{num}}"
+            }
+        },
+        "integration_section": {
+            "title": {
+                "normal": "Tích hợp với các",
+                "highlight": "ứng dụng phổ biến"
+            }
+        },
+        "customer_review_section": {
+            "title": {
+                "normal": "Đánh giá từ",
+                "highlight": "khách hàng"
+            },
+            "downloaded": "Lượt tải và cài đặt",
+            "rates": "Dựa trên {{numOfReviews}} lượt đánh giá",
+            "btn": {
+                "see_reviews": "Xem các đánh giá trên app store",
+                "view_promote": "Khuyến mãi"
+            }
+        },
+        "join_section": {
+            "join_community": {
+                "title": {
+                    "normal": "Tham gia vào",
+                    "highlight": "cộng đồng"
+                },
+                "community": {
+                    "github": {
+                        "description": "Mã nguồn mở và mã cam kết"
+                    },
+                    "tweeter": {
+                        "description": "Tin tức & Cập nhật mới nhất"
+                    },
+                    "telegram": {
+                        "description": "Kênh dành cho cộng đồng"
+                    }
+                }
+            },
+            "ready_experience": {
+                "title": {
+                    "normal": "Sẵn sàng để",
+                    "highlight": "trải nghiệm"
+                },
+                "subtitle": "Đăng ký ngay để trải nghiệm miễn phí trong {{days}} ngày đầu tiên",
+                "btn": {
+                    "sign_up_google": "Đăng ký tài khoản với Google",
+                    "sign_up_linkedin": "Đăng ký tài khoản với LinkedIn"
+                }
+            }
+        },
+        "footer": {
+            "nav": {
+                "home": "Trang chủ",
+                "pages": "Các trang",
+                "contact": "Liên hệ"
+            },
+            "copyright": "Bản quyền {{year}} thuộc về Hirelight. Đã đăng ký Bản quyền."
+        }
+    },
+    "login_page": {
+        "login_form": {
+            "title": {
+                "highlight": "Đăng nhập vào Hirelight"
+            },
+            "label": {
+                "email": "Email",
+                "password": "Mật khẩu"
+            },
+            "or": "Hoặc",
+            "btn": {
+                "signin": "Đăng nhập",
+                "forgot_password": "Quên mật khẩu?",
+                "signin_google": "Đăng nhập với Google",
+                "signin_linkedin": "Đăng nhập với LinkedIn"
+            },
+            "error": {
+                "personal_email_no_org": "Bạn đang sử dụng email cá nhân. Đồng thời, bạn không thuộc về bất cứ công ty nào. Bạn cần sử dụng email doanh nghiệp để tạo công ty riêng cho mình hoặc trở thành thành viên của một công ty."
+            }
+        },
+        "dont_have_account": "Chưa có tài khoản Hirelight?",
+        "btn": {
+            "signup": "Đăng ký ngay để trải nghiệm miễn phí trong {{days}} ngày đầu tiên"
+        }
+    },
+    "signup_page": {
+        "signup_form": {
+            "title": {
+                "highlight": "Đăng ký vào Hirelight"
+            },
+            "label": {
+                "first_name": "Họ",
+                "last_name": "Tên",
+                "email": "Email doanh nghiệp",
+                "password": "Mật khẩu"
+            },
+            "or": "Hoặc",
+            "btn": {
+                "signup": "Đăng ký",
+
+                "signup_google": "Đăng ký với Google",
+                "signup_linkedin": "Đăng ký với LinkedIn"
+            },
+            "error": {
+                "empty_email": "Email không được phép bỏ trống!",
+                "incorrect_credentials": "Email hoặc mật khẩu không chính xác!",
+                "personal_email_no_org": "Bạn đang sử dụng email cá nhân. Đồng thời, bạn không thuộc về bất cứ công ty nào. Bạn cần sử dụng email doanh nghiệp để tạo công ty riêng cho mình hoặc trở thành thành viên của một công ty."
+            }
+        },
+        "have_account": "Đã có tài khoản Hirelight?",
+        "btn": {
+            "signin": "Đăng nhập"
+        }
+    },
+    "new_org_page": {
+        "new_org_form": {
+            "title": {
+                "highlight": "Tạo tài khoản công ty"
+            },
+            "subtitle": "Bắt đầu trải nghiệm {{days}} ngày dùng thử, thông tin tín dụng không bắt buộc.",
+            "almost_done": "Sắp xong rồi! Thêm một vài thông tin chi tiết để tạo tài khoản công ty của bạn và bạn có thể bắt đầu quy trình tuyển dụng",
+            "label": {
+                "org_name": "Tên công ty",
+                "domain": "tên miền phụ"
+            },
+            "btn": {
+                "submit": "Bắt đầu trải nghiệm {{days}} ngày dùng thử"
+            },
+            "error": {
+                "domain_existed": "Tên miền phụ đã tồn tại!",
+                "domain_empty": "Tên miền phụ không được bỏ trống!",
+                "org_name_empty": "Tên công ty không được bỏ trống"
+            }
+        },
+        "make_mistake": "Đã nhập sai gì sao?",
+        "btn": {
+            "start_again": "Bắt đầu lại"
+        }
+    }
+}

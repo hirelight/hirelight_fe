@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
+import { delayFunc } from "@/helpers/shareHelpers";
 
 import { useOutsideClick } from "@/hooks/useClickOutside";
-import { delayFunc } from "@/helpers/shareHelpers";
 
 import styles from "./Modal.module.scss";
 

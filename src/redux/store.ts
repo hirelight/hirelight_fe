@@ -1,9 +1,9 @@
-import { configureStore } from "@reduxjs/toolkit";
-
 import jobReducer from "./slices/job.slice";
 import appFormReducer from "./slices/app-form.slice";
 import questionKitsReducer from "./slices/question-kits.slice";
 import candidatesReducer from "./slices/candidates.slice";
+
+import { configureStore } from "@reduxjs/toolkit";
 
 export const store = configureStore({
     reducer: {

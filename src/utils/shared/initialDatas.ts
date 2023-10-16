@@ -1,5 +1,5 @@
-import { EAppFormOption, IAppFormField } from "@/interfaces";
 import { IAppFormState } from "@/redux/slices/app-form.slice";
+import { EAppFormOption, IAppFormField } from "@/interfaces";
 
 export const personalInfoFields: IAppFormField[] = [
     {

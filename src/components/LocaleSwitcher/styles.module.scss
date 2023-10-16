@@ -1,0 +1,37 @@
+.locale__dropdown__wrapper {
+    position: absolute;
+    right: 0;
+    z-index: 10;
+    margin-top: 0.5rem;
+    width: 16rem;
+    transform-origin: top right;
+    border-radius: 0.375rem;
+    background-color: white;
+
+    @apply shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none;
+    &.entering {
+        opacity: 100;
+        transform: scale(100%);
+        visibility: visible;
+        transition: all ease-out 100ms;
+    }
+
+    &.leaving {
+        opacity: 0;
+        transform: scale(95%);
+        visibility: hidden;
+        transition: all ease-in 100ms;
+    }
+}
+
+.locale__dropdown__btn {
+    display: block;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    text-align: left;
+    @apply text-gray-700 text-sm;
+
+    &:hover {
+        @apply bg-blue-100;
+    }
+}

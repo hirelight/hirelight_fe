@@ -9,6 +9,9 @@ import DeleteModal from "./DeleteModal";
 import LocationAutocomplete from "./LocationAutocomplete";
 import Modal from "./Modal";
 import PdfViewer from "./PdfViewer";
+import LocaleSwitcher from "./LocaleSwitcher";
+import ThemeProvider from "./ThemeProvider";
+import ThemeSwitcher from "./ThemeSwitcher";
 
 export {
     Modal,
@@ -22,4 +25,7 @@ export {
     DeleteModal,
     LocationAutocomplete,
     PdfViewer,
+    LocaleSwitcher,
+    ThemeProvider,
+    ThemeSwitcher,
 };

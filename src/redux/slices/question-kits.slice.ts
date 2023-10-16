@@ -1,6 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
-
 import { IKit } from "@/interfaces/question-kits.interface";
+
+import { createSlice } from "@reduxjs/toolkit";
 
 interface IQuestionKitsSlice {
     datas: IKit[];

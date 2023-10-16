@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
 import {
     IJobDetail,
     IJobDetailError,
     INewJobDto,
 } from "@/services/job/job.interface";
+
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface IJobSliceInitialState {
     data: IJobDetail;

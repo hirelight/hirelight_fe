@@ -1,0 +1,36 @@
+@import "/src/utils/colors/baseColor";
+
+.profile__tab__btn {
+    position: relative;
+    @apply py-2;
+    &:first-of-type {
+        @apply mr-3 right-0;
+        &::after {
+            left: unset;
+            @apply right-0;
+        }
+    }
+    &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        @apply transition-all duration-300 bg-neutral-700;
+    }
+
+    & > span {
+        text-transform: uppercase;
+        @apply text-sm font-semibold text-neutral-500;
+    }
+
+    &.active {
+        &::after {
+            width: 100%;
+        }
+        & > span {
+            @apply text-neutral-700;
+        }
+    }
+}
