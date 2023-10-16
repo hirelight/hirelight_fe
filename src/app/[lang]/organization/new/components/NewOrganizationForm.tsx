@@ -4,10 +4,12 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { UserIcon } from "@heroicons/react/24/solid";
+import Cookies from "js-cookie";
 
 import { SpinLoading } from "@/icons";
 import organizationsServices from "@/services/organizations/organizations.service";
 import { ICreateOrgDto } from "@/services/organizations/organizations.interface";
+import { IResponse } from "@/interfaces/service.interface";
 
 import styles from "./NewOrganizationForm.module.scss";
 
@@ -32,9 +34,23 @@ const NewOrganizationForm = () => {
 
         setLoading(true);
         try {
-            const data =
+            const data: IResponse =
                 await organizationsServices.createNewOrganization(newOrgForm);
-            console.log(data);
+
+            if (data.statusCode === 200) {
+                if (process.env.NODE_ENV === "development")
+                    router.replace(
+                        `${window.location.protocol}//${newOrgForm.domain}.${
+                            process.env.NEXT_PUBLIC_ROOT_DOMAIN
+                        }?loginId=${loginId}&accessToken=${Cookies.get(
+                            "hirelight_access_token"
+                        )}`
+                    );
+                else
+                    router.replace(
+                        `${window.location.protocol}//${newOrgForm.domain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend`
+                    );
+            }
         } catch (error) {
             console.log(error);
         }
@@ -53,12 +69,6 @@ const NewOrganizationForm = () => {
 
         return valid;
     };
-
-    React.useEffect(() => {
-        if (loginId) {
-            console.log("Call api get token", loginId);
-        }
-    }, [loginId]);
 
     return (
         <div>

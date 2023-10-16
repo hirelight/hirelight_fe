@@ -92,6 +92,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                         organizationsServices.getOwnedOrganizations(),
                         organizationsServices.getJoinedOrganizations(),
                     ]);
+
                     if (
                         ownedOrgRes.statusCode === 200 &&
                         ownedOrgRes.data !== null

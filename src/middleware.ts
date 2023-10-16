@@ -33,7 +33,9 @@ export default async function middleware(req: NextRequest) {
     if (pathnameIsMissingLocale) {
         return NextResponse.redirect(
             new URL(
-                `/${locale}${pathname.startsWith("/") ? "" : "/"}${pathname}`,
+                `/${locale}${pathname.startsWith("/") ? "" : "/"}${pathname}${
+                    url.search
+                }`,
                 req.url
             )
         );
