@@ -3,6 +3,7 @@
 import React, { FormEvent } from "react";
 import { LightBulbIcon } from "@heroicons/react/24/outline";
 import { XCircleIcon } from "@heroicons/react/24/solid";
+
 import { Button, CustomInput, Modal } from "@/components";
 
 const permissions = [

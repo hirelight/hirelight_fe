@@ -4,17 +4,13 @@ import React from "react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
+
 import {
     currencyList,
     experienceLevels,
     workModalities,
 } from "@/utils/shared/initialDatas";
-
-import {
-    createNewJob,
-    getJobById,
-    updateJobDetail,
-} from "@/services/job/job.service";
+import { getJobById } from "@/services/job/job.service";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setJob, setJobError } from "@/redux/slices/job.slice";
 import { delayFunc } from "@/helpers/shareHelpers";

@@ -6,8 +6,8 @@ import {
 } from "@heroicons/react/24/solid";
 import dynamic from "next/dynamic";
 import React, { FormEvent } from "react";
-import { Button, CustomInput, Selection } from "@/components";
 
+import { Button, CustomInput, Selection } from "@/components";
 import { DragIndicatorIcon } from "@/icons";
 
 import styles from "./AddNewQuestionSection.module.scss";

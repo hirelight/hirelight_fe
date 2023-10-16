@@ -1,13 +1,7 @@
 "use client";
 
 import React from "react";
-import ReactDOM, { createPortal } from "react-dom";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
-import {
-    detailsFields,
-    personalInfoFields,
-    profileFields,
-} from "@/utils/shared/initialDatas";
 
 import Portal from "@/components/Portal";
 import { useAppSelector } from "@/redux/reduxHooks";
