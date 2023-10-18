@@ -63,7 +63,7 @@ export default function RootLayout({
                 className={`${inter.className} ${roboto_mono.className} ${publicSans.className}`}
             >
                 <ThemeProvider theme={"light"}>
-                    <TopProgressBar />
+                    {/* <TopProgressBar /> */}
                     <ReduxProvider>
                         <ToastContainer
                             position="top-center"

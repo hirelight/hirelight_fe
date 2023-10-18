@@ -1,0 +1,323 @@
+[
+    {
+        "id": 5586227,
+        "slug": "interview",
+        "name": "Arrange an interview",
+        "medium": "email",
+        "media": {
+            "email": {
+                "active": true,
+                "translations": {
+                    "en": {
+                        "body": "\u003cp\u003eDear \u003cimg alt=\"[candidate_first_name]\" title=\"[candidate_first_name]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr candidate_first_name\"\u003e,\u003c/p\u003e\n\u003cp\u003eI am delighted to inform you that we would like to arrange an interview. Please let us know when you are available to come to our offices.\u003c/p\u003e\n\u003cp\u003eSincerely,\u003c/p\u003e\n\u003cp\u003e\u003cimg alt=\"[user]\" title=\"[user]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr user\"\u003e\u003c/p\u003e",
+                        "attachments": [],
+                        "placeholders": ["candidate_first_name", "user"]
+                    }
+                }
+            },
+            "texting": {
+                "active": true,
+                "translations": {
+                    "en": {
+                        "body": "\u003cp\u003eHi \u003cimg alt=\"[candidate_first_name]\" title=\"[candidate_first_name]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr candidate_first_name\"\u003e,\u003c/p\u003e\n\u003cp\u003eWe would like to set up an interview. Are there any dates and times that work well for you?\u003c/p\u003e\n\u003cp\u003e- \u003cimg alt=\"[user]\" title=\"[user]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr user\"\u003e from \u003cimg alt=\"[company]\" title=\"[company]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr company\"\u003e\u003c/p\u003e",
+                        "attachments": [],
+                        "placeholders": [
+                            "candidate_first_name",
+                            "user",
+                            "company"
+                        ]
+                    }
+                }
+            }
+        },
+        "departments": [],
+        "locations": []
+    },
+    {
+        "id": 5586226,
+        "slug": "phonecall",
+        "name": "Arrange a phone call",
+        "medium": "email",
+        "media": {
+            "email": {
+                "active": true,
+                "translations": {
+                    "en": {
+                        "body": "\u003cp\u003eDear \u003cimg alt=\"[candidate_first_name]\" title=\"[candidate_first_name]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr candidate_first_name\"\u003e,\u003c/p\u003e\n\u003cp\u003eThank you for your application. I'd like to set up a call with you to discuss this opportunity. Could you please suggest some times when you will be available in the next few days?\u003c/p\u003e\n\u003cp\u003eI look forward to speaking with you.\u003c/p\u003e\n\u003cp\u003eSincerely,\u003c/p\u003e\n\u003cp\u003e\u003cimg alt=\"[user]\" title=\"[user]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr user\"\u003e\u003c/p\u003e",
+                        "attachments": [],
+                        "placeholders": ["candidate_first_name", "user"]
+                    }
+                }
+            },
+            "texting": {
+                "active": true,
+                "translations": {
+                    "en": {
+                        "body": "\u003cp\u003eHi \u003cimg alt=\"[candidate_first_name]\" title=\"[candidate_first_name]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr candidate_first_name\"\u003e,\u003c/p\u003e\n\u003cp\u003eThanks for your application for the \u003cimg alt=\"[job]\" title=\"[job]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr job\"\u003e position at \u003cimg alt=\"[company]\" title=\"[company]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr company\"\u003e. We’d like to set up a call to discuss the opportunity.  Are there any dates and times that work well for you?\u003c/p\u003e\n\u003cp\u003e- \u003cimg alt=\"[user]\" title=\"[user]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr user\"\u003e from \u003cimg alt=\"[company]\" title=\"[company]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr company\"\u003e\u003c/p\u003e",
+                        "attachments": [],
+                        "placeholders": [
+                            "candidate_first_name",
+                            "job",
+                            "company",
+                            "user",
+                            "company"
+                        ]
+                    }
+                }
+            }
+        },
+        "departments": [],
+        "locations": []
+    },
+    {
+        "id": 5586228,
+        "slug": "assignment",
+        "name": "Assignment",
+        "medium": "email",
+        "media": {
+            "email": {
+                "active": true,
+                "translations": {
+                    "en": {
+                        "body": "\u003cp\u003eDear \u003cimg alt=\"[candidate_first_name]\" title=\"[candidate_first_name]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr candidate_first_name\"\u003e,\u003c/p\u003e\n\u003cp\u003eWe kindly ask that you complete the attached assignment as part of your application.\u003c/p\u003e\n\u003cp\u003ePlease reply to confirm your availability to complete the assignment. If you have any further questions do not hesitate to contact me.\u003c/p\u003e\n\u003cp\u003eSincerely,\u003c/p\u003e\n\u003cp\u003e\u003cimg alt=\"[user]\" title=\"[user]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr user\"\u003e\u003c/p\u003e",
+                        "attachments": [],
+                        "placeholders": ["candidate_first_name", "user"]
+                    }
+                }
+            }
+        },
+        "departments": [],
+        "locations": []
+    },
+    {
+        "id": 5586229,
+        "slug": "rejection",
+        "name": "Mass rejection",
+        "medium": "email",
+        "media": {
+            "email": {
+                "active": true,
+                "translations": {
+                    "en": {
+                        "body": "\u003cp\u003eDear \u003cimg alt=\"[candidate_first_name]\" title=\"[candidate_first_name]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr candidate_first_name\"\u003e,\u003c/p\u003e\n\u003cp\u003eThank you for your interest in this job. We have reviewed your application and we regret to inform you that it has not been selected for further consideration.\u003c/p\u003e\n\u003cp\u003eWe wish you every success with your job search and thank you for your interest in our company.\u003c/p\u003e\n\u003cp\u003eSincerely,\u003c/p\u003e\n\u003cp\u003e\u003cimg alt=\"[user]\" title=\"[user]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr user\"\u003e\u003c/p\u003e",
+                        "attachments": [],
+                        "placeholders": ["candidate_first_name", "user"]
+                    }
+                }
+            },
+            "texting": {
+                "active": true,
+                "translations": {
+                    "en": {
+                        "body": "\u003cp\u003eHi \u003cimg alt=\"[candidate_first_name]\" title=\"[candidate_first_name]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr candidate_first_name\"\u003e,\u003c/p\u003e\n\u003cp\u003eThank you for your interest in the \u003cimg alt=\"[job]\" title=\"[job]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr job\"\u003e position at \u003cimg alt=\"[company]\" title=\"[company]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr company\"\u003e. We reviewed your application and regret to inform you that it hasn’t been selected for consideration. We wish you success with your job search.\u003c/p\u003e\n\u003cp\u003e- \u003cimg alt=\"[user]\" title=\"[user]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr user\"\u003e from \u003cimg alt=\"[company]\" title=\"[company]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr company\"\u003e\u003c/p\u003e",
+                        "attachments": [],
+                        "placeholders": [
+                            "candidate_first_name",
+                            "job",
+                            "company",
+                            "user",
+                            "company"
+                        ]
+                    }
+                }
+            }
+        },
+        "departments": [],
+        "locations": []
+    },
+    {
+        "id": 5586232,
+        "slug": "new-opportunity",
+        "name": "New job opportunity",
+        "medium": "email",
+        "media": {
+            "email": {
+                "active": true,
+                "translations": {
+                    "en": {
+                        "body": "\u003cp\u003eDear \u003cimg alt=\"[candidate_first_name]\" title=\"[candidate_first_name]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr candidate_first_name\"\u003e,\u003c/p\u003e\n\u003cp\u003eWe have recently started hiring for a new job which I thought you would be interested in. You can read the full job description here \u003cimg alt=\"[job_link]\" title=\"[job_link]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr job_link\"\u003e. Might this be of interest?\u003c/p\u003e\n\u003cp\u003eI look forward to hearing from you.\u003c/p\u003e\n\u003cp\u003eSincerely,\u003c/p\u003e\n\u003cp\u003e\u003cimg alt=\"[user]\" title=\"[user]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr user\"\u003e\u003c/p\u003e",
+                        "attachments": [],
+                        "placeholders": [
+                            "candidate_first_name",
+                            "job_link",
+                            "user"
+                        ]
+                    }
+                }
+            },
+            "texting": {
+                "active": true,
+                "translations": {
+                    "en": {
+                        "body": "\u003cp\u003eHi \u003cimg alt=\"[candidate_first_name]\" title=\"[candidate_first_name]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr candidate_first_name\"\u003e,\u003c/p\u003e\n\u003cp\u003eWe started hiring for a new job at \u003cimg alt=\"[company]\" title=\"[company]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr company\"\u003e and thought you might be interested. You can read the full job description here: \u003cimg alt=\"[job_link]\" title=\"[job_link]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr job_link\"\u003e. Please let me know if you’d like to learn more.\u003c/p\u003e\n\u003cp\u003e- \u003cimg alt=\"[user]\" title=\"[user]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr user\"\u003e from \u003cimg alt=\"[company]\" title=\"[company]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr company\"\u003e\u003c/p\u003e",
+                        "attachments": [],
+                        "placeholders": [
+                            "candidate_first_name",
+                            "company",
+                            "job_link",
+                            "user",
+                            "company"
+                        ]
+                    }
+                }
+            }
+        },
+        "departments": [],
+        "locations": []
+    },
+    {
+        "id": 5586231,
+        "slug": "offer",
+        "name": "Offer letter",
+        "medium": "email",
+        "media": {
+            "email": {
+                "active": true,
+                "translations": {
+                    "en": {
+                        "body": "\u003cp\u003eDear \u003cimg alt=\"[candidate_first_name]\" title=\"[candidate_first_name]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr candidate_first_name\"\u003e,\u003c/p\u003e\n\u003cp\u003eIt is my great pleasure to offer you the job of \u003cimg alt=\"[job]\" title=\"[job]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr job\"\u003e at \u003cimg alt=\"[company]\" title=\"[company]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr company\"\u003e. You will find the details of the offer in attached document.\u003c/p\u003e\n\u003cp\u003eThis offer is valid until \u003ci\u003e{Offer Validity Date}\u003c/i\u003e. If you choose to accept our offer, please sign the offer letter and return it to me by this date.\u003c/p\u003e\n\u003cp\u003eWe look forward to welcoming you onboard.\u003c/p\u003e\n\u003cp\u003ePlease let me know if you have any questions or if I can provide any additional information.\u003c/p\u003e\n\u003cp\u003eSincerely,\u003c/p\u003e\n\u003cp\u003e\u003cimg alt=\"[user]\" title=\"[user]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr user\"\u003e\u003c/p\u003e",
+                        "attachments": [],
+                        "placeholders": [
+                            "candidate_first_name",
+                            "job",
+                            "company",
+                            "user"
+                        ]
+                    }
+                }
+            }
+        },
+        "departments": [],
+        "locations": []
+    },
+    {
+        "id": 5586230,
+        "slug": "interview-rejection",
+        "name": "Rejection after interview",
+        "medium": "email",
+        "media": {
+            "email": {
+                "active": true,
+                "translations": {
+                    "en": {
+                        "body": "\u003cp\u003eDear \u003cimg alt=\"[candidate_first_name]\" title=\"[candidate_first_name]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr candidate_first_name\"\u003e,\u003c/p\u003e\n\u003cp\u003eI would like to thank you for taking the time to discuss this role with us. I regret to inform you that we have decided not to progress further with your application.\u003c/p\u003e\n\u003cp\u003eI wish you every success with your job search. Thanks again for your interest in our company.\u003c/p\u003e\n\u003cp\u003eSincerely,\u003c/p\u003e\n\u003cp\u003e\u003cimg alt=\"[user]\" title=\"[user]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr user\"\u003e\u003c/p\u003e",
+                        "attachments": [],
+                        "placeholders": ["candidate_first_name", "user"]
+                    }
+                }
+            },
+            "texting": {
+                "active": true,
+                "translations": {
+                    "en": {
+                        "body": "\u003cp\u003eHi \u003cimg alt=\"[candidate_first_name]\" title=\"[candidate_first_name]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr candidate_first_name\"\u003e,\u003c/p\u003e\n\u003cp\u003eThank you for meeting with us about the \u003cimg alt=\"[job]\" title=\"[job]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr job\"\u003e position. We regret to inform you that we have decided not to move forward with your application. We wish you success with your job search.\u003c/p\u003e\n\u003cp\u003e- \u003cimg alt=\"[user]\" title=\"[user]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr user\"\u003e from \u003cimg alt=\"[company]\" title=\"[company]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr company\"\u003e\u003c/p\u003e",
+                        "attachments": [],
+                        "placeholders": [
+                            "candidate_first_name",
+                            "job",
+                            "user",
+                            "company"
+                        ]
+                    }
+                }
+            }
+        },
+        "departments": [],
+        "locations": []
+    },
+    {
+        "id": 5586235,
+        "slug": "self-schedule",
+        "name": "Self-schedule interview",
+        "medium": "email",
+        "media": {
+            "email": {
+                "active": true,
+                "translations": {
+                    "en": {
+                        "body": "\u003cp\u003eDear \u003cimg alt=\"[candidate_first_name]\" title=\"[candidate_first_name]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr candidate_first_name\"\u003e,\u003c/p\u003e\n\u003cp\u003eI’m delighted to let you know that we would like to arrange an interview. Please use this \u003ca href=\"%5Bself_schedule_link%5D\" class=\"w-phr self_schedule_link editable\" contenteditable=\"false\" data-duration=\"30\" data-event-type=\"call\" data-schedule-after=\"tomorrow\" data-expires-at=\"1209600\" data-title=\"self-schedule link\" data-language=\"en\" data-location=\"remote\"\u003eself-schedule link\u003c/a\u003e to select some times that work best for you.\u003c/p\u003e\n\u003cp\u003eThanks,\u003c/p\u003e\n\u003cp\u003e\u003cimg alt=\"[user]\" title=\"[user]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr user\"\u003e\u003c/p\u003e",
+                        "attachments": [],
+                        "placeholders": [
+                            "candidate_first_name",
+                            "user",
+                            "self_schedule_link"
+                        ]
+                    }
+                }
+            },
+            "texting": {
+                "active": true,
+                "translations": {
+                    "en": {
+                        "body": "\u003cp\u003eDear \u003cimg alt=\"[candidate_first_name]\" title=\"[candidate_first_name]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr candidate_first_name\"\u003e,\u003c/p\u003e\n\u003cp\u003eI’m delighted to let you know that we would like to arrange an interview. Please use this \u003ca href=\"%5Bself_schedule_link%5D\" class=\"w-phr self_schedule_link editable\" contenteditable=\"false\" data-duration=\"30\" data-event-type=\"call\" data-schedule-after=\"tomorrow\" data-expires-at=\"1209600\" data-title=\"self-schedule link\" data-language=\"en\" data-location=\"remote\"\u003eself-schedule link\u003c/a\u003e to select some times that work best for you.\u003c/p\u003e\n\u003cp\u003eThanks,\u003c/p\u003e\n\u003cp\u003e- \u003cimg alt=\"[user]\" title=\"[user]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr user\"\u003e from \u003cimg alt=\"[company]\" title=\"[company]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr company\"\u003e\u003c/p\u003e",
+                        "attachments": [],
+                        "placeholders": [
+                            "candidate_first_name",
+                            "user",
+                            "company",
+                            "self_schedule_link"
+                        ]
+                    }
+                }
+            }
+        },
+        "departments": [],
+        "locations": []
+    },
+    {
+        "id": 5586234,
+        "slug": "assessment-invitation",
+        "name": "Send an assessment",
+        "medium": "email",
+        "media": {
+            "email": {
+                "active": true,
+                "translations": {
+                    "en": {
+                        "body": "\u003cp\u003eHi \u003cimg alt=\"[candidate_first_name]\" title=\"[candidate_first_name]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr candidate_first_name\"\u003e,\u003c/p\u003e\n\u003cp\u003eCongratulations on making it to this step of our process for \u003cimg alt=\"[job]\" title=\"[job]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr job\"\u003e at \u003cimg alt=\"[company]\" title=\"[company]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr company\"\u003e!\u003c/p\u003e\n\u003cp\u003eWe’d like to know more about you, so we prepared an online assessment that will give us a glimpse of you at work. We ask that you please complete it by \u003cimg alt=\"[due_date]\" title=\"[due_date]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr due_date\"\u003e.\u003c/p\u003e\n\u003cp\u003eHere’s an overview:\u003c/p\u003e\n\u003cp\u003e\u003cimg alt=\"[assessment_info]\" title=\"[assessment_info]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr assessment_info\"\u003e\u003c/p\u003e\n\u003cp\u003eYou can access the assessment below. You’ll find all instructions there. Good luck!\u003c/p\u003e\n\u003cp\u003e\u003ca href=\"%5Bassessment_link%5D\" class=\"w-phr assessment_link editable button\" contenteditable=\"false\" data-title=\"here\"\u003eassessment link\u003c/a\u003e\u003c/p\u003e",
+                        "attachments": [],
+                        "placeholders": [
+                            "candidate_first_name",
+                            "job",
+                            "company",
+                            "due_date",
+                            "assessment_info",
+                            "assessment_link"
+                        ]
+                    }
+                }
+            }
+        },
+        "departments": [],
+        "locations": []
+    },
+    {
+        "id": 5586233,
+        "slug": "video-interview-invitation",
+        "name": "Send a video interview",
+        "medium": "email",
+        "media": {
+            "email": {
+                "active": true,
+                "translations": {
+                    "en": {
+                        "body": "\u003cp\u003eDear \u003cimg alt=\"[candidate_first_name]\" title=\"[candidate_first_name]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr candidate_first_name\"\u003e,\u003c/p\u003e\n\u003cp\u003eThanks for your interest in the \u003cimg alt=\"[job]\" title=\"[job]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr job\"\u003e at \u003cimg alt=\"[company]\" title=\"[company]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr company\"\u003e. We’re excited to learn more about you – through video! We have put together a few questions that should help you showcase your skills.\u003c/p\u003e\n\u003cp\u003ePlease \u003ca href=\"%5Bvideo_interview_link%5D\" class=\"w-phr video_interview_link editable\" contenteditable=\"false\" data-title=\"here\"\u003evisit the welcome page\u003c/a\u003e to access the questions and record videos of your responses.\u003c/p\u003e\n\u003cp\u003eThis can be started at your convenience, but the last day to submit your recordings is \u003cimg alt=\"[due_date]\" title=\"[due_date]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr due_date\"\u003e.\u003c/p\u003e\n\u003cp\u003e\u003cimg alt=\"[video_interview_info]\" title=\"[video_interview_info]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr video_interview_info\"\u003e\u003c/p\u003e\n\u003cp\u003eAn overview of the job can be found here: \u003cimg alt=\"[job_link]\" title=\"[job_link]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr job_link\"\u003e\u003c/p\u003e\n\u003cp\u003eSincerely,\u003c/p\u003e\n\u003cp\u003e\u003cimg alt=\"[user]\" title=\"[user]\" src=\"data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==\" class=\"w-phr user\"\u003e\u003c/p\u003e",
+                        "attachments": [],
+                        "placeholders": [
+                            "candidate_first_name",
+                            "job",
+                            "company",
+                            "due_date",
+                            "video_interview_info",
+                            "job_link",
+                            "user",
+                            "video_interview_link"
+                        ]
+                    }
+                }
+            }
+        },
+        "departments": [],
+        "locations": []
+    }
+]

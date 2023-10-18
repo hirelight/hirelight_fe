@@ -4,10 +4,11 @@ import React from "react";
 import Quill, { QuillOptionsStatic } from "quill";
 import { Inter, Public_Sans, Roboto_Mono } from "next/font/google";
 
-import { Bold, ImageIcon, Italic, LinkIcon, ListOL, ListUL } from "@/icons";
 import { useOutsideClick } from "@/hooks/useClickOutside";
 
 import styles from "./QuillEditor.module.scss";
+import EditorToolbar from "./EditorToolbar";
+import CustomSpan from "./CustomSpan";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -29,7 +30,7 @@ const publicSans = Public_Sans({
 interface IQuillEditor {
     value?: string;
     placeholder?: string;
-    onChange: (content: string) => void;
+    onChange?: (content: string) => void;
     theme?: "snow" | "bubble";
     className?: string;
     readOnly?: boolean;
@@ -53,6 +54,8 @@ const QuillEditor = ({
     const toolbarRef = React.useRef<HTMLDivElement>(null);
     const resizeRef = React.useRef<HTMLDivElement>(null);
 
+    const [fullscreen, setFullscreen] = React.useState(false);
+
     const [mousePos, setMousePos] = React.useState({
         x: 0,
         y: 0,
@@ -63,17 +66,10 @@ const QuillEditor = ({
             if (source == "api") {
                 console.log("An API call triggered this change.");
             } else if (source == "user") {
-                // console.log("Hello");
-                // console.log(onChange);
                 if (onChange) {
                     const editorContent =
                         quillInstance.current!!.root.innerHTML;
                     onChange(editorContent);
-                    // debounce(() => {
-                    //     const editorContent =
-                    //         quillInstance.current!!.root.innerHTML;
-                    //     onChange(editorContent);
-                    // }, 500)();
                 }
             }
         },
@@ -113,13 +109,23 @@ const QuillEditor = ({
     const insertImage = (imageUrl: any) => {
         const range = quillInstance.current!!.getSelection();
         if (range) {
-            quillInstance.current!!.insertEmbed(range.index, "image", imageUrl);
+            quillInstance.current!!.insertEmbed(
+                range.index + 1,
+                "image",
+                imageUrl
+            );
         }
     };
 
     React.useEffect(() => {
         if (editorRef.current) {
             if (!quillInstance.current) {
+                CustomSpan.blotName = "label";
+                CustomSpan.tagName = "SPAN";
+                CustomSpan.className = "ql-custom-span";
+
+                Quill.register(CustomSpan);
+
                 const options: QuillOptionsStatic = {
                     modules: {
                         toolbar: {
@@ -193,7 +199,9 @@ const QuillEditor = ({
         <>
             <div
                 ref={wrapperRef}
-                className={`${styles.quill__wrapper} ${className}`}
+                className={`${styles.quill__wrapper} ${
+                    styles[theme]
+                } ${className} ${fullscreen ? styles.full__screen : ""}`}
                 onFocusCapture={() =>
                     toolbarRef.current!!.setAttribute(
                         "style",
@@ -206,103 +214,18 @@ const QuillEditor = ({
             >
                 <div
                     ref={toolbarRef}
-                    className={[
-                        theme === "bubble"
-                            ? "h-0 invisible"
-                            : "h-[42px] visible",
-                        styles.toolbar__container,
-                    ].join(" ")}
+                    className={styles.toolbar__container}
                     style={{
                         display: !readOnly ? "block" : "none",
                     }}
                 >
-                    <ul className="h-full flex relative">
-                        <li className="border-r border-gray-300 hover:bg-slate-200 cursor-pointer">
-                            <button
-                                type="button"
-                                className={
-                                    styles.ql__formats +
-                                    ` ql-bold h-[42px] w-[42px] flex items-center justify-center text-neutral-600`
-                                }
-                            >
-                                <span className="h-4 w-4">
-                                    <Bold />
-                                </span>
-                            </button>
-                        </li>
-                        <li className="border-r border-gray-300 hover:bg-slate-200 cursor-pointer">
-                            <button
-                                type="button"
-                                className={
-                                    styles.ql__formats +
-                                    ` ql-italic h-[42px] w-[42px] flex items-center justify-center text-neutral-600`
-                                }
-                            >
-                                <span className="h-4 w-4">
-                                    <Italic />
-                                </span>
-                            </button>
-                        </li>
-                        <li className="border-r border-gray-300 hover:bg-slate-200 cursor-pointer">
-                            <button
-                                type="button"
-                                className={
-                                    styles.ql__formats +
-                                    ` ql-list h-[42px] w-[42px] flex items-center justify-center text-neutral-600`
-                                }
-                                // value={'ordered'}
-                            >
-                                <span className="h-4 w-4">
-                                    <ListOL />
-                                </span>
-                            </button>
-                        </li>
-                        <li className="border-r border-gray-300 hover:bg-slate-200 cursor-pointer">
-                            <button
-                                type="button"
-                                className={
-                                    styles.ql__formats +
-                                    ` ql-list h-[42px] w-[42px] flex items-center justify-center text-neutral-600`
-                                }
-                                // value={'bullet'}
-                            >
-                                <span className="h-4 w-4">
-                                    <ListUL />
-                                </span>
-                            </button>
-                        </li>
-                        <li className="border-r border-gray-300 hover:bg-slate-200 cursor-pointer">
-                            <button
-                                type="button"
-                                className={
-                                    styles.ql__formats +
-                                    ` ql-link h-[42px] w-[42px] flex items-center justify-center text-neutral-600`
-                                }
-                            >
-                                <span className="h-4 w-4">
-                                    <LinkIcon />
-                                </span>
-                            </button>
-                        </li>
-                        <li className="border-r border-gray-300 hover:bg-slate-200 cursor-pointer">
-                            <button
-                                type="button"
-                                className={
-                                    styles.ql__formats +
-                                    ` ql-image h-[42px] w-[42px] flex items-center justify-center text-neutral-600`
-                                }
-                            >
-                                <span className="h-4 w-4">
-                                    <ImageIcon />
-                                </span>
-                            </button>
-                        </li>
-                        <li className="h-full aspect-square absolute right-0 flex items-center justify-center border-l border-gray-300 hover:bg-slate-200 cursor-pointer">
-                            <button type="button">expand</button>
-                        </li>
-                    </ul>
+                    <EditorToolbar
+                        quillInstance={quillInstance.current}
+                        fullscreen={fullscreen}
+                        toggleFullscreen={() => setFullscreen(prev => !prev)}
+                    />
                 </div>
-                <div className="relative">
+                <div className="relative flex-1 flex flex-col">
                     <div
                         ref={editorRef}
                         className={[
@@ -310,33 +233,9 @@ const QuillEditor = ({
                             inter.className,
                             roboto_mono.className,
                             publicSans.className,
+                            theme === "snow" ? styles.snow : "",
                         ].join(" ")}
-                        style={
-                            theme === "snow"
-                                ? { margin: "0px 0px" }
-                                : { margin: "0px -16px" }
-                        }
-                        onClick={e => {
-                            const { x, y } =
-                                e.currentTarget.getBoundingClientRect();
-                            console.log(e.clientX - x - 15, e.clientY - y - 12);
-                            setMousePos({
-                                x: e.clientX - x - 15,
-                                y: e.clientY - y - 12,
-                            });
-                        }}
                     ></div>
-                    <div
-                        ref={resizeRef}
-                        className="absolute bottom-0 -z-10 invisible border-2 border-black"
-                    >
-                        <div className="h-full w-full relative">
-                            <div className="h-3 w-3 bg-white absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 cursor-nwse-resize"></div>
-                            <div className="h-3 w-3 bg-white absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 cursor-nesw-resize"></div>
-                            <div className="h-3 w-3 bg-white absolute bottom-0 left-0 -translate-x-1/2 translate-y-1/2 cursor-nesw-resize"></div>
-                            <div className="h-3 w-3 bg-white absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 cursor-nwse-resize"></div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </>

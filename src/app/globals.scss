@@ -15,6 +15,16 @@
 .ql-editor {
     font-family: inherit;
     padding: 12px 16px;
+    .complex {
+        padding: 0.15rem 0.5rem;
+        @apply bg-blue_primary_100 text-blue_primary_800 font-medium rounded-full;
+    }
+    p {
+        &:first-of-type {
+            margin-top: 0;
+        }
+        margin-top: 8px;
+    }
 }
 
 .ql-editor.ql-blank::before {
@@ -23,4 +33,20 @@
 
 strong {
     font-weight: 600;
+}
+
+.complex {
+    padding: 0.15rem 0.5rem;
+    @apply bg-blue_primary_100 text-blue_primary_800 font-medium rounded-full;
+}
+
+.editor_content {
+    font-family: inherit;
+    @apply text-sm text-neutral-700;
+    p {
+        &:first-of-type {
+            margin-top: 0;
+        }
+        margin-top: 8px;
+    }
 }

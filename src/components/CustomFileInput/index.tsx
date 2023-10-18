@@ -37,6 +37,7 @@ const CustomFileInput = (props: ICustomFileInput) => {
     };
 
     const handleResetFile = () => {
+        if (inputRef.current) inputRef.current.value = "";
         setFile(undefined);
     };
 

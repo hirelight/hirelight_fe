@@ -1,7 +1,7 @@
 import "server-only";
 import { Locale } from "../../../i18n.config";
 
-const dictionaries = {
+const dictionaries: any = {
     en: () =>
         import("@/utils/dictionaries/en.json").then(module => module.default),
     vn: () =>

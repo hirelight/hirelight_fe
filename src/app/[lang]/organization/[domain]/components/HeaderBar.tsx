@@ -13,7 +13,6 @@ import Cookies from "js-cookie";
 import { delayFunc } from "@/helpers/shareHelpers";
 import { Bell } from "@/icons";
 import { useOutsideClick } from "@/hooks/useClickOutside";
-import { useUserInfo } from "@/hooks/useUserInfo";
 
 import styles from "./HeaderBar.module.scss";
 
@@ -21,8 +20,6 @@ const HeaderBar = () => {
     const pathname = usePathname();
     const router = useRouter();
     const cite = pathname.split("/")[1];
-
-    const userInfo = useUserInfo();
 
     const [showAvatarDropdown, setShowAvatarDropdown] = useState(false);
 
@@ -168,9 +165,7 @@ const HeaderBar = () => {
                                 </span>
                                 <div>
                                     <h4 className="text-neutral-700 font-semibold">
-                                        {userInfo
-                                            ? userInfo.email
-                                            : "Nguyen Kien"}
+                                        {"Nguyen Kien"}
                                     </h4>
                                     <p className="text-sm text-neutral-500">
                                         Hirelight

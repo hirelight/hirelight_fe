@@ -61,7 +61,7 @@ const NewOneWayInterview = () => {
                         </div>
                     </div>
 
-                    <div className="min-h-[320px] flex flex-col gap-4 mb-6 px-4 xl:px-6">
+                    <div className=" flex flex-col gap-4 mb-6 px-4 xl:px-6">
                         <h3 className="text-neutral-700 font-medium">
                             Welcome note
                         </h3>
@@ -70,7 +70,7 @@ const NewOneWayInterview = () => {
                     responsibility and what the candidate might do on a typical
                     day."
                             onChange={(value: string) => {}}
-                            className="flex-1 border border-slate-400 rounded-md overflow-hidden"
+                            className="min-h-[320px] rounded-md overflow-hidden"
                             theme="snow"
                         />
                     </div>
