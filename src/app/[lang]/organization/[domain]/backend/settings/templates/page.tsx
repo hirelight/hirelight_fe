@@ -1,18 +1,11 @@
-"use client";
-
 import { Metadata } from "next";
 import React from "react";
-import dynamic from "next/dynamic";
 
 import { SearchIcon } from "@/icons";
 
 import styles from "./styles.module.scss";
 import EmailTemplateCard from "./components/EmailTemplateCard";
 import templates from "./mock-data.json";
-
-const EmailEditorNoSSR = dynamic(() => import("./components/EmailEditor"), {
-    ssr: false,
-});
 
 export const metadata: Metadata = {
     title: "Hirelight - Templates - Hirelight",
