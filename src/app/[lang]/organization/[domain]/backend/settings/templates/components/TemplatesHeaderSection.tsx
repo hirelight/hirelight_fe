@@ -12,7 +12,9 @@ import AddEmailTemplate from "./AddEmailTemplate";
 const TemplatesHeaderSection = () => {
     const dispatch = useAppDispatch();
 
-    const { isAdding, searchQuery } = useAppSelector(state => state.templates);
+    const { isAdding, searchQuery } = useAppSelector(
+        state => state.templates.emailTemplates
+    );
 
     return (
         <div className="p-4 border-b border-gray-300">

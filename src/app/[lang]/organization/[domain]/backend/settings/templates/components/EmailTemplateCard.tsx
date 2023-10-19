@@ -18,7 +18,9 @@ interface IEmailTemplateCard {
 
 const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
     const dispatch = useAppDispatch();
-    const editingId = useAppSelector(state => state.templates.editingId);
+    const { editingId } = useAppSelector(
+        state => state.templates.emailTemplates
+    );
 
     const [showPreview, setShowPreview] = useState(false);
 

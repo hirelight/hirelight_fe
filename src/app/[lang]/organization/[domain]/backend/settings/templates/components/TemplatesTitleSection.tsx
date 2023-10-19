@@ -11,7 +11,9 @@ import styles from "../styles.module.scss";
 const TemplatesTitleSection = () => {
     const dispatch = useAppDispatch();
 
-    const { editingId } = useAppSelector(state => state.templates);
+    const { editingId } = useAppSelector(
+        state => state.templates.emailTemplates
+    );
 
     return (
         <div className="flex justify-between">

@@ -16,7 +16,9 @@ interface IEmailTemplateList {
 
 const EmailTemplateList: React.FC<IEmailTemplateList> = ({ datas }) => {
     const dispatch = useAppDispatch();
-    const { editingId, searchQuery } = useAppSelector(state => state.templates);
+    const { editingId, searchQuery } = useAppSelector(
+        state => state.templates.emailTemplates
+    );
 
     return (
         <ul>
