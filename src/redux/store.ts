@@ -4,6 +4,7 @@ import jobReducer from "./slices/job.slice";
 import appFormReducer from "./slices/app-form.slice";
 import questionKitsReducer from "./slices/question-kits.slice";
 import candidatesReducer from "./slices/candidates.slice";
+import templatesReducer from "./slices/templates.slice";
 
 export const store = configureStore({
     reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
         appForm: appFormReducer,
         questionKits: questionKitsReducer,
         candidates: candidatesReducer,
+        templates: templatesReducer,
     },
 });
 

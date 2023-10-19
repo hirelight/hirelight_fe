@@ -7,8 +7,6 @@ const ChangePassword = () => {
 
     const handleChangePassword = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        console.log((e.currentTarget[0] as HTMLInputElement).value);
     };
 
     const getShowIcon = (visible: boolean) => {

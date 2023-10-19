@@ -19,7 +19,6 @@ interface IHomeHeader {
 
 const HomeHeader = ({ _t }: IHomeHeader) => {
     const { lang } = useParams();
-    console.log(lang);
     const [showMenu, setShowMenu] = React.useState(false);
 
     const handleShowMenu = (show: boolean) => {
