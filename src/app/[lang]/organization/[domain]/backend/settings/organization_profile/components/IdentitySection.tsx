@@ -10,7 +10,9 @@ import { Button } from "@/components";
 
 const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ssr: false,
-    loading: () => <p>Loading ...</p>,
+    loading: () => (
+        <div className="min-h-[200px] border border-gray-300 rounded-md overflow-hidden"></div>
+    ),
 });
 
 import styles from "../styles.module.scss";
@@ -169,6 +171,7 @@ const IdentitySection = () => {
                                 ref={inputRef}
                                 type="file"
                                 className="absolute top-0 left-0 h-0 w-0 overflow-hidden invisible"
+                                accept="image/png, image/gif, image/jpeg"
                                 onChange={e => {
                                     if (
                                         e.target.files &&
@@ -190,13 +193,11 @@ const IdentitySection = () => {
                             The company introduction helps other people know
                             briefly about your company
                         </p>
-                        <div className="min-h-[200px] flex">
-                            <QuillEditorNoSSR
-                                theme="snow"
-                                onChange={() => {}}
-                                className="flex-1 border border-slate-400 rounded-md overflow-hidden"
-                            />
-                        </div>
+                        <QuillEditorNoSSR
+                            theme="snow"
+                            onChange={() => {}}
+                            className="flex-1 min-h-[200px] rounded-md overflow-hidden"
+                        />
                     </div>
 
                     <div>
@@ -209,13 +210,11 @@ const IdentitySection = () => {
                             It also appears on welcome pages for features like
                             video interviews and assessments.
                         </p>
-                        <div className="min-h-[200px] flex">
-                            <QuillEditorNoSSR
-                                theme="snow"
-                                onChange={() => {}}
-                                className="flex-1 border border-slate-400 rounded-md overflow-hidden"
-                            />
-                        </div>
+                        <QuillEditorNoSSR
+                            theme="snow"
+                            onChange={() => {}}
+                            className="flex-1 min-h-[200px] rounded-md overflow-hidden"
+                        />
                     </div>
                 </div>
                 <div className="p-6 border-t border-gray-300">
