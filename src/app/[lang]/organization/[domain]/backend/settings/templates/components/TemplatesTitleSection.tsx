@@ -2,6 +2,7 @@
 
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import React from "react";
+import { PencilIcon } from "@heroicons/react/24/solid";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setEditingId, setIsAdding } from "@/redux/slices/templates.slice";

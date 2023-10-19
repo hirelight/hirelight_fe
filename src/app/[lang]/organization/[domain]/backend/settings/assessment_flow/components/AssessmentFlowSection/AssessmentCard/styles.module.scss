@@ -1,0 +1,38 @@
+@function elementHoverStatus($hovered: false, $lastChild: false) {
+    @if $hovered {
+        @return #3498db;
+    } @else {
+        @return #000;
+    }
+}
+
+@function invert($color, $amount: 100%) {
+    $inverse: change-color($color, $hue: hue($color) + 180);
+    @return mix($inverse, $color, $amount);
+}
+
+$lastLiColor: #ff5733;
+
+.card__wrapper {
+    width: 124px;
+    height: 6rem;
+    flex-shrink: 0;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    @apply drop-shadow-lg rounded-md last:mr-0 mr-4 text-neutral-700;
+}
+
+.card__lock__btn {
+    @apply mt-2;
+    &.selecting {
+        @apply text-red-600;
+    }
+
+    &.hovering {
+        @apply text-red-400;
+    }
+}

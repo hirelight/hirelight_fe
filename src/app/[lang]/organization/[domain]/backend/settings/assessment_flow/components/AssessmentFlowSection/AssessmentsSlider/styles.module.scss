@@ -1,0 +1,7 @@
+.slider__wrapper {
+    position: relative;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    @apply flex overflow-x-auto scroll-smooth p-1;
+}

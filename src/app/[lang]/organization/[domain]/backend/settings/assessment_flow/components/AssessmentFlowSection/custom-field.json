@@ -1,0 +1,226 @@
+{
+    "app_form": [
+        {
+            "custom": false,
+            "id": "personal_information",
+            "label": "Personal information",
+            "fields": [
+                {
+                    "custom": false,
+                    "id": "name",
+                    "label": "Name"
+                },
+                {
+                    "custom": false,
+                    "id": "email",
+                    "label": "Email"
+                },
+                {
+                    "custom": false,
+                    "id": "headline",
+                    "label": "Headline"
+                },
+                {
+                    "custom": false,
+                    "id": "phone",
+                    "label": "Phone"
+                },
+                {
+                    "custom": false,
+                    "id": "address",
+                    "label": "Address"
+                },
+                {
+                    "custom": false,
+                    "id": "avatar",
+                    "label": "Photo"
+                }
+            ]
+        },
+        {
+            "custom": false,
+            "id": "candidate_profile",
+            "label": "Profile",
+            "fields": [
+                {
+                    "custom": false,
+                    "id": "education",
+                    "label": "Education"
+                },
+                {
+                    "custom": false,
+                    "id": "experience",
+                    "label": "Experience"
+                },
+                {
+                    "custom": false,
+                    "id": "summary",
+                    "label": "Summary"
+                },
+                {
+                    "custom": false,
+                    "id": "resume",
+                    "label": "Resume"
+                }
+            ]
+        },
+        {
+            "custom": false,
+            "id": "application_details",
+            "label": "Details",
+            "fields": [
+                {
+                    "custom": false,
+                    "id": "cover_letter",
+                    "label": "Cover letter"
+                }
+            ]
+        }
+    ],
+    "profile": [
+        {
+            "custom": false,
+            "id": "cover_letter",
+            "label": "Cover letter",
+            "fields": [
+                {
+                    "custom": false,
+                    "id": "cover_letter",
+                    "label": "Cover letter"
+                }
+            ]
+        },
+        {
+            "custom": false,
+            "id": "summary",
+            "label": "Summary",
+            "fields": [
+                {
+                    "custom": false,
+                    "id": "summary",
+                    "label": "Summary"
+                }
+            ]
+        },
+        {
+            "custom": false,
+            "id": "experiences",
+            "label": "Work experience",
+            "fields": [
+                {
+                    "custom": false,
+                    "id": "experiences",
+                    "label": "Work experience"
+                }
+            ]
+        },
+        {
+            "custom": false,
+            "id": "educations",
+            "label": "Education",
+            "fields": [
+                {
+                    "custom": false,
+                    "id": "educations",
+                    "label": "Education"
+                }
+            ]
+        },
+        {
+            "custom": false,
+            "id": "skills",
+            "label": "Skills",
+            "fields": [
+                {
+                    "custom": false,
+                    "id": "skills",
+                    "label": "Skills"
+                }
+            ]
+        },
+        {
+            "custom": false,
+            "id": "keywords",
+            "label": "Keyword matches",
+            "fields": [
+                {
+                    "custom": false,
+                    "id": "keywords",
+                    "label": "Keyword matches"
+                }
+            ]
+        },
+        {
+            "custom": false,
+            "id": "resume",
+            "label": "Resume",
+            "fields": [
+                {
+                    "custom": false,
+                    "id": "resume",
+                    "label": "Resume"
+                }
+            ]
+        },
+        {
+            "custom": false,
+            "id": "contact_details",
+            "label": "Contact details",
+            "fields": [
+                {
+                    "custom": false,
+                    "id": "address",
+                    "label": "Address"
+                },
+                {
+                    "custom": false,
+                    "id": "phone",
+                    "label": "Phone"
+                },
+                {
+                    "custom": false,
+                    "id": "email",
+                    "label": "Email"
+                }
+            ]
+        },
+        {
+            "custom": false,
+            "id": "privacy_settings",
+            "label": "Contact preferences",
+            "fields": [
+                {
+                    "custom": false,
+                    "id": "texting_consent",
+                    "label": "Texting consent"
+                }
+            ]
+        },
+        {
+            "custom": false,
+            "id": "linkedin_profile_url",
+            "label": "Linkedin Profile",
+            "fields": [
+                {
+                    "custom": false,
+                    "id": "linkedin_profile_url",
+                    "label": "Linkedin Profile"
+                }
+            ],
+            "hidden": true
+        },
+        {
+            "custom": false,
+            "id": "social_profiles",
+            "label": "Social profiles",
+            "fields": [
+                {
+                    "custom": false,
+                    "id": "social_profiles",
+                    "label": "Social profiles"
+                }
+            ]
+        }
+    ],
+    "version": 0
+}

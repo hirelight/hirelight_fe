@@ -1,0 +1,76 @@
+[
+    {
+        "id": 655881,
+        "name": "Recruiting pipeline",
+        "base": false,
+        "default": false,
+        "active": true,
+        "departments": [],
+        "locations": [],
+        "meta": {
+            "jobs": {
+                "total": 0
+            },
+            "stages": {
+                "total": 7
+            }
+        },
+        "permissions": {
+            "pipeline:activate": {
+                "resolution": "denied"
+            },
+            "pipeline:create_stage": {
+                "resolution": "ok"
+            },
+            "pipeline:deactivate": {
+                "resolution": "denied"
+            },
+            "pipeline:destroy": {
+                "resolution": "denied"
+            },
+            "pipeline:show": {
+                "resolution": "ok"
+            },
+            "pipeline:update": {
+                "resolution": "ok"
+            }
+        }
+    },
+    {
+        "id": 656573,
+        "name": "Reporting pipeline",
+        "base": true,
+        "default": false,
+        "active": true,
+        "departments": [],
+        "locations": [],
+        "meta": {
+            "jobs": {
+                "total": 0
+            },
+            "stages": {
+                "total": 7
+            }
+        },
+        "permissions": {
+            "pipeline:activate": {
+                "resolution": "denied"
+            },
+            "pipeline:create_stage": {
+                "resolution": "ok"
+            },
+            "pipeline:deactivate": {
+                "resolution": "denied"
+            },
+            "pipeline:destroy": {
+                "resolution": "denied"
+            },
+            "pipeline:show": {
+                "resolution": "ok"
+            },
+            "pipeline:update": {
+                "resolution": "ok"
+            }
+        }
+    }
+]

@@ -1,0 +1,184 @@
+{
+    "id": 655881,
+    "name": "Default pipeline",
+    "base": false,
+    "default": true,
+    "active": true,
+    "stages": [
+        {
+            "id": 4137587,
+            "name": "Sourced",
+            "kind": "sourced",
+            "base_stage_id": null,
+            "confidential": false,
+            "marked_as_deleted": false,
+            "permissions": {
+                "stage:destroy": {
+                    "resolution": "denied"
+                },
+                "stage:sort": {
+                    "resolution": "denied"
+                },
+                "stage:update": {
+                    "resolution": "denied"
+                }
+            }
+        },
+        {
+            "id": 4137588,
+            "name": "Applied",
+            "kind": "applied",
+            "base_stage_id": null,
+            "confidential": false,
+            "marked_as_deleted": false,
+            "permissions": {
+                "stage:destroy": {
+                    "resolution": "denied"
+                },
+                "stage:sort": {
+                    "resolution": "denied"
+                },
+                "stage:update": {
+                    "resolution": "denied"
+                }
+            }
+        },
+        {
+            "id": 4137589,
+            "name": "Phone Screen",
+            "kind": "phone-screen",
+            "base_stage_id": null,
+            "confidential": false,
+            "marked_as_deleted": false,
+            "permissions": {
+                "stage:destroy": {
+                    "resolution": "ok"
+                },
+                "stage:sort": {
+                    "resolution": "ok"
+                },
+                "stage:update": {
+                    "resolution": "ok",
+                    "meta": {
+                        "modifiable_kind": true,
+                        "modifiable_mapping": true
+                    }
+                }
+            }
+        },
+        {
+            "id": 4137590,
+            "name": "Assessment",
+            "kind": "assessment",
+            "base_stage_id": null,
+            "confidential": false,
+            "marked_as_deleted": false,
+            "permissions": {
+                "stage:destroy": {
+                    "resolution": "ok"
+                },
+                "stage:sort": {
+                    "resolution": "ok"
+                },
+                "stage:update": {
+                    "resolution": "ok",
+                    "meta": {
+                        "modifiable_kind": true,
+                        "modifiable_mapping": true
+                    }
+                }
+            }
+        },
+        {
+            "id": 4137591,
+            "name": "Interview",
+            "kind": "interview",
+            "base_stage_id": null,
+            "confidential": false,
+            "marked_as_deleted": false,
+            "permissions": {
+                "stage:destroy": {
+                    "resolution": "ok"
+                },
+                "stage:sort": {
+                    "resolution": "ok"
+                },
+                "stage:update": {
+                    "resolution": "ok",
+                    "meta": {
+                        "modifiable_kind": true,
+                        "modifiable_mapping": true
+                    }
+                }
+            }
+        },
+        {
+            "id": 4137592,
+            "name": "Offer",
+            "kind": "offer",
+            "base_stage_id": null,
+            "confidential": false,
+            "marked_as_deleted": false,
+            "permissions": {
+                "stage:destroy": {
+                    "resolution": "ok"
+                },
+                "stage:sort": {
+                    "resolution": "ok"
+                },
+                "stage:update": {
+                    "resolution": "ok",
+                    "meta": {
+                        "modifiable_kind": true,
+                        "modifiable_mapping": true
+                    }
+                }
+            }
+        },
+        {
+            "id": 4137593,
+            "name": "Hired",
+            "kind": "hired",
+            "base_stage_id": null,
+            "confidential": false,
+            "marked_as_deleted": false,
+            "permissions": {
+                "stage:destroy": {
+                    "resolution": "ok"
+                },
+                "stage:sort": {
+                    "resolution": "ok"
+                },
+                "stage:update": {
+                    "resolution": "ok",
+                    "meta": {
+                        "modifiable_kind": true,
+                        "modifiable_mapping": true
+                    }
+                }
+            }
+        }
+    ],
+    "departments": [],
+    "locations": [],
+    "permissions": {
+        "pipeline:activate": {
+            "resolution": "denied"
+        },
+        "pipeline:create_stage": {
+            "resolution": "ok"
+        },
+        "pipeline:deactivate": {
+            "resolution": "denied"
+        },
+        "pipeline:destroy": {
+            "resolution": "denied"
+        },
+        "pipeline:show": {
+            "resolution": "ok"
+        },
+        "pipeline:update": {
+            "resolution": "ok"
+        }
+    }
+}
