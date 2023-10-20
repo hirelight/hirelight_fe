@@ -61,7 +61,7 @@ const AssessmentsSlider = () => {
         if (sliderWrapperRef.current) {
             if (
                 data.stages.length * (cardWidth + sliderGap) >
-                sliderWrapperRef.current.clientWidth
+                sliderWrapperRef.current.clientWidth - 16
             ) {
                 setSwipeVisible(prev => ({ ...prev, swipeRight: true }));
             }
