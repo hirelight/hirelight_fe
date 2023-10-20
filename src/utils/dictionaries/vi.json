@@ -14,6 +14,17 @@
                 "signup": "Đăng ký thành công!",
                 "create_new_org": "Tạo tài khoản công ty thành công!"
             }
+        },
+        "components": {
+            "popover_warning": {
+                "btn": {
+                    "confirm": "Tiếp tục",
+                    "cancel": "Hủy"
+                }
+            },
+            "custom_input": {
+                "optional": "Không bắt buộc"
+            }
         }
     },
 
@@ -185,6 +196,112 @@
         "make_mistake": "Đã nhập sai gì sao?",
         "btn": {
             "start_again": "Bắt đầu lại"
+        }
+    },
+    "settings": {
+        "templates": {
+            "templates_title_section": {
+                "title": "Mẫu liên lạc",
+                "popover": {
+                    "warning": {
+                        "content": "Bạn có những thay đổi chưa được lưu và sẽ bị mất nếu bạn tiếp tục.",
+                        "btn": {
+                            "confirm": "Tiếp tục",
+                            "cancel": "Giữ"
+                        }
+                    }
+                },
+                "btn": {
+                    "add_new_template": "Thêm mẫu mới"
+                }
+            },
+            "templates_header_section": {
+                "search_input": {
+                    "placeholder": "Bắt đầu nhập để tìm kiếm..."
+                },
+                "add_email_template": {
+                    "form": {
+                        "name": {
+                            "label": "Tên"
+                        },
+                        "department": {
+                            "label": "Phòng ban"
+                        },
+                        "industry": {
+                            "label": "Ngành"
+                        },
+
+                        "body": {
+                            "label": "Nội dung"
+                        },
+
+                        "btn": {
+                            "save_template": "Lưu mẫu",
+                            "cancel": "Hủy"
+                        }
+                    }
+                }
+            },
+            "email_template_list": {
+                "email_template_card": {
+                    "btn": {
+                        "preview": "Xem trước",
+                        "edit": "Chỉnh sửa",
+                        "delete": "Xóa"
+                    },
+                    "popover": {
+                        "edit_warning": {
+                            "content": "Bạn có những thay đổi chưa được lưu và sẽ bị mất nếu bạn tiếp tục.",
+                            "btn": {
+                                "cancel": "Giữ"
+                            }
+                        },
+                        "delete_warning": {
+                            "content": "Bạn có chắc chắn muốn xóa mẫu tin nhắn này không?",
+                            "btn": {
+                                "confirm": "Xóa",
+                                "cancel": "Giữ"
+                            }
+                        }
+                    }
+                },
+                "preview_modal": {
+                    "preview_h2": "Xem trước"
+                },
+                "update_email_template": {
+                    "form": {
+                        "name": {
+                            "label": "Tên"
+                        },
+                        "department": {
+                            "label": "Phòng ban"
+                        },
+                        "industry": {
+                            "label": "Ngành"
+                        },
+
+                        "body": {
+                            "label": "Nội dung"
+                        },
+
+                        "btn": {
+                            "save_changes": "Lưu thay đổi",
+                            "cancel": "Hủy"
+                        }
+                    }
+                }
+            }
+        },
+        "components": {
+            "settings_sidebar": {
+                "organization_profile": "Hồ sơ công ty",
+                "account_members": "Tài khoản thành viên",
+                "assessment_flow": "Luồng đánh giá",
+                "templates": "Mẫu",
+                "billing": "Thanh toán",
+                "integrations": "Tích hợp",
+                "your_profile": "Hồ sơ của bạn"
+            }
         }
     }
 }

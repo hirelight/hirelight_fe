@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 
-import { getDictionary } from "../../dictionnary";
+import { getDictionary } from "../../../../utils/dictionaries/dictionnary";
 import { Locale } from "../../../../../i18n.config";
 
 import NewOrganizationForm from "./components/NewOrganizationForm";

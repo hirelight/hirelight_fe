@@ -10,16 +10,40 @@
     visibility: hidden;
     background-color: white;
     transform: scale(0.95);
-    transition-property: all;
-    transition-timing-function: ease-in;
-    transition-duration: 200ms;
 
     @apply text-sm text-gray-500 border border-gray-200 rounded-lg drop-shadow-lg dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800;
 
     &.entering {
+        animation: anime__enter 200ms ease-out forwards;
+    }
+    &.leaving {
+        animation: anim__leave 50ms ease-in forwards;
+    }
+}
+
+@keyframes anime__enter {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+        visibility: hidden;
+    }
+    to {
         opacity: 100;
         visibility: visible;
         transform: scale(1);
-        transition-timing-function: ease-out;
+    }
+}
+
+@keyframes anim__leave {
+    from {
+        opacity: 100;
+        visibility: visible;
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(0.95);
+        opacity: 0;
+        visibility: hidden;
     }
 }

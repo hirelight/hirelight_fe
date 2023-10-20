@@ -14,6 +14,7 @@ import "nprogress/nprogress.css";
 
 import { ThemeProvider } from "@/components";
 import ReduxProvider from "@/components/ReduxProvider/ReduxProvider";
+import InternationalizationProvider from "@/components/InternationalizationProvider";
 
 import { Locale, i18n } from "../../i18n.config";
 
@@ -62,25 +63,27 @@ export default function RootLayout({
             <body
                 className={`${inter.className} ${roboto_mono.className} ${publicSans.className}`}
             >
-                <ThemeProvider theme={"light"}>
-                    {/* <TopProgressBar /> */}
-                    <ReduxProvider>
-                        <ToastContainer
-                            position="top-center"
-                            autoClose={5000}
-                            hideProgressBar={false}
-                            newestOnTop={false}
-                            closeOnClick
-                            rtl={false}
-                            pauseOnFocusLoss
-                            draggable
-                            pauseOnHover
-                            theme="light"
-                        />
-                        {children}
-                        <div id="hirelight__portal"></div>
-                    </ReduxProvider>
-                </ThemeProvider>
+                <InternationalizationProvider lang={params.lang}>
+                    <ThemeProvider theme={"light"}>
+                        {/* <TopProgressBar /> */}
+                        <ReduxProvider>
+                            <ToastContainer
+                                position="top-center"
+                                autoClose={5000}
+                                hideProgressBar={false}
+                                newestOnTop={false}
+                                closeOnClick
+                                rtl={false}
+                                pauseOnFocusLoss
+                                draggable
+                                pauseOnHover
+                                theme="light"
+                            />
+                            {children}
+                            <div id="hirelight__portal"></div>
+                        </ReduxProvider>
+                    </ThemeProvider>
+                </InternationalizationProvider>
                 <Script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></Script>
             </body>
         </html>

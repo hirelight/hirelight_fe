@@ -5,6 +5,7 @@ import React from "react";
 import { delayFunc } from "@/helpers/shareHelpers";
 
 import { Button } from "..";
+import { useTranslation } from "../InternationalizationProvider";
 
 import styles from "./styles.module.scss";
 
@@ -28,20 +29,27 @@ const PopoverWarning: React.FC<IPopoverWarning> = ({
     cancelButton,
 }) => {
     const popoverRef = React.useRef<HTMLDivElement>(null);
+    const t = useTranslation("en", "common.components.popover_warning");
 
     const handleConfirm = async () => {
         if (popoverRef.current)
-            popoverRef.current.classList.toggle(styles.entering);
+            popoverRef.current.classList.replace(
+                styles.entering,
+                styles.leaving
+            );
 
-        delayFunc(220);
+        await delayFunc(50);
         onConfirm();
     };
 
     const handleCancel = async () => {
         if (popoverRef.current)
-            popoverRef.current.classList.toggle(styles.entering);
+            popoverRef.current.classList.replace(
+                styles.entering,
+                styles.leaving
+            );
 
-        delayFunc(220);
+        await delayFunc(50);
         onCancel();
     };
 
@@ -61,8 +69,11 @@ const PopoverWarning: React.FC<IPopoverWarning> = ({
                         {confirmButton ? (
                             <div onClick={handleConfirm}>{confirmButton}</div>
                         ) : (
-                            <Button className="px-10" onClick={handleConfirm}>
-                                Proceed
+                            <Button
+                                className="px-10 whitespace-nowrap"
+                                onClick={handleConfirm}
+                            >
+                                {t.btn.confirm}
                             </Button>
                         )}
                         {cancelButton ? (
@@ -71,9 +82,9 @@ const PopoverWarning: React.FC<IPopoverWarning> = ({
                             <button
                                 type="button"
                                 onClick={handleCancel}
-                                className="border border-gray-600 py-2.5 px-10 rounded-md hover:bg-slate-200 text-neutral-700"
+                                className="border border-gray-600 py-2.5 px-10 rounded-md hover:bg-slate-200 text-neutral-700 whitespace-nowrap"
                             >
-                                Cancel
+                                {t.btn.cancel}
                             </button>
                         )}
                     </div>

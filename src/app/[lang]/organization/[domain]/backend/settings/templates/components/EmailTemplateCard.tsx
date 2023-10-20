@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
+import { useParams } from "next/navigation";
 
 import {
     Button,
@@ -13,8 +14,10 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setEditingId, setIsAdding } from "@/redux/slices/templates.slice";
 import { useOutsideClick } from "@/hooks/useClickOutside";
+import { useTranslation } from "@/components/InternationalizationProvider";
 
 import datas from "../mock-data.json";
+import { Locale } from "../../../../../../../../../i18n.config";
 
 import PreviewModal from "./PreviewModal";
 import UpdateEmailTemplate from "./UpdateEmailTemplate";
@@ -24,6 +27,12 @@ interface IEmailTemplateCard {
 }
 
 const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
+    const { lang } = useParams();
+    const t = useTranslation(
+        lang as Locale,
+        "settings.templates.email_template_list.email_template_card"
+    );
+
     const dispatch = useAppDispatch();
     const { editingId, isAdding } = useAppSelector(
         state => state.templates.emailTemplates
@@ -82,13 +91,12 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
                                 className="text-sm text-blue_primary_700 font-semibold hover:text-blue_primary_800 hover:underline"
                                 onClick={() => setShowPreview(true)}
                             >
-                                Preview
+                                {t.btn.preview}
                             </button>
                             <div ref={warningRef}>
                                 <PopoverWarning
                                     show={showWarning}
-                                    content="You have unsaved changes that will
-                                    be lost if you proceed."
+                                    content={t.popover.edit_warning.content}
                                     onConfirm={handleProceed}
                                     onCancel={() => setShowWarning(false)}
                                     cancelButton={
@@ -96,7 +104,7 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
                                             type="button"
                                             className="border border-gray-600 py-2.5 px-10 rounded-md hover:bg-slate-200 text-neutral-700"
                                         >
-                                            Keep
+                                            {t.popover.edit_warning.btn.cancel}
                                         </button>
                                     }
                                 >
@@ -112,21 +120,24 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
                                             }
                                         }}
                                     >
-                                        Edit
+                                        {t.btn.edit}
                                     </button>
                                 </PopoverWarning>
                             </div>
                             <div ref={deleteWarningRef}>
                                 <PopoverWarning
                                     show={showDeleteWarning}
-                                    content="Are you sure you want to delete this message template?"
+                                    content={t.popover.delete_warning.content}
                                     onConfirm={() => {
                                         setShowDeleteWarning(false);
                                     }}
                                     onCancel={() => setShowDeleteWarning(false)}
                                     confirmButton={
                                         <Button className="px-10 bg-red-600 hover:bg-red-700">
-                                            Delete
+                                            {
+                                                t.popover.delete_warning.btn
+                                                    .confirm
+                                            }
                                         </Button>
                                     }
                                     cancelButton={
@@ -134,7 +145,10 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
                                             type="button"
                                             className="border border-gray-600 py-2.5 px-10 rounded-md hover:bg-slate-200 text-neutral-700"
                                         >
-                                            Keep
+                                            {
+                                                t.popover.delete_warning.btn
+                                                    .cancel
+                                            }
                                         </button>
                                     }
                                 >
@@ -146,7 +160,7 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
                                             setShowDeleteWarning(true)
                                         }
                                     >
-                                        Delete
+                                        {t.btn.delete}
                                     </button>
                                 </PopoverWarning>
                             </div>

@@ -1,10 +1,12 @@
-import { Bell } from "@/icons";
-
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
+import { Bell } from "@/icons";
+
 import logo from "/public/images/logo.png";
+
+import { LocaleSwitcher, ThemeSwitcher } from "@/components";
 
 const HeaderBar = () => {
     return (
@@ -23,6 +25,10 @@ const HeaderBar = () => {
                 </Link>
                 <div className="flex gap-8 items-center">
                     <Bell className="text-white w-8 h-8" />
+                    <div className="flex gap-4">
+                        <LocaleSwitcher />
+                        <ThemeSwitcher />
+                    </div>
                     <Link
                         href={"/settings"}
                         className="rounded-full w-8 aspect-square border border-white"
