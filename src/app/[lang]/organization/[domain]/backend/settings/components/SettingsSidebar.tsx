@@ -11,18 +11,28 @@ import {
     UserIcon,
     WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
+
+import { useTranslation } from "@/components/InternationalizationProvider";
+
+import { Locale } from "../../../../../../../../i18n.config";
 
 import styles from "./SettingsSidebar.module.scss";
 
 const SettingsSidebar = () => {
     const pathname = usePathname();
+    const { lang } = useParams();
+
+    const t = useTranslation(
+        lang as Locale,
+        "settings.components.settings_sidebar"
+    );
     return (
         <aside className="min-w-[200px] w-full bg-white shadow-md rounded-md overflow-hidden">
             <ul className="w-full flex flex-col">
                 <li>
                     <Link
-                        href={"/backend/settings/organization_profile"}
+                        href={`/${lang}/backend/settings/organization_profile`}
                         className={`${styles.tab__btn} ${
                             pathname.includes(
                                 "/backend/settings/organization_profile"
@@ -32,12 +42,12 @@ const SettingsSidebar = () => {
                         }`}
                     >
                         <BuildingOffice2Icon className="w-6 h-6" />
-                        <span>Organization Profile</span>
+                        <span>{t.organization_profile}</span>
                     </Link>
                 </li>
                 <li>
                     <Link
-                        href={"/backend/settings/members"}
+                        href={`/${lang}/backend/settings/members`}
                         className={`${styles.tab__btn} ${
                             pathname.includes("/backend/settings/members")
                                 ? styles.active
@@ -45,12 +55,12 @@ const SettingsSidebar = () => {
                         }`}
                     >
                         <UserGroupIcon className="w-6 h-6" />
-                        <span>Account members</span>
+                        <span>{t.account_members}</span>
                     </Link>
                 </li>
                 <li>
                     <Link
-                        href={"/backend/settings/assessment_flow"}
+                        href={`/${lang}/backend/settings/assessment_flow`}
                         className={`${styles.tab__btn} ${
                             pathname.includes(
                                 "/backend/settings/assessment_flow"
@@ -60,12 +70,12 @@ const SettingsSidebar = () => {
                         }`}
                     >
                         <QueueListIcon className="w-6 h-6" />
-                        <span>Assessment flow</span>
+                        <span>{t.assessment_flow}</span>
                     </Link>
                 </li>
                 <li>
                     <Link
-                        href={"/backend/settings/templates"}
+                        href={`/${lang}/backend/settings/templates`}
                         className={`${styles.tab__btn} ${
                             pathname.includes("/backend/settings/templates")
                                 ? styles.active
@@ -73,12 +83,12 @@ const SettingsSidebar = () => {
                         }`}
                     >
                         <DocumentTextIcon className="w-6 h-6" />
-                        <span>Templates</span>
+                        <span>{t.templates}</span>
                     </Link>
                 </li>
                 <li>
                     <Link
-                        href={"/backend/settings/billing"}
+                        href={`/${lang}/backend/settings/billing`}
                         className={`${styles.tab__btn} ${
                             pathname.includes("/backend/settings/billing")
                                 ? styles.active
@@ -86,12 +96,12 @@ const SettingsSidebar = () => {
                         }`}
                     >
                         <CreditCardIcon className="w-6 h-6" />
-                        <span>Billing</span>
+                        <span>{t.billing}</span>
                     </Link>
                 </li>
                 <li>
                     <Link
-                        href={"/backend/settings/integrations"}
+                        href={`/${lang}/backend/settings/integrations`}
                         className={`${styles.tab__btn} ${
                             pathname.includes("/backend/settings/integrations")
                                 ? styles.active
@@ -99,13 +109,13 @@ const SettingsSidebar = () => {
                         }`}
                     >
                         <WrenchScrewdriverIcon className="w-6 h-6" />
-                        <span>Intergrations</span>
+                        <span>{t.integrations}</span>
                     </Link>
                 </li>
                 <li>
                     <Link href={"#"} className={`${styles.tab__btn}`}>
                         <UserGroupIcon className="w-6 h-6" />
-                        <span>Your profile</span>
+                        <span>{t.your_profile}</span>
                     </Link>
                 </li>
             </ul>

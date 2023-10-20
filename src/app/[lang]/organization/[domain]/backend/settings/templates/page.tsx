@@ -1,6 +1,10 @@
 import { Metadata } from "next";
 import React from "react";
 
+import { getDictionary } from "@/utils/dictionaries/dictionnary";
+
+import { Locale } from "../../../../../../../../i18n.config";
+
 import styles from "./styles.module.scss";
 import templates from "./mock-data.json";
 import EmailTemplateList from "./components/EmailTemplateList";
@@ -11,7 +15,13 @@ export const metadata: Metadata = {
     title: "Hirelight - Templates - Hirelight",
 };
 
-const Templates = () => {
+const Templates = async ({
+    params: { lang },
+}: {
+    params: { lang: Locale };
+}) => {
+    const { settings } = await getDictionary(lang);
+
     return (
         <div className="w-full flex flex-col gap-8">
             <section>

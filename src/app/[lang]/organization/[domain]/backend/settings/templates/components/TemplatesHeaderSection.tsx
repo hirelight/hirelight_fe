@@ -2,15 +2,24 @@
 
 import React from "react";
 import { toast } from "react-toastify";
+import { useParams } from "next/navigation";
 
 import { SearchIcon } from "@/icons";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setIsAdding, setSearchQuery } from "@/redux/slices/templates.slice";
+import { useTranslation } from "@/components/InternationalizationProvider";
+
+import { Locale } from "../../../../../../../../../i18n.config";
 
 import AddEmailTemplate from "./AddEmailTemplate";
 
 const TemplatesHeaderSection = () => {
+    const { lang } = useParams();
     const dispatch = useAppDispatch();
+    const t = useTranslation(
+        lang as Locale,
+        "settings.templates.templates_header_section"
+    );
 
     const { isAdding, searchQuery, editingId } = useAppSelector(
         state => state.templates.emailTemplates
@@ -27,7 +36,7 @@ const TemplatesHeaderSection = () => {
                         <input
                             type="text"
                             className="block w-full rounded-md border-0 py-2.5 pl-10 pr-20 text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue_primary_700 sm:sm:leading-6 placeholder:text-sm"
-                            placeholder="Start typing to search..."
+                            placeholder={t.search_input.placeholder}
                             value={searchQuery}
                             onChange={e =>
                                 dispatch(setSearchQuery(e.target.value))

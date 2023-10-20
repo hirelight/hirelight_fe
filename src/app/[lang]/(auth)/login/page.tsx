@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Metadata } from "next";
 
 import { Locale } from "../../../../../i18n.config";
-import { getDictionary } from "../../dictionnary";
+import { getDictionary } from "../../../../utils/dictionaries/dictionnary";
 
 import LoginForm from "./components/LoginForm";
 
