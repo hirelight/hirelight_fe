@@ -31,17 +31,23 @@ const PopoverWarning: React.FC<IPopoverWarning> = ({
 
     const handleConfirm = async () => {
         if (popoverRef.current)
-            popoverRef.current.classList.toggle(styles.entering);
+            popoverRef.current.classList.replace(
+                styles.entering,
+                styles.leaving
+            );
 
-        delayFunc(220);
+        await delayFunc(50);
         onConfirm();
     };
 
     const handleCancel = async () => {
         if (popoverRef.current)
-            popoverRef.current.classList.toggle(styles.entering);
+            popoverRef.current.classList.replace(
+                styles.entering,
+                styles.leaving
+            );
 
-        delayFunc(220);
+        await delayFunc(50);
         onCancel();
     };
 
