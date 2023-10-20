@@ -2,7 +2,7 @@ import React, { FormEvent } from "react";
 import Link from "next/link";
 import { Metadata } from "next";
 
-import { getDictionary } from "../../dictionnary";
+import { getDictionary } from "../../../../utils/dictionaries/dictionnary";
 import { Locale } from "../../../../../i18n.config";
 
 import SignupForm from "./components/SignupForm";

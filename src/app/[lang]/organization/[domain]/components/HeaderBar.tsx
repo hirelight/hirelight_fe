@@ -13,6 +13,7 @@ import Cookies from "js-cookie";
 import { delayFunc } from "@/helpers/shareHelpers";
 import { Bell } from "@/icons";
 import { useOutsideClick } from "@/hooks/useClickOutside";
+import { LocaleSwitcher, ThemeSwitcher } from "@/components";
 
 import styles from "./HeaderBar.module.scss";
 
@@ -109,6 +110,10 @@ const HeaderBar = () => {
                 </nav>
                 <div className="flex gap-8 items-center">
                     <Bell className="text-blue_primary_800 w-8 h-8" />
+                    <div className="flex gap-4">
+                        <LocaleSwitcher />
+                        <ThemeSwitcher />
+                    </div>
                     <div
                         className="relative inline-block text-left"
                         ref={avatarDropdownRef}

@@ -18,6 +18,14 @@ function getLocale(request: NextRequest): string | undefined {
     return locale;
 }
 
+function getCurLocale(req: NextRequest): string {
+    const pathname = req.nextUrl.pathname;
+
+    const data = pathname.split("/")[1];
+
+    return data;
+}
+
 export default async function middleware(req: NextRequest) {
     const url = req.nextUrl;
     const hostname = req.headers.get("host")!;
@@ -29,6 +37,7 @@ export default async function middleware(req: NextRequest) {
     );
 
     const locale = getLocale(req);
+
     // Redirect if there is no locale
     if (pathnameIsMissingLocale) {
         return NextResponse.redirect(
@@ -40,6 +49,8 @@ export default async function middleware(req: NextRequest) {
             )
         );
     }
+
+    const curLocale = getCurLocale(req);
 
     if (
         hostname === "localhost:3000" ||
@@ -58,9 +69,10 @@ export default async function middleware(req: NextRequest) {
     ) {
         return NextResponse.rewrite(
             new URL(
-                `/${locale}/interviewee${pathname.replace(`/${locale}`, "")}${
-                    url.search
-                }`,
+                `/${curLocale}/interviewee${pathname.replace(
+                    `/${curLocale}`,
+                    ""
+                )}${url.search}`,
                 req.url
             )
         );
@@ -68,9 +80,9 @@ export default async function middleware(req: NextRequest) {
 
     return NextResponse.rewrite(
         new URL(
-            `/${locale}/organization/${
+            `/${curLocale}/organization/${
                 hostname.split(".")[0]
-            }${pathname.replace(`/${locale}`, "")}${url.search}`,
+            }${pathname.replace(`/${curLocale}`, "")}${url.search}`,
             req.url
         )
     );

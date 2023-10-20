@@ -1,7 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 
-import { getDictionary } from "../dictionnary";
+import { getDictionary } from "../../../utils/dictionaries/dictionnary";
 import { Locale } from "../../../../i18n.config";
 
 import OverviewSection from "./components/OverView/Overview";
