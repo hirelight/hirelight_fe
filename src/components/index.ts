@@ -12,6 +12,7 @@ import PdfViewer from "./PdfViewer";
 import LocaleSwitcher from "./LocaleSwitcher";
 import ThemeProvider from "./ThemeProvider";
 import ThemeSwitcher from "./ThemeSwitcher";
+import PopoverWarning from "./PopoverWarning";
 
 export {
     Modal,
@@ -28,4 +29,5 @@ export {
     LocaleSwitcher,
     ThemeProvider,
     ThemeSwitcher,
+    PopoverWarning,
 };
