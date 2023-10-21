@@ -44,7 +44,7 @@ const HeaderBar = () => {
     };
 
     return (
-        <div className="bg-white shadow-md relative z-10">
+        <header className="bg-white shadow-md relative z-10">
             <div className="max-w-screen-xl mx-auto px-4 xl:px-6 flex items-center justify-between py-4">
                 <Link href={`/backend`} className="flex gap-2 items-center">
                     <Image
@@ -219,7 +219,7 @@ const HeaderBar = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </header>
     );
 };
 

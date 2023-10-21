@@ -6,7 +6,7 @@ const OrganizationLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <div className="w-full min-h-screen relative bg-slate-100">
             <HeaderBar />
-            {children}
+            <main className="relative z-0">{children}</main>
         </div>
     );
 };

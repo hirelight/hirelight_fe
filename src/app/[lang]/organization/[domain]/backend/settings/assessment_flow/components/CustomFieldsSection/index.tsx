@@ -8,7 +8,7 @@ import pageStyles from "../../styles.module.scss";
 import sections from "../../custom-field.json";
 
 import styles from "./styles.module.scss";
-import FieldCard from "./components/FieldCard";
+import FormSectionCard from "./components/FormSectionCard";
 
 type CustomFieldsSectionProps = {};
 
@@ -69,18 +69,33 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
                             </button>
                         </div>
                     </div>
-                    <LazyMotion features={domMax}>
-                        <Reorder.Group
-                            axis="y"
-                            className={styles.field__list__container}
-                            values={profile}
-                            onReorder={setProfile}
-                        >
-                            {profile.map(field => (
-                                <FieldCard key={field.id} data={field} />
-                            ))}
-                        </Reorder.Group>
-                    </LazyMotion>
+                    <Reorder.Group
+                        axis="y"
+                        className={styles.field__list__container}
+                        values={profile}
+                        onReorder={setProfile}
+                    >
+                        {profile.map(field => (
+                            <FormSectionCard
+                                key={field.id}
+                                data={field}
+                                reorderFields={newOrder =>
+                                    setProfile(prev =>
+                                        prev.map(item => {
+                                            if (item.id === field.id) {
+                                                return {
+                                                    ...field,
+                                                    fields: newOrder,
+                                                };
+                                            }
+
+                                            return item;
+                                        })
+                                    )
+                                }
+                            />
+                        ))}
+                    </Reorder.Group>
                 </section>
 
                 <section className={styles.app__form__section}>
@@ -100,18 +115,33 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
                             </button>
                         </div>
                     </div>
-                    <LazyMotion features={domMax}>
-                        <Reorder.Group
-                            axis="y"
-                            className={styles.field__list__container}
-                            values={appForm}
-                            onReorder={setAppForm}
-                        >
-                            {appForm.map((field, fieldIndex) => (
-                                <FieldCard key={field.id} data={field} />
-                            ))}
-                        </Reorder.Group>
-                    </LazyMotion>
+                    <Reorder.Group
+                        axis="y"
+                        className={styles.field__list__container}
+                        values={appForm}
+                        onReorder={setAppForm}
+                    >
+                        {appForm.map((field, fieldIndex) => (
+                            <FormSectionCard
+                                key={field.id}
+                                data={field}
+                                reorderFields={newOrder =>
+                                    setProfile(prev =>
+                                        prev.map(item => {
+                                            if (item.id === field.id) {
+                                                return {
+                                                    ...field,
+                                                    fields: newOrder,
+                                                };
+                                            }
+
+                                            return item;
+                                        })
+                                    )
+                                }
+                            />
+                        ))}
+                    </Reorder.Group>
                 </section>
             </div>
         </section>
