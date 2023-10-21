@@ -3,6 +3,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { useParams } from "next/navigation";
+import dynamic from "next/dynamic";
 
 import { SearchIcon } from "@/icons";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
@@ -11,7 +12,11 @@ import { useTranslation } from "@/components/InternationalizationProvider";
 
 import { Locale } from "../../../../../../../../../i18n.config";
 
-import AddEmailTemplate from "./AddEmailTemplate";
+import EditAddTemplateSkeleton from "./EditAddTemplateSkeleton";
+
+const AddEmailTemplate = dynamic(() => import("./AddEmailTemplate"), {
+    loading: () => <EditAddTemplateSkeleton />,
+});
 
 const TemplatesHeaderSection = () => {
     const { lang } = useParams();

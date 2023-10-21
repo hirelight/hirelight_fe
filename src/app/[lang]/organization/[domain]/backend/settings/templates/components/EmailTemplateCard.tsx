@@ -1,16 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
+import dynamic from "next/dynamic";
 
-import {
-    Button,
-    CustomInput,
-    Modal,
-    PopoverWarning,
-    Portal,
-} from "@/components";
+import { Button, PopoverWarning, Portal } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setEditingId, setIsAdding } from "@/redux/slices/templates.slice";
 import { useOutsideClick } from "@/hooks/useClickOutside";
@@ -19,8 +13,7 @@ import { useTranslation } from "@/components/InternationalizationProvider";
 import datas from "../mock-data.json";
 import { Locale } from "../../../../../../../../../i18n.config";
 
-import PreviewModal from "./PreviewModal";
-import UpdateEmailTemplate from "./UpdateEmailTemplate";
+const PreviewModal = dynamic(() => import("./PreviewModal"));
 
 interface IEmailTemplateCard {
     data: (typeof datas)[0];

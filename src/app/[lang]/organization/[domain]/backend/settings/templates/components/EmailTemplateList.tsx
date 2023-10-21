@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setEditingId } from "@/redux/slices/templates.slice";
@@ -8,7 +9,11 @@ import { setEditingId } from "@/redux/slices/templates.slice";
 import templates from "../mock-data.json";
 
 import EmailTemplateCard from "./EmailTemplateCard";
-import UpdateEmailTemplate from "./UpdateEmailTemplate";
+import EditAddTemplateSkeleton from "./EditAddTemplateSkeleton";
+
+const UpdateEmailTemplate = dynamic(() => import("./UpdateEmailTemplate"), {
+    loading: () => <EditAddTemplateSkeleton />,
+});
 
 interface IEmailTemplateList {
     datas: typeof templates;
