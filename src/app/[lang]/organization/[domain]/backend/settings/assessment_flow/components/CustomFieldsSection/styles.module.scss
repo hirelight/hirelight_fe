@@ -1,0 +1,6 @@
+.fields__header__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    @apply p-4 md:px-6 bg-gray-100;
+}

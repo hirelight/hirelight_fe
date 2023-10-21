@@ -1,7 +1,11 @@
 const path = require("path");
 
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+    enabled: process.env.ANALYZE === "true",
+});
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig = withBundleAnalyzer({
     sassOptions: {
         includePaths: [path.join(__dirname, "styles")],
     },
@@ -10,6 +14,6 @@ const nextConfig = {
 
         return config;
     },
-};
+});
 
 module.exports = nextConfig;
