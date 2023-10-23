@@ -126,7 +126,7 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
                                     }}
                                     onCancel={() => setShowDeleteWarning(false)}
                                     confirmButton={
-                                        <Button className="px-10 bg-red-600 hover:bg-red-700">
+                                        <Button className="!px-10 bg-red-600 hover:bg-red-700">
                                             {
                                                 t.popover.delete_warning.btn
                                                     .confirm

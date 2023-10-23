@@ -16,7 +16,7 @@ const createNewOrganization = async (createNewOrgDto: ICreateOrgDto) => {
 
 const getListOrganizations = async () => {
     try {
-        const res = await interceptor.get<IResponse>(`/organizations`);
+        const res = await interceptor.get<IResponse<any>>(`/organizations`);
 
         return res.data;
     } catch (error) {
@@ -26,7 +26,9 @@ const getListOrganizations = async () => {
 
 const getJoinedOrganizations = async () => {
     try {
-        const res = await interceptor.get<IResponse>(`/organizations/joined`);
+        const res = await interceptor.get<IResponse<any>>(
+            `/organizations/joined`
+        );
 
         return res.data;
     } catch (error) {
@@ -36,7 +38,8 @@ const getJoinedOrganizations = async () => {
 
 const getOwnedOrganizations = async () => {
     try {
-        const res = await interceptor.get<IResponse>(`/organizations/owned`);
+        const res =
+            await interceptor.get<IResponse<any>>(`/organizations/owned`);
 
         return res.data;
     } catch (error) {

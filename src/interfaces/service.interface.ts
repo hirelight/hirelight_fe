@@ -1,5 +1,5 @@
-export interface IResponse {
-    data: any;
+export interface IResponse<T> {
+    data: T;
     statusCode: number;
     message: string;
 }

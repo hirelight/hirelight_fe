@@ -20,6 +20,7 @@ export default class CustomSpan extends Inline {
         const node = super.create();
         if (value) {
             node.classList.add("complex");
+            node.id = value;
             node.innerHTML = value;
             node.contentEditable = false;
         }

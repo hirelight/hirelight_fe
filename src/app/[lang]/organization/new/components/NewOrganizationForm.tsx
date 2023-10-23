@@ -34,7 +34,7 @@ const NewOrganizationForm = () => {
 
         setLoading(true);
         try {
-            const data: IResponse =
+            const data: IResponse<any> =
                 await organizationsServices.createNewOrganization(newOrgForm);
 
             if (data.statusCode === 200) {
