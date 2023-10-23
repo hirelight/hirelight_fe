@@ -86,6 +86,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
             setPageLoading(true);
             try {
                 const userData: any = jwt_decode(token);
+                console.log(userData);
 
                 if (isOrgMember === null && isOrgOwner === null) {
                     const [ownedOrgRes, joinedOrgRes] = await Promise.all([
@@ -105,7 +106,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                     )
                         handleRedirect(joinedOrgRes.data[0].domain);
 
-                    if (!validWorkEmail(userData.email)) {
+                    if (!validWorkEmail(userData.emailAddress)) {
                         setLoginFormErr(prev => ({
                             ...prev,
                             errMessage:
@@ -114,7 +115,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                         setPageLoading(false);
                     } else router.push("/organization/new");
                 } else if (isOrgMember === "false" && isOrgOwner === "false") {
-                    if (!validWorkEmail(userData.email)) {
+                    if (!validWorkEmail(userData.emailAddress)) {
                         setLoginFormErr(prev => ({
                             ...prev,
                             errMessage:
