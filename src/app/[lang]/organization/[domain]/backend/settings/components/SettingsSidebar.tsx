@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 import {
     BuildingOffice2Icon,
+    ClipboardDocumentListIcon,
     CreditCardIcon,
     DocumentTextIcon,
     QueueListIcon,
@@ -45,19 +46,7 @@ const SettingsSidebar = () => {
                         <span>{t.organization_profile}</span>
                     </Link>
                 </li>
-                <li>
-                    <Link
-                        href={`/${lang}/backend/settings/members`}
-                        className={`${styles.tab__btn} ${
-                            pathname.includes("/backend/settings/members")
-                                ? styles.active
-                                : ""
-                        }`}
-                    >
-                        <UserGroupIcon className="w-6 h-6" />
-                        <span>{t.account_members}</span>
-                    </Link>
-                </li>
+
                 <li>
                     <Link
                         href={`/${lang}/backend/settings/assessment_flow`}
@@ -84,6 +73,34 @@ const SettingsSidebar = () => {
                     >
                         <DocumentTextIcon className="w-6 h-6" />
                         <span>{t.templates}</span>
+                    </Link>
+                </li>
+                <li>
+                    <Link
+                        href={`/${lang}/backend/settings/members`}
+                        className={`${styles.tab__btn} ${
+                            pathname.includes("/backend/settings/members")
+                                ? styles.active
+                                : ""
+                        }`}
+                    >
+                        <UserGroupIcon className="w-6 h-6" />
+                        <span>{t.account_members}</span>
+                    </Link>
+                </li>
+                <li>
+                    <Link
+                        href={`/${lang}/backend/settings/questions-bank`}
+                        className={`${styles.tab__btn} ${
+                            pathname.includes(
+                                "/backend/settings/questions-bank"
+                            )
+                                ? styles.active
+                                : ""
+                        }`}
+                    >
+                        <ClipboardDocumentListIcon className="w-6 h-6" />
+                        <span>{t.questions_bank}</span>
                     </Link>
                 </li>
                 <li>
