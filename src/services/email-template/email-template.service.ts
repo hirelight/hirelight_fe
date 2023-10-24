@@ -9,85 +9,92 @@ import {
     IEmailTemplatesDto,
 } from "./email-template.interface";
 
-const createEmailTemplate = async (
-    createEmailTemplatesDto: ICreateEmailTemplatesDto
-) => {
-    try {
-        const res = await interceptor.post<IResponse<any>>(
-            `${endpoints.EMAIL_TEMPLATE}`,
-            createEmailTemplatesDto
-        );
+interface IEmailTemplateServices {
+    getListAsync: () => Promise<IResponse<IEmailTemplatesDto[]>>;
+    getByIdAsync: (id: number) => Promise<IResponse<IEmailTemplatesDto>>;
+    createAsync: (
+        createDto: ICreateEmailTemplatesDto
+    ) => Promise<IResponse<any>>;
+    editAsync: (editDto: IEditEmailTemplatesDto) => Promise<IResponse<any>>;
+    deleteByIdAsync: (id: number) => Promise<IResponse<any>>;
+}
 
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
-        return res.data;
-    } catch (error) {
-        throw error;
-    }
-};
+class EmailTemplateServices implements IEmailTemplateServices {
+    createAsync = async (
+        createEmailTemplatesDto: ICreateEmailTemplatesDto
+    ): Promise<IResponse<any>> => {
+        try {
+            const res = await interceptor.post<IResponse<any>>(
+                `${endpoints.EMAIL_TEMPLATE}`,
+                createEmailTemplatesDto
+            );
 
-const getEmailTemplates = async () => {
-    try {
-        const res = await interceptor.get<IResponse<IEmailTemplatesDto[]>>(
-            endpoints.EMAIL_TEMPLATE
-        );
+            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            return res.data;
+        } catch (error) {
+            throw error;
+        }
+    };
 
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+    getListAsync = async (): Promise<IResponse<IEmailTemplatesDto[]>> => {
+        try {
+            const res = await interceptor.get(endpoints.EMAIL_TEMPLATE);
 
-        return res.data;
-    } catch (error) {
-        throw error;
-    }
-};
+            console.log(res);
 
-const getEmailTemplatesById = async (id: string) => {
-    try {
-        const res = await interceptor.get<IResponse<IEmailTemplatesDto>>(
-            `${endpoints.EMAIL_TEMPLATE}/${id}`
-        );
+            // if (res.data.statusCode >= 400) throw new Error(res.data.message);
 
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
-        return res.data;
-    } catch (error) {
-        throw error;
-    }
-};
+            return res.data;
+        } catch (error) {
+            throw error;
+        }
+    };
 
-const editEmailTemplates = async (
-    templateId: string,
-    updateEmailTemplateDto: IEditEmailTemplatesDto
-) => {
-    try {
-        const res = await interceptor.put<IResponse<any>>(
-            `${endpoints.EMAIL_TEMPLATE}/${templateId}`,
-            updateEmailTemplateDto
-        );
+    getByIdAsync = async (
+        id: number
+    ): Promise<IResponse<IEmailTemplatesDto>> => {
+        try {
+            const res = await interceptor.get<IResponse<IEmailTemplatesDto>>(
+                `${endpoints.EMAIL_TEMPLATE}/${id}`
+            );
 
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
-        return res.data;
-    } catch (error) {
-        throw error;
-    }
-};
+            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            return res.data;
+        } catch (error) {
+            throw error;
+        }
+    };
 
-const deleteEmailTemplateById = async (id: string) => {
-    try {
-        const res = await interceptor.delete<IResponse<any>>(
-            `${endpoints.EMAIL_TEMPLATE}/${id}`
-        );
+    editAsync = async (
+        updateEmailTemplateDto: IEditEmailTemplatesDto
+    ): Promise<IResponse<any>> => {
+        try {
+            const res = await interceptor.put<IResponse<any>>(
+                `${endpoints.EMAIL_TEMPLATE}/${updateEmailTemplateDto.templateId}`,
+                updateEmailTemplateDto
+            );
 
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
-        return res.data;
-    } catch (error) {
-        throw error;
-    }
-};
+            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            return res.data;
+        } catch (error) {
+            throw error;
+        }
+    };
 
-const emailTemplateService = {
-    createEmailTemplate,
-    getEmailTemplates,
-    editEmailTemplates,
-    deleteEmailTemplateById,
-    getEmailTemplatesById,
-};
+    deleteByIdAsync = async (id: number): Promise<IResponse<any>> => {
+        try {
+            const res = await interceptor.delete<IResponse<any>>(
+                `${endpoints.EMAIL_TEMPLATE}/${id}`
+            );
+
+            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            return res.data;
+        } catch (error) {
+            throw error;
+        }
+    };
+}
+
+const emailTemplateService = new EmailTemplateServices();
 
 export default emailTemplateService;

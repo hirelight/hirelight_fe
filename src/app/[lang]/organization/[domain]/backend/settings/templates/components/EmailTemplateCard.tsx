@@ -3,12 +3,15 @@
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
+import { toast } from "react-toastify";
 
 import { Button, PopoverWarning, Portal } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setEditingId, setIsAdding } from "@/redux/slices/templates.slice";
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import { useTranslation } from "@/components/InternationalizationProvider";
+import { IEmailTemplatesDto } from "@/services/email-template/email-template.interface";
+import { deleteEmailTemplateById } from "@/redux/thunks/email-templates.thunk";
 
 import datas from "../mock-data.json";
 import { Locale } from "../../../../../../../../../i18n.config";
@@ -16,7 +19,7 @@ import { Locale } from "../../../../../../../../../i18n.config";
 const PreviewModal = dynamic(() => import("./PreviewModal"));
 
 interface IEmailTemplateCard {
-    data: (typeof datas)[0];
+    data: IEmailTemplatesDto;
 }
 
 const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
@@ -47,6 +50,13 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
         if (isAdding) dispatch(setIsAdding(false));
 
         setShowWarning(false);
+    };
+
+    const handleDeleteTemplate = async () => {
+        const res = await dispatch(deleteEmailTemplateById(data.id));
+        if (res.meta.requestStatus === "fulfilled")
+            toast.success(`Delete template success`);
+        setShowDeleteWarning(false);
     };
 
     return (
@@ -121,9 +131,7 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
                                 <PopoverWarning
                                     show={showDeleteWarning}
                                     content={t.popover.delete_warning.content}
-                                    onConfirm={() => {
-                                        setShowDeleteWarning(false);
-                                    }}
+                                    onConfirm={handleDeleteTemplate}
                                     onCancel={() => setShowDeleteWarning(false)}
                                     confirmButton={
                                         <Button className="!px-10 bg-red-600 hover:bg-red-700">

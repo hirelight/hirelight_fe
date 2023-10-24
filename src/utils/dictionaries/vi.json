@@ -224,8 +224,8 @@
                         "name": {
                             "label": "Tên"
                         },
-                        "department": {
-                            "label": "Phòng ban"
+                        "title": {
+                            "label": "Tiêu đề"
                         },
                         "industry": {
                             "label": "Ngành"
@@ -273,8 +273,8 @@
                         "name": {
                             "label": "Tên"
                         },
-                        "department": {
-                            "label": "Phòng ban"
+                        "title": {
+                            "label": "Tiêu đề"
                         },
                         "industry": {
                             "label": "Ngành"
