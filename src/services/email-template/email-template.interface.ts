@@ -22,8 +22,9 @@ export interface IEmailTemplatesDto {
 }
 
 export interface IEditEmailTemplatesDto {
-    organizationId: 0;
-    emailTypeId: 0;
+    templateId: number;
+    organizationId: number;
+    emailTypeId: number;
     name: string;
     title: string;
     content: string;

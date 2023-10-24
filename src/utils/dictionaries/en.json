@@ -228,8 +228,8 @@
                         "name": {
                             "label": "Name"
                         },
-                        "department": {
-                            "label": "Department"
+                        "title": {
+                            "label": "Title"
                         },
                         "industry": {
                             "label": "Industry"
@@ -277,8 +277,8 @@
                         "name": {
                             "label": "Name"
                         },
-                        "department": {
-                            "label": "Department"
+                        "title": {
+                            "label": "Title"
                         },
                         "industry": {
                             "label": "Industry"

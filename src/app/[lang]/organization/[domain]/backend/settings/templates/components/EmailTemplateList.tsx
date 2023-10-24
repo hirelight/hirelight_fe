@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setEditingId } from "@/redux/slices/templates.slice";
-
-import templates from "../mock-data.json";
+import { fetchEmailTemplates } from "@/redux/thunks/email-templates.thunk";
 
 import EmailTemplateCard from "./EmailTemplateCard";
 import EditAddTemplateSkeleton from "./EditAddTemplateSkeleton";
@@ -15,20 +14,21 @@ const UpdateEmailTemplate = dynamic(() => import("./UpdateEmailTemplate"), {
     loading: () => <EditAddTemplateSkeleton />,
 });
 
-interface IEmailTemplateList {
-    datas: typeof templates;
-}
+interface IEmailTemplateList {}
 
-const EmailTemplateList: React.FC<IEmailTemplateList> = ({ datas }) => {
+const EmailTemplateList: React.FC<IEmailTemplateList> = ({}) => {
     const dispatch = useAppDispatch();
-    const { editingId, searchQuery } = useAppSelector(
+    const { editingId, searchQuery, datas } = useAppSelector(
         state => state.templates.emailTemplates
     );
+    useEffect(() => {
+        dispatch(fetchEmailTemplates());
+    }, []);
 
     return (
         <ul>
             {datas
-                .filter(item =>
+                ?.filter(item =>
                     item.name.toLowerCase().includes(searchQuery.toLowerCase())
                 )
                 .map((item, index) => (
