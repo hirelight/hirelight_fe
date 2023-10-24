@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 
 import { Modal } from "@/components";
 import { useTranslation } from "@/components/InternationalizationProvider";
+import { IEmailTemplatesDto } from "@/services/email-template/email-template.interface";
 
 import datas from "../mock-data.json";
 import { Locale } from "../../../../../../../../../i18n.config";
@@ -10,7 +11,7 @@ import { Locale } from "../../../../../../../../../i18n.config";
 interface IPreviewModal {
     isOpen: boolean;
     onClose: () => void;
-    data: (typeof datas)[0];
+    data: IEmailTemplatesDto;
 }
 
 const PreviewModal: React.FC<IPreviewModal> = ({ isOpen, onClose, data }) => {
@@ -28,9 +29,9 @@ const PreviewModal: React.FC<IPreviewModal> = ({ isOpen, onClose, data }) => {
                 </h2>
             </div>
             <div
-                className="p-6 flex"
+                className="p-6"
                 dangerouslySetInnerHTML={{
-                    __html: data.media.email.translations.en.body,
+                    __html: data.content,
                 }}
             ></div>
         </Modal>
