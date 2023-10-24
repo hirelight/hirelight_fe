@@ -120,12 +120,6 @@ const QuillEditor = ({
     React.useEffect(() => {
         if (editorRef.current) {
             if (!quillInstance.current) {
-                CustomSpan.blotName = "label";
-                CustomSpan.tagName = "SPAN";
-                CustomSpan.className = "ql-custom-span";
-
-                Quill.register(CustomSpan);
-
                 const options: QuillOptionsStatic = {
                     modules: {
                         toolbar: {
