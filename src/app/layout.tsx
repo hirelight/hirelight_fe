@@ -2,8 +2,9 @@ import "./globals.scss";
 import "react-quill/dist/quill.snow.css";
 import "react-quill/dist/quill.bubble.css";
 
-import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import { ToastContainer } from "react-toastify";
+import type { Metadata } from "next";
 import { Inter, Public_Sans, Roboto_Mono } from "next/font/google";
 import Script from "next/script";
 import dynamic from "next/dynamic";
@@ -65,7 +66,7 @@ export default function RootLayout({
             >
                 <InternationalizationProvider lang={params.lang}>
                     <ThemeProvider theme={"light"}>
-                        {/* <TopProgressBar /> */}
+                        <TopProgressBar />
                         <ReduxProvider>
                             <ToastContainer
                                 position="top-center"
@@ -84,6 +85,7 @@ export default function RootLayout({
                         </ReduxProvider>
                     </ThemeProvider>
                 </InternationalizationProvider>
+                <Analytics />
                 <Script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></Script>
             </body>
         </html>
