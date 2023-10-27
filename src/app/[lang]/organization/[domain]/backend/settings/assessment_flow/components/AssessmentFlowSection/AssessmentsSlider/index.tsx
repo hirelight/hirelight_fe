@@ -5,8 +5,8 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
 
 import data from "../mock-data.json";
-import AssessmentCard from "../AssessmentCard";
 
+import AssessmentSliderCard from "./AssessmentSliderCard";
 import styles from "./styles.module.scss";
 
 const cardWidth: number = 124;
@@ -58,6 +58,17 @@ const AssessmentsSlider = () => {
     };
 
     useEffect(() => {
+        window.addEventListener("resize", () => {
+            if (sliderWrapperRef.current) {
+                if (
+                    data.stages.length * (cardWidth + sliderGap) >
+                    sliderWrapperRef.current.clientWidth - 16
+                ) {
+                    setSwipeVisible(prev => ({ ...prev, swipeRight: true }));
+                }
+            }
+        });
+
         if (sliderWrapperRef.current) {
             if (
                 data.stages.length * (cardWidth + sliderGap) >
@@ -66,10 +77,14 @@ const AssessmentsSlider = () => {
                 setSwipeVisible(prev => ({ ...prev, swipeRight: true }));
             }
         }
+
+        return () => {
+            window.removeEventListener("resize", () => {});
+        };
     }, []);
 
     return (
-        <div className="relative">
+        <div className="relative max-w-full">
             {swipeVisible.swipeLeft && (
                 <motion.button
                     initial={{
@@ -88,7 +103,7 @@ const AssessmentsSlider = () => {
             <div ref={sliderWrapperRef} className={`${styles.slider__wrapper}`}>
                 {data.stages.map((item, index) => {
                     return (
-                        <AssessmentCard
+                        <AssessmentSliderCard
                             key={item.id}
                             data={item}
                             stageVisibility={index >= stagesVisible}

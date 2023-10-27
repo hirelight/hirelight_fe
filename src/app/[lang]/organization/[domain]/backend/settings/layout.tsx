@@ -15,7 +15,9 @@ const OrganizationSettingsLayout = ({
                 <div className="w-1/4 hidden lg:block">
                     <SettingsSidebar />
                 </div>
-                <div className="flex-1 max-w-full">{children}</div>
+                <div className="flex-1 max-w-full overflow-hidden">
+                    {children}
+                </div>
             </div>
         </>
     );

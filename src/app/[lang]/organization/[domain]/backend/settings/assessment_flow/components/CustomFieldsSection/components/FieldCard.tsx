@@ -7,16 +7,17 @@ import {
     m,
     LazyMotion,
     domAnimation,
-    MotionConfig,
 } from "framer-motion";
 import dynamic from "next/dynamic";
 import React, { useState } from "react";
 
 import styles from "./FieldCard.module.scss";
 
-const AddField = dynamic(() => import("./AddField"));
-
-const EditField = dynamic(() => import("./EditField"));
+const EditField = dynamic(() => import("./EditField"), {
+    loading: () => (
+        <div className="my-4 p-6 border border-gray-300 rounded min-h-[360px]"></div>
+    ),
+});
 
 type FieldCardProps = {
     data: any;
@@ -32,14 +33,13 @@ const FieldCard: React.FC<FieldCardProps> = ({ data }) => {
         <Reorder.Item
             value={data}
             id={data.id}
-            className={`p-4 bg-white relative `}
+            className={`mx-4 bg-white relative group ${
+                isEditing ? "" : "border-b"
+            } border-gray-300 last:border-b-0 group`}
             style={{ y }}
             dragListener={false}
             dragControls={dragControls}
         >
-            <button type="button" onClick={() => setIsEditing(!isEditing)}>
-                Toggle
-            </button>
             <AnimatePresence initial={false}>
                 <LazyMotion features={domAnimation} strict>
                     {!isEditing && (
@@ -48,7 +48,9 @@ const FieldCard: React.FC<FieldCardProps> = ({ data }) => {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                         >
-                            <div className={`${styles.card__container} group`}>
+                            <div
+                                className={`${styles.card__container} px-6 py-4 hover:bg-blue-100`}
+                            >
                                 <button
                                     type="button"
                                     className={
@@ -66,7 +68,7 @@ const FieldCard: React.FC<FieldCardProps> = ({ data }) => {
                                 <div className="flex-1 flex flex-col gap-2 text-neutral-700 text-sm">
                                     <span>{data.label}</span>
                                 </div>
-                                <div className="flex gap-4">
+                                <div className="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                     <button
                                         type="button"
                                         tabIndex={-1}

@@ -14,12 +14,11 @@ type EditFieldProps = {
 const EditField: React.FC<EditFieldProps> = ({ data, onUpdate, onCancel }) => {
     return (
         <m.div
-            className="w-full"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
         >
-            <div className="p-6 border border-gray-300 rounded">
+            <div className="my-4 p-6 border border-gray-300 rounded">
                 <div className="grid grid-cols-2 gap-2 mb-4">
                     <CustomInput
                         title="Custom field title"

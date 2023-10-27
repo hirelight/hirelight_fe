@@ -10,11 +10,11 @@ import {
 import { LockClosedIcon, RectangleStackIcon } from "@heroicons/react/24/solid";
 import React from "react";
 
-import mockData from "../mock-data.json";
+import mockData from "../../mock-data.json";
 
 import styles from "./styles.module.scss";
 
-interface IAssessmentCard {
+interface IAssessmentSliderCard {
     data: (typeof mockData.stages)[0];
     stageVisibility: boolean;
     toggleStageVisibility: () => void;
@@ -22,7 +22,7 @@ interface IAssessmentCard {
     toggleHovervisiblity: (pos?: number) => void;
 }
 
-const AssessmentCard: React.FC<IAssessmentCard> = ({
+const AssessmentSliderCard: React.FC<IAssessmentSliderCard> = ({
     data,
     stageVisibility,
     toggleStageVisibility,
@@ -71,4 +71,4 @@ const AssessmentCard: React.FC<IAssessmentCard> = ({
     );
 };
 
-export default AssessmentCard;
+export default AssessmentSliderCard;

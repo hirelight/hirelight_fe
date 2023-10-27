@@ -2,7 +2,9 @@
 
 import React from "react";
 import { EyeIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
-import { Reorder, LazyMotion, domMax } from "framer-motion";
+import { Reorder } from "framer-motion";
+
+import { Logo } from "@/icons";
 
 import pageStyles from "../../styles.module.scss";
 import sections from "../../custom-field.json";
@@ -48,7 +50,8 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
                 </div>
                 <section className={styles.fields__container}>
                     <div className={styles.fields__header__container}>
-                        <h5 className="text-neutral-700 text-xl font-semibold">
+                        <h5 className="text-neutral-700 text-xl font-semibold flex items-center gap-2">
+                            <Logo className="text-blue_primary_300 h-6 w-6" />
                             Candidate profile
                         </h5>
                         <div className="flex items-center gap-4">
@@ -102,7 +105,8 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
                     <div
                         className={`${styles.fields__header__container} border-t border-gray-300`}
                     >
-                        <h5 className="text-neutral-700 text-xl font-semibold">
+                        <h5 className="text-neutral-700 text-xl font-semibold flex items-center gap-2">
+                            <Logo className="text-blue_primary_300 h-6 w-6" />
                             Application form
                         </h5>
                         <div className="flex items-center gap-4">

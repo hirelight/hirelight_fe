@@ -25,8 +25,10 @@ import SpinLoading from "./SpinLoading";
 import GoogleIcon from "./GoogleIcon";
 import LinkedInIcon from "./LinkedInIcon";
 import MinusBigIcon from "./MinusBigIcon";
+import Logo from "./Logo";
 
 export {
+    Logo,
     MenuIcon,
     CloseIcon,
     Bell,

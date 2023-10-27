@@ -97,7 +97,7 @@ const Selection = ({
             className={"min-w-[200px] md:min-w-[300px] w-full " + className}
         >
             {title && (
-                <h4 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                <h4 className="block mb-2 text-sm font-medium text-neutral-900 dark:text-white">
                     {required && <span className="text-red-500 mr-1">*</span>}
                     {title}
                 </h4>
@@ -105,10 +105,10 @@ const Selection = ({
             <div className="relative ">
                 <button
                     type="button"
-                    className={`w-full flex items-center justify-between font-medium dark:text-white p-2.5 cursor-pointer border border-gray-300 rounded-md text-sm ${
+                    className={`w-full flex items-center justify-between font-medium bg-white dark:text-white p-2.5 cursor-pointer border border-gray-300 rounded-md text-sm ${
                         selected === placeholder
-                            ? "text-gray-600"
-                            : "text-gray-900"
+                            ? "text-neutral-600"
+                            : "text-neutral-900"
                     } ${labelClassName}`}
                     onClick={expandSelection}
                 >

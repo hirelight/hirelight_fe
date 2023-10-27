@@ -17,11 +17,16 @@ import {
 } from "framer-motion";
 import dynamic from "next/dynamic";
 
+import { useRaisedShadow } from "@/hooks/use-raised-boxshadow";
+
 import styles from "./FormSectionCard.module.scss";
-import { useRaisedShadow } from "./use-raised-boxshadow";
 
 const FieldList = dynamic(() => import("./FieldList"));
-const AddField = dynamic(() => import("./AddField"));
+const AddField = dynamic(() => import("./AddField"), {
+    loading: () => (
+        <div className="my-4 p-6 border border-gray-300 rounded min-h-[360px]"></div>
+    ),
+});
 
 type FormSectionCardProps = {
     data: any;
@@ -48,7 +53,9 @@ const FormSectionCard: React.FC<FormSectionCardProps> = ({
             dragListener={false}
             dragControls={dragControls}
         >
-            <div className={`${styles.field__item__card__header} group`}>
+            <div
+                className={`${styles.field__item__card__header} group hover:bg-blue-100`}
+            >
                 <button
                     type="button"
                     className={
