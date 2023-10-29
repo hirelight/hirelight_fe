@@ -30,7 +30,7 @@ const NewOneWayInterview = () => {
     };
 
     return (
-        <div className="bg-white py-4 shadow-md rounded-md">
+        <div className="bg-white py-4 drop-shadow-md rounded-md">
             <h2 className="text-xl text-neutral-700 font-medium px-4 xl:px-6 mb-8">
                 Create your video interview
             </h2>
@@ -61,7 +61,7 @@ const NewOneWayInterview = () => {
                         </div>
                     </div>
 
-                    <div className=" flex flex-col gap-4 mb-6 px-4 xl:px-6">
+                    <div className="flex flex-col gap-4 mb-6 px-4 xl:px-6">
                         <h3 className="text-neutral-700 font-medium">
                             Welcome note
                         </h3>
@@ -70,7 +70,7 @@ const NewOneWayInterview = () => {
                     responsibility and what the candidate might do on a typical
                     day."
                             onChange={(value: string) => {}}
-                            className="min-h-[320px] rounded-md overflow-hidden"
+                            className="min-h-[320px]"
                             theme="snow"
                         />
                     </div>
@@ -154,7 +154,7 @@ const NewOneWayInterview = () => {
                         <div className="w-1/3"></div>
                     </div>
 
-                    <div className="min-h-[320px] flex flex-col gap-4 mb-6 px-4 xl:px-6">
+                    <div className="flex flex-col gap-4 mb-6 px-4 xl:px-6">
                         <h3 className="text-neutral-700 font-medium">
                             Outro note{" "}
                             <span className="text-neutral-500 font-normal text-sm">
@@ -164,7 +164,7 @@ const NewOneWayInterview = () => {
                         <QuillEditorNoSSR
                             placeholder="We'll be watching your interview soon and will contact you about the next steps"
                             onChange={(value: string) => {}}
-                            className="flex-1 border border-slate-400 rounded-md overflow-hidden"
+                            className="min-h-[240px]"
                             theme="snow"
                         />
                     </div>

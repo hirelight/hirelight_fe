@@ -228,6 +228,7 @@ const QuillEditor = ({
                             roboto_mono.className,
                             publicSans.className,
                             theme === "snow" ? styles.snow : "",
+                            readOnly ? "!border-0" : "",
                         ].join(" ")}
                     ></div>
                 </div>

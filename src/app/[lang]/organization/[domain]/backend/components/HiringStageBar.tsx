@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import { Plus } from "@/icons";
@@ -9,7 +10,10 @@ import { Plus } from "@/icons";
 import styles from "./HiringStageBar.module.scss";
 
 const HiringStageBar = () => {
+    const { lang } = useParams();
+
     const [curStage, setCurStage] = React.useState("In Progress");
+
     const stageBtnWrapperRef = useOutsideClick<HTMLUListElement>(() => {
         if (stageBtnWrapperRef.current) {
             if (
@@ -86,7 +90,7 @@ const HiringStageBar = () => {
                 </ul>
             </div>
             <Link
-                href="/backend/jobs/new"
+                href={`/${lang}/backend/jobs/new`}
                 className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm p-2 md:p-0 md:px-5 md:py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 ml-auto flex items-center gap-1"
             >
                 <Plus className="w-6 h-6" />
