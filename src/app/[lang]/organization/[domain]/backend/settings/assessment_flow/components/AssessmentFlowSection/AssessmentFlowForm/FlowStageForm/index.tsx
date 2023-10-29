@@ -14,34 +14,52 @@ enum AssessmentType {
     Hired = "Hired",
 }
 
-type AddNewStageFormProps = {
-    onSave: () => void;
-    onCancel: () => void;
+const initialData = {
+    name: "",
+    type: AssessmentType.CVScreening,
 };
 
-const AddNewStageForm: React.FC<AddNewStageFormProps> = ({
+type FlowStageFormProps = {
+    onSave: () => void;
+    onCancel: () => void;
+    data?: typeof initialData;
+};
+
+const FlowStageForm: React.FC<FlowStageFormProps> = ({
     onSave,
     onCancel,
+    data = initialData,
 }) => {
-    const [name, setName] = useState("");
-    const [type, setType] = useState(AssessmentType.Sourced);
+    const [formState, setFormState] = useState(data);
 
     return (
         <section className="border border-gray-300 bg-slate-100 rounded-md">
             <h4 className="p-4 border-b border-gray-300">
-                {name ? name : "Add a stage name"}
+                {formState.name ? formState.name : "Add a stage name"}
             </h4>
             <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <CustomInput
                     title="Assessment name"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
+                    value={formState.name}
+                    onChange={e =>
+                        setFormState(prev => ({
+                            ...prev,
+                            name: e.target.value,
+                        }))
+                    }
                     required
                 />
                 <Selection
                     title="Assessment type"
                     datas={["Phone Screen"]}
-                    onChange={() => {}}
+                    onChange={content =>
+                        setFormState(prev => ({
+                            ...prev,
+                            type: AssessmentType[
+                                content as keyof typeof AssessmentType
+                            ],
+                        }))
+                    }
                     required
                 />
             </div>
@@ -59,4 +77,4 @@ const AddNewStageForm: React.FC<AddNewStageFormProps> = ({
     );
 };
 
-export default AddNewStageForm;
+export default FlowStageForm;

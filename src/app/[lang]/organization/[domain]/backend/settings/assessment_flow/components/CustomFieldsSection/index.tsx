@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { EyeIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
+import { EyeIcon } from "@heroicons/react/24/solid";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { Reorder } from "framer-motion";
 
 import { Logo } from "@/icons";
@@ -59,16 +60,20 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
                                 type="button"
                                 className="flex gap-1 items-center text-sm text-blue_primary_700 font-semibold hover:underline"
                             >
-                                <PlusCircleIcon className="w-4 h-4" />
-                                <span>Create new section</span>
+                                <PlusCircleIcon className="w-5 h-5" />
+                                <span className="hidden md:inline">
+                                    Create new section
+                                </span>
                             </button>
 
                             <button
                                 type="button"
                                 className="flex gap-1 items-center text-sm text-blue_primary_700 font-semibold hover:underline"
                             >
-                                <EyeIcon className="w-4 h-4" />
-                                <span>Preview</span>
+                                <EyeIcon className="w-5 h-5" />
+                                <span className="hidden md:inline">
+                                    Preview
+                                </span>
                             </button>
                         </div>
                     </div>

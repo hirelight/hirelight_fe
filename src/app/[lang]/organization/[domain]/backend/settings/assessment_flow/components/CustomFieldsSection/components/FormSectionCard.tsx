@@ -18,15 +18,12 @@ import {
 import dynamic from "next/dynamic";
 
 import { useRaisedShadow } from "@/hooks/use-raised-boxshadow";
+import { DragIndicatorIcon } from "@/icons";
 
 import styles from "./FormSectionCard.module.scss";
 
 const FieldList = dynamic(() => import("./FieldList"));
-const AddField = dynamic(() => import("./AddField"), {
-    loading: () => (
-        <div className="my-4 p-6 border border-gray-300 rounded min-h-[360px]"></div>
-    ),
-});
+const AddField = dynamic(() => import("./AddField"));
 
 type FormSectionCardProps = {
     data: any;
@@ -68,7 +65,7 @@ const FormSectionCard: React.FC<FormSectionCardProps> = ({
                         dragControls.start(event);
                     }}
                 >
-                    <Bars3Icon className="w-5 h-5" />
+                    <DragIndicatorIcon className="w-5 h-5 text-neutral-700" />
                 </button>
                 <div className="flex-1 flex items-center gap-2">
                     <span>{data.label}</span>
@@ -96,19 +93,26 @@ const FormSectionCard: React.FC<FormSectionCardProps> = ({
                     <ChevronDownIcon className="w-5 h-5" />
                 </button>
             </div>
-            <AnimatePresence>
-                {isExpand && (
-                    <FieldList
-                        datas={data.fields}
-                        reorderFields={reorderFields}
-                    />
-                )}
-            </AnimatePresence>
-            <LazyMotion features={domAnimation}>
+            <div className="mx-4">
                 <AnimatePresence>
-                    {isAdding && isExpand && <AddField />}
+                    {isExpand && (
+                        <FieldList
+                            datas={data.fields}
+                            reorderFields={reorderFields}
+                        />
+                    )}
                 </AnimatePresence>
-            </LazyMotion>
+                <LazyMotion features={domAnimation} strict>
+                    <AnimatePresence>
+                        {isAdding && isExpand && (
+                            <AddField
+                                onAdd={() => setIsAdding(false)}
+                                onCancel={() => setIsAdding(false)}
+                            />
+                        )}
+                    </AnimatePresence>
+                </LazyMotion>
+            </div>
         </Reorder.Item>
     );
 };

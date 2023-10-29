@@ -8,6 +8,10 @@
     box-sizing: border-box;
 }
 
+body {
+    @apply text-neutral-900;
+}
+
 .ql-active {
     @apply bg-slate-200 text-blue_primary_800;
 }
