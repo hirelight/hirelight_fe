@@ -1,13 +1,12 @@
 import {
     ArrowDownTrayIcon,
-    Bars3Icon,
     PlusCircleIcon,
     TrashIcon,
 } from "@heroicons/react/24/solid";
 import React, { FormEvent } from "react";
 import { AnimatePresence, Reorder } from "framer-motion";
 
-import { Button, CustomInput, Selection } from "@/components";
+import { Button, CustomInput } from "@/components";
 
 import QuestionItem from "./QuestionItem";
 
@@ -178,6 +177,7 @@ const AddNewQuestionSection = ({
                     <button
                         type="button"
                         className="text-neutral-500 font-semibold text-sm hover:text-neutral-700"
+                        onClick={() => onFinish()}
                     >
                         Cancel
                     </button>

@@ -12,9 +12,11 @@ import {
     Selection,
 } from "@/components";
 
-import AddNewQuestionSection from "../components/AddNewQuestionSection";
-
 import QuestionSection from "./components/QuestionSection";
+
+const AddNewQuestionSection = dynamic(
+    () => import("../components/AddNewQuestionSection")
+);
 
 const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ssr: false,
