@@ -11,7 +11,6 @@ type FieldListProps = {
 const FieldList: React.FC<FieldListProps> = ({ datas, reorderFields }) => {
     return (
         <motion.div
-            className="w-full"
             initial={{ height: 0 }}
             animate={{ height: "auto" }}
             exit={{ height: 0 }}

@@ -9,7 +9,8 @@ import { Logo } from "@/icons";
 import pageStyles from "../../styles.module.scss";
 
 import AssessmentsSlider from "./AssessmentsSlider";
-import AddNewFlowForm from "./AddNewFlowForm";
+import AssessmentFlowForm from "./AssessmentFlowForm";
+import CustomFlowList from "./CustomFlowList";
 
 const AssessmentFlowSection = () => {
     const [showAdding, setShowAdding] = useState(false);
@@ -44,7 +45,7 @@ const AssessmentFlowSection = () => {
                     <AssessmentsSlider />
 
                     <hr className="my-8 border-gray-300" />
-                    <div>
+                    <section>
                         <h4
                             className={`${pageStyles.content__h4} flex items-center gap-2`}
                         >
@@ -69,14 +70,16 @@ const AssessmentFlowSection = () => {
                         </div>
 
                         {showAdding && (
-                            <AddNewFlowForm
+                            <AssessmentFlowForm
                                 onSave={() => setShowAdding(false)}
                                 onClose={() => setShowAdding(false)}
                             />
                         )}
 
-                        <div className="flex flex-col"></div>
-                    </div>
+                        <div>
+                            <CustomFlowList />
+                        </div>
+                    </section>
                 </div>
             </div>
         </section>

@@ -10,11 +10,40 @@ import { AssessmentType } from "@/interfaces/assessment.interface";
 
 import AssessmentFlowCard from "../AssessmentFlowCard";
 
-import AddNewStageForm from "./AddNewStageForm";
+import FlowStageForm from "./FlowStageForm";
 
-type AddNewFlowFormProps = {
+const initialData = {
+    name: "",
+    department: "",
+    location: "",
+    assessments: [
+        {
+            id: 0,
+            name: "Sourced",
+            type: AssessmentType.Sourced,
+        },
+        {
+            id: 1,
+            name: "Hired 2",
+            type: AssessmentType.CVScreening,
+        },
+        {
+            id: 2,
+            name: "Hired 4",
+            type: AssessmentType.CVScreening,
+        },
+        {
+            id: 3,
+            name: "Hired",
+            type: AssessmentType.Hired,
+        },
+    ],
+};
+
+type AssessmentFlowFormProps = {
     onSave: () => void;
     onClose: () => void;
+    data?: typeof initialData;
 };
 
 type Assessment = {
@@ -30,35 +59,13 @@ type AssessmentFlow = {
     assessments: Assessment[];
 };
 
-const AddNewFlowForm: React.FC<AddNewFlowFormProps> = ({ onSave, onClose }) => {
+const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
+    onSave,
+    onClose,
+    data = initialData,
+}) => {
     const [showAddStage, setShowAddStage] = useState(false);
-    const [formState, setFormState] = useState<AssessmentFlow>({
-        name: "",
-        department: "",
-        location: "",
-        assessments: [
-            {
-                id: 0,
-                name: "Sourced",
-                type: AssessmentType.Sourced,
-            },
-            {
-                id: 1,
-                name: "Hired 2",
-                type: AssessmentType.CVScreening,
-            },
-            {
-                id: 2,
-                name: "Hired 4",
-                type: AssessmentType.CVScreening,
-            },
-            {
-                id: 3,
-                name: "Hired",
-                type: AssessmentType.Hired,
-            },
-        ],
-    });
+    const [formState, setFormState] = useState<AssessmentFlow>(data);
 
     const handleCreateFlow = (e: FormEvent) => {
         e.preventDefault();
@@ -160,7 +167,7 @@ const AddNewFlowForm: React.FC<AddNewFlowFormProps> = ({ onSave, onClose }) => {
                         </Reorder.Group>
 
                         {showAddStage ? (
-                            <AddNewStageForm
+                            <FlowStageForm
                                 onSave={() => setShowAddStage(false)}
                                 onCancel={() => setShowAddStage(false)}
                             />
@@ -191,4 +198,4 @@ const AddNewFlowForm: React.FC<AddNewFlowFormProps> = ({ onSave, onClose }) => {
     );
 };
 
-export default AddNewFlowForm;
+export default AssessmentFlowForm;
