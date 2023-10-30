@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import React from "react";
 
@@ -6,15 +8,17 @@ import oneWay from "/public/images/one-way-assessment.png";
 import testAssessment from "/public/images/test-assessment.png";
 
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 import styles from "./PipelineConfigAssessment.module.scss";
 
 const PipelineConfigAssessment = () => {
+    const { assessmentId } = useParams();
     return (
         <div className="w-full px-6">
             <div className="flex flex-col lg:flex-row gap-8">
                 <Link
-                    href={"config-pipeline/123/face-to-face-assessment/new"}
+                    href={`config-pipeline/123/face-to-face-assessment/new`}
                     className={styles.assessment__wrapper}
                 >
                     <Image
@@ -29,7 +33,7 @@ const PipelineConfigAssessment = () => {
                     </p>
                 </Link>
                 <Link
-                    href={"config-pipeline/123/one-way-assessment/new"}
+                    href={`config-pipeline/123/one-way-assessment/new`}
                     className={styles.assessment__wrapper}
                 >
                     <Image
@@ -46,7 +50,7 @@ const PipelineConfigAssessment = () => {
                     </p>
                 </Link>
                 <Link
-                    href={"config-pipeline/123/one-way-assessment/new"}
+                    href={`config-pipeline/123/multiple-choice-assessment/new`}
                     className={styles.assessment__wrapper}
                 >
                     <Image

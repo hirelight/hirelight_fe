@@ -58,16 +58,17 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
         toast.success("Sign in  success");
         await delayFunc(500);
         setLoading(false);
-        router.replace(
-            `${window.location.protocol}//fpt.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?code=123`
-        );
+        if (process.env.NODE_ENV === "development")
+            router.replace(
+                `${window.location.protocol}//fpt.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?code=123`
+            );
     };
 
     const handleRedirect = React.useCallback(
-        (domain: string) => {
+        (subdomain: string) => {
             if (process.env.NODE_ENV === "development")
                 router.replace(
-                    `${window.location.protocol}//${domain}.${
+                    `${window.location.protocol}//${subdomain}.${
                         process.env.NEXT_PUBLIC_ROOT_DOMAIN
                     }?loginId=${loginId}&accessToken=${Cookies.get(
                         "hirelight_access_token"
@@ -75,7 +76,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                 );
             else
                 router.replace(
-                    `${window.location.protocol}//${domain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend`
+                    `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend`
                 );
         },
         [loginId, router]
@@ -98,13 +99,13 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                         ownedOrgRes.statusCode === 200 &&
                         ownedOrgRes.data !== null
                     )
-                        handleRedirect(ownedOrgRes.data[0].domain);
+                        handleRedirect(ownedOrgRes.data[0].subdomain);
 
                     if (
                         joinedOrgRes.statusCode === 200 &&
                         joinedOrgRes.data !== null
                     )
-                        handleRedirect(joinedOrgRes.data[0].domain);
+                        handleRedirect(joinedOrgRes.data[0].subdomain);
 
                     if (!validWorkEmail(userData.emailAddress)) {
                         setLoginFormErr(prev => ({
@@ -133,8 +134,8 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                             await organizationsServices.getJoinedOrganizations();
 
                     if (res.statusCode === 200) {
-                        const { domain } = res.data[0];
-                        handleRedirect(domain);
+                        const { subdomain } = res.data[0];
+                        handleRedirect(subdomain);
                     }
                 }
             } catch (error) {
