@@ -66,12 +66,12 @@ class EmailTemplateServices implements IEmailTemplateServices {
     };
 
     editAsync = async (
-        updateEmailTemplateDto: IEditEmailTemplatesDto
+        editEmailTemplateDto: IEditEmailTemplatesDto
     ): Promise<IResponse<any>> => {
         try {
             const res = await interceptor.put<IResponse<any>>(
-                `${endpoints.EMAIL_TEMPLATE}/${updateEmailTemplateDto.templateId}`,
-                updateEmailTemplateDto
+                `${endpoints.EMAIL_TEMPLATE}/${editEmailTemplateDto.templateId}`,
+                editEmailTemplateDto
             );
 
             if (res.data.statusCode >= 400) throw new Error(res.data.message);

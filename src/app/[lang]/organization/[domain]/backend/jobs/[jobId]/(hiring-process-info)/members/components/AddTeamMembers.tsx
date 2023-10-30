@@ -188,7 +188,10 @@ const AddTeamMebers = () => {
                         <div className="flex-1 md:flex-auto">
                             <Selection
                                 title=""
-                                datas={internalMembers.map(item => item.email)}
+                                items={internalMembers.map(item => ({
+                                    label: item.email,
+                                    value: item.email,
+                                }))}
                                 value={
                                     selectedInternal
                                         ? selectedInternal.email

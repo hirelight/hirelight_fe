@@ -29,7 +29,10 @@ const EditField: React.FC<EditFieldProps> = ({ data, onUpdate, onCancel }) => {
                     <Selection
                         title="Field type"
                         required
-                        datas={["Paragraph", "asd"]}
+                        items={["Paragraph", "asd"].map(item => ({
+                            label: item,
+                            value: item,
+                        }))}
                         value="Paragraph"
                         onChange={() => {}}
                     />
@@ -37,14 +40,20 @@ const EditField: React.FC<EditFieldProps> = ({ data, onUpdate, onCancel }) => {
                     <Selection
                         title="Provider"
                         required
-                        datas={["Candidate", "asd"]}
+                        items={["Candidate", "asd"].map(item => ({
+                            label: item,
+                            value: item,
+                        }))}
                         value="Candidate"
                         onChange={() => {}}
                     />
                     <Selection
                         title="Location in Application form"
                         required
-                        datas={["Details", "asd"]}
+                        items={["Details", "asd"].map(item => ({
+                            label: item,
+                            value: item,
+                        }))}
                         value="Details"
                         onChange={() => {}}
                     />

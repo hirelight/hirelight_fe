@@ -8,6 +8,7 @@ import React from "react";
 const breadcrumbStructure: { [pathName: string]: string } = {
     "/questions-bank": "Questions Bank",
     "/questions-bank/create-question": "Create Question",
+    "/questions-bank/*/edit": "Edit Question",
 };
 
 function extractSubpath(fullPath: string, paramString: string): string {
@@ -46,7 +47,7 @@ function buildBreadcrumbs(
 
 const HeaderBar = () => {
     const pathname = usePathname();
-    const { lang } = useParams();
+    const { lang, questionId } = useParams();
 
     return (
         <nav

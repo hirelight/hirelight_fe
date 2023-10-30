@@ -149,11 +149,11 @@ const AddNewQuestionSection = ({
                 <div className="flex flex-col justify-between">
                     <Selection
                         title=""
-                        datas={[
+                        items={[
                             "Unlimited time to think",
                             "3 minutes",
                             "10 minutes",
-                        ]}
+                        ].map(item => ({ label: item, value: item }))}
                         onChange={value =>
                             setQuestionSection({
                                 ...questionSection,
@@ -171,10 +171,13 @@ const AddNewQuestionSection = ({
                     />
                     <Selection
                         title=""
-                        datas={["3", "10", "30"]}
+                        items={["3", "10", "30"].map(item => ({
+                            label: item,
+                            value: item,
+                        }))}
                         labelClassName="bg-white"
                         value={item.answerLength ? item.answerLength : ""}
-                        onChange={value =>
+                        onChange={(value: string) =>
                             setQuestionSection({
                                 ...questionSection,
                                 questions: questionSection.questions.map(i => {
@@ -189,7 +192,10 @@ const AddNewQuestionSection = ({
                     />
                     <Selection
                         title=""
-                        datas={["One take", "3 takes", "5 takes"]}
+                        items={["One take", "3 takes", "5 takes"].map(item => ({
+                            label: item,
+                            value: item,
+                        }))}
                         onChange={() => {}}
                         labelClassName="bg-white"
                         value={
