@@ -1,18 +1,45 @@
-import { IResponse } from "@/interfaces/service.interface";
 import endpoints from "@/utils/constants/service-endpoint";
+import { IResponse } from "@/interfaces/service.interface";
 
 import interceptor from "../interceptor";
 
-import { LoginRequestDto } from "./auth.interface";
+import {
+    AuthResponse,
+    LoginEmployerDto,
+    RegisterEmployerDto,
+} from "./auth.interface";
 
-// const loginRequest = async (loginDto: LoginRequestDto) => {
-//     const res = await fetch("someurl", {
-//         method: "POST",
-//         body: JSON.stringify(loginDto),
-//     });
+const loginEmployer = async (
+    loginDto: LoginEmployerDto
+): Promise<IResponse<AuthResponse>> => {
+    try {
+        const res = await interceptor.post<IResponse<AuthResponse>>(
+            `/identity/employer/login`,
+            loginDto
+        );
+        if (res.data.statusCode >= 400) throw new Error(res.data.message);
 
-//     return res.data;
-// };
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const registerEmployee = async (
+    registerEmployeeDto: RegisterEmployerDto
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.post<IResponse<any>>(
+            `/identity/employer/register`,
+            registerEmployeeDto
+        );
+        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
 const getAccessToken = async (loginId: string) => {
     const res = await interceptor.get<IResponse<any>>(
@@ -20,6 +47,20 @@ const getAccessToken = async (loginId: string) => {
     );
 
     return res.data;
+};
+
+const getOrgAccessToken = async (id: number) => {
+    try {
+        const res = await interceptor.get<IResponse<AuthResponse>>(
+            `/identity/employer/organizations/${id}`
+        );
+
+        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
 };
 
 const getUserInfo = async () => {
@@ -36,6 +77,12 @@ const getUserInfo = async () => {
     }
 };
 
-const authServices = { getAccessToken, getUserInfo };
+const authServices = {
+    getAccessToken,
+    getUserInfo,
+    registerEmployee,
+    loginEmployer,
+    getOrgAccessToken,
+};
 
 export default authServices;

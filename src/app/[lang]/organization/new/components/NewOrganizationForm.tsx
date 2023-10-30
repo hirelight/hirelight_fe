@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { UserIcon } from "@heroicons/react/24/solid";
 import Cookies from "js-cookie";
+import jwtDecode from "jwt-decode";
 
 import { SpinLoading } from "@/icons";
 import organizationsServices from "@/services/organizations/organizations.service";
@@ -16,6 +17,8 @@ import styles from "./NewOrganizationForm.module.scss";
 const NewOrganizationForm = () => {
     const router = useRouter();
     const loginId = useSearchParams().get("loginId");
+    const token = Cookies.get("hirelight_access_token")!!;
+    const decoded: any = jwtDecode(token);
 
     const [newOrgFormErr, setNewOrgFormErr] = React.useState({
         nameErr: "",
@@ -88,9 +91,9 @@ const NewOrganizationForm = () => {
                             <UserIcon className="w-full h-full text-neutral-700" />
                         </div>
                         <div className="inline-flex flex-col text-sm text-left">
-                            <strong>Nguyen Kien</strong>
+                            <strong>{`${decoded.firstName} ${decoded.lastName}`}</strong>
                             <p className="text-gray-500">
-                                ngkien299@hirelight.xyz
+                                {decoded.emailAddress}
                             </p>
                         </div>
                     </div>

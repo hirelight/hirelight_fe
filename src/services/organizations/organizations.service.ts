@@ -2,7 +2,7 @@ import { IResponse } from "@/interfaces/service.interface";
 
 import interceptor from "../interceptor";
 
-import { ICreateOrgDto } from "./organizations.interface";
+import { ICreateOrgDto, IOrganizationDto } from "./organizations.interface";
 
 const createNewOrganization = async (createNewOrgDto: ICreateOrgDto) => {
     try {
@@ -26,10 +26,10 @@ const getListOrganizations = async () => {
 
 const getJoinedOrganizations = async () => {
     try {
-        const res = await interceptor.get<IResponse<any>>(
+        const res = await interceptor.get<IResponse<IOrganizationDto[]>>(
             `/organizations/joined`
         );
-
+        if (res.data.statusCode >= 400) throw new Error(res.data.message);
         return res.data;
     } catch (error) {
         throw error;
@@ -39,7 +39,10 @@ const getJoinedOrganizations = async () => {
 const getOwnedOrganizations = async () => {
     try {
         const res =
-            await interceptor.get<IResponse<any>>(`/organizations/owned`);
+            await interceptor.get<IResponse<IOrganizationDto[]>>(
+                `/organizations/owned`
+            );
+        if (res.data.statusCode >= 400) throw new Error(res.data.message);
 
         return res.data;
     } catch (error) {

@@ -3,12 +3,14 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 
 import { delayFunc } from "@/helpers/shareHelpers";
 import { GoogleIcon, LinkedInIcon, SpinLoading } from "@/icons";
+import authServices from "@/services/auth/auth.service";
+import { RegisterEmployerDto } from "@/services/auth/auth.interface";
 
 import styles from "./SignupForm.module.scss";
 
@@ -32,11 +34,12 @@ interface ISignupForm {
 
 const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
     const router = useRouter();
-    const code = useSearchParams().get("code");
+    const { lang } = useParams();
 
     const [signupFormErr, setSignupFormErr] =
         React.useState(initialFormErrState);
-    const [signupForm, setSignupForm] = React.useState(initialFormState);
+    const [signupForm, setSignupForm] =
+        React.useState<RegisterEmployerDto>(initialFormState);
     const [loading, setLoading] = React.useState(false);
 
     const handleSignup = async (e: React.FormEvent) => {
@@ -49,30 +52,17 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
 
         setLoading(true);
 
-        if (process.env.NODE_ENV === "production")
-            Cookies.set("hirelight_access_token", "tokenasdkajsdnkas", {
-                domain: `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-                secure: true,
-            });
-        else
-            Cookies.set("hirelight_access_token", "tokenasdkajsdnkas", {
-                domain: `.local`,
-                secure: true,
-            });
+        try {
+            const res = await authServices.registerEmployee(signupForm);
 
-        await delayFunc(2000);
-        toast.success("Sign up  success");
-        await delayFunc(500);
-
-        setLoading(false);
-        router.push(`/organization/new`);
-    };
-
-    React.useEffect(() => {
-        if (code) {
-            console.log("Call api get token", code);
+            toast.success(res.message);
+            setLoading(false);
+            router.push(`/${lang}/login`);
+        } catch (error) {
+            setLoading(false);
+            console.error(error);
         }
-    }, [code]);
+    };
 
     return (
         <form onSubmit={handleSignup}>
