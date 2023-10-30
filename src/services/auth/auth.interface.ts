@@ -2,7 +2,6 @@ export interface LoginEmployerDto {
     email: string;
     password: string;
 }
-
 export interface AuthResponse {
     accessToken: string;
 }
@@ -13,3 +12,6 @@ export interface RegisterEmployerDto {
     email: string;
     password: string;
 }
+
+export interface LoginCandidateDto extends LoginEmployerDto {}
+export interface RegisterCandidateDto extends RegisterEmployerDto {}

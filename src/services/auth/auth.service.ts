@@ -5,9 +5,43 @@ import interceptor from "../interceptor";
 
 import {
     AuthResponse,
+    LoginCandidateDto,
     LoginEmployerDto,
+    RegisterCandidateDto,
     RegisterEmployerDto,
 } from "./auth.interface";
+
+const loginCandidate = async (
+    loginCandidateDto: LoginCandidateDto
+): Promise<IResponse<AuthResponse>> => {
+    try {
+        const res = await interceptor.post<IResponse<AuthResponse>>(
+            `/identity/candidate/login`,
+            loginCandidateDto
+        );
+        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const registerCandidate = async (
+    registerCandidateDto: RegisterCandidateDto
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.post<IResponse<any>>(
+            `/identity/candidate/register`,
+            registerCandidateDto
+        );
+        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
 const loginEmployer = async (
     loginDto: LoginEmployerDto
@@ -83,6 +117,8 @@ const authServices = {
     registerEmployee,
     loginEmployer,
     getOrgAccessToken,
+    loginCandidate,
+    registerCandidate,
 };
 
 export default authServices;

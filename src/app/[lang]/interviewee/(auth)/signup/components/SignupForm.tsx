@@ -1,6 +1,12 @@
 "use client";
 
 import React, { FormEvent, useState } from "react";
+import { toast } from "react-toastify";
+import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
+
+import { RegisterCandidateDto } from "@/services/auth/auth.interface";
+import authServices from "@/services/auth/auth.service";
 
 const initialErr = {
     firstName: "",
@@ -14,20 +20,22 @@ const initialErr = {
     confirmPassword: "",
 };
 
+interface FormState extends RegisterCandidateDto {
+    confirmPassword: string;
+}
+
 const SignupForm = () => {
-    const [formState, setFormState] = useState({
+    const router = useRouter();
+
+    const [formState, setFormState] = useState<FormState>({
         firstName: "",
         lastName: "",
-        company: "",
-        phoneNumber: "",
-        site: "",
-        visitors: 0,
         email: "",
         password: "",
         confirmPassword: "",
     });
     const [formError, setFormError] = useState(initialErr);
-    const [isLoading, setIsLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
 
     const handleChangeForm = (e: any, key: string) => {
         setFormState({
@@ -40,7 +48,7 @@ const SignupForm = () => {
         });
     };
 
-    const handleSubmitSignup = (e: FormEvent) => {
+    const handleSubmitSignup = async (e: FormEvent) => {
         e.preventDefault();
         if (formState.password !== formState.confirmPassword) {
             setFormError({
@@ -48,7 +56,17 @@ const SignupForm = () => {
                 confirmPassword: "Confirm password not matched!",
             });
         }
-        console.log(formState);
+
+        try {
+            const res = await authServices.registerCandidate(formState);
+
+            toast.success(res.message);
+            setLoading(false);
+            router.push("login");
+        } catch (error) {
+            setLoading(false);
+            console.error(error);
+        }
     };
 
     return (
@@ -99,55 +117,6 @@ const SignupForm = () => {
                         <p className="mt-2 text-sm text-red-600 dark:text-red-500">
                             <span className="font-medium">Oh, snapp!</span>{" "}
                             {formError.lastName}.
-                        </p>
-                    )}
-                </div>
-                <div>
-                    <label
-                        htmlFor="company"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                        Company
-                        <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="company"
-                        value={formState.company}
-                        onChange={e => handleChangeForm(e, "company")}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Flowbite"
-                        required
-                    />
-                    {formError.company && (
-                        <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                            <span className="font-medium">Oh, snapp!</span>{" "}
-                            {formError.company}.
-                        </p>
-                    )}
-                </div>
-                <div>
-                    <label
-                        htmlFor="phone"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                        Phone number
-                        <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="tel"
-                        id="phone"
-                        value={formState.phoneNumber}
-                        onChange={e => handleChangeForm(e, "phoneNumber")}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="123-45-678"
-                        pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
-                        required
-                    />
-                    {formError.phoneNumber && (
-                        <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                            <span className="font-medium">Oh, snapp!</span>{" "}
-                            {formError.phoneNumber}.
                         </p>
                     )}
                 </div>
@@ -252,7 +221,7 @@ const SignupForm = () => {
                 type="submit"
                 className="flex w-full justify-center items-center  text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
-                {isLoading && (
+                {loading && (
                     <svg
                         aria-hidden="true"
                         role="status"
