@@ -45,7 +45,10 @@ const EditStageForm: React.FC<EditStageFormProps> = ({
                 />
                 <Selection
                     title="Assessment type"
-                    datas={["Phone Screen"]}
+                    items={["Phone Screen"].map(item => ({
+                        label: item,
+                        value: item,
+                    }))}
                     onChange={() => {}}
                     required
                 />

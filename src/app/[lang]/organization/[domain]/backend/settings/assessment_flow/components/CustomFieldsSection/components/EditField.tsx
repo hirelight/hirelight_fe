@@ -40,7 +40,10 @@ const EditField: React.FC<EditFieldProps> = ({ data, onUpdate, onCancel }) => {
                         <Selection
                             title="Field type"
                             required
-                            datas={["Paragraph", "asd"]}
+                            items={["Paragraph", "asd"].map(item => ({
+                                label: item,
+                                value: item,
+                            }))}
                             value={"Paragraph"}
                             onChange={() => {}}
                         />

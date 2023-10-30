@@ -51,7 +51,10 @@ const FlowStageForm: React.FC<FlowStageFormProps> = ({
                 />
                 <Selection
                     title="Assessment type"
-                    datas={["Phone Screen"]}
+                    items={["Phone Screen"].map(item => ({
+                        label: item,
+                        value: item,
+                    }))}
                     onChange={content =>
                         setFormState(prev => ({
                             ...prev,

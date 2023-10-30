@@ -3,15 +3,18 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { PlusIcon } from "@heroicons/react/24/solid";
 
 import { Button, ButtonOutline, CustomInput, Selection } from "@/components";
 import { delayFunc } from "@/helpers/shareHelpers";
 import questionAnswerServices from "@/services/questions/questions.service";
-import { IQuestionTagDto } from "@/services/questions/questions.interface";
-import { CreateQuestionForm } from "@/interfaces/questions.interface";
+import {
+    IQuestionAnswerDto,
+    IQuestionTagDto,
+} from "@/services/questions/questions.interface";
+import { QuestionAnswerContentJson } from "@/interfaces/questions.interface";
 
 const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ssr: false,
@@ -20,20 +23,21 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ),
 });
 
-const CreateQuestionPage = () => {
-    const router = useRouter();
+type EditQuestionFormProps = {
+    data: IQuestionAnswerDto;
+};
 
-    const [formState, setFormState] = useState<CreateQuestionForm>({
-        content: {
-            name: "",
-            type: "one-answer",
-            answers: new Array(4).fill({
-                name: "",
-                correct: false,
-            }),
-        },
-        difficulty: 0,
-        tagList: [],
+const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ data }) => {
+    const router = useRouter();
+    const { lang } = useParams();
+
+    const [formState, setFormState] = useState<
+        Omit<IQuestionAnswerDto, "content"> & {
+            content: QuestionAnswerContentJson;
+        }
+    >({
+        ...data,
+        content: JSON.parse(data.content) as QuestionAnswerContentJson,
     });
 
     const [tagList, setTagList] = useState<IQuestionTagDto[]>([]);
@@ -53,31 +57,20 @@ const CreateQuestionPage = () => {
             });
     };
 
-    const handleCreateQuestion = async (e: FormEvent) => {
+    const handleEditQuestion = async (e: FormEvent) => {
         e.preventDefault();
 
         try {
-            const res = await questionAnswerServices.createAsync({
+            const res = await questionAnswerServices.editAsync({
                 ...formState,
                 content: JSON.stringify(formState.content),
-                tagIdList: formState.tagList.map(tag => tag.id),
+                tagIdList: formState.tagList.map(item => item.id),
             });
 
             if (res.statusCode === 200)
-                toast.success("Create question successfully!");
-
-            setFormState({
-                content: {
-                    name: "",
-                    type: "one-answer",
-                    answers: new Array(4).fill({
-                        name: "",
-                        correct: false,
-                    }),
-                },
-                difficulty: 0,
-                tagList: [],
-            });
+                toast.success("Edit question successfully!");
+            await delayFunc(500);
+            router.replace(`/${lang}/backend/settings/questions-bank`);
         } catch (error) {
             console.error(error);
         }
@@ -98,14 +91,7 @@ const CreateQuestionPage = () => {
     }, []);
 
     return (
-        <form
-            onSubmit={handleCreateQuestion}
-            className="w-full bg-white rounded-md shadow-md p-4 xl:px-6"
-        >
-            <h1 className="text-xl text-blue_primary_800 font-semibold text-center mb-4">
-                Create multiple choice question
-            </h1>
-
+        <form onSubmit={handleEditQuestion}>
             <div className="mb-4">
                 <Selection
                     title="Difficulty"
@@ -154,6 +140,10 @@ const CreateQuestionPage = () => {
                 <Selection
                     title="Tags"
                     placeholder="Example: Frontend, C#, Spring,..."
+                    value={
+                        tagList.find(tag => tag.id === formState.tagList[0].id)
+                            ?.name ?? ""
+                    }
                     items={tagList.map(item => ({
                         label: item.name,
                         value: item,
@@ -186,7 +176,7 @@ const CreateQuestionPage = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                {formState.content.answers.map((item, index) => {
+                {formState.content.answers.map((answer, index) => {
                     return (
                         <div key={index} className="mb-4">
                             <div className="flex items-center mb-4">
@@ -198,9 +188,9 @@ const CreateQuestionPage = () => {
                                             : "checkbox"
                                     }
                                     value={index}
-                                    name="default-radio"
+                                    name="question-answers"
                                     className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                    checked={item.correct}
+                                    checked={answer.correct}
                                     onChange={e => {
                                         setFormState({
                                             ...formState,
@@ -240,6 +230,7 @@ const CreateQuestionPage = () => {
                             <QuillEditorNoSSR
                                 className="min-h-[150px]"
                                 placeholder={`Answer number ${index + 1}`}
+                                value={answer.name}
                                 onChange={content =>
                                     setFormState({
                                         ...formState,
@@ -272,10 +263,10 @@ const CreateQuestionPage = () => {
                 <Link href={"/en/backend/settings/questions-bank"}>
                     <ButtonOutline type="button">Cancel</ButtonOutline>
                 </Link>
-                <Button type="submit">Save</Button>
+                <Button type="submit">Save changes</Button>
             </div>
         </form>
     );
 };
 
-export default CreateQuestionPage;
+export default EditQuestionForm;

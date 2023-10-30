@@ -51,7 +51,10 @@ const AddField: React.FC<AddFieldProps> = ({ onAdd, onCancel }) => {
                         <Selection
                             title="Field type"
                             required
-                            datas={["Paragraph", "asd"]}
+                            items={["Paragraph", "asd"].map(item => ({
+                                label: item,
+                                value: item,
+                            }))}
                             value={formState.type}
                             onChange={(content: string) =>
                                 setFormState({ ...formState, type: content })

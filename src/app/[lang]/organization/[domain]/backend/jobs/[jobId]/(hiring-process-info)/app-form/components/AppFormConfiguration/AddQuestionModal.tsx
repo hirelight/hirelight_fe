@@ -93,7 +93,10 @@ const AddQuestionModal = ({ closeModal }: IAddQuestionModal) => {
                 </p>
                 <Selection
                     title="Input type"
-                    datas={questionTypes}
+                    items={questionTypes.map(item => ({
+                        label: item,
+                        value: item,
+                    }))}
                     value={questionTypes[0]}
                     onChange={(value: string) => {
                         setSelectedType(value);

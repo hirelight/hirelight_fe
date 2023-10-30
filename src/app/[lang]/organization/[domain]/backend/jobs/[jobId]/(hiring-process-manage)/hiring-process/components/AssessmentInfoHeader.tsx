@@ -79,7 +79,10 @@ const AssessmentInfoHeader = () => {
                         <Selection
                             title=""
                             placeholder="Add candidates"
-                            datas={["Add resume", "Add manually"]}
+                            items={["Add resume", "Add manually"].map(item => ({
+                                label: item,
+                                value: item,
+                            }))}
                             onChange={() => {}}
                         />
                     </div>
