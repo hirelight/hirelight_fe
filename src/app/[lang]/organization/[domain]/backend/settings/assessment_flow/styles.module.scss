@@ -14,9 +14,9 @@
 }
 
 .content__h4 {
-    @apply text-sm font-semibold text-neutral-700;
+    @apply text-sm font-semibold text-neutral-700 mb-2;
 }
 
 .content__subheading {
-    @apply text-sm text-neutral-500;
+    @apply hidden text-sm text-neutral-500 sm:block;
 }

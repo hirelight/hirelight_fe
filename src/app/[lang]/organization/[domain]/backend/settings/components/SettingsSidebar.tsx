@@ -30,23 +30,16 @@ const SettingsSidebar = () => {
     );
     return (
         <aside className="min-w-[200px] w-full bg-white shadow-md rounded-md overflow-hidden">
-            <ul className="w-full flex flex-col">
+            <ul className="w-full flex flex-col text-neutral-700">
+                {/* ***************Hiring settings section******************* */}
                 <li>
-                    <Link
-                        href={`/${lang}/backend/settings/organization_profile`}
-                        className={`${styles.tab__btn} ${
-                            pathname.includes(
-                                "/backend/settings/organization_profile"
-                            )
-                                ? styles.active
-                                : ""
-                        }`}
-                    >
-                        <BuildingOffice2Icon className="w-6 h-6" />
-                        <span>{t.organization_profile}</span>
-                    </Link>
+                    <div className="flex items-center gap-4 p-4">
+                        <h4 className="text-neutral-600 text-sm uppercase font-semibold">
+                            Hiring
+                        </h4>
+                        <div className="h-[1px] flex-1 bg-gray-300"></div>
+                    </div>
                 </li>
-
                 <li>
                     <Link
                         href={`/${lang}/backend/settings/assessment_flow`}
@@ -77,19 +70,6 @@ const SettingsSidebar = () => {
                 </li>
                 <li>
                     <Link
-                        href={`/${lang}/backend/settings/members`}
-                        className={`${styles.tab__btn} ${
-                            pathname.includes("/backend/settings/members")
-                                ? styles.active
-                                : ""
-                        }`}
-                    >
-                        <UserGroupIcon className="w-6 h-6" />
-                        <span>{t.account_members}</span>
-                    </Link>
-                </li>
-                <li>
-                    <Link
                         href={`/${lang}/backend/settings/questions-bank`}
                         className={`${styles.tab__btn} ${
                             pathname.includes(
@@ -101,6 +81,44 @@ const SettingsSidebar = () => {
                     >
                         <ClipboardDocumentListIcon className="w-6 h-6" />
                         <span>{t.questions_bank}</span>
+                    </Link>
+                </li>
+
+                {/* ***************Organization settings section******************* */}
+                <li>
+                    <div className="flex items-center gap-4 p-4">
+                        <h4 className="text-neutral-600 text-sm uppercase font-semibold">
+                            Organization
+                        </h4>
+                        <div className="h-[1px] flex-1 bg-gray-300"></div>
+                    </div>
+                </li>
+                <li>
+                    <Link
+                        href={`/${lang}/backend/settings/organization_profile`}
+                        className={`${styles.tab__btn} ${
+                            pathname.includes(
+                                "/backend/settings/organization_profile"
+                            )
+                                ? styles.active
+                                : ""
+                        }`}
+                    >
+                        <BuildingOffice2Icon className="w-6 h-6" />
+                        <span>{t.organization_profile}</span>
+                    </Link>
+                </li>
+                <li>
+                    <Link
+                        href={`/${lang}/backend/settings/members`}
+                        className={`${styles.tab__btn} ${
+                            pathname.includes("/backend/settings/members")
+                                ? styles.active
+                                : ""
+                        }`}
+                    >
+                        <UserGroupIcon className="w-6 h-6" />
+                        <span>{t.account_members}</span>
                     </Link>
                 </li>
                 <li>
@@ -128,6 +146,16 @@ const SettingsSidebar = () => {
                         <WrenchScrewdriverIcon className="w-6 h-6" />
                         <span>{t.integrations}</span>
                     </Link>
+                </li>
+
+                {/* ***************Others settings section******************* */}
+                <li>
+                    <div className="flex items-center gap-4 p-4">
+                        <h4 className="text-neutral-600 text-sm uppercase font-semibold">
+                            Others
+                        </h4>
+                        <div className="h-[1px] flex-1 bg-gray-300"></div>
+                    </div>
                 </li>
                 <li>
                     <Link href={"#"} className={`${styles.tab__btn}`}>

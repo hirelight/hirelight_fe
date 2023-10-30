@@ -1,8 +1,11 @@
 "use client";
 
 import React from "react";
-import { EyeIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
-import { Reorder, LazyMotion, domMax } from "framer-motion";
+import { EyeIcon } from "@heroicons/react/24/solid";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import { Reorder } from "framer-motion";
+
+import { Logo } from "@/icons";
 
 import pageStyles from "../../styles.module.scss";
 import sections from "../../custom-field.json";
@@ -48,7 +51,8 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
                 </div>
                 <section className={styles.fields__container}>
                     <div className={styles.fields__header__container}>
-                        <h5 className="text-neutral-700 text-xl font-semibold">
+                        <h5 className="text-neutral-700 text-xl font-semibold flex items-center gap-2">
+                            <Logo className="text-blue_primary_300 h-6 w-6" />
                             Candidate profile
                         </h5>
                         <div className="flex items-center gap-4">
@@ -56,16 +60,20 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
                                 type="button"
                                 className="flex gap-1 items-center text-sm text-blue_primary_700 font-semibold hover:underline"
                             >
-                                <PlusCircleIcon className="w-4 h-4" />
-                                <span>Create new section</span>
+                                <PlusCircleIcon className="w-5 h-5" />
+                                <span className="hidden md:inline">
+                                    Create new section
+                                </span>
                             </button>
 
                             <button
                                 type="button"
                                 className="flex gap-1 items-center text-sm text-blue_primary_700 font-semibold hover:underline"
                             >
-                                <EyeIcon className="w-4 h-4" />
-                                <span>Preview</span>
+                                <EyeIcon className="w-5 h-5" />
+                                <span className="hidden md:inline">
+                                    Preview
+                                </span>
                             </button>
                         </div>
                     </div>
@@ -102,7 +110,8 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
                     <div
                         className={`${styles.fields__header__container} border-t border-gray-300`}
                     >
-                        <h5 className="text-neutral-700 text-xl font-semibold">
+                        <h5 className="text-neutral-700 text-xl font-semibold flex items-center gap-2">
+                            <Logo className="text-blue_primary_300 h-6 w-6" />
                             Application form
                         </h5>
                         <div className="flex items-center gap-4">

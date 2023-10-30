@@ -7,14 +7,13 @@ import {
     m,
     LazyMotion,
     domAnimation,
-    MotionConfig,
 } from "framer-motion";
 import dynamic from "next/dynamic";
 import React, { useState } from "react";
 
-import styles from "./FieldCard.module.scss";
+import { DragIndicatorIcon } from "@/icons";
 
-const AddField = dynamic(() => import("./AddField"));
+import styles from "./FieldCard.module.scss";
 
 const EditField = dynamic(() => import("./EditField"));
 
@@ -32,23 +31,22 @@ const FieldCard: React.FC<FieldCardProps> = ({ data }) => {
         <Reorder.Item
             value={data}
             id={data.id}
-            className={`p-4 bg-white relative `}
+            className={`bg-white relative group ${
+                isEditing ? "" : "border-b"
+            } border-gray-300 last:border-b-0 group`}
             style={{ y }}
             dragListener={false}
             dragControls={dragControls}
         >
-            <button type="button" onClick={() => setIsEditing(!isEditing)}>
-                Toggle
-            </button>
             <AnimatePresence initial={false}>
                 <LazyMotion features={domAnimation} strict>
                     {!isEditing && (
                         <m.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
                         >
-                            <div className={`${styles.card__container} group`}>
+                            <div className={`${styles.card__container}`}>
                                 <button
                                     type="button"
                                     className={
@@ -61,12 +59,12 @@ const FieldCard: React.FC<FieldCardProps> = ({ data }) => {
                                         dragControls.start(event);
                                     }}
                                 >
-                                    <Bars3Icon className="w-5 h-5" />
+                                    <DragIndicatorIcon className="w-5 h-5" />
                                 </button>
                                 <div className="flex-1 flex flex-col gap-2 text-neutral-700 text-sm">
                                     <span>{data.label}</span>
                                 </div>
-                                <div className="flex gap-4">
+                                <div className="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                     <button
                                         type="button"
                                         tabIndex={-1}
@@ -98,6 +96,7 @@ const FieldCard: React.FC<FieldCardProps> = ({ data }) => {
                     )}
                 </LazyMotion>
             </AnimatePresence>
+
             <LazyMotion features={domAnimation} strict>
                 <AnimatePresence>
                     {isEditing && (

@@ -1,11 +1,20 @@
-import React from "react";
-import { PencilIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
+"use client";
+
+import React, { useState } from "react";
+import { PencilIcon } from "@heroicons/react/24/solid";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
+
+import { Logo } from "@/icons";
 
 import pageStyles from "../../styles.module.scss";
 
 import AssessmentsSlider from "./AssessmentsSlider";
+import AssessmentFlowForm from "./AssessmentFlowForm";
+import CustomFlowList from "./CustomFlowList";
 
 const AssessmentFlowSection = () => {
+    const [showAdding, setShowAdding] = useState(false);
+
     return (
         <section className={pageStyles.section__wrapper}>
             <h2 className={pageStyles.section__title}>Assessments Flow</h2>
@@ -16,7 +25,8 @@ const AssessmentFlowSection = () => {
                         <h4
                             className={`${pageStyles.content__h4} flex items-center gap-2`}
                         >
-                            Reporting pipeline
+                            <Logo className="text-blue_primary_300 h-5 w-5" />
+                            <span>Reporting pipeline</span>
                             <button
                                 type="button"
                                 className="inline-flex items-center gap-1 text-blue_primary_700 font-semibold text-sm hover:text-blue_primary_800 hover:underline"
@@ -35,11 +45,12 @@ const AssessmentFlowSection = () => {
                     <AssessmentsSlider />
 
                     <hr className="my-8 border-gray-300" />
-                    <div>
+                    <section>
                         <h4
                             className={`${pageStyles.content__h4} flex items-center gap-2`}
                         >
-                            Recruiting pipeline
+                            <Logo className="text-blue_primary_300 h-5 w-5" />
+                            <span>Recruiting pipeline</span>
                         </h4>
                         <div className="flex justify-between mb-6">
                             <p className={pageStyles.content__subheading}>
@@ -48,7 +59,8 @@ const AssessmentFlowSection = () => {
                             </p>
                             <button
                                 type="button"
-                                className="flex items-center gap-1 text-blue_primary_700 hover:text-blue_primary_800 hover:underline"
+                                className="flex items-start gap-1 text-blue_primary_700 hover:text-blue_primary_800 hover:underline md:items-center"
+                                onClick={() => setShowAdding(true)}
                             >
                                 <PlusCircleIcon className="w-5 h-5" />
                                 <span className="text-sm font-semibold whitespace-nowrap">
@@ -57,8 +69,17 @@ const AssessmentFlowSection = () => {
                             </button>
                         </div>
 
-                        <div className="flex flex-col"></div>
-                    </div>
+                        {showAdding && (
+                            <AssessmentFlowForm
+                                onSave={() => setShowAdding(false)}
+                                onClose={() => setShowAdding(false)}
+                            />
+                        )}
+
+                        <div>
+                            <CustomFlowList />
+                        </div>
+                    </section>
                 </div>
             </div>
         </section>

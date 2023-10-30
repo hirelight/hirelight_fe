@@ -13,10 +13,12 @@ import LocaleSwitcher from "./LocaleSwitcher";
 import ThemeProvider from "./ThemeProvider";
 import ThemeSwitcher from "./ThemeSwitcher";
 import PopoverWarning from "./PopoverWarning";
+import Pagination from "./Pagination";
 
 export {
     Modal,
     Button,
+    Pagination,
     Selection,
     ButtonOutline,
     CustomInput,

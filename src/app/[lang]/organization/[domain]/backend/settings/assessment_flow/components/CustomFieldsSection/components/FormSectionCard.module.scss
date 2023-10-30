@@ -1,5 +1,4 @@
 .field__item__card {
-    width: 100%;
     background-color: white;
     position: relative;
     @apply border-b  border-gray-300 last:border-none;
@@ -8,5 +7,5 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    @apply text-neutral-600 text-sm p-6;
+    @apply text-neutral-600 text-sm p-4 py-6;
 }
