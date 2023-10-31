@@ -22,14 +22,18 @@ const PreviewModal: React.FC<IPreviewModal> = ({ isOpen, onClose, data }) => {
     );
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal
+            isOpen={isOpen}
+            onClose={onClose}
+            className="bg-white rounded-md"
+        >
             <div className="p-6 border-b border-gray-300">
                 <h2 className="text-neutral-700 text-xl font-semibold">
                     {t.preview_h2}: {data.name}
                 </h2>
             </div>
             <div
-                className="p-6"
+                className="p-6 ql-editor"
                 dangerouslySetInnerHTML={{
                     __html: data.content,
                 }}

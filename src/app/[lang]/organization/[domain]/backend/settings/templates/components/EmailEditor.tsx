@@ -6,6 +6,12 @@ import { Inter, Public_Sans, Roboto_Mono } from "next/font/google";
 
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import CustomSpan from "@/components/QuillEditor/CustomSpan";
+import {
+    IEmailTemplateTypeDto,
+    IEmailTemplatesDto,
+} from "@/services/email-template/email-template.interface";
+import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
+import { fetchEmailTemplateTypes } from "@/redux/thunks/email-templates.thunk";
 
 import styles from "./EmailEditor.module.scss";
 import EmailEditorToolbar from "./EmailEditorToolbar";
@@ -29,11 +35,14 @@ const publicSans = Public_Sans({
 
 interface IEmailEditor {
     value?: string;
+    data?: IEmailTemplatesDto;
     placeholder?: string;
     onChange: (content: string) => void;
     theme?: "snow" | "bubble";
     className?: string;
     readOnly?: boolean;
+    emailTemplateType?: IEmailTemplateTypeDto;
+    onEmailTemplateTypeChange: (id: number) => void;
 }
 
 const EmailEditor: React.FC<IEmailEditor> = ({
@@ -43,6 +52,9 @@ const EmailEditor: React.FC<IEmailEditor> = ({
     onChange,
     className = "",
     readOnly = false,
+    emailTemplateType,
+    onEmailTemplateTypeChange,
+    data,
 }) => {
     const wrapperRef = useOutsideClick<HTMLDivElement>(
         theme === "bubble"
@@ -52,6 +64,11 @@ const EmailEditor: React.FC<IEmailEditor> = ({
     const editorRef = React.useRef<HTMLDivElement>(null);
     const quillInstance = React.useRef<Quill | null>(null);
     const toolbarRef = React.useRef<HTMLDivElement>(null);
+
+    const dispatch = useAppDispatch();
+    const { emailTemplateTypes } = useAppSelector(
+        state => state.templates.emailTemplates
+    );
 
     const [fullscreen, setFullscreen] = React.useState(false);
 
@@ -63,7 +80,6 @@ const EmailEditor: React.FC<IEmailEditor> = ({
                 if (onChange) {
                     const editorContent =
                         quillInstance.current!!.root.innerHTML;
-                    console.log(editorContent);
                     onChange(editorContent);
                 }
             }
@@ -75,10 +91,6 @@ const EmailEditor: React.FC<IEmailEditor> = ({
         if (quillInstance.current) {
             const range = quillInstance.current.getSelection();
             if (range) {
-                var complexSpan =
-                    document.getElementById("complextype")!!
-                        .firstElementChild!!;
-
                 quillInstance.current.insertEmbed(
                     range.index,
                     "span",
@@ -137,6 +149,11 @@ const EmailEditor: React.FC<IEmailEditor> = ({
         };
     }, [handleTextChange, placeholder, readOnly, value]);
 
+    React.useEffect(() => {
+        if (emailTemplateTypes.length === 0)
+            dispatch(fetchEmailTemplateTypes());
+    }, [dispatch, emailTemplateTypes.length]);
+
     return (
         <div
             ref={wrapperRef}
@@ -161,9 +178,12 @@ const EmailEditor: React.FC<IEmailEditor> = ({
                 }}
             >
                 <EmailEditorToolbar
+                    data={data}
                     fullscreen={fullscreen}
                     toggleFullscreen={() => setFullscreen(prev => !prev)}
                     handleVarChange={handleSelectVars}
+                    onEmailTemplateTypeChange={onEmailTemplateTypeChange}
+                    emailTemplateType={emailTemplateType}
                 />
             </div>
             <div className="relative flex-1 flex flex-col">

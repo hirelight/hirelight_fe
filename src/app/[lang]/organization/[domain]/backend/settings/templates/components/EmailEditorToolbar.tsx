@@ -1,12 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import {
     ArrowsPointingInIcon,
     ArrowsPointingOutIcon,
     SquaresPlusIcon,
 } from "@heroicons/react/24/solid";
-import Quill from "quill";
 
 import {
     Bold,
@@ -17,8 +16,12 @@ import {
     ListOL,
     ListUL,
 } from "@/icons";
-import { Selection } from "@/components";
-import { useOutsideClick } from "@/hooks/useClickOutside";
+import emailTemplateService from "@/services/email-template/email-template.service";
+import {
+    IEmailTemplateTypeDto,
+    IEmailTemplatesDto,
+} from "@/services/email-template/email-template.interface";
+import { useAppSelector } from "@/redux/reduxHooks";
 
 import styles from "./EmailEditor.module.scss";
 
@@ -26,23 +29,28 @@ interface IEmailEditorToolbar {
     fullscreen: boolean;
     toggleFullscreen: () => void;
     handleVarChange: (value: string) => void;
+    onEmailTemplateTypeChange: (id: number) => void;
+    emailTemplateType?: IEmailTemplateTypeDto;
+    data?: IEmailTemplatesDto;
 }
 
 const EmailEditorToolbar: React.FC<IEmailEditorToolbar> = ({
     fullscreen,
     toggleFullscreen,
     handleVarChange,
+    onEmailTemplateTypeChange,
+    emailTemplateType,
+    data,
 }) => {
+    const { emailTemplateTypes } = useAppSelector(
+        state => state.templates.emailTemplates
+    );
+
     const selectionRef = React.useRef<HTMLUListElement>(null);
 
     const emailTypesSelectionRef = React.useRef<HTMLUListElement>(null);
-    const [emailType, setEmailType] = React.useState("");
-    const [emailParams, setEmailParams] = React.useState([
-        "[candidate]",
-        "[candidate_first_name]",
-        "[company]",
-        "[user]",
-    ]);
+    const [emailType, setEmailType] = React.useState<IEmailTemplateTypeDto>();
+    const [emailParams, setEmailParams] = React.useState<string[]>([]);
 
     const handleShowSelection = (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -101,11 +109,35 @@ const EmailEditorToolbar: React.FC<IEmailEditorToolbar> = ({
         selectionRef.current!!.classList.remove(styles.show);
     };
 
-    const handleSelectEmailType = (value: string) => {
+    const handleSelectEmailType = (value: IEmailTemplateTypeDto) => {
+        onEmailTemplateTypeChange(value.id);
         setEmailType(value);
+        setEmailParams(value.parameters.split(", ").map(item => `[${item}]`));
         emailTypesSelectionRef.current!!.classList.remove(styles.showTop);
         emailTypesSelectionRef.current!!.classList.remove(styles.show);
     };
+
+    useEffect(() => {
+        if (emailTemplateTypes.length > 0) {
+            if (data) {
+                console.log(data);
+                const templateType = emailTemplateTypes.find(
+                    item => item.id === data.emailTemplateType.id
+                )!!;
+                setEmailType(templateType);
+                setEmailParams(
+                    templateType.parameters.split(", ").map(item => `[${item}]`)
+                );
+            } else {
+                setEmailType(emailTemplateTypes[0]);
+                setEmailParams(
+                    emailTemplateTypes[0].parameters
+                        .split(", ")
+                        .map(item => `[${item}]`)
+                );
+            }
+        }
+    }, [emailTemplateTypes, data]);
 
     return (
         <ul className="h-full flex relative">
@@ -123,7 +155,7 @@ const EmailEditorToolbar: React.FC<IEmailEditorToolbar> = ({
                     ref={selectionRef}
                     className={`${styles.vars__selection__wrapper} ql-custom-inline`}
                 >
-                    {emailParams.map((item, index) => (
+                    {emailParams?.map((item, index) => (
                         <li key={index}>
                             <button
                                 type="button"
@@ -203,7 +235,7 @@ const EmailEditorToolbar: React.FC<IEmailEditorToolbar> = ({
                     className={`h-[42px] w-full flex items-center justify-between gap-2 font-medium dark:text-white px-2.5 cursor-pointer text-sm text-neutral-700`}
                     onClick={expandSelection}
                 >
-                    {emailType}
+                    {emailType ? emailType.name : "Select mail type"}
                     <div>
                         <ChevronDown className="w-4 h-4" strokeWidth={2} />
                     </div>
@@ -212,20 +244,13 @@ const EmailEditorToolbar: React.FC<IEmailEditorToolbar> = ({
                     ref={emailTypesSelectionRef}
                     className={`${styles.email__types__selection__wrapper}`}
                 >
-                    {[
-                        "Send assessment information",
-                        "Send assessment information",
-                        "Send assessment information",
-                        "Send assessment information",
-                        "Send assessment information",
-                        "Invite collaborator sssssssssssssss",
-                    ].map((item: any, index: number) => (
-                        <li key={index}>
+                    {emailTemplateTypes?.map((item, index: number) => (
+                        <li key={item.id}>
                             <button
                                 type="button"
                                 onClick={handleSelectEmailType.bind(null, item)}
                             >
-                                <span>{item}</span>
+                                <span>{item.name}</span>
                             </button>
                         </li>
                     ))}

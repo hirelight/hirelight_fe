@@ -5,12 +5,22 @@ import emailTemplateServices from "@/services/email-template/email-template.serv
 import {
     DELTE_EMAIL_TEMPLATES_BY_ID,
     FETCH_EMAIL_TEMPLATES,
+    FETCH_EMAIL_TEMPLATE_TYPES,
 } from "../constants";
 
 export const fetchEmailTemplates = createAsyncThunk(
     FETCH_EMAIL_TEMPLATES,
     async () => {
         const data = await emailTemplateServices.getListAsync();
+        return data.data;
+    }
+);
+
+export const fetchEmailTemplateTypes = createAsyncThunk(
+    FETCH_EMAIL_TEMPLATE_TYPES,
+    async () => {
+        const data =
+            await emailTemplateServices.getEmailTemplateTypesListAsync();
         return data.data;
     }
 );

@@ -1,14 +1,17 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, createContext, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Button, CustomInput } from "@/components";
 import { useTranslation } from "@/components/InternationalizationProvider";
 import { ICreateEmailTemplatesDto } from "@/services/email-template/email-template.interface";
 import emailTemplateServices from "@/services/email-template/email-template.service";
+import { useAppSelector } from "@/redux/reduxHooks";
+import getQueryClient from "@/utils/react-query/getQueryClient";
 
 import { Locale } from "../../../../../../../../../i18n.config";
 
@@ -31,33 +34,46 @@ const AddEmailTemplate: React.FC<IAddEmailTemplate> = ({
         lang as Locale,
         "settings.templates.templates_header_section.add_email_template"
     );
+    const queryClient = useQueryClient();
+    const mutation = useMutation({
+        mutationFn: (newEmailTemplate: ICreateEmailTemplatesDto) =>
+            emailTemplateServices.createAsync(newEmailTemplate),
+        onSuccess: res => {
+            toast.success(res.message);
+            queryClient.invalidateQueries({ queryKey: ["email-templates"] });
+        },
+        onError: error => console.error(error),
+    });
+
+    const { emailTemplateTypes } = useAppSelector(
+        state => state.templates.emailTemplates
+    );
 
     const [form, setForm] = useState<ICreateEmailTemplatesDto>({
         name: "",
         title: "",
         content: "",
-        organizationId: 1,
-        parameters: "kkk",
-        emailTypeId: 1,
+        emailTemplateTypeId:
+            emailTemplateTypes.length > 0 ? emailTemplateTypes[0].id : 1,
     });
 
     const handleCreateNewTemplate = async (e: FormEvent) => {
         e.preventDefault();
-        try {
-            const res = await emailTemplateServices.createAsync(form);
-            console.log(res);
-            toast.success(res.message);
-            onSaveTemplate();
-        } catch (error: any) {
-            console.log(error);
-            toast.error(error.message);
-            onSaveTemplate();
-        }
+        mutation.mutate(form);
+        onSaveTemplate();
     };
+
+    useEffect(() => {
+        if (emailTemplateTypes.length > 0) {
+            setForm(prev => ({
+                ...prev,
+                emailTemplateTypeId: emailTemplateTypes[0].id,
+            }));
+        }
+    }, [emailTemplateTypes]);
 
     return (
         <form onSubmit={handleCreateNewTemplate}>
-            {" "}
             <div className="grid grid-cols-2 mb-4 gap-4">
                 <CustomInput
                     type="text"
@@ -70,16 +86,18 @@ const AddEmailTemplate: React.FC<IAddEmailTemplate> = ({
                 />
                 <div></div>
             </div>
-            <div className="grid grid-cols-2 mb-4 gap-4">
-                <CustomInput
-                    type="text"
-                    title={t.form.title.label}
-                    value={form.title}
-                    onChange={(e: any) =>
-                        setForm({ ...form, title: e.target.value })
-                    }
-                />
-                <CustomInput type="text" title={t.form.industry.label} />
+            <div className="grid grid-cols-3 mb-4 gap-4">
+                <div className="col-span-2">
+                    <CustomInput
+                        type="text"
+                        title={t.form.title.label}
+                        value={form.title}
+                        onChange={(e: any) =>
+                            setForm({ ...form, title: e.target.value })
+                        }
+                    />
+                </div>
+                <div></div>
             </div>
             <div className="p-4 bg-slate-200 border border-gray-300 mb-4 rounded-md overflow-hidden">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -90,6 +108,9 @@ const AddEmailTemplate: React.FC<IAddEmailTemplate> = ({
                     value={form.content}
                     onChange={content => setForm({ ...form, content: content })}
                     className="bg-white min-h-[220px]"
+                    onEmailTemplateTypeChange={(id: number) =>
+                        setForm({ ...form, emailTemplateTypeId: id })
+                    }
                 />
             </div>
             <div className="flex">

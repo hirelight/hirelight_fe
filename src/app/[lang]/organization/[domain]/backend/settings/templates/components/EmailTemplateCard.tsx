@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Button, PopoverWarning, Portal } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
@@ -12,6 +13,7 @@ import { useOutsideClick } from "@/hooks/useClickOutside";
 import { useTranslation } from "@/components/InternationalizationProvider";
 import { IEmailTemplatesDto } from "@/services/email-template/email-template.interface";
 import { deleteEmailTemplateById } from "@/redux/thunks/email-templates.thunk";
+import emailTemplateService from "@/services/email-template/email-template.service";
 
 import datas from "../mock-data.json";
 import { Locale } from "../../../../../../../../../i18n.config";
@@ -28,6 +30,20 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
         lang as Locale,
         "settings.templates.email_template_list.email_template_card"
     );
+
+    const queryClient = useQueryClient();
+    const deleteMutation = useMutation({
+        mutationFn: (id: number) => emailTemplateService.deleteByIdAsync(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["email-templates"] });
+            toast.success(`Delete template success`);
+            setShowDeleteWarning(false);
+        },
+        onError: error => {
+            console.error(error);
+            setShowDeleteWarning(false);
+        },
+    });
 
     const dispatch = useAppDispatch();
     const { editingId, isAdding } = useAppSelector(
@@ -53,10 +69,7 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
     };
 
     const handleDeleteTemplate = async () => {
-        const res = await dispatch(deleteEmailTemplateById(data.id));
-        if (res.meta.requestStatus === "fulfilled")
-            toast.success(`Delete template success`);
-        setShowDeleteWarning(false);
+        deleteMutation.mutate(data.id);
     };
 
     return (

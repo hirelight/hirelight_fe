@@ -47,7 +47,7 @@ interceptor.interceptors.response.use(
             Cookies.remove("hirelight_access_token");
         }
         if (error.response) {
-            return error.response.data;
+            return error.response;
         } else {
             return Promise.reject(error);
         }

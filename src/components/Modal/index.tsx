@@ -12,6 +12,7 @@ export interface IModalProps {
     isOpen: boolean;
     onClose: () => void;
     position?: "top" | "center" | "bottom";
+    className?: string;
 }
 
 const Modal = ({
@@ -19,6 +20,7 @@ const Modal = ({
     onClose,
     children,
     position = "center",
+    className,
 }: IModalProps) => {
     const modalRef = useOutsideClick<HTMLDivElement>(() => {
         closeModal();
@@ -86,7 +88,9 @@ const Modal = ({
         --> */}
                     <div
                         ref={modalRef}
-                        className={`${styles.modal__panel} ${styles.entering}`}
+                        className={`${styles.modal__panel} ${styles.entering} ${
+                            className ? className : ""
+                        }`}
                     >
                         {children}
                     </div>

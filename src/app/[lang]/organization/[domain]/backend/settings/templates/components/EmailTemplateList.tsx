@@ -2,10 +2,13 @@
 
 import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
+import { useQuery } from "@tanstack/react-query";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setEditingId } from "@/redux/slices/templates.slice";
 import { fetchEmailTemplates } from "@/redux/thunks/email-templates.thunk";
+import { IEmailTemplatesDto } from "@/services/email-template/email-template.interface";
+import emailTemplateService from "@/services/email-template/email-template.service";
 
 import EmailTemplateCard from "./EmailTemplateCard";
 import EditAddTemplateSkeleton from "./EditAddTemplateSkeleton";
@@ -18,16 +21,22 @@ interface IEmailTemplateList {}
 
 const EmailTemplateList: React.FC<IEmailTemplateList> = ({}) => {
     const dispatch = useAppDispatch();
-    const { editingId, searchQuery, datas } = useAppSelector(
+    const { editingId, searchQuery } = useAppSelector(
         state => state.templates.emailTemplates
     );
-    useEffect(() => {
-        dispatch(fetchEmailTemplates());
-    }, []);
+
+    const {
+        data: res,
+        error,
+        isFetched,
+    } = useQuery({
+        queryKey: ["email-templates"],
+        queryFn: emailTemplateService.getListAsync,
+    });
 
     return (
         <ul>
-            {datas
+            {res?.data
                 ?.filter(item =>
                     item.name.toLowerCase().includes(searchQuery.toLowerCase())
                 )
