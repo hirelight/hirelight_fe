@@ -7,8 +7,8 @@ import { useOutsideClick } from "@/hooks/useClickOutside";
 
 import styles from "./Modal.module.scss";
 
-interface IModal {
-    children: React.ReactNode;
+export interface IModalProps {
+    children?: React.ReactNode;
     isOpen: boolean;
     onClose: () => void;
     position?: "top" | "center" | "bottom";
@@ -19,7 +19,7 @@ const Modal = ({
     onClose,
     children,
     position = "center",
-}: IModal) => {
+}: IModalProps) => {
     const modalRef = useOutsideClick<HTMLDivElement>(() => {
         closeModal();
     });
