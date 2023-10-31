@@ -40,7 +40,11 @@ const NewMCAssessment = () => {
                         <div className="w-1/3">
                             <Selection
                                 title="Due date"
-                                datas={["In 7 days", "In 1 month", "In 3 days"]}
+                                items={[
+                                    "In 7 days",
+                                    "In 1 month",
+                                    "In 3 days",
+                                ].map(item => ({ label: item, value: item }))}
                                 onChange={() => {}}
                                 required
                             />

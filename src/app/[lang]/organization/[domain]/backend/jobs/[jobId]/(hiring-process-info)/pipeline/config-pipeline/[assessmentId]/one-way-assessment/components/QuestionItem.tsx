@@ -96,11 +96,11 @@ const QuestionItem: React.FC<QuestionItemProps> = ({
                 <div className="flex flex-col gap-2 justify-between">
                     <Selection
                         title=""
-                        datas={[
+                        items={[
                             "Unlimited time to think",
                             "3 minutes",
                             "10 minutes",
-                        ]}
+                        ].map(item => ({ label: item, value: item }))}
                         onChange={(value: string) =>
                             onChange({
                                 ...data,
@@ -112,7 +112,10 @@ const QuestionItem: React.FC<QuestionItemProps> = ({
                     />
                     <Selection
                         title=""
-                        datas={["3", "10", "30"]}
+                        items={["3", "10", "30"].map(item => ({
+                            label: item,
+                            value: item,
+                        }))}
                         labelClassName="bg-white"
                         value={data.answerLength ? data.answerLength : ""}
                         onChange={(value: string) =>
@@ -124,7 +127,10 @@ const QuestionItem: React.FC<QuestionItemProps> = ({
                     />
                     <Selection
                         title=""
-                        datas={["One take", "3 takes", "5 takes"]}
+                        items={["One take", "3 takes", "5 takes"].map(item => ({
+                            label: item,
+                            value: item,
+                        }))}
                         onChange={() => {}}
                         labelClassName="bg-white"
                         value={

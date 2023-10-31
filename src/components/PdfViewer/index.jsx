@@ -170,7 +170,11 @@ export default function PDFViewer({ src = defaultUrl }) {
                         </button>
                         <Selection
                             title=""
-                            datas={["Actual size", "Page fit", "Page width"]}
+                            items={[
+                                "Actual size",
+                                "Page fit",
+                                "Page width",
+                            ].map(item => ({ label: item, value: item }))}
                             onChange={value => {
                                 switch (value) {
                                     case "Actual size":

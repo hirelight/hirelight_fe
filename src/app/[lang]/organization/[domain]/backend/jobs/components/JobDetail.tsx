@@ -347,9 +347,10 @@ const JobDetail = ({}: IJobDetail) => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                                 <Selection
                                     title="Employment type"
-                                    datas={workModalities.map(
-                                        item => item.name
-                                    )}
+                                    items={workModalities.map(item => ({
+                                        label: item.name,
+                                        value: item.name,
+                                    }))}
                                     value={job.workModality}
                                     onChange={(value: string) => {
                                         dispatch(
@@ -362,9 +363,10 @@ const JobDetail = ({}: IJobDetail) => {
                                 />
                                 <Selection
                                     title="Experience"
-                                    datas={experienceLevels.map(
-                                        item => item.name
-                                    )}
+                                    items={experienceLevels.map(item => ({
+                                        label: item.name,
+                                        value: item.name,
+                                    }))}
                                     value={job.experience}
                                     onChange={(value: string) => {
                                         dispatch(
@@ -442,10 +444,10 @@ const JobDetail = ({}: IJobDetail) => {
                                 <div className="col-span-2">
                                     <Selection
                                         title="Currency"
-                                        datas={currencyList.map(
-                                            item =>
-                                                `${item.name} (${item.code})`
-                                        )}
+                                        items={currencyList.map(item => ({
+                                            label: `${item.name} (${item.code})`,
+                                            value: `${item.name} (${item.code})`,
+                                        }))}
                                         value={job.currency ? job.currency : ""}
                                         onChange={
                                             (value: string) => {

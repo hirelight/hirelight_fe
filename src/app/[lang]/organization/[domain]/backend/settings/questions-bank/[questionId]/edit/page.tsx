@@ -1,18 +1,11 @@
-import { Metadata } from "next";
 import React from "react";
 import { cookies } from "next/headers";
 
-import questionAnswerServices from "@/services/questions/questions.service";
+import EditQuestionForm from "./components/EditForm";
 
-import QuestionList from "./components/QuestionList";
-
-export const metadata: Metadata = {
-    title: "Hirelight - Question bank - Company",
-};
-
-const fetchDatas = async () => {
+const getQuestionData = async (id: number) => {
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_API}/question-answers`,
+        `${process.env.NEXT_PUBLIC_SERVER_API}/question-answers/${id}`,
         {
             method: "GET",
             cache: "no-store",
@@ -26,6 +19,7 @@ const fetchDatas = async () => {
             },
         }
     );
+
     if (!res.ok) {
         throw new Error("Failed to fetch data");
     }
@@ -37,14 +31,18 @@ const fetchDatas = async () => {
     return jsonRes.data;
 };
 
-const QuestionsBank = async () => {
-    const datas = await fetchDatas();
+const EditQuestion = async ({ params }: any) => {
+    const { questionId } = params;
+    const data = await getQuestionData(parseInt(questionId));
 
     return (
-        <div className="bg-white rounded-md shadow-md p-4 xl:px-6">
-            <QuestionList datas={datas} />
+        <div className="w-full bg-white rounded-md shadow-md p-4 xl:px-6">
+            <h1 className="text-xl text-blue_primary_800 font-semibold text-center mb-4">
+                Edit multiple choice question
+            </h1>
+            <EditQuestionForm data={data} />
         </div>
     );
 };
 
-export default QuestionsBank;
+export default EditQuestion;

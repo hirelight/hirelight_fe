@@ -14,7 +14,7 @@ const DomainPage = ({
     params: { domain: string };
     searchParams: { [key: string]: string | string[] | undefined };
 }) => {
-    const { loginId, accessToken } = searchParams;
+    const { accessToken } = searchParams;
 
     const router = useRouter();
 
@@ -45,10 +45,8 @@ const DomainPage = ({
 
     React.useEffect(() => {
         if (!Cookies.get("hirelight_access_token")) {
-            if (loginId !== "null") {
-                fetchAccessToken(loginId as string);
-            } else if (accessToken) {
-                if (process.env.NODE_ENV !== "production")
+            if (process.env.NODE_ENV === "development") {
+                if (accessToken) {
                     Cookies.set(
                         "hirelight_access_token",
                         accessToken as string,
@@ -57,15 +55,15 @@ const DomainPage = ({
                             secure: true,
                         }
                     );
-
-                router.push("/backend");
-            } else {
-                router.replace(
-                    `${window.location.protocol}//www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`
-                );
+                    router.push("/backend");
+                } else {
+                    router.replace(
+                        `${window.location.protocol}//www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`
+                    );
+                }
             }
         } else router.push("/backend");
-    }, [accessToken, fetchAccessToken, loginId, router]);
+    }, [accessToken, fetchAccessToken, router]);
 
     return (
         <div className="w-full flex items-center justify-center py-80">

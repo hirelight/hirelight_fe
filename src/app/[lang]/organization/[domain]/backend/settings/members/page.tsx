@@ -24,12 +24,18 @@ const MembersSetting = () => {
                 </div>
                 <Selection
                     title=""
-                    datas={["Department"]}
+                    items={["Department"].map(item => ({
+                        label: item,
+                        value: item,
+                    }))}
                     onChange={() => {}}
                 />
                 <Selection
                     title=""
-                    datas={["Department"]}
+                    items={["Department"].map(item => ({
+                        label: item,
+                        value: item,
+                    }))}
                     onChange={() => {}}
                 />
             </div>

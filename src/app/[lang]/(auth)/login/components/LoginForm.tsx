@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import jwt_decode from "jwt-decode";
@@ -14,6 +14,8 @@ import { delayFunc } from "@/helpers/shareHelpers";
 import { validWorkEmail } from "@/helpers/validateHelpers";
 import { Portal } from "@/components/index";
 import { GoogleIcon, LinkedInIcon, SpinLoading } from "@/icons";
+import { LoginEmployerDto } from "@/services/auth/auth.interface";
+import { IOrganizationDto } from "@/services/organizations/organizations.interface";
 
 import styles from "./LoginForm.module.scss";
 
@@ -23,6 +25,8 @@ interface ILoginForm {
 
 const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
     const router = useRouter();
+    const { lang } = useParams();
+
     const loginStatus = useSearchParams().get("status");
     const loginId = useSearchParams().get("loginId");
     const isOrgOwner = useSearchParams().get("is_org_owner");
@@ -33,7 +37,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
         passwordErr: "",
         errMessage: "",
     });
-    const [loginForm, setLoginForm] = React.useState({
+    const [loginForm, setLoginForm] = React.useState<LoginEmployerDto>({
         email: "",
         password: "",
     });
@@ -45,51 +49,58 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
         e.preventDefault();
 
         setLoading(true);
-        Cookies.set("hirelight_access_token", "ATOken", {
-            domain:
-                process.env.NODE_ENV === "production"
-                    ? `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
-                    : ".localhost",
-            sameSite: "strict",
-            secure: true,
-        });
 
-        await delayFunc(2000);
-        toast.success("Sign in  success");
-        await delayFunc(500);
-        setLoading(false);
-        if (process.env.NODE_ENV === "development")
-            router.replace(
-                `${window.location.protocol}//fpt.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?code=123`
-            );
+        try {
+            const res = await authServices.loginEmployer(loginForm);
+
+            toast.success(res.message);
+            setLoading(false);
+            Cookies.set("hirelight_access_token", res.data.accessToken, {
+                domain:
+                    process.env.NODE_ENV === "production"
+                        ? `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
+                        : ".localhost",
+                sameSite: "strict",
+                secure: true,
+            });
+
+            handleRedirectOrgBased(res.data.accessToken);
+        } catch (error) {
+            setLoading(false);
+            console.error(error);
+        }
     };
 
-    const handleRedirect = React.useCallback(
-        (subdomain: string) => {
+    const handleRedirect = React.useCallback(async (org: IOrganizationDto) => {
+        try {
+            const res = await authServices.getOrgAccessToken(org.id);
             if (process.env.NODE_ENV === "development")
                 router.replace(
-                    `${window.location.protocol}//${subdomain}.${
-                        process.env.NEXT_PUBLIC_ROOT_DOMAIN
-                    }?loginId=${loginId}&accessToken=${Cookies.get(
-                        "hirelight_access_token"
-                    )}`
+                    `${window.location.protocol}//${org.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?loginId=${loginId}&accessToken=${res.data.accessToken}`
                 );
-            else
+            else {
+                Cookies.set("hirelight_access_token", res.data.accessToken, {
+                    domain: `${org.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+                    sameSite: "strict",
+                    secure: true,
+                });
                 router.replace(
-                    `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend`
+                    `${window.location.protocol}//${org.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend`
                 );
-        },
-        [loginId, router]
-    );
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }, []);
 
     const handleRedirectOrgBased = React.useCallback(
         async (token: string) => {
             setPageLoading(true);
+            console.log(isOrgMember, isOrgOwner);
             try {
                 const userData: any = jwt_decode(token);
-                console.log(userData);
 
-                if (isOrgMember === null && isOrgOwner === null) {
+                if (!isOrgMember && !isOrgOwner) {
                     const [ownedOrgRes, joinedOrgRes] = await Promise.all([
                         organizationsServices.getOwnedOrganizations(),
                         organizationsServices.getJoinedOrganizations(),
@@ -99,13 +110,13 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                         ownedOrgRes.statusCode === 200 &&
                         ownedOrgRes.data !== null
                     )
-                        handleRedirect(ownedOrgRes.data[0].subdomain);
+                        return handleRedirect(ownedOrgRes.data[0]);
 
                     if (
                         joinedOrgRes.statusCode === 200 &&
                         joinedOrgRes.data !== null
                     )
-                        handleRedirect(joinedOrgRes.data[0].subdomain);
+                        return handleRedirect(joinedOrgRes.data[0]);
 
                     if (!validWorkEmail(userData.emailAddress)) {
                         setLoginFormErr(prev => ({
@@ -113,9 +124,9 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                             errMessage:
                                 _t.login_form.error.personal_email_no_org,
                         }));
-                        setPageLoading(false);
-                    } else router.push("/organization/new");
-                } else if (isOrgMember === "false" && isOrgOwner === "false") {
+                        return setPageLoading(false);
+                    } else return router.push("/organization/new");
+                } else if (isOrgMember == "false" && isOrgOwner == "false") {
                     if (!validWorkEmail(userData.emailAddress)) {
                         setLoginFormErr(prev => ({
                             ...prev,
@@ -126,7 +137,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                     } else router.push("/organization/new");
                 } else {
                     let res;
-                    if (isOrgOwner === "true")
+                    if (isOrgOwner == "true")
                         res =
                             await organizationsServices.getOwnedOrganizations();
                     else
@@ -134,8 +145,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                             await organizationsServices.getJoinedOrganizations();
 
                     if (res.statusCode === 200) {
-                        const { subdomain } = res.data[0];
-                        handleRedirect(subdomain);
+                        handleRedirect(res.data[0]);
                     }
                 }
             } catch (error) {
@@ -155,10 +165,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                         "hirelight_access_token",
                         res.data.accessToken,
                         {
-                            domain:
-                                process.env.NODE_ENV === "production"
-                                    ? `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
-                                    : ".localhost",
+                            domain: ".localhost",
                             sameSite: "strict",
                             secure: true,
                         }

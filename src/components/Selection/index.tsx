@@ -22,27 +22,27 @@ const toBottom: React.CSSProperties = {
     visibility: "visible",
 };
 
-interface ISelection {
+interface ISelection<T = any> {
     title: string;
     placeholder?: string;
     value?: string;
-    datas: string[];
     required?: boolean;
-    onChange: (value: string) => void;
+    onChange: (value: T) => void;
     className?: string;
     labelClassName?: string;
+    items: { label: string; value: T }[];
 }
 
-const Selection = ({
+const Selection = <T extends object | string>({
     title,
     placeholder = "Select...",
-    datas,
+    items,
     value,
     required = false,
     onChange,
     className,
     labelClassName,
-}: ISelection) => {
+}: ISelection<T>) => {
     const [show, setShow] = React.useState(false);
     const [search, setSearch] = React.useState("");
 
@@ -80,8 +80,8 @@ const Selection = ({
         }
     };
 
-    const handleSelectItem = (value: any) => {
-        setSelected(value);
+    const handleSelectItem = (label: string, value: any) => {
+        setSelected(label);
         onChange(value);
         setShow(false);
         dropdownRef.current!!.removeAttribute("style");
@@ -135,19 +135,32 @@ const Selection = ({
                         />
                     </div>
                     <ul className="max-h-52 overflow-y-auto overflow-x-hidden">
-                        {["Select...", ...datas]
-                            .filter(item => item.includes(search))
-                            .map((item: any, index: number) => (
+                        <li>
+                            <button
+                                type="button"
+                                className={`w-full text-left text-neutral-700 p-2.5 cursor-pointer hover:bg-slate-200 `}
+                                onClick={handleSelectItem.bind(
+                                    null,
+                                    placeholder
+                                )}
+                            >
+                                <span>Select...</span>
+                            </button>
+                        </li>
+                        {items
+                            .filter(item => item.label.includes(search))
+                            .map((item, index: number) => (
                                 <li key={index}>
                                     <button
                                         type="button"
                                         className={`w-full text-left text-neutral-700 p-2.5 cursor-pointer hover:bg-slate-200 `}
                                         onClick={handleSelectItem.bind(
                                             null,
-                                            item
+                                            item.label,
+                                            item.value
                                         )}
                                     >
-                                        <span>{item}</span>
+                                        <span>{item.label}</span>
                                     </button>
                                 </li>
                             ))}

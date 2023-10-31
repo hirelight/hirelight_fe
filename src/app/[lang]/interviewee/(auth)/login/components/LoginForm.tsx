@@ -9,14 +9,18 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components";
 import { delayFunc } from "@/helpers/shareHelpers";
 import { SpinLoading } from "@/icons";
+import { LoginCandidateDto } from "@/services/auth/auth.interface";
+import authServices from "@/services/auth/auth.service";
 
 const LoginForm = () => {
     // document.cookie =
     //     "hirelight_access_token=asdasdasdasd; domain:jobs.locahost:3000; path=/";
     const router = useRouter();
+    const [formState, setFormState] = useState<LoginCandidateDto>({
+        email: "",
+        password: "",
+    });
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [loading, setLoading] = React.useState(false);
 
     const [formErr, setFormErr] = useState({
@@ -31,22 +35,27 @@ const LoginForm = () => {
             passwordError: "Password incorrect!",
         });
 
-        if (process.env.NODE_ENV === "production")
-            Cookies.set("hirelight_access_token", "tokenasdkajsdnkas", {
-                domain: `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-                secure: true,
-            });
-        else
-            Cookies.set("hirelight_access_token", "tokenasdkajsdnkas", {
-                domain: `.local`,
-                secure: true,
-            });
-        await delayFunc(2000);
-        toast.success("Sign in  success");
-        await delayFunc(500);
-        setLoading(false);
-        router.push("/");
+        try {
+            const res = await authServices.loginCandidate(formState);
+
+            toast.success(res.message);
+            if (process.env.NODE_ENV === "production")
+                Cookies.set("hirelight_access_token", res.data.accessToken, {
+                    domain: `jobs.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+                    secure: true,
+                });
+            else
+                Cookies.set("hirelight_access_token", res.data.accessToken, {
+                    secure: true,
+                });
+            setLoading(false);
+            router.push("/");
+        } catch (error) {
+            setLoading(false);
+            console.error(error);
+        }
     };
+
     return (
         <form className="space-y-6" onSubmit={handleSubmitLogin}>
             <div>
@@ -61,9 +70,12 @@ const LoginForm = () => {
                         id="email"
                         name="email"
                         type="email"
-                        value={email}
+                        value={formState.email}
                         onChange={e => {
-                            setEmail(e.target.value);
+                            setFormState({
+                                ...formState,
+                                email: e.target.value,
+                            });
                             setFormErr({ ...formErr, emailError: "" });
                         }}
                         autoComplete="email"
@@ -102,9 +114,12 @@ const LoginForm = () => {
                         id="password"
                         name="password"
                         type="password"
-                        value={password}
+                        value={formState.password}
                         onChange={e => {
-                            setPassword(e.target.value);
+                            setFormState({
+                                ...formState,
+                                password: e.target.value,
+                            });
                             setFormErr({ ...formErr, passwordError: "" });
                         }}
                         autoComplete="current-password"
