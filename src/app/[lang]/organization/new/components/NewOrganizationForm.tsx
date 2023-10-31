@@ -6,11 +6,16 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { UserIcon } from "@heroicons/react/24/solid";
 import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
+import { toast } from "react-toastify";
 
 import { SpinLoading } from "@/icons";
 import organizationsServices from "@/services/organizations/organizations.service";
-import { ICreateOrgDto } from "@/services/organizations/organizations.interface";
+import {
+    ICreateOrgDto,
+    IOrganizationDto,
+} from "@/services/organizations/organizations.interface";
 import { IResponse } from "@/interfaces/service.interface";
+import authServices from "@/services/auth/auth.service";
 
 import styles from "./NewOrganizationForm.module.scss";
 
@@ -26,7 +31,7 @@ const NewOrganizationForm = () => {
     });
     const [newOrgForm, setNewOrgForm] = React.useState<ICreateOrgDto>({
         name: "",
-        domain: "",
+        subdomain: "",
     });
     const [loading, setLoading] = React.useState(false);
 
@@ -37,22 +42,33 @@ const NewOrganizationForm = () => {
 
         setLoading(true);
         try {
-            const data: IResponse<any> =
+            const data: IResponse<IOrganizationDto> =
                 await organizationsServices.createNewOrganization(newOrgForm);
 
             if (data.statusCode === 200) {
+                const { subdomain, id } = data.data;
+                const resOrgToken = await authServices.getOrgAccessToken(id);
+                if (resOrgToken.statusCode !== 200)
+                    return toast.error("Get org token failure");
+
                 if (process.env.NODE_ENV === "development")
                     router.replace(
-                        `${window.location.protocol}//${newOrgForm.domain}.${
-                            process.env.NEXT_PUBLIC_ROOT_DOMAIN
-                        }?loginId=${loginId}&accessToken=${Cookies.get(
-                            "hirelight_access_token"
-                        )}`
+                        `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?loginId=${loginId}&accessToken=${resOrgToken.data.accessToken}`
                     );
-                else
+                else {
+                    Cookies.set(
+                        "hirelight_access_token",
+                        resOrgToken.data.accessToken,
+                        {
+                            domain: `${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+                            sameSite: "strict",
+                            secure: true,
+                        }
+                    );
                     router.replace(
-                        `${window.location.protocol}//${newOrgForm.domain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend`
+                        `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend`
                     );
+                }
             }
         } catch (error) {
             console.log(error);
@@ -143,13 +159,13 @@ const NewOrganizationForm = () => {
                             type="text"
                             id="domain"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            value={newOrgForm.domain}
+                            value={newOrgForm.subdomain}
                             placeholder="hirelight-co"
                             required
                             onChange={e => {
                                 setNewOrgForm({
                                     ...newOrgForm,
-                                    domain: e.target.value,
+                                    subdomain: e.target.value,
                                 });
                                 setNewOrgFormErr({
                                     nameErr: "",

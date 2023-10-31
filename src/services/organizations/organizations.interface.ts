@@ -1,6 +1,6 @@
 export interface ICreateOrgDto {
     name: string;
-    domain: string;
+    subdomain: string;
 }
 
 export interface IOrganizationDto {
