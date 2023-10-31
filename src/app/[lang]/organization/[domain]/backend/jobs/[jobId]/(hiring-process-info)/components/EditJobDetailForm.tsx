@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
@@ -10,15 +10,21 @@ import {
     experienceLevels,
     workModalities,
 } from "@/utils/shared/initialDatas";
-import { getJobById } from "@/services/job/job.service";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setJob, setJobError } from "@/redux/slices/job.slice";
 import { delayFunc } from "@/helpers/shareHelpers";
 import { LocationAutocomplete, Selection } from "@/components";
 import { SpinLoading } from "@/icons";
+import {
+    ICreateJobDto,
+    IJobDto,
+    JobContentJson,
+} from "@/services/job/job.interface";
+import jobServices from "@/services/job/job.service";
 
-import styles from "./JobDetail.module.scss";
-import FormInput from "./FormInput";
+import FormInput from "../../../components/FormInput";
+
+import styles from "./EditJobDetailForm.module.scss";
 
 const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ssr: false,
@@ -40,9 +46,11 @@ const industries = [
     "Design",
 ];
 
-interface IJobDetail {}
+type EditJobDetailFormProps = {
+    data: Omit<IJobDto, "content"> & { content: JobContentJson };
+};
 
-const JobDetail = ({}: IJobDetail) => {
+const EditJobDetailForm: React.FC<EditJobDetailFormProps> = ({ data }) => {
     const pathname = usePathname();
     const router = useRouter();
     const params = useParams();
@@ -59,10 +67,8 @@ const JobDetail = ({}: IJobDetail) => {
     const job = useAppSelector(state => state.job.data);
     const jobErr = useAppSelector(state => state.job.error);
 
-    const handleSubmitJobDetail = async (e: any) => {
-        e.preventDefault();
-
-        if (job.maxSalary && job.minSalary && job.minSalary > job.maxSalary)
+    const validateFormInput = (): boolean => {
+        if (job.maxSalary && job.minSalary && job.minSalary > job.maxSalary) {
             dispatch(
                 setJobError({
                     status: true,
@@ -73,7 +79,16 @@ const JobDetail = ({}: IJobDetail) => {
                     },
                 })
             );
-        if (jobErr.status) {
+            return false;
+        }
+
+        return true;
+    };
+
+    const handleSubmitJobDetail = async (e: any) => {
+        e.preventDefault();
+
+        if (!validateFormInput()) {
             return;
         }
 
@@ -81,31 +96,20 @@ const JobDetail = ({}: IJobDetail) => {
         await delayFunc(2000);
         setLoading(false);
         try {
-            if (pathname.includes("jobs/new")) {
-                dispatch(setJob(job));
-                router.push("/backend/jobs/123/edit");
-            } else {
-                if (params.jobId !== undefined) {
-                    toast.success("Update successfully!");
-                    // dispatch(setJob(res.data.data));
-                    router.push(`/backend/jobs/${params.jobId}/app-form`);
-                }
-            }
-        } catch (error) {}
+            const res = await jobServices.createAsync({
+                ...job,
+                content: JSON.stringify(job.content),
+            });
+            toast.success(res.message);
+        } catch (error) {
+            console.error(error);
+            toast.error("Create job failure");
+        }
     };
 
-    React.useEffect(() => {
-        const fetchJobDetail = async () => {
-            if (params.jobId) {
-                try {
-                    const res = await getJobById(params.jobId as string);
-                    // if (res.data.status === 200)
-                    // dispatch(setJob(res.data.data));
-                } catch (error) {}
-            }
-        };
-        fetchJobDetail();
-    }, [dispatch, params.jobId]);
+    useEffect(() => {
+        dispatch(setJob(data));
+    }, [data, dispatch]);
 
     return (
         <>
@@ -132,7 +136,7 @@ const JobDetail = ({}: IJobDetail) => {
                                     type="text"
                                     placeholder="Example: Fullstack Developer"
                                     autoComplete="organization-title"
-                                    value={job.title ? job.title : ""}
+                                    value={job.title}
                                     onChange={e => {
                                         dispatch(
                                             setJob({
@@ -165,18 +169,18 @@ const JobDetail = ({}: IJobDetail) => {
                         <div className={`${styles.form__section__wrapper}`}>
                             <div className="mb-4 md:mb-6">
                                 <LocationAutocomplete
-                                    title="Job location"
+                                    title="Job area"
                                     required={true}
-                                    id="job-location"
-                                    name="job-location"
+                                    id="job-area"
+                                    name="job-area"
                                     type="text"
                                     placeholder="Example: District 7, Ho Chi Minh"
-                                    value={job?.location ? job.location : ""}
+                                    value={job.area}
                                     handlePlaceChange={(value: string) => {
                                         dispatch(
                                             setJob({
                                                 ...job,
-                                                location: value,
+                                                area: value,
                                             })
                                         );
                                     }}
@@ -402,7 +406,9 @@ const JobDetail = ({}: IJobDetail) => {
                                             dispatch(
                                                 setJob({
                                                     ...job,
-                                                    minSalary: e.target.value,
+                                                    minSalary: parseInt(
+                                                        e.target.value
+                                                    ),
                                                 })
                                             );
                                         }}
@@ -423,8 +429,9 @@ const JobDetail = ({}: IJobDetail) => {
                                                 dispatch(
                                                     setJob({
                                                         ...job,
-                                                        maxSalary:
-                                                            e.target.value,
+                                                        maxSalary: parseInt(
+                                                            e.target.value
+                                                        ),
                                                     })
                                                 );
                                                 dispatch(
@@ -496,4 +503,4 @@ const JobDetail = ({}: IJobDetail) => {
     );
 };
 
-export default JobDetail;
+export default EditJobDetailForm;

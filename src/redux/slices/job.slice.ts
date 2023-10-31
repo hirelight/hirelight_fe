@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import {
-    IJobDetail,
     IJobDetailError,
-    INewJobDto,
+    IJobDto,
+    JobContentJson,
 } from "@/services/job/job.interface";
 
 export interface IJobSliceInitialState {
-    data: IJobDetail;
+    data: Omit<IJobDto, "content"> & { content: JobContentJson };
     loading: boolean;
     error: {
         status: boolean;
@@ -17,13 +17,30 @@ export interface IJobSliceInitialState {
 
 const initialState: IJobSliceInitialState = {
     data: {
+        id: 0,
+        creatorId: 0,
+        assessmentFlowId: 0,
+        organizationId: 0,
         title: "",
-        location: "",
         content: {
             description: "",
             requirements: "",
             benefits: "",
         },
+        applicationForm: "",
+        minSalary: 0,
+        maxSalary: 0,
+        currency: "",
+        startTime: new Date(),
+        endTime: new Date(),
+        area: "",
+        experience: "",
+        workModality: "",
+        employmentType: "",
+        keywords: "",
+        createdTime: new Date(),
+        updatedTime: new Date(),
+        status: "",
     },
     error: {
         status: false,
@@ -44,7 +61,7 @@ const jobSlice = createSlice({
     name: "job",
     initialState,
     reducers: {
-        setJob: (state, action: PayloadAction<INewJobDto>) => {
+        setJob: (state, action: PayloadAction<typeof initialState.data>) => {
             state.data = action.payload;
         },
         deleteJob: (state, action) => {},

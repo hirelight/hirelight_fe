@@ -14,6 +14,8 @@ export const store = configureStore({
         candidates: candidatesReducer,
         templates: templatesReducer,
     },
+    middleware: getDefaultMiddleware =>
+        getDefaultMiddleware({ serializableCheck: false }),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

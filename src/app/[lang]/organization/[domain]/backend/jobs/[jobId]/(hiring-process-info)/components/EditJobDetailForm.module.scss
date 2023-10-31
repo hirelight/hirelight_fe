@@ -1,0 +1,37 @@
+$form_margin_right: 2rem;
+$content_padding: 1rem;
+$content_padding_xl: 1.5rem;
+
+.form__container {
+    background-color: white;
+    @apply w-full lg:w-3/4 lg:mr-8 shadow-md rounded-md;
+}
+
+.instruction__text {
+    max-width: calc(25% - $form_margin_right - $content_padding_xl);
+    @apply hidden lg:block;
+}
+
+.form__section__title {
+    width: 100%;
+    padding: 20px $content_padding_xl;
+    font-size: 18px;
+    @apply font-medium;
+}
+
+.form__section__wrapper {
+    padding: 12px $content_padding_xl;
+}
+
+@media screen and (max-width: 1440px) {
+    .form__section__title {
+        padding: 20px $content_padding;
+    }
+    .form__section__wrapper {
+        padding: 12px $content_padding;
+    }
+
+    .instruction__text {
+        max-width: calc(25% - $form_margin_right - $content_padding);
+    }
+}

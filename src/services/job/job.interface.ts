@@ -1,26 +1,33 @@
-export interface IJobDetail extends INewJobDto {
-    id?: string;
+export interface ICreateJobDto {
+    title: string;
+    content: string;
+    applicationForm: string;
+    minSalary: number;
+    maxSalary: number;
+    currency: string;
+    startTime: Date;
+    endTime: Date;
+    area: string;
+    experience: string;
+    workModality: string;
 }
 
-export interface INewJobDto {
-    title: string;
-    location: string;
-    content: {
-        description?: string;
-        requirements?: string;
-        benefits?: string;
-    };
-    workModality?: string;
-    area?: string;
-    experience?: string;
-    minSalary?: string;
-    maxSalary?: string;
-    currency?: string;
-    status?: string;
-    startTime?: Date;
-    endTime?: Date;
-    createdTime?: Date;
-    updatedTime?: Date;
+export interface JobContentJson {
+    description: string;
+    requirements: string;
+    benefits: string;
+}
+
+export interface IJobDto extends ICreateJobDto {
+    id: number;
+    creatorId: number;
+    assessmentFlowId: number;
+    organizationId: number;
+    employmentType: string;
+    keywords: string;
+    createdTime: Date;
+    updatedTime: Date;
+    status: string;
 }
 
 export interface IJobDetailError {
@@ -42,19 +49,17 @@ export interface IJobDetailError {
     endTimeErr?: Date;
 }
 
-export interface IUpdateJobDto {
-    id: string;
+export interface IEditJobDto {
+    jobPostId: number;
     title: string;
-    location: string;
-    content: {
-        description?: string;
-        requirements?: string;
-        benefits?: string;
-    };
-    workModality?: string;
-    area?: string;
-    experience?: string;
-    status?: string;
-    createdTime?: Date;
-    updatedTime?: Date;
+    content: string;
+    applicationForm: string;
+    minSalary: number;
+    maxSalary: number;
+    currency: string;
+    startTime: Date;
+    endTime: Date;
+    area: string;
+    experience: string;
+    workModality: string;
 }

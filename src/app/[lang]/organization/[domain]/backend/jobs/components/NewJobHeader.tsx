@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-import { createNewJob, updateJobDetail } from "@/services/job/job.service";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setJob } from "@/redux/slices/job.slice";
+import jobServices from "@/services/job/job.service";
 
 import styles from "./NewJobHeader.module.scss";
 
@@ -20,8 +20,6 @@ const NewJobHeader = ({}: INewJobHeader) => {
     const title = useAppSelector(state => state.job.data.title);
     const dispatch = useAppDispatch();
     const job = useAppSelector(state => state.job.data);
-
-    const stage = pathname.split("/")[4];
 
     const handleSaveAndContinue = async (e: any) => {
         e.preventDefault();
@@ -45,23 +43,36 @@ const NewJobHeader = ({}: INewJobHeader) => {
 
         try {
             if (pathname.includes("jobs/new")) {
-                const res = await createNewJob(job);
+                const res = await jobServices.createAsync({
+                    ...job,
+                    content: JSON.stringify(job),
+                });
                 if (res.data.status === 200) {
                     dispatch(setJob(job));
                     router.push(redirectLink);
                 }
             } else {
-                if (jobId !== undefined) {
-                    const res = await updateJobDetail({
-                        id: jobId as string,
-                        ...job,
-                    });
-                    if (res.data.status === 200) {
-                        toast.success("Update successfully!");
-                        dispatch(setJob(res.data.data));
-                    }
+                const stage = pathname.split("/")[4];
+                switch (stage.toLowerCase()) {
+                    case "edit": {
+                        if (jobId !== undefined) {
+                            const res = await jobServices.editAsync({
+                                ...job,
+                                jobPostId: parseInt(jobId as string),
+                                content: JSON.stringify(job.content),
+                            });
+                            toast.success(res.message);
 
-                    router.push(redirectLink);
+                            router.push(redirectLink);
+                        }
+                        break;
+                    }
+                    case "app-form":
+                        redirectLink = `/backend/jobs/${jobId}/members`;
+                        break;
+                    case "members":
+                        redirectLink = `/backend/jobs/${jobId}/pipeline/config-pipeline`;
+                        break;
                 }
             }
         } catch (error) {}

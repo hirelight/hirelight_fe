@@ -1,14 +1,14 @@
 import React from "react";
 import { Metadata } from "next";
 
-import JobDetail from "../components/JobDetail";
+import AddJobDetailForm from "./components/AddJobDetailForm";
 
 export const metadata: Metadata = {
     title: "Create new hiring pipeline",
 };
 
 const NewJob = (props: any) => {
-    return <JobDetail />;
+    return <AddJobDetailForm />;
 };
 
 export default NewJob;
