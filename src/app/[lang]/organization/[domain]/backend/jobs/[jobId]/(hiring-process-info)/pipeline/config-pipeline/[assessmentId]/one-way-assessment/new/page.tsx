@@ -2,7 +2,7 @@
 
 import React, { FormEvent } from "react";
 import dynamic from "next/dynamic";
-import { PlusCircleIcon } from "@heroicons/react/24/solid";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
 
 import {
     Button,
@@ -32,8 +32,8 @@ const NewOneWayInterview = () => {
     };
 
     return (
-        <div className="bg-white py-4 drop-shadow-md rounded-md">
-            <h2 className="text-xl text-neutral-700 font-medium px-4 xl:px-6 mb-8">
+        <div className="bg-white py-6 drop-shadow-md rounded-md">
+            <h2 className="text-xl text-neutral-700 text-center font-medium px-4 xl:px-6 mb-8">
                 Create your video interview
             </h2>
 
@@ -132,7 +132,7 @@ const NewOneWayInterview = () => {
                                 onClick={() => setShowCreate(true)}
                             >
                                 <span className="relative py-4 px-5 flex items-center">
-                                    <PlusCircleIcon className="w-4 h-4 mr-1" />
+                                    <PlusCircleIcon className="w-5 h-5 mr-1" />
                                     Create new topic
                                 </span>
                             </button>

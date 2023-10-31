@@ -1,0 +1,15 @@
+.section__h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    @apply text-lg text-neutral-700 bg-slate-100;
+}
+
+@media screen and (min-width: 1440px) {
+    .section__h3 {
+        padding-inline: 1.5rem;
+    }
+}
