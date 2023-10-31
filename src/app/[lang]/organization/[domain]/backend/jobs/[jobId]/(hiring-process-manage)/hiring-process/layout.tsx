@@ -8,9 +8,9 @@ const HiringProcessManageLayout = ({
     children: React.ReactNode;
 }) => {
     return (
-        <div>
+        <div className="flex flex-col h-full">
             <AssessmentInfoHeader />
-            {children}
+            <div className="flex-1">{children}</div>
         </div>
     );
 };

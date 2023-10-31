@@ -16,7 +16,7 @@ const BackendLayout = ({ children }: { children: React.ReactNode }) => {
             `http://www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`,
             RedirectType.replace
         );
-    return <div>{children}</div>;
+    return <>{children}</>;
 };
 
 export default BackendLayout;

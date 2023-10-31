@@ -110,53 +110,55 @@ const AssessmentInfoHeader = () => {
                     </div>
                 </div>
 
-                <div className="w-full">
-                    <div role="tablist" className="flex">
-                        {[
-                            "All",
-                            "Sourced",
-                            "Applied",
-                            "Phone screen",
-                            "Assessment",
-                            "Interview",
-                            "Offer",
-                            "Hired",
-                        ].map((item, index) => (
-                            <div
-                                role="tab"
-                                key={item}
-                                className="flex-1 text-center"
-                            >
-                                <Link
-                                    href={`/backend/jobs/${jobId}/hiring-process/${item
-                                        .toLowerCase()
-                                        .replace(" ", "-")}`}
-                                    className={styles.assessment__btn}
+                {assessmentId && (
+                    <div className="w-full">
+                        <div role="tablist" className="flex">
+                            {[
+                                "All",
+                                "Sourced",
+                                "Applied",
+                                "Phone screen",
+                                "Assessment",
+                                "Interview",
+                                "Offer",
+                                "Hired",
+                            ].map((item, index) => (
+                                <div
+                                    role="tab"
+                                    key={item}
+                                    className="flex-1 text-center"
                                 >
-                                    <span
-                                        className={`${
-                                            styles.assessment__btn__text
-                                        } ${
-                                            item
-                                                .toLowerCase()
-                                                .replace(" ", "-") ===
-                                            (assessmentId as string)
-                                                .toLowerCase()
-                                                .replace(" ", "-")
-                                                ? styles.active
-                                                : ""
-                                        }`}
+                                    <Link
+                                        href={`/backend/jobs/${jobId}/hiring-process/${item
+                                            .toLowerCase()
+                                            .replace(" ", "-")}`}
+                                        className={styles.assessment__btn}
                                     >
-                                        {item}{" "}
-                                        <span className="ml-1 text-neutral-400">
-                                            {index === 0 ? "-" : index}
+                                        <span
+                                            className={`${
+                                                styles.assessment__btn__text
+                                            } ${
+                                                item
+                                                    .toLowerCase()
+                                                    .replace(" ", "-") ===
+                                                (assessmentId as string)
+                                                    .toLowerCase()
+                                                    .replace(" ", "-")
+                                                    ? styles.active
+                                                    : ""
+                                            }`}
+                                        >
+                                            {item}{" "}
+                                            <span className="ml-1 text-neutral-400">
+                                                {index === 0 ? "-" : index}
+                                            </span>
                                         </span>
-                                    </span>
-                                </Link>
-                            </div>
-                        ))}
+                                    </Link>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );
