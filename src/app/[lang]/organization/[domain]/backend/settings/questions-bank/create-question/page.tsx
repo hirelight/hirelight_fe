@@ -3,14 +3,18 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { PlusIcon } from "@heroicons/react/24/solid";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Button, ButtonOutline, CustomInput, Selection } from "@/components";
 import { delayFunc } from "@/helpers/shareHelpers";
 import questionAnswerServices from "@/services/questions/questions.service";
-import { IQuestionTagDto } from "@/services/questions/questions.interface";
+import {
+    ICreateQuestionDto,
+    IQuestionTagDto,
+} from "@/services/questions/questions.interface";
 import { CreateQuestionForm } from "@/interfaces/questions.interface";
 
 const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
@@ -20,8 +24,38 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ),
 });
 
+const difficulties = ["Easy", "Medium", "Hard", "Advance"];
+
 const CreateQuestionPage = () => {
+    const { lang } = useParams();
     const router = useRouter();
+    const queryClient = useQueryClient();
+    const createMutation = useMutation({
+        mutationFn: (createDto: ICreateQuestionDto) =>
+            questionAnswerServices.createAsync(createDto),
+        onSuccess: res => {
+            toast.success(res.message);
+
+            setFormState({
+                content: {
+                    name: "",
+                    type: "one-answer",
+                    answers: new Array(4).fill({
+                        name: "",
+                        correct: false,
+                    }),
+                },
+                difficulty: 0,
+                tagList: [],
+            });
+            queryClient.invalidateQueries({ queryKey: ["questions"] });
+            router.push(`/${lang}/backend/settings/questions-bank`);
+        },
+        onError: err => {
+            console.error(err);
+            toast.error("Create question failure");
+        },
+    });
 
     const [formState, setFormState] = useState<CreateQuestionForm>({
         content: {
@@ -56,31 +90,11 @@ const CreateQuestionPage = () => {
     const handleCreateQuestion = async (e: FormEvent) => {
         e.preventDefault();
 
-        try {
-            const res = await questionAnswerServices.createAsync({
-                ...formState,
-                content: JSON.stringify(formState.content),
-                tagIdList: formState.tagList.map(tag => tag.id),
-            });
-
-            if (res.statusCode === 200)
-                toast.success("Create question successfully!");
-
-            setFormState({
-                content: {
-                    name: "",
-                    type: "one-answer",
-                    answers: new Array(4).fill({
-                        name: "",
-                        correct: false,
-                    }),
-                },
-                difficulty: 0,
-                tagList: [],
-            });
-        } catch (error) {
-            console.error(error);
-        }
+        createMutation.mutate({
+            ...formState,
+            content: JSON.stringify(formState.content),
+            tagIdList: formState.tagList.map(tag => tag.id),
+        });
     };
 
     useEffect(() => {
@@ -109,15 +123,20 @@ const CreateQuestionPage = () => {
             <div className="mb-4">
                 <Selection
                     title="Difficulty"
-                    items={["0", "1", "2", "3"].map(item => ({
-                        label: item,
-                        value: item,
-                    }))}
-                    value={formState.difficulty?.toString()}
+                    items={["Easy", "Medium", "Hard", "Advance"].map(
+                        (item, index) => ({
+                            label: item,
+                            value: {
+                                name: item,
+                                value: index,
+                            },
+                        })
+                    )}
+                    value={difficulties[formState.difficulty]}
                     onChange={value =>
                         setFormState({
                             ...formState,
-                            difficulty: parseInt(value),
+                            difficulty: value.value,
                         })
                     }
                 />

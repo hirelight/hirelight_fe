@@ -1,6 +1,6 @@
 export interface ICreateQuestionDto {
     content: string;
-    difficulty: number | null;
+    difficulty: number;
     tagIdList: number[];
 }
 
@@ -9,7 +9,7 @@ export interface IQuestionAnswerDto {
     updaterId: number;
     organizationId: number;
     content: string;
-    difficulty: number | null;
+    difficulty: number;
     tagList: IQuestionTagDto[];
     createdTime: Date;
     updatedTime: Date;

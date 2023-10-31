@@ -1,6 +1,11 @@
 import { Metadata } from "next";
 import React from "react";
 import { cookies } from "next/headers";
+import {
+    HydrationBoundary,
+    QueryClient,
+    dehydrate,
+} from "@tanstack/react-query";
 
 import questionAnswerServices from "@/services/questions/questions.service";
 
@@ -38,11 +43,17 @@ const fetchDatas = async () => {
 };
 
 const QuestionsBank = async () => {
-    const datas = await fetchDatas();
+    const queryClient = new QueryClient();
+    await queryClient.prefetchQuery({
+        queryKey: ["questions"],
+        queryFn: fetchDatas,
+    });
 
     return (
         <div className="bg-white rounded-md shadow-md p-4 xl:px-6">
-            <QuestionList datas={datas} />
+            <HydrationBoundary state={dehydrate(queryClient)}>
+                <QuestionList />
+            </HydrationBoundary>
         </div>
     );
 };

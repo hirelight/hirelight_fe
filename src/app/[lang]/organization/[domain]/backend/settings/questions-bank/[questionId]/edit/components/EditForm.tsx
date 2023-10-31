@@ -6,11 +6,13 @@ import { toast } from "react-toastify";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { PlusIcon } from "@heroicons/react/24/solid";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Button, ButtonOutline, CustomInput, Selection } from "@/components";
 import { delayFunc } from "@/helpers/shareHelpers";
 import questionAnswerServices from "@/services/questions/questions.service";
 import {
+    IEditQuestionAnswerDto,
     IQuestionAnswerDto,
     IQuestionTagDto,
 } from "@/services/questions/questions.interface";
@@ -23,6 +25,8 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ),
 });
 
+const difficulties = ["Easy", "Medium", "Hard", "Advance"];
+
 type EditQuestionFormProps = {
     data: IQuestionAnswerDto;
 };
@@ -30,6 +34,22 @@ type EditQuestionFormProps = {
 const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ data }) => {
     const router = useRouter();
     const { lang } = useParams();
+
+    const queryClient = useQueryClient();
+    const updateMutation = useMutation({
+        mutationFn: (updateDto: IEditQuestionAnswerDto) =>
+            questionAnswerServices.editAsync(updateDto),
+        onSuccess: async res => {
+            toast.success("Edit question successfully!");
+            queryClient.invalidateQueries({ queryKey: ["questions"] });
+            await delayFunc(500);
+            router.replace(`/${lang}/backend/settings/questions-bank`);
+        },
+        onError: err => {
+            console.error(err);
+            toast.error("Update question failure");
+        },
+    });
 
     const [formState, setFormState] = useState<
         Omit<IQuestionAnswerDto, "content"> & {
@@ -60,20 +80,11 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ data }) => {
     const handleEditQuestion = async (e: FormEvent) => {
         e.preventDefault();
 
-        try {
-            const res = await questionAnswerServices.editAsync({
-                ...formState,
-                content: JSON.stringify(formState.content),
-                tagIdList: formState.tagList.map(item => item.id),
-            });
-
-            if (res.statusCode === 200)
-                toast.success("Edit question successfully!");
-            await delayFunc(500);
-            router.replace(`/${lang}/backend/settings/questions-bank`);
-        } catch (error) {
-            console.error(error);
-        }
+        updateMutation.mutate({
+            ...formState,
+            content: JSON.stringify(formState.content),
+            tagIdList: formState.tagList.map(item => item.id),
+        });
     };
 
     useEffect(() => {
@@ -95,15 +106,20 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ data }) => {
             <div className="mb-4">
                 <Selection
                     title="Difficulty"
-                    items={["0", "1", "2", "3"].map(item => ({
-                        label: item,
-                        value: item,
-                    }))}
-                    value={formState.difficulty?.toString()}
+                    items={["Easy", "Medium", "Hard", "Advance"].map(
+                        (item, index) => ({
+                            label: item,
+                            value: {
+                                name: item,
+                                value: index,
+                            },
+                        })
+                    )}
+                    value={difficulties[formState.difficulty]}
                     onChange={value =>
                         setFormState({
                             ...formState,
-                            difficulty: parseInt(value),
+                            difficulty: value.value,
                         })
                     }
                 />
