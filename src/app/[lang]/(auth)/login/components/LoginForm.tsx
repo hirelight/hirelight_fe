@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useCallback } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import jwt_decode from "jwt-decode";
+import jwtDecode from "jwt-decode";
 
 import authServices from "@/services/auth/auth.service";
 import organizationsServices from "@/services/organizations/organizations.service";
@@ -45,6 +46,12 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
 
     const [pageLoading, setPageLoading] = React.useState(false);
 
+    const isAdmin = useCallback((token: string) => {
+        const decoded: any = jwtDecode(token);
+
+        return decoded.role === "SYSTEM_ADMIN";
+    }, []);
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -55,6 +62,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
 
             toast.success(res.message);
             setLoading(false);
+
             Cookies.set("hirelight_access_token", res.data.accessToken, {
                 domain:
                     process.env.NODE_ENV === "production"
@@ -64,6 +72,8 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                 secure: true,
             });
 
+            if (isAdmin(res.data.accessToken)) return router.push("/admin");
+
             handleRedirectOrgBased(res.data.accessToken);
         } catch (error) {
             setLoading(false);
@@ -71,27 +81,34 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
         }
     };
 
-    const handleRedirect = React.useCallback(async (org: IOrganizationDto) => {
-        try {
-            const res = await authServices.getOrgAccessToken(org.id);
-            if (process.env.NODE_ENV === "development")
-                router.replace(
-                    `${window.location.protocol}//${org.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?loginId=${loginId}&accessToken=${res.data.accessToken}`
-                );
-            else {
-                Cookies.set("hirelight_access_token", res.data.accessToken, {
-                    domain: `${org.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-                    sameSite: "strict",
-                    secure: true,
-                });
-                router.replace(
-                    `${window.location.protocol}//${org.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend`
-                );
+    const handleRedirect = React.useCallback(
+        async (org: IOrganizationDto) => {
+            try {
+                const res = await authServices.getOrgAccessToken(org.id);
+                if (process.env.NODE_ENV === "development")
+                    router.replace(
+                        `${window.location.protocol}//${org.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?loginId=${loginId}&accessToken=${res.data.accessToken}`
+                    );
+                else {
+                    Cookies.set(
+                        "hirelight_access_token",
+                        res.data.accessToken,
+                        {
+                            domain: `${org.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+                            sameSite: "strict",
+                            secure: true,
+                        }
+                    );
+                    router.replace(
+                        `${window.location.protocol}//${org.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend`
+                    );
+                }
+            } catch (error) {
+                console.error(error);
             }
-        } catch (error) {
-            console.error(error);
-        }
-    }, []);
+        },
+        [loginId, router]
+    );
 
     const handleRedirectOrgBased = React.useCallback(
         async (token: string) => {
@@ -187,9 +204,17 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                 fetchAccessToken(loginId);
             }
         } else {
-            handleRedirectOrgBased(accessToken);
+            if (isAdmin(accessToken)) router.push("/admin");
+            else handleRedirectOrgBased(accessToken);
         }
-    }, [handleRedirectOrgBased, fetchAccessToken, loginId, loginStatus]);
+    }, [
+        handleRedirectOrgBased,
+        fetchAccessToken,
+        isAdmin,
+        loginId,
+        loginStatus,
+        router,
+    ]);
 
     return (
         <form onSubmit={handleLogin}>

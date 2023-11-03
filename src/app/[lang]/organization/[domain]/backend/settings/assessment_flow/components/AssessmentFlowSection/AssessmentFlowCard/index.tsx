@@ -1,9 +1,19 @@
 import { Bars3Icon } from "@heroicons/react/24/solid";
-import { Reorder, useDragControls, useMotionValue } from "framer-motion";
-import React from "react";
+import {
+    Reorder,
+    useDragControls,
+    useMotionValue,
+    m,
+    AnimatePresence,
+    LazyMotion,
+    domAnimation,
+} from "framer-motion";
+import React, { useState } from "react";
 
 import { useRaisedShadow } from "@/hooks/use-raised-boxshadow";
 import { AssessmentType } from "@/interfaces/assessment.interface";
+
+import FlowStageForm from "../AssessmentFlowForm/FlowStageForm";
 
 type AssessmentFlowCardProps = {
     data: any;
@@ -14,55 +24,110 @@ const AssessmentFlowCard: React.FC<AssessmentFlowCardProps> = ({ data }) => {
     const y = useMotionValue(0);
     const boxShadow = useRaisedShadow(y);
 
+    const [showEdit, setShowEdit] = useState(false);
+
     return (
-        <Reorder.Item
-            value={data}
-            className={`relative bg-gray-100 p-4 flex items-center gap-2 group`}
-            style={{ y, boxShadow }}
-            dragListener={false}
-            dragControls={dragControls}
-        >
-            <button
-                type="button"
-                className={`hover:cursor-move ${
-                    [AssessmentType.Hired, AssessmentType.Sourced].includes(
-                        data.type
-                    )
-                        ? "hover:cursor-not-allowed"
-                        : ""
-                }`}
-                onPointerDown={event => {
-                    if (
-                        [AssessmentType.Hired, AssessmentType.Sourced].includes(
-                            data.type
-                        )
-                    )
-                        return;
-                    dragControls.start(event);
-                }}
+        <>
+            <Reorder.Item
+                value={data}
+                className={`relative bg-gray-100 p-4`}
+                style={{ y, boxShadow }}
+                dragListener={false}
+                dragControls={dragControls}
             >
-                <Bars3Icon className="w-5 h-5" />
-            </button>
-            <div className="flex-1">{data.name}</div>
-            {![AssessmentType.Hired, AssessmentType.Sourced].includes(
-                data.type
-            ) && (
-                <div className="flex items-center gap-4 invisible group-hover:visible text-sm font-semibold">
+                <div className={`flex items-center gap-2 group`}>
                     <button
                         type="button"
-                        className="text-blue_primary_700 hover:text-blue_primary_800 hover:underline "
+                        className={`hover:cursor-move ${
+                            [
+                                AssessmentType.Hired,
+                                AssessmentType.Sourced,
+                            ].includes(data.type)
+                                ? "hover:cursor-not-allowed"
+                                : ""
+                        }`}
+                        onPointerDown={event => {
+                            if (
+                                [
+                                    AssessmentType.Hired,
+                                    AssessmentType.Sourced,
+                                ].includes(data.type) ||
+                                showEdit
+                            )
+                                return;
+                            dragControls.start(event);
+                        }}
                     >
-                        Edit
+                        <Bars3Icon className="w-5 h-5" />
                     </button>
-                    <button
-                        type="button"
-                        className="text-red-600 hover:underline hover:text-red-700"
-                    >
-                        Delete
-                    </button>
+                    <div className="flex-1">{data.name}</div>
+                    {![AssessmentType.Hired, AssessmentType.Sourced].includes(
+                        data.type
+                    ) && (
+                        <div className="flex items-center gap-4 invisible group-hover:visible text-sm font-semibold">
+                            <button
+                                type="button"
+                                className="text-blue_primary_700 hover:text-blue_primary_800 hover:underline "
+                                onClick={() => setShowEdit(true)}
+                            >
+                                Edit
+                            </button>
+                            <button
+                                type="button"
+                                className="text-red-600 hover:underline hover:text-red-700"
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    )}
                 </div>
-            )}
-        </Reorder.Item>
+            </Reorder.Item>
+            <LazyMotion features={domAnimation}>
+                <AnimatePresence>
+                    {showEdit && (
+                        <m.div
+                            initial={{
+                                height: 0,
+                                opacity: 0,
+                            }}
+                            animate={{
+                                height: "auto",
+                                opacity: 1,
+                                transition: {
+                                    ease: "easeOut",
+                                    duration: 0.15,
+                                    opacity: {
+                                        delay: 0.15,
+                                        duration: 0.2,
+                                    },
+                                },
+                            }}
+                            exit={{
+                                height: 0,
+                                opacity: 0,
+                                transition: {
+                                    ease: "easeIn",
+                                    duration: 0.2,
+                                    height: {
+                                        delay: 0.2,
+                                        duration: 0.15,
+                                    },
+                                },
+                            }}
+                        >
+                            <FlowStageForm
+                                data={{
+                                    name: data.name,
+                                    type: data.type,
+                                }}
+                                onSave={() => setShowEdit(false)}
+                                onCancel={() => setShowEdit(false)}
+                            />
+                        </m.div>
+                    )}
+                </AnimatePresence>
+            </LazyMotion>
+        </>
     );
 };
 

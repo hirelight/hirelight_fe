@@ -3,12 +3,23 @@
 import { TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import { Pagination } from "@/components";
+import employerOrgServices from "@/services/employer-organization/employer-organization.service";
 
 import styles from "./MemberList.module.scss";
 
 const MemberList = () => {
+    const {
+        data: res,
+        error,
+        isFetched,
+    } = useQuery({
+        queryKey: ["employers-organization"],
+        queryFn: employerOrgServices.getListAsync,
+    });
+
     return (
         <>
             <table className="w-full text-sm text-left text-neutral-700 dark:text-gray-400 rounded-tl-lg rounded-tr-lg overflow-hidden">

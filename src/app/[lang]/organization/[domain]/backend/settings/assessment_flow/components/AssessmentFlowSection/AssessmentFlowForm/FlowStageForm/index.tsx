@@ -3,16 +3,7 @@
 import React, { useState } from "react";
 
 import { Button, CustomInput, Selection } from "@/components";
-
-enum AssessmentType {
-    Sourced = "Sourced",
-    CVScreening = "CVScreening",
-    OneWayInterview = "OneWayInterview",
-    FaceToFaceInterview = "FaceToFaceInterview",
-    MulChoice = "MulChoice",
-    IntegrationAssessment = "IntegrationAssessment",
-    Hired = "Hired",
-}
+import { AssessmentType } from "@/interfaces/assessment.interface";
 
 const initialData = {
     name: "",
@@ -55,6 +46,7 @@ const FlowStageForm: React.FC<FlowStageFormProps> = ({
                         label: item,
                         value: item,
                     }))}
+                    value={data ? data.type : ""}
                     onChange={content =>
                         setFormState(prev => ({
                             ...prev,

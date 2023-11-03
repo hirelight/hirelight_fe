@@ -107,7 +107,11 @@ const NewOrganizationForm = () => {
                             <UserIcon className="w-full h-full text-neutral-700" />
                         </div>
                         <div className="inline-flex flex-col text-sm text-left">
-                            <strong>{`${decoded.firstName} ${decoded.lastName}`}</strong>
+                            <strong>{`${
+                                decoded.firstName ? decoded.firstName : ""
+                            } ${
+                                decoded.lastName ? decoded.lastName : ""
+                            }`}</strong>
                             <p className="text-gray-500">
                                 {decoded.emailAddress}
                             </p>
