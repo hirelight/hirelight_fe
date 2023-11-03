@@ -1,15 +1,21 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { PlusCircleIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
+import { AnimatePresence, LazyMotion, domAnimation } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 
 import { SearchIcon } from "@/icons";
 import { Selection } from "@/components";
+import employerOrgServices from "@/services/employer-organization/employer-organization.service";
 
 import MemberList from "./components/MemberList";
+import AddNewMember from "./components/AddNewMember";
 
 const MembersSetting = () => {
+    const [showAdd, setShowAdd] = useState(false);
+
     return (
         <div className="bg-white rounded-md shadow-md p-4 xl:px-6">
             <div className="grid grid-cols-3 gap-4 mb-4">
@@ -61,11 +67,15 @@ const MembersSetting = () => {
 
             <button
                 type="button"
-                className="flex gap-2 text-blue_primary_700 font-semibold mb-4 hover:underline"
+                className="flex gap-2 text-blue_primary_700 font-medium mb-4 hover:underline"
+                onClick={() => setShowAdd(!showAdd)}
             >
                 <PlusCircleIcon className="w-5 h-5" />
                 <span>Invite a new member</span>
             </button>
+            <LazyMotion features={domAnimation}>
+                <AnimatePresence>{showAdd && <AddNewMember />}</AnimatePresence>
+            </LazyMotion>
 
             <MemberList />
         </div>
