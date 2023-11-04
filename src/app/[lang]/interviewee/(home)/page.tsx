@@ -15,9 +15,9 @@ import JobsCenterPagination from "./components/JobsCenterPagination";
 import JobsCenterCategory from "./components/JobsCenterCategory";
 import JobDescriptionBeside from "./components/JobDescriptionBeside";
 
-export const metadata: Metadata = {
-    title: "Jobs by Hirelight",
-};
+// export const metadata: Metadata = {
+//     title: "Jobs by Hirelight",
+// };
 
 const JobsCenter = () => {
     const [showJD, setShowJD] = useState(false);
