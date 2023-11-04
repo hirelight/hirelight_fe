@@ -3,25 +3,21 @@ import React from "react";
 
 import { CustomFileInput, CustomInput, CustomTextArea } from "@/components";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { EAppFormOption, IAppFormField } from "@/interfaces";
-
-import styles from "./AppFormMobileSection.module.scss";
+import { IAppFormField } from "@/interfaces";
 
 const AppFormMobileSection = () => {
     const appForm = useAppSelector(state => state.appForm.datas);
 
     const inputFieldOnType = (field: IAppFormField) => {
-        switch (field.inputType) {
+        switch (field.type) {
             case "text-area":
                 return (
                     <div key={field.label} className=" mb-6">
                         <CustomTextArea
+                            key={field.label}
                             title={field.label}
-                            type={field.inputType}
-                            required={
-                                field.selectedOption ===
-                                EAppFormOption.MANDATORY
-                            }
+                            type={field.type}
+                            required={field.required}
                         />
                     </div>
                 );
@@ -29,12 +25,10 @@ const AppFormMobileSection = () => {
                 return (
                     <div key={field.label} className=" mb-6">
                         <CustomFileInput
+                            key={field.label}
                             title={field.label}
-                            type={field.inputType}
-                            required={
-                                field.selectedOption ===
-                                EAppFormOption.MANDATORY
-                            }
+                            type={field.type}
+                            required={field.required}
                         />
                     </div>
                 );
@@ -42,12 +36,10 @@ const AppFormMobileSection = () => {
                 return (
                     <div key={field.label} className=" mb-6">
                         <CustomInput
+                            key={field.label}
                             title={field.label}
-                            type={field.inputType}
-                            required={
-                                field.selectedOption ===
-                                EAppFormOption.MANDATORY
-                            }
+                            type={field.type}
+                            required={field.required}
                         />
                     </div>
                 );
@@ -62,34 +54,32 @@ const AppFormMobileSection = () => {
             </h4>
             {appForm.map(section => {
                 return (
-                    <section key={section.title}>
+                    <section key={section.name}>
                         <div className="flex items-center justify-between border-b border-gray-300 pb-2 mb-4">
-                            <h2 className="text-xl">{section.title}</h2>
+                            <h2 className="text-xl">{section.name}</h2>
                             <div className="flex gap-1 items-center text-neutral-500 text-sm">
                                 <TrashIcon className="w-4 h-4" />
                                 Clear
                             </div>
                         </div>
                         {section.fields
-                            .filter(
-                                field =>
-                                    field.selectedOption !== EAppFormOption.OFF
-                            )
+                            .filter(field => field.required !== undefined)
                             .map((field, index) => {
-                                if (field.label.toLowerCase() === "name") {
+                                if (field.label === "Name")
                                     return (
                                         <React.Fragment key={field.label}>
                                             {inputFieldOnType({
                                                 ...field,
                                                 label: "First name",
+                                                id: "firstname",
                                             })}
                                             {inputFieldOnType({
                                                 ...field,
                                                 label: "Last name",
+                                                id: "firstname",
                                             })}
                                         </React.Fragment>
                                     );
-                                }
 
                                 return inputFieldOnType(field);
                             })}

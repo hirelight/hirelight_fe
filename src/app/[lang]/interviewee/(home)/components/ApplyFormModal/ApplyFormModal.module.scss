@@ -1,0 +1,9 @@
+.modal__wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: calc(100vh - 48px);
+    width: 100%;
+    background-color: white;
+    @apply rounded-tr-xl rounded-tl-xl;
+}

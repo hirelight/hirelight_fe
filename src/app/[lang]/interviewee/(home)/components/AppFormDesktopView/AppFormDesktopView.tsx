@@ -5,6 +5,7 @@ import React from "react";
 import { useAppSelector } from "@/redux/reduxHooks";
 
 import AppFormDesktopSection from "./AppFormDesktopSection";
+import { mockDatas } from "./data";
 
 const AppFormDesktopView = () => {
     return (
@@ -24,9 +25,9 @@ const AppFormDesktopView = () => {
                         </span>
                     </div>
                 </div>
-                <div className="min-h-[800px] bg-slate-100 w-full pointer-events-none">
+                <div className="min-h-[800px] bg-slate-100 w-full">
                     <div className="max-w-3xl py-10 mx-auto">
-                        <AppFormDesktopSection />
+                        <AppFormDesktopSection datas={mockDatas} />
                     </div>
                 </div>
             </div>

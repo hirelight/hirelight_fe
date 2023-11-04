@@ -9,10 +9,9 @@ import {
     CustomTextArea,
     Selection,
 } from "@/components";
-import Portal from "@/components/Portal";
 import { useAppDispatch } from "@/redux/reduxHooks";
 import { addField } from "@/redux/slices/app-form.slice";
-import { EAppFormOption, IAppFormField } from "@/interfaces";
+import { IAppFormField } from "@/interfaces";
 
 const questionTypes = [
     "Paragraph",
@@ -29,16 +28,10 @@ interface IAddQuestionModal {
 }
 
 const AddQuestionModal = ({ closeModal }: IAddQuestionModal) => {
-    const [selectedType, setSelectedType] = React.useState(questionTypes[0]);
     const [questionField, setQuestionField] = React.useState<IAppFormField>({
         label: "",
-        selectedOption: EAppFormOption.MANDATORY,
-        inputType: "text-area",
-        options: [
-            EAppFormOption.MANDATORY,
-            EAppFormOption.OPTIONAL,
-            EAppFormOption.OFF,
-        ],
+        type: "text-area",
+        required: false,
     });
 
     const dispatch = useAppDispatch();
@@ -46,7 +39,7 @@ const AddQuestionModal = ({ closeModal }: IAddQuestionModal) => {
     const handleAddQuestion = () => {
         dispatch(
             addField({
-                title: "Details",
+                sectionName: "Details",
                 field: questionField,
             })
         );
@@ -58,19 +51,19 @@ const AddQuestionModal = ({ closeModal }: IAddQuestionModal) => {
             case "Paragraph":
                 setQuestionField({
                     ...questionField,
-                    inputType: "text-area",
+                    type: "text-area",
                 });
                 break;
             case "Short answer":
                 setQuestionField({
                     ...questionField,
-                    inputType: "text",
+                    type: "text",
                 });
                 break;
             case "File upload":
                 setQuestionField({
                     ...questionField,
-                    inputType: "file",
+                    type: "file",
                 });
         }
     };
@@ -99,7 +92,6 @@ const AddQuestionModal = ({ closeModal }: IAddQuestionModal) => {
                     }))}
                     value={questionTypes[0]}
                     onChange={(value: string) => {
-                        setSelectedType(value);
                         getQuestionOnType(value);
                     }}
                     className="mb-6"

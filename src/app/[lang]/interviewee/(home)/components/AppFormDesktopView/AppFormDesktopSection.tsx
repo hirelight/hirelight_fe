@@ -1,20 +1,36 @@
-import React from "react";
+import React, { HTMLInputTypeAttribute } from "react";
 import { TrashIcon } from "@heroicons/react/24/solid";
 
 import { useAppSelector } from "@/redux/reduxHooks";
 import { CustomFileInput, CustomInput, CustomTextArea } from "@/components";
-import { IAppFormField } from "@/interfaces";
+import { EAppFormOption, IAppFormField } from "@/interfaces";
 
-const AppFormDesktopSection = () => {
-    const appForm = useAppSelector(state => state.appForm.datas);
+import { mockDatas } from "./data";
 
-    const inputFieldOnType = (field: IAppFormField) => {
+type AppFormDesktopSectionProps = {
+    datas: (typeof mockDatas)[0][];
+};
+
+interface Field extends React.HTMLProps<HTMLInputElement> {
+    id: string;
+    label: string;
+    type: "multiple" | "text-area" | "add-file" | HTMLInputTypeAttribute;
+    supportedFileTypes?: string[];
+    supportedMimeTypes?: string[];
+    maxFileSize?: number;
+    singleOption?: boolean;
+    options?: { name: string; value: string }[];
+}
+
+const AppFormDesktopSection: React.FC<AppFormDesktopSectionProps> = ({
+    datas,
+}) => {
+    const inputFieldOnType = (field: Field) => {
         switch (field.type) {
             case "text-area":
                 return (
                     <div key={field.label} className=" mb-6">
                         <CustomTextArea
-                            key={field.label}
                             title={field.label}
                             type={field.type}
                             required={field.required}
@@ -25,7 +41,6 @@ const AppFormDesktopSection = () => {
                 return (
                     <div key={field.label} className=" mb-6">
                         <CustomFileInput
-                            key={field.label}
                             title={field.label}
                             type={field.type}
                             required={field.required}
@@ -36,7 +51,6 @@ const AppFormDesktopSection = () => {
                 return (
                     <div key={field.label} className=" mb-6">
                         <CustomInput
-                            key={field.label}
                             title={field.label}
                             type={field.type}
                             required={field.required}
@@ -52,7 +66,7 @@ const AppFormDesktopSection = () => {
                 <span className="text-red-500 mr-1">*</span>
                 Required fields
             </h4>
-            {appForm.map(section => {
+            {datas.map(section => {
                 return (
                     <section key={section.name}>
                         <div className="flex items-center justify-between border-b border-gray-300 pb-2 mb-8">
@@ -62,29 +76,21 @@ const AppFormDesktopSection = () => {
                                 Clear
                             </div>
                         </div>
-                        {section.fields
-                            .filter(field => field.required)
-                            .map(field => {
-                                if (field.label === "Name")
-                                    return (
-                                        <div
-                                            key={field.label}
-                                            className="grid grid-cols-1 md:grid-cols-2 gap-6"
-                                        >
-                                            {inputFieldOnType({
-                                                ...field,
-                                                label: "First name",
-                                                id: "firstname",
-                                            })}
-                                            {inputFieldOnType({
-                                                ...field,
-                                                label: "Last name",
-                                                id: "firstname",
-                                            })}
-                                        </div>
-                                    );
-                                return inputFieldOnType(field);
-                            })}
+                        {section.fields.map((field: Field) => {
+                            if (field.label.toLowerCase() === "name") {
+                                return (
+                                    <div
+                                        key={field.id}
+                                        className="grid gap-6 md:grid-cols-2"
+                                    >
+                                        {inputFieldOnType(field)}
+                                        {inputFieldOnType(field)}
+                                    </div>
+                                );
+                            }
+
+                            return inputFieldOnType(field);
+                        })}
                     </section>
                 );
             })}

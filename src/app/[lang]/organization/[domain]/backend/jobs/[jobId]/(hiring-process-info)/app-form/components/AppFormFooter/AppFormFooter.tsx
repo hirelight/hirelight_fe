@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 
 import { ButtonOutline, DeleteModal, Portal } from "@/components";
 import { useAppDispatch } from "@/redux/reduxHooks";
-import { clearAppForm } from "@/redux/slices/app-form.slice";
 import { delayFunc } from "@/helpers/shareHelpers";
 import { SpinLoading } from "@/icons";
 

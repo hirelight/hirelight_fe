@@ -1,18 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { appFormSections } from "@/utils/shared/initialDatas";
-import { EAppFormOption, IAppFormField, ISetAppFormField } from "@/interfaces";
-
-interface IAppFormSection {
-    title: string;
-    fields: IAppFormField[];
-}
+import { IAppFormSection } from "@/interfaces";
 
 export interface IAppFormState {
     datas: IAppFormSection[];
 }
 const initialState: IAppFormState = {
-    datas: appFormSections.datas,
+    datas: appFormSections as IAppFormSection[],
 };
 
 const appFormSlice = createSlice({
@@ -27,23 +22,21 @@ const appFormSlice = createSlice({
         },
 
         addField: (state, action) => {
-            state.datas = state.datas.map(item => {
-                if (
-                    item.title.toLowerCase() ===
-                    action.payload.title.toLowerCase()
-                ) {
-                    return {
-                        ...item,
-                        fields: [...item.fields, action.payload.field],
-                    };
-                }
-                return item;
-            });
+            state.datas ===
+                state.datas.map(item => {
+                    if (item.name === action.payload.sectionName) {
+                        return {
+                            ...item,
+                            fields: item.fields.concat([action.payload]),
+                        };
+                    }
+                    return item;
+                });
         },
 
         removeField: (state, action) => {
             state.datas = state.datas.map(item => {
-                if (item.title === action.payload.title) {
+                if (item.name === action.payload.title) {
                     return {
                         ...item,
                         fields: item.fields.filter(
@@ -55,17 +48,15 @@ const appFormSlice = createSlice({
             });
         },
 
-        setField: (state, action: PayloadAction<ISetAppFormField>) => {
-            const { sectionTitle, label, option } = action.payload;
+        setField: (state, action) => {
+            const { field, sectionName } = action.payload;
 
             state.datas = state.datas.map(item => {
-                if (item.title.toLowerCase() === sectionTitle.toLowerCase()) {
+                if (item.name === sectionName) {
                     return {
                         ...item,
-                        fields: item.fields.map(field =>
-                            field.label === label
-                                ? { ...field, selectedOption: option }
-                                : field
+                        fields: item.fields.map(itemField =>
+                            itemField.label === field.label ? field : itemField
                         ),
                     };
                 }
@@ -73,13 +64,9 @@ const appFormSlice = createSlice({
                 return item;
             });
         },
-
-        clearAppForm: (state, action) => {
-            state = initialState;
-        },
     },
 });
 
-export const { setField, clearAppForm, addSection, addField, removeField } =
+export const { setField, addSection, addField, removeField } =
     appFormSlice.actions;
 export default appFormSlice.reducer;

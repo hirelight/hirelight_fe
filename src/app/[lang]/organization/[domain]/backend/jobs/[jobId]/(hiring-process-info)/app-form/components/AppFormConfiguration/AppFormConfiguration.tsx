@@ -20,11 +20,7 @@ const AppFormConfiguration = () => {
             <div className="flex-1 flex-shrink-0 bg-white drop-shadow-lg pb-4 rounded-tr-md rounded-tl-md overflow-hidden">
                 <div>
                     {appFormSections.map(section => (
-                        <AppFormSection
-                            key={section.title}
-                            title={section.title}
-                            fields={section.fields}
-                        />
+                        <AppFormSection key={section.name} data={section} />
                     ))}
 
                     <div className="px-4" onClick={() => setShow(true)}>
