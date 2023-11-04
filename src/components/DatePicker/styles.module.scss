@@ -1,0 +1,23 @@
+.datepicker__header {
+}
+.datepicker__main {
+    padding: 0.25rem;
+}
+.datepicker__footer {
+}
+
+.datepicker__cell {
+    @apply hover:bg-gray-100 dark:hover:bg-gray-600 block flex-1 leading-9 border-0 rounded-lg cursor-pointer text-center text-neutral-900 dark:text-white font-semibold text-sm;
+
+    &.before {
+        @apply text-neutral-500;
+    }
+
+    &.after {
+        @apply text-neutral-500;
+    }
+
+    &.selected {
+        @apply bg-blue-700 text-white dark:bg-blue-600;
+    }
+}

@@ -13,9 +13,8 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setJob, setJobError } from "@/redux/slices/job.slice";
 import { delayFunc } from "@/helpers/shareHelpers";
-import { LocationAutocomplete, Selection } from "@/components";
+import { DatePicker, LocationAutocomplete, Selection } from "@/components";
 import { SpinLoading } from "@/icons";
-import { ICreateJobDto } from "@/services/job/job.interface";
 import jobServices from "@/services/job/job.service";
 
 import FormInput from "../../components/FormInput";
@@ -76,6 +75,11 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
             return false;
         }
 
+        if (job.startTime.getTime() > job.endTime.getTime()) {
+            toast.error("Start time must earlier than end time");
+            return false;
+        }
+
         return true;
     };
 
@@ -86,9 +90,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
             return;
         }
 
-        setLoading(true);
-        await delayFunc(2000);
-        setLoading(false);
+        console.log(job);
         try {
             const res = await jobServices.createAsync({
                 ...job,
@@ -458,6 +460,47 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                             //         currency: value,
                                             //     },
                                             // })
+                                        }
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* ***********************Job Post Publishcation duration*********************************** */}
+                    <section className="relative">
+                        <h2 className={`${styles.form__section__title}`}>
+                            Job post available time range
+                        </h2>
+                        <div className={`${styles.form__section__wrapper}`}>
+                            <div className="grid grid-cols-2 gap-x-8">
+                                <div>
+                                    <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        Start time
+                                    </h3>
+                                    <DatePicker
+                                        onChange={date =>
+                                            dispatch(
+                                                setJob({
+                                                    ...job,
+                                                    startTime: date,
+                                                })
+                                            )
+                                        }
+                                    />
+                                </div>
+                                <div>
+                                    <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        End time
+                                    </h3>
+                                    <DatePicker
+                                        onChange={date =>
+                                            dispatch(
+                                                setJob({
+                                                    ...job,
+                                                    endTime: date,
+                                                })
+                                            )
                                         }
                                     />
                                 </div>

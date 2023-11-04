@@ -14,6 +14,7 @@ import ThemeProvider from "./ThemeProvider";
 import ThemeSwitcher from "./ThemeSwitcher";
 import PopoverWarning from "./PopoverWarning";
 import Pagination from "./Pagination";
+import DatePicker from "./DatePicker";
 
 export {
     Modal,
@@ -32,4 +33,5 @@ export {
     ThemeProvider,
     ThemeSwitcher,
     PopoverWarning,
+    DatePicker,
 };

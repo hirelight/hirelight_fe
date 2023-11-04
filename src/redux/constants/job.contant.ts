@@ -1,0 +1,1 @@
+export const CREATE_NEW_JOBPOST = "CREATE_NEW_JOBPOST";

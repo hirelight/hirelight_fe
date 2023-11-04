@@ -1,13 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import {
+    ICreateJobDto,
     IJobDetailError,
     IJobDto,
     JobContentJson,
 } from "@/services/job/job.interface";
 
+import { createNewJobPost } from "../thunks/job.thunk";
+
 export interface IJobSliceInitialState {
-    data: Omit<IJobDto, "content"> & { content: JobContentJson };
+    data: Omit<ICreateJobDto, "content"> & { content: JobContentJson };
     loading: boolean;
     error: {
         status: boolean;
@@ -17,10 +20,6 @@ export interface IJobSliceInitialState {
 
 const initialState: IJobSliceInitialState = {
     data: {
-        id: 0,
-        creatorId: 0,
-        assessmentFlowId: 0,
-        organizationId: 0,
         title: "",
         content: {
             description: "",
@@ -36,11 +35,6 @@ const initialState: IJobSliceInitialState = {
         area: "",
         experience: "",
         workModality: "",
-        employmentType: "",
-        keywords: "",
-        createdTime: new Date(),
-        updatedTime: new Date(),
-        status: "",
     },
     error: {
         status: false,
@@ -82,6 +76,15 @@ const jobSlice = createSlice({
                 },
             };
         },
+    },
+
+    extraReducers: builder => {
+        builder
+            .addCase(createNewJobPost.pending, () => {})
+            .addCase(createNewJobPost.fulfilled, (state, action) => {
+                console.log(action.payload);
+            })
+            .addCase(createNewJobPost.rejected, (state, action) => {});
     },
 });
 

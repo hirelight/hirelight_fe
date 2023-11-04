@@ -153,9 +153,7 @@ export const jobFunctions = [
 export const workModalities = [
     { id: 0, name: "Full-time" },
     { id: 1, name: "Part-time" },
-    { id: 2, name: "Contract" },
-    { id: 3, name: "Temporary" },
-    { id: 4, name: "Other" },
+    { id: 2, name: "Remote" },
 ];
 
 export const experienceLevels = [
