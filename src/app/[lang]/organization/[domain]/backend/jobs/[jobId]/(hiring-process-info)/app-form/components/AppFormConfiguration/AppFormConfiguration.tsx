@@ -5,13 +5,21 @@ import { PlusCircleIcon } from "@heroicons/react/24/solid";
 
 import Portal from "@/components/Portal";
 import { useAppSelector } from "@/redux/reduxHooks";
+import { IAppFormSection } from "@/interfaces";
 
 import AppFormSection from "./AppFormSection";
 import AddQuestionModal from "./AddQuestionModal";
 
-const AppFormConfiguration = () => {
+type AppFormConfigurationProps = {
+    appFormSections: IAppFormSection[];
+};
+
+const AppFormConfiguration: React.FC<AppFormConfigurationProps> = ({}) => {
     const [show, setShow] = React.useState(false);
-    const appFormSections = useAppSelector(state => state.appForm.datas);
+    const appFormSections = useAppSelector(
+        state => state.job.data.applicationForm
+    );
+
     return (
         <React.Fragment>
             <Portal>
@@ -19,7 +27,7 @@ const AppFormConfiguration = () => {
             </Portal>
             <div className="flex-1 flex-shrink-0 bg-white drop-shadow-lg pb-4 rounded-tr-md rounded-tl-md overflow-hidden">
                 <div>
-                    {appFormSections.map(section => (
+                    {appFormSections?.map(section => (
                         <AppFormSection key={section.name} data={section} />
                     ))}
 

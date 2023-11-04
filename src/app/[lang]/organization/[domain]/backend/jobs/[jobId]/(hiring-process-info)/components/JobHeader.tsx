@@ -9,71 +9,64 @@ import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setJob } from "@/redux/slices/job.slice";
 import jobServices from "@/services/job/job.service";
 
-import styles from "./NewJobHeader.module.scss";
+import styles from "./JobHeader.module.scss";
 
-interface INewJobHeader {}
+interface IJobHeader {}
 
-const NewJobHeader = ({}: INewJobHeader) => {
-    const router = useRouter();
+const JobHeader = ({}: IJobHeader) => {
     const pathname = usePathname();
-    const { jobId } = useParams();
-    const title = useAppSelector(state => state.job.data.title);
-    const dispatch = useAppDispatch();
+    const { jobId, lang } = useParams();
     const job = useAppSelector(state => state.job.data);
 
     const handleSaveAndContinue = async (e: any) => {
         e.preventDefault();
         let redirectLink = "";
-        if (pathname.includes("jobs/new")) {
-            redirectLink = `/backend/jobs/${123}/edit`;
-        } else {
-            const stage = pathname.split("/")[4];
+        const stage = pathname.split("/")[5];
+        switch (stage.toLowerCase()) {
+            case "edit":
+                redirectLink = `/${lang}/backend/jobs/${jobId}/app-form`;
+                break;
+            case "app-form":
+                redirectLink = `/${lang}/backend/jobs/${jobId}/members`;
+                break;
+            case "members":
+                redirectLink = `/${lang}/backend/jobs/${jobId}/pipeline/config-pipeline`;
+                break;
+        }
+
+        try {
+            const stage = pathname.split("/")[5];
             switch (stage.toLowerCase()) {
-                case "edit":
-                    redirectLink = `/backend/jobs/${jobId}/app-form`;
+                case "edit": {
+                    if (jobId !== undefined) {
+                        const res = await jobServices.editAsync({
+                            ...job,
+                            id: parseInt(jobId as string),
+                            content: JSON.stringify(job.content),
+                            applicationForm: JSON.stringify(
+                                job.applicationForm
+                            ),
+                        });
+                        toast.success(res.message);
+                    }
                     break;
+                }
                 case "app-form":
-                    redirectLink = `/backend/jobs/${jobId}/members`;
+                    if (jobId !== undefined) {
+                        const res = await jobServices.editAsync({
+                            ...job,
+                            id: parseInt(jobId as string),
+                            content: JSON.stringify(job.content),
+                            applicationForm: JSON.stringify(
+                                job.applicationForm
+                            ),
+                        });
+                        toast.success(res.message);
+                    }
                     break;
                 case "members":
                     redirectLink = `/backend/jobs/${jobId}/pipeline/config-pipeline`;
                     break;
-            }
-        }
-
-        try {
-            if (pathname.includes("jobs/new")) {
-                const res = await jobServices.createAsync({
-                    ...job,
-                    content: JSON.stringify(job),
-                });
-                if (res.data.status === 200) {
-                    dispatch(setJob(job));
-                    router.push(redirectLink);
-                }
-            } else {
-                const stage = pathname.split("/")[4];
-                switch (stage.toLowerCase()) {
-                    case "edit": {
-                        if (jobId !== undefined) {
-                            const res = await jobServices.editAsync({
-                                ...job,
-                                jobPostId: parseInt(jobId as string),
-                                content: JSON.stringify(job.content),
-                            });
-                            toast.success(res.message);
-
-                            router.push(redirectLink);
-                        }
-                        break;
-                    }
-                    case "app-form":
-                        redirectLink = `/backend/jobs/${jobId}/members`;
-                        break;
-                    case "members":
-                        redirectLink = `/backend/jobs/${jobId}/pipeline/config-pipeline`;
-                        break;
-                }
             }
         } catch (error) {}
     };
@@ -88,7 +81,7 @@ const NewJobHeader = ({}: INewJobHeader) => {
             <div className="max-w-screen-xl mx-auto py-5 px-4 xl:px-6 flex-shrink-0">
                 <div className="w-full flex items-center justify-between mb-4">
                     <h4 className="text-2xl text-neutral-700 font-medium">
-                        {title ? title : "New Job"}
+                        {job.title}
                     </h4>
                     <div className="hidden md:block">
                         <button
@@ -108,16 +101,8 @@ const NewJobHeader = ({}: INewJobHeader) => {
                 </div>
                 <div className={styles.stage__wrapper}>
                     <div className={styles.section__wrapper}>
-                        <button
-                            type="button"
-                            onClick={
-                                jobId
-                                    ? () =>
-                                          router.push(
-                                              `/backend/jobs/${jobId}/edit`
-                                          )
-                                    : () => {}
-                            }
+                        <Link
+                            href={`/${lang}/backend/jobs/${jobId}/edit`}
                             className={`${styles.section__container} ${
                                 pathname.includes("edit") ||
                                 pathname.includes("jobs/new")
@@ -133,7 +118,7 @@ const NewJobHeader = ({}: INewJobHeader) => {
                                 Tells applicants about this role, including job
                                 title, location and requirements.
                             </p>
-                        </button>
+                        </Link>
                     </div>
                     <div className={styles.section__wrapper}>
                         <div
@@ -141,14 +126,10 @@ const NewJobHeader = ({}: INewJobHeader) => {
                                 pathname.includes("app-form")
                                     ? styles.active
                                     : ""
-                            } ${
-                                pathname.includes("jobs/new")
-                                    ? styles.disabled
-                                    : ""
                             }`}
                         >
                             <Link
-                                href={`/backend/jobs/${jobId}/app-form`}
+                                href={`/${lang}/backend/jobs/${jobId}/app-form`}
                                 tabIndex={-1}
                                 className={`h-full ${
                                     pathname.includes("app-form")
@@ -172,14 +153,10 @@ const NewJobHeader = ({}: INewJobHeader) => {
                                 pathname.includes("members")
                                     ? styles.active
                                     : ""
-                            } ${
-                                pathname.includes("jobs/new")
-                                    ? styles.disabled
-                                    : ""
                             }`}
                         >
                             <Link
-                                href={`/backend/jobs/${jobId}/members`}
+                                href={`/${lang}/backend/jobs/${jobId}/members`}
                                 tabIndex={-1}
                                 className={`h-full ${
                                     pathname.includes("members")
@@ -203,14 +180,10 @@ const NewJobHeader = ({}: INewJobHeader) => {
                                 pathname.includes("pipeline")
                                     ? styles.active
                                     : ""
-                            } ${
-                                pathname.includes("jobs/new")
-                                    ? styles.disabled
-                                    : ""
                             }`}
                         >
                             <Link
-                                href={`/backend/jobs/${jobId}/pipeline/config-pipeline`}
+                                href={`/${lang}/backend/jobs/${jobId}/pipeline/config-pipeline`}
                                 tabIndex={-1}
                                 className={`h-full ${
                                     pathname.includes("pipeline")
@@ -234,4 +207,4 @@ const NewJobHeader = ({}: INewJobHeader) => {
     );
 };
 
-export default NewJobHeader;
+export default JobHeader;

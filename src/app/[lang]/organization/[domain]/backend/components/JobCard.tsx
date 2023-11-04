@@ -1,7 +1,11 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { EllipsisVertical } from "@/icons";
+import { IJobDto } from "@/services/job/job.interface";
 
 interface IStage {
     name: string;
@@ -35,31 +39,27 @@ const arrs: IStage[] = [
     },
 ];
 
-interface IJobCard {
-    title: string;
-    location: string;
-    isPublished?: boolean;
-    stages?: IStage[];
+interface JobCardProps {
+    data: IJobDto;
 }
 
-const JobCard = ({
-    title,
-    location,
-    isPublished = false,
-    stages = arrs,
-}: IJobCard) => {
+const JobCard: React.FC<JobCardProps> = ({
+    data: { title, area, status, id },
+}) => {
+    const router = useRouter();
+
     return (
         <div className="w-full p-6 bg-white shadow-md rounded-lg">
             <div className="w-full flex  items-center justify-between mb-6">
                 <div className="flex  flex-wrap sm:flex-nowrap items-start sm:items-center sm:flex-row gap-3">
                     <Link
-                        href={`backend/jobs/${123}/hiring-process/applied`}
+                        href={`backend/jobs/${id}/hiring-process/applied`}
                         className="text-blue_primary_700 text-xl font-medium whitespace-nowrap hover:underline"
                     >
                         {title}
                     </Link>
                     <span className="text-sm text-neutral-500 whitespace-nowrap">
-                        {location}
+                        {area}
                     </span>
                 </div>
                 <div className="flex gap-4 items-center">
@@ -69,13 +69,17 @@ const JobCard = ({
                     >
                         Publish
                     </button>
-                    <button type="button" className="group">
+                    <button
+                        type="button"
+                        className="group"
+                        onClick={() => router.push(`backend/jobs/${id}/edit`)}
+                    >
                         <EllipsisVertical className="w-5 h-5 group-hover:w-6 group-hover:h-6 transition-all" />
                     </button>
                 </div>
             </div>
             <div className="hidden md:grid grid-cols-6 mt-2 mb-6">
-                {stages.map((item, index) => (
+                {arrs.map((item, index) => (
                     <div
                         key={item.name}
                         className='text-center items-center p-4 relative after:content-[""] after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:h-3/5 after:w-[1px] after:bg-gray-400 last:after:w-0'
@@ -89,14 +93,12 @@ const JobCard = ({
             </div>
             <div className="w-full flex justify-between">
                 <div className="hidden sm:block">
-                    <span className="text-neutral-500 text-sm">
-                        {isPublished ? "Alread published on platform" : "Draft"}
-                    </span>
+                    <span className="text-neutral-500 text-sm">{status}</span>
                 </div>
                 <div className="flex gap-5">
                     <span className="text-blue_primary_700 text-sm">
                         Candidates:{" "}
-                        {stages
+                        {arrs
                             .map(item => item.numOfCandidate)
                             .reduce(
                                 (accumulator, currentValue) =>
@@ -105,7 +107,7 @@ const JobCard = ({
                     </span>
                     <span className="text-green-500 text-sm">
                         In progress:{" "}
-                        {stages
+                        {arrs
                             .filter(item => item.name !== "Inbox")
                             .map(item => item.numOfCandidate)
                             .reduce(

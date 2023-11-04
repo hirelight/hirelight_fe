@@ -1,6 +1,6 @@
 import React from "react";
 
-import NewJobHeader from "../components/NewJobHeader";
+import NewJobHeader from "./components/NewJobHeader";
 
 const NewJobLayout = ({ children }: { children: React.ReactNode }) => {
     return (

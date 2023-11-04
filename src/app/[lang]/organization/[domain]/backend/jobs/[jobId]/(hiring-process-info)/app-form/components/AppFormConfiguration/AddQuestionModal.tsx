@@ -9,9 +9,10 @@ import {
     CustomTextArea,
     Selection,
 } from "@/components";
-import { useAppDispatch } from "@/redux/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { addField } from "@/redux/slices/app-form.slice";
 import { IAppFormField } from "@/interfaces";
+import { addAppFormField, setAppForm } from "@/redux/slices/job.slice";
 
 const questionTypes = [
     "Paragraph",
@@ -29,18 +30,23 @@ interface IAddQuestionModal {
 
 const AddQuestionModal = ({ closeModal }: IAddQuestionModal) => {
     const [questionField, setQuestionField] = React.useState<IAppFormField>({
+        id: "",
         label: "",
         type: "text-area",
         required: false,
     });
 
     const dispatch = useAppDispatch();
-
+    const allFields = useAppSelector(state => state.job.data.applicationForm)
+        .map(item => item.fields)
+        .flat(1);
     const handleAddQuestion = () => {
+        if (allFields.find(item => item.label === questionField.label))
+            return alert("Question title must not dupplicate");
         dispatch(
-            addField({
+            addAppFormField({
                 sectionName: "Details",
-                field: questionField,
+                field: questionField as IAppFormField,
             })
         );
         closeModal();
@@ -106,6 +112,7 @@ const AddQuestionModal = ({ closeModal }: IAddQuestionModal) => {
                         setQuestionField({
                             ...questionField,
                             label: e.target.value,
+                            id: e.target.value.toLowerCase().replace(" ", "_"),
                         })
                     }
                 />

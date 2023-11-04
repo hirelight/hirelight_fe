@@ -10,11 +10,14 @@ import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
 
 import { useAppSelector } from "@/redux/reduxHooks";
 import { debounce } from "@/helpers/shareHelpers";
+import { IAppFormSection } from "@/interfaces";
 
 import styles from "./AppFormMobileView.module.scss";
 import AppFormMobileSection from "./AppFormMobileSection";
 
-const AppFormMobileView = () => {
+type AppFormMobileViewProps = {};
+
+const AppFormMobileView: React.FC<AppFormMobileViewProps> = ({}) => {
     const [show, setShow] = React.useState(false);
     const job = useAppSelector(state => state.job.data);
     const containerRef = React.useRef<HTMLDivElement>(null);

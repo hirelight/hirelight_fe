@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
     ArrowLongLeftIcon,
     ArrowLongRightIcon,
@@ -43,7 +43,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
     );
 
     const [showDatepicker, setShowDatepicker] = useState(false);
-    const [selectedDate, setSelectedDate] = useState<Date | undefined>(value);
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>();
     const [currentDate, setCurrentDate] = useState(
         selectedDate ? selectedDate : new Date()
     );
@@ -194,6 +194,10 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
         );
         return __container;
     };
+
+    useEffect(() => {
+        setSelectedDate(value);
+    }, [value]);
 
     return (
         <div ref={wrapperRef} className="relative">

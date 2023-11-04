@@ -61,7 +61,7 @@ class JobServices implements IJobServices {
     editAsync = async (editJobDto: IEditJobDto): Promise<IResponse<any>> => {
         try {
             const res = await interceptor.put<IResponse<any>>(
-                `${endpoints.JOBPOSTS}/${editJobDto.title}`,
+                `${endpoints.JOBPOSTS}`,
                 editJobDto
             );
 

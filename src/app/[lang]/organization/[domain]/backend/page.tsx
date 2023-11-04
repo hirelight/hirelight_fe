@@ -4,6 +4,11 @@ import Image from "next/image";
 import banner from "/public/images/interviewee_auth_bg.png";
 
 import { Metadata } from "next";
+import { cookies } from "next/headers";
+import jwtDecode from "jwt-decode";
+
+import endpoints from "@/utils/constants/service-endpoint";
+import { IJobDto } from "@/services/job/job.interface";
 
 import JobCard from "./components/JobCard";
 import HiringStageBar from "./components/HiringStageBar";
@@ -12,7 +17,40 @@ export const metadata: Metadata = {
     title: "Hirelight Backend",
 };
 
-const Backend = () => {
+const getJobList = async (): Promise<IJobDto[]> => {
+    const token = cookies().get("hirelight_access_token")!!.value;
+    const decoded: any = jwtDecode(token);
+    const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_API}${endpoints.JOBPOSTS}/search`,
+        {
+            method: "POST",
+            cache: "no-store",
+            headers: {
+                mode: "cors",
+                credentials: "same-origin",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                organizationId: decoded.organizationId,
+            }),
+        }
+    );
+
+    if (!res.ok) {
+        throw new Error("Failed to fetch data");
+    }
+
+    const jsonRes = await res.json();
+
+    if (jsonRes.statusCode >= 400) throw new Error(jsonRes.message);
+
+    return jsonRes.data;
+};
+
+const Backend = async () => {
+    const datas = await getJobList();
+
     return (
         <main className="relative">
             <div className="w-full max-h-[160px] overflow-hidden opacity-60">
@@ -24,13 +62,13 @@ const Backend = () => {
             </div>
             <div className="max-w-screen-xl mx-auto px-4">
                 <HiringStageBar />
-                <div>
-                    <JobCard
-                        title="Frontend Dev"
-                        isPublished={true}
-                        location="District 9, Ho Chi Minh city, Ho Chi Minh"
-                    />
-                </div>
+                <ul className="space-y-6">
+                    {datas.map(job => (
+                        <li key={job.id}>
+                            <JobCard data={job} />
+                        </li>
+                    ))}
+                </ul>
             </div>
         </main>
     );

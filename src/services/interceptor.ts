@@ -45,6 +45,7 @@ interceptor.interceptors.response.use(
     (error: AxiosError) => {
         if (error.response?.status === 401) {
             Cookies.remove("hirelight_access_token");
+            window.location.href = "/login";
         }
         if (error.response) {
             return error.response;

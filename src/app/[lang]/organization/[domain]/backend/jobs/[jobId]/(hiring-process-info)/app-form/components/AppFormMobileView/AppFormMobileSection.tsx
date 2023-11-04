@@ -3,10 +3,13 @@ import React from "react";
 
 import { CustomFileInput, CustomInput, CustomTextArea } from "@/components";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { IAppFormField } from "@/interfaces";
+import { IAppFormField, IAppFormSection } from "@/interfaces";
+import LoadingIndicator from "@/components/LoadingIndicator";
 
-const AppFormMobileSection = () => {
-    const appForm = useAppSelector(state => state.appForm.datas);
+type AppFormMobileSectionProps = {};
+
+const AppFormMobileSection: React.FC<AppFormMobileSectionProps> = ({}) => {
+    const appForms = useAppSelector(state => state.job.data.applicationForm);
 
     const inputFieldOnType = (field: IAppFormField) => {
         switch (field.type) {
@@ -46,13 +49,20 @@ const AppFormMobileSection = () => {
         }
     };
 
+    if (appForms.length === 0)
+        return (
+            <div className="px-4 pt-12 flex justify-center">
+                <LoadingIndicator />
+            </div>
+        );
+
     return (
         <div className="px-4">
             <h4 className="text-sm text-neutral-700 py-8">
                 <span className="text-red-500 mr-1">*</span>
                 Required fields
             </h4>
-            {appForm.map(section => {
+            {appForms.map(section => {
                 return (
                     <section key={section.name}>
                         <div className="flex items-center justify-between border-b border-gray-300 pb-2 mb-4">

@@ -29,8 +29,6 @@ export interface IAppFormField extends React.HTMLProps<HTMLInputElement> {
     maxFileSize?: number;
     singleOption?: boolean;
     options?: { name: string; value: string }[];
-    requireOptions?: EAppFormOption[];
-    selectedRequire?: EAppFormOption;
 }
 
 export interface ISetAppFormField {

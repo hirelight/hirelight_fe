@@ -13,7 +13,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setJob, setJobError } from "@/redux/slices/job.slice";
 import { delayFunc } from "@/helpers/shareHelpers";
-import { LocationAutocomplete, Selection } from "@/components";
+import { DatePicker, LocationAutocomplete, Selection } from "@/components";
 import { SpinLoading } from "@/icons";
 import {
     ICreateJobDto,
@@ -21,6 +21,7 @@ import {
     JobContentJson,
 } from "@/services/job/job.interface";
 import jobServices from "@/services/job/job.service";
+import { IAppFormSection } from "@/interfaces";
 
 import FormInput from "../../../components/FormInput";
 
@@ -47,7 +48,10 @@ const industries = [
 ];
 
 type EditJobDetailFormProps = {
-    data: Omit<IJobDto, "content"> & { content: JobContentJson };
+    data: Omit<IJobDto, "content" | "applicationForm"> & {
+        content: JobContentJson;
+        applicationForm: IAppFormSection[];
+    };
 };
 
 const EditJobDetailForm: React.FC<EditJobDetailFormProps> = ({ data }) => {
@@ -92,13 +96,12 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = ({ data }) => {
             return;
         }
 
-        setLoading(true);
-        await delayFunc(2000);
-        setLoading(false);
         try {
-            const res = await jobServices.createAsync({
+            const res = await jobServices.editAsync({
                 ...job,
+                id: data.id,
                 content: JSON.stringify(job.content),
+                applicationForm: JSON.stringify(job.applicationForm),
             });
             toast.success(res.message);
         } catch (error) {
@@ -472,6 +475,49 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = ({ data }) => {
                                             //         currency: value,
                                             //     },
                                             // })
+                                        }
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* ***********************Job Post Publishcation duration*********************************** */}
+                    <section className="relative">
+                        <h2 className={`${styles.form__section__title}`}>
+                            Job post available time range
+                        </h2>
+                        <div className={`${styles.form__section__wrapper}`}>
+                            <div className="grid grid-cols-2 gap-x-8">
+                                <div>
+                                    <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        Start time
+                                    </h3>
+                                    <DatePicker
+                                        value={new Date(job.startTime)}
+                                        onChange={date =>
+                                            dispatch(
+                                                setJob({
+                                                    ...job,
+                                                    startTime: date,
+                                                })
+                                            )
+                                        }
+                                    />
+                                </div>
+                                <div>
+                                    <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                        End time
+                                    </h3>
+                                    <DatePicker
+                                        value={new Date(job.endTime)}
+                                        onChange={date =>
+                                            dispatch(
+                                                setJob({
+                                                    ...job,
+                                                    endTime: date,
+                                                })
+                                            )
                                         }
                                     />
                                 </div>

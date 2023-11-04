@@ -3,10 +3,14 @@ import { TrashIcon } from "@heroicons/react/24/solid";
 
 import { useAppSelector } from "@/redux/reduxHooks";
 import { CustomFileInput, CustomInput, CustomTextArea } from "@/components";
-import { IAppFormField } from "@/interfaces";
+import { IAppFormField, IAppFormSection } from "@/interfaces";
 
-const AppFormDesktopSection = () => {
-    const appForm = useAppSelector(state => state.appForm.datas);
+type AppFormDesktopSectionProps = {};
+
+const AppFormDesktopSection: React.FC<AppFormDesktopSectionProps> = ({}) => {
+    const appFormSections = useAppSelector(
+        state => state.job.data.applicationForm
+    );
 
     const inputFieldOnType = (field: IAppFormField) => {
         switch (field.type) {
@@ -52,7 +56,7 @@ const AppFormDesktopSection = () => {
                 <span className="text-red-500 mr-1">*</span>
                 Required fields
             </h4>
-            {appForm.map(section => {
+            {appFormSections.map(section => {
                 return (
                     <section key={section.name}>
                         <div className="flex items-center justify-between border-b border-gray-300 pb-2 mb-8">
@@ -63,7 +67,7 @@ const AppFormDesktopSection = () => {
                             </div>
                         </div>
                         {section.fields
-                            .filter(field => field.required)
+                            .filter(field => field.required !== undefined)
                             .map(field => {
                                 if (field.label === "Name")
                                     return (

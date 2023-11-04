@@ -2,9 +2,10 @@
 
 import React from "react";
 
-import { useAppDispatch } from "@/redux/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setField } from "@/redux/slices/app-form.slice";
 import { IAppFormField } from "@/interfaces";
+import { setAppForm } from "@/redux/slices/job.slice";
 
 import styles from "./AppFormSectionField.module.scss";
 
@@ -21,25 +22,33 @@ const AppFormSectionField: React.FC<AppFormSectionFieldProps> = ({
         "Mandatory" | "Optional" | "Off"
     >(data.required ? "Mandatory" : "Optional");
     const dispatch = useAppDispatch();
+    const appForms = useAppSelector(state => state.job.data.applicationForm);
 
     const handleSelectType = (option: "Mandatory" | "Optional" | "Off") => {
         setSelected(option);
-        setTimeout(() => {
-            dispatch(
-                setField({
-                    sectionName: sectionName,
-                    field: {
-                        ...data,
-                        required:
-                            option === "Off"
-                                ? undefined
-                                : option === "Mandatory"
-                                ? true
-                                : false,
-                    },
-                })
-            );
-        }, 500);
+        const newAppForm = appForms.map(section => {
+            if (section.name === sectionName) {
+                return {
+                    ...section,
+                    fields: section.fields.map(field => {
+                        if (field.label === data.label)
+                            return {
+                                ...field,
+                                required:
+                                    option === "Off"
+                                        ? undefined
+                                        : option === "Mandatory"
+                                        ? true
+                                        : false,
+                            };
+                        return field;
+                    }),
+                };
+            }
+
+            return section;
+        });
+        dispatch(setAppForm(newAppForm));
     };
 
     return (

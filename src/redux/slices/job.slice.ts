@@ -6,11 +6,15 @@ import {
     IJobDto,
     JobContentJson,
 } from "@/services/job/job.interface";
+import { IAppFormSection } from "@/interfaces";
 
-import { createNewJobPost } from "../thunks/job.thunk";
+import { createNewJobPost, getJobById } from "../thunks/job.thunk";
 
 export interface IJobSliceInitialState {
-    data: Omit<ICreateJobDto, "content"> & { content: JobContentJson };
+    data: Omit<IJobDto, "content" | "applicationForm"> & {
+        content: JobContentJson;
+        applicationForm: IAppFormSection[];
+    };
     loading: boolean;
     error: {
         status: boolean;
@@ -20,13 +24,17 @@ export interface IJobSliceInitialState {
 
 const initialState: IJobSliceInitialState = {
     data: {
+        id: 0,
+        creatorId: 0,
+        assessmentFlowId: 0,
+        organizationId: 0,
         title: "",
         content: {
             description: "",
             requirements: "",
             benefits: "",
         },
-        applicationForm: "",
+        applicationForm: [],
         minSalary: 0,
         maxSalary: 0,
         currency: "",
@@ -35,6 +43,11 @@ const initialState: IJobSliceInitialState = {
         area: "",
         experience: "",
         workModality: "",
+        employmentType: "",
+        keywords: "",
+        createdTime: new Date(),
+        updatedTime: new Date(),
+        status: "",
     },
     error: {
         status: false,
@@ -55,7 +68,7 @@ const jobSlice = createSlice({
     name: "job",
     initialState,
     reducers: {
-        setJob: (state, action: PayloadAction<typeof initialState.data>) => {
+        setJob: (state, action) => {
             state.data = action.payload;
         },
         deleteJob: (state, action) => {},
@@ -76,6 +89,32 @@ const jobSlice = createSlice({
                 },
             };
         },
+
+        setAppForm: (state, action) => {
+            state.data.applicationForm = action.payload;
+        },
+
+        addAppFormField: (state, action) => {
+            console.log(action.payload);
+            state.data.applicationForm = state.data.applicationForm.map(
+                section => {
+                    if (section.name === action.payload.sectionName) {
+                        return {
+                            ...section,
+                            fields: section.fields.concat([
+                                action.payload.field,
+                            ]),
+                        };
+                    }
+
+                    return section;
+                }
+            );
+        },
+
+        resetJobSliceState: state => {
+            return initialState;
+        },
     },
 
     extraReducers: builder => {
@@ -85,8 +124,32 @@ const jobSlice = createSlice({
                 console.log(action.payload);
             })
             .addCase(createNewJobPost.rejected, (state, action) => {});
+
+        builder
+            .addCase(getJobById.pending, state => {
+                state.loading = true;
+            })
+            .addCase(getJobById.fulfilled, (state, action) => {
+                console.log(action.payload);
+                state.data = {
+                    ...action.payload,
+                    content: JSON.parse(action.payload.content),
+                    applicationForm: JSON.parse(action.payload.applicationForm),
+                };
+                state.loading = false;
+            })
+            .addCase(getJobById.rejected, state => {
+                state.loading = false;
+            });
     },
 });
 
-export const { setJob, resetJobError, setJobError } = jobSlice.actions;
+export const {
+    setJob,
+    resetJobError,
+    setJobError,
+    resetJobSliceState,
+    setAppForm,
+    addAppFormField,
+} = jobSlice.actions;
 export default jobSlice.reducer;

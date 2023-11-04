@@ -50,7 +50,7 @@ export interface IJobDetailError {
 }
 
 export interface IEditJobDto {
-    jobPostId: number;
+    id: number;
     title: string;
     content: string;
     applicationForm: string;

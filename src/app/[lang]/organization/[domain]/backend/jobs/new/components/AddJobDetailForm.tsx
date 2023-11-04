@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
@@ -8,10 +8,15 @@ import { toast } from "react-toastify";
 import {
     currencyList,
     experienceLevels,
+    intialAppForm,
     workModalities,
 } from "@/utils/shared/initialDatas";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
-import { setJob, setJobError } from "@/redux/slices/job.slice";
+import {
+    resetJobSliceState,
+    setJob,
+    setJobError,
+} from "@/redux/slices/job.slice";
 import { delayFunc } from "@/helpers/shareHelpers";
 import { DatePicker, LocationAutocomplete, Selection } from "@/components";
 import { SpinLoading } from "@/icons";
@@ -44,9 +49,8 @@ const industries = [
 type AddJobDetailFormProps = {};
 
 const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
-    const pathname = usePathname();
     const router = useRouter();
-    const params = useParams();
+    const { lang } = useParams();
 
     const [loading, setLoading] = React.useState(false);
 
@@ -90,18 +94,23 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
             return;
         }
 
-        console.log(job);
         try {
             const res = await jobServices.createAsync({
                 ...job,
                 content: JSON.stringify(job.content),
+                applicationForm: JSON.stringify(intialAppForm),
             });
             toast.success(res.message);
+            router.push(`/${lang}/backend/jobs/${res.data}/edit`);
         } catch (error) {
             console.error(error);
             toast.error("Create job failure");
         }
     };
+
+    useEffect(() => {
+        dispatch(resetJobSliceState());
+    }, [dispatch]);
 
     return (
         <>

@@ -3,10 +3,13 @@
 import React from "react";
 
 import { useAppSelector } from "@/redux/reduxHooks";
+import { IAppFormSection } from "@/interfaces";
 
 import AppFormDesktopSection from "./AppFormDesktopSection";
 
-const AppFormDesktopView = () => {
+type AppFormDesktopViewProps = {};
+
+const AppFormDesktopView: React.FC<AppFormDesktopViewProps> = ({}) => {
     return (
         <div className="w-full max-h-screen shadow-lg overflow-y-auto">
             <div className="bg-white flex flex-col gap-6 items-center py-16">
