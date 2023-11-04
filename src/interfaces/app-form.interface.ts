@@ -38,7 +38,7 @@ export interface ISetAppFormField {
 
 export interface IAddAppFormField {
     sectionName: string;
-    field: IAppFormField;
+    field: any;
 }
 
 export interface IAppFormSection {

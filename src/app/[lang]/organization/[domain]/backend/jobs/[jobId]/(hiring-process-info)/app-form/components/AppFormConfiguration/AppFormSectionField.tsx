@@ -3,7 +3,6 @@
 import React from "react";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
-import { setField } from "@/redux/slices/app-form.slice";
 import { IAppFormField } from "@/interfaces";
 import { setAppForm } from "@/redux/slices/job.slice";
 

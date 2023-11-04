@@ -6,7 +6,7 @@ import {
     IJobDto,
     JobContentJson,
 } from "@/services/job/job.interface";
-import { IAppFormSection } from "@/interfaces";
+import { IAddAppFormField, IAppFormSection } from "@/interfaces";
 
 import { createNewJobPost, getJobById } from "../thunks/job.thunk";
 
@@ -94,8 +94,7 @@ const jobSlice = createSlice({
             state.data.applicationForm = action.payload;
         },
 
-        addAppFormField: (state, action) => {
-            console.log(action.payload);
+        addAppFormField: (state, action: PayloadAction<IAddAppFormField>) => {
             state.data.applicationForm = state.data.applicationForm.map(
                 section => {
                     if (section.name === action.payload.sectionName) {

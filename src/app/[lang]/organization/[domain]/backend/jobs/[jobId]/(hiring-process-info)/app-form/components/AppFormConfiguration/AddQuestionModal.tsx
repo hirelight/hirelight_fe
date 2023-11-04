@@ -10,7 +10,6 @@ import {
     Selection,
 } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
-import { addField } from "@/redux/slices/app-form.slice";
 import { IAppFormField } from "@/interfaces";
 import { addAppFormField, setAppForm } from "@/redux/slices/job.slice";
 
