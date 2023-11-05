@@ -19,7 +19,13 @@ const AppFormSectionField: React.FC<AppFormSectionFieldProps> = ({
 }) => {
     const [selected, setSelected] = React.useState<
         "Mandatory" | "Optional" | "Off"
-    >(data.required ? "Mandatory" : "Optional");
+    >(
+        data.required === undefined
+            ? "Off"
+            : data.required
+            ? "Mandatory"
+            : "Optional"
+    );
     const dispatch = useAppDispatch();
     const appForms = useAppSelector(state => state.job.data.applicationForm);
 

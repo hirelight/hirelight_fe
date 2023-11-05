@@ -17,15 +17,9 @@ import { ThemeProvider } from "@/components";
 import ReduxProvider from "@/components/ReduxProvider/ReduxProvider";
 import InternationalizationProvider from "@/components/InternationalizationProvider";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
+import TopProgressBar from "@/components/TopProgressBar/TopProgressBar";
 
 import { Locale, i18n } from "../../i18n.config";
-
-const TopProgressBar = dynamic(
-    () => import("@/components/TopProgressBar/TopProgressBar"),
-    {
-        ssr: false,
-    }
-);
 
 const inter = Inter({
     subsets: ["latin"],
@@ -64,10 +58,10 @@ export default function RootLayout({
             <body
                 className={`${inter.className} ${roboto_mono.className} ${publicSans.className}`}
             >
+                <TopProgressBar />
                 <ReactQueryProvider>
                     <InternationalizationProvider lang={params.lang}>
                         <ThemeProvider theme={"light"}>
-                            <TopProgressBar />
                             <ReduxProvider>
                                 <ToastContainer
                                     position="top-center"
