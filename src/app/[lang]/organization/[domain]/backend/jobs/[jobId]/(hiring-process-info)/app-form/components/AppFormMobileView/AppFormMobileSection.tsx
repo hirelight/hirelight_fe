@@ -24,6 +24,17 @@ const AppFormMobileSection: React.FC<AppFormMobileSectionProps> = ({}) => {
                         />
                     </div>
                 );
+            case "paragraph":
+                return (
+                    <div key={field.label} className=" mb-6">
+                        <CustomTextArea
+                            key={field.label}
+                            title={field.label}
+                            type={field.type}
+                            required={field.required}
+                        />
+                    </div>
+                );
             case "file":
                 return (
                     <div key={field.label} className=" mb-6">

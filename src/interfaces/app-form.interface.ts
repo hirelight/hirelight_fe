@@ -32,6 +32,7 @@ export interface IAppFormField extends React.HTMLProps<HTMLInputElement> {
 }
 
 export interface IAppFormSection {
+    custom?: boolean;
     name: string;
     fields: IAppFormField[];
 }
