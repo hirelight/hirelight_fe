@@ -112,7 +112,6 @@ const HeaderBar = () => {
                     <Bell className="text-blue_primary_800 w-8 h-8" />
                     <div className="flex gap-4">
                         <LocaleSwitcher />
-                        <ThemeSwitcher />
                     </div>
                     <div
                         className="relative inline-block text-left"

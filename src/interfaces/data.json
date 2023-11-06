@@ -1,0 +1,32 @@
+{
+    "content": {
+        "candidate_profile": [
+            {
+                "custom": false,
+                "sectionName": "Cover letter",
+                "fields": [
+                    {
+                        "id": "cover_letter",
+                        "required": false,
+                        "label": "Cover letter",
+                        "type": "paragraph"
+                    }
+                ]
+            }
+        ],
+        "app_form": [
+            {
+                "name": "Personal information",
+                "fields": [
+                    {
+                        "id": "name",
+                        "required": true,
+                        "label": "Name",
+                        "type": "text",
+                        "maxLength": 127
+                    }
+                ]
+            }
+        ]
+    }
+}

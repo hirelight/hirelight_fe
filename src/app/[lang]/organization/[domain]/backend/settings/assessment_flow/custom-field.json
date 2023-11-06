@@ -3,76 +3,196 @@
         {
             "custom": false,
             "id": "personal_information",
-            "label": "Personal information",
+            "name": "Personal information",
             "fields": [
                 {
-                    "custom": false,
                     "id": "name",
-                    "label": "Name"
+                    "required": true,
+                    "label": "Name",
+                    "type": "text",
+                    "maxLength": 127
                 },
                 {
-                    "custom": false,
                     "id": "email",
-                    "label": "Email"
+                    "required": true,
+                    "label": "Email",
+                    "type": "email",
+                    "maxLength": 255
                 },
                 {
-                    "custom": false,
                     "id": "headline",
-                    "label": "Headline"
+                    "required": false,
+                    "label": "Headline",
+                    "type": "text",
+                    "maxLength": 255
                 },
                 {
-                    "custom": false,
                     "id": "phone",
-                    "label": "Phone"
+                    "required": false,
+                    "label": "Phone",
+                    "type": "phone",
+                    "helper": "The hiring team may use this number to contact you about this job.",
+                    "maxLength": 255
                 },
                 {
-                    "custom": false,
                     "id": "address",
-                    "label": "Address"
+                    "required": false,
+                    "label": "Address",
+                    "type": "text"
                 },
                 {
-                    "custom": false,
                     "id": "avatar",
-                    "label": "Photo"
+                    "required": false,
+                    "label": "Photo",
+                    "type": "file",
+                    "supportedFileTypes": [".jpg", ".jpeg", ".gif", ".png"],
+                    "supportedMimeTypes": [
+                        "image/jpeg",
+                        "image/gif",
+                        "image/png"
+                    ],
+                    "maxFileSize": 12000000
                 }
             ]
         },
         {
             "custom": false,
-            "id": "candidate_profile",
-            "label": "Profile",
+            "id": "profile",
+            "name": "Profile",
             "fields": [
                 {
-                    "custom": false,
                     "id": "education",
-                    "label": "Education"
+                    "required": false,
+                    "label": "Education",
+                    "type": "group",
+                    "fields": [
+                        {
+                            "id": "school",
+                            "required": true,
+                            "label": "School",
+                            "type": "text",
+                            "maxLength": 255
+                        },
+                        {
+                            "id": "field_of_study",
+                            "required": false,
+                            "label": "Field of study",
+                            "type": "text",
+                            "maxLength": 255
+                        },
+                        {
+                            "id": "degree",
+                            "required": false,
+                            "label": "Degree",
+                            "type": "text",
+                            "maxLength": 255
+                        },
+                        {
+                            "id": "start_date",
+                            "required": false,
+                            "label": "Start date",
+                            "type": "date"
+                        },
+                        {
+                            "id": "end_date",
+                            "required": false,
+                            "label": "End date",
+                            "type": "date"
+                        }
+                    ]
                 },
                 {
-                    "custom": false,
                     "id": "experience",
-                    "label": "Experience"
+                    "required": false,
+                    "label": "Experience",
+                    "type": "group",
+                    "fields": [
+                        {
+                            "id": "title",
+                            "required": true,
+                            "label": "Title",
+                            "type": "text",
+                            "maxLength": 255
+                        },
+                        {
+                            "id": "company",
+                            "required": false,
+                            "label": "Company",
+                            "type": "text",
+                            "maxLength": 255
+                        },
+                        {
+                            "id": "industry",
+                            "required": false,
+                            "label": "Industry",
+                            "type": "text",
+                            "maxLength": 255
+                        },
+                        {
+                            "id": "summary",
+                            "required": false,
+                            "label": "Summary",
+                            "type": "paragraph"
+                        },
+                        {
+                            "id": "start_date",
+                            "required": false,
+                            "label": "Start date",
+                            "type": "date"
+                        },
+                        {
+                            "id": "end_date",
+                            "required": false,
+                            "label": "End date",
+                            "type": "date"
+                        },
+                        {
+                            "id": "current",
+                            "required": false,
+                            "label": "I currently work here",
+                            "type": "boolean"
+                        }
+                    ]
                 },
                 {
-                    "custom": false,
                     "id": "summary",
-                    "label": "Summary"
+                    "required": false,
+                    "label": "Summary",
+                    "type": "paragraph"
                 },
                 {
-                    "custom": false,
                     "id": "resume",
-                    "label": "Resume"
+                    "required": false,
+                    "label": "Resume",
+                    "type": "file",
+                    "supportedFileTypes": [
+                        ".pdf",
+                        ".doc",
+                        ".docx",
+                        ".odt",
+                        ".rtf"
+                    ],
+                    "supportedMimeTypes": [
+                        "application/pdf",
+                        "application/msword",
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        "application/vnd.oasis.opendocument.text",
+                        "application/rtf"
+                    ],
+                    "maxFileSize": 12000000
                 }
             ]
         },
         {
             "custom": false,
-            "id": "application_details",
-            "label": "Details",
+            "id": "details",
+            "name": "Details",
             "fields": [
                 {
-                    "custom": false,
                     "id": "cover_letter",
-                    "label": "Cover letter"
+                    "required": false,
+                    "label": "Cover letter",
+                    "type": "paragraph"
                 }
             ]
         }
@@ -221,6 +341,5 @@
                 }
             ]
         }
-    ],
-    "version": 0
+    ]
 }

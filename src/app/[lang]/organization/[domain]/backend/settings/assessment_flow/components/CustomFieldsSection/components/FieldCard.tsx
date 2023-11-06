@@ -12,13 +12,14 @@ import dynamic from "next/dynamic";
 import React, { useState } from "react";
 
 import { DragIndicatorIcon } from "@/icons";
+import { IAppFormTemplateField } from "@/interfaces/app-form-template.interface";
 
 import styles from "./FieldCard.module.scss";
 
 const EditField = dynamic(() => import("./EditField"));
 
 type FieldCardProps = {
-    data: any;
+    data: IAppFormTemplateField;
 };
 
 const FieldCard: React.FC<FieldCardProps> = ({ data }) => {
@@ -64,33 +65,35 @@ const FieldCard: React.FC<FieldCardProps> = ({ data }) => {
                                 <div className="flex-1 flex flex-col gap-2 text-neutral-700 text-sm">
                                     <span>{data.label}</span>
                                 </div>
-                                <div className="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <button
-                                        type="button"
-                                        tabIndex={-1}
-                                        className="text-sm text-blue_primary_700 font-semibold hover:text-blue_primary_800 hover:underline"
-                                        onClick={() => {}}
-                                    >
-                                        Move
-                                    </button>
-                                    <button
-                                        type="button"
-                                        tabIndex={-1}
-                                        className="text-sm text-blue_primary_700 font-semibold hover:text-blue_primary_800 hover:underline"
-                                        onClick={() => setIsEditing(true)}
-                                    >
-                                        Edit
-                                    </button>
+                                {data.custom && (
+                                    <div className="flex gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        <button
+                                            type="button"
+                                            tabIndex={-1}
+                                            className="text-sm text-blue_primary_700 font-semibold hover:text-blue_primary_800 hover:underline"
+                                            onClick={() => {}}
+                                        >
+                                            Move
+                                        </button>
+                                        <button
+                                            type="button"
+                                            tabIndex={-1}
+                                            className="text-sm text-blue_primary_700 font-semibold hover:text-blue_primary_800 hover:underline"
+                                            onClick={() => setIsEditing(true)}
+                                        >
+                                            Edit
+                                        </button>
 
-                                    <button
-                                        type="button"
-                                        tabIndex={-1}
-                                        className="text-sm text-red-600 font-semibold hover:text-red-700 hover:underline"
-                                        onClick={() => {}}
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
+                                        <button
+                                            type="button"
+                                            tabIndex={-1}
+                                            className="text-sm text-red-600 font-semibold hover:text-red-700 hover:underline"
+                                            onClick={() => {}}
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </m.div>
                     )}

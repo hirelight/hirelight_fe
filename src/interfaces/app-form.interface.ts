@@ -31,6 +31,11 @@ export interface IAppFormField extends React.HTMLProps<HTMLInputElement> {
     options?: { name: string; value: string }[];
 }
 
+export interface IAppFormSection {
+    name: string;
+    fields: IAppFormField[];
+}
+
 export interface ISetAppFormField {
     sectionName: string;
     field: IAppFormField;
@@ -39,9 +44,4 @@ export interface ISetAppFormField {
 export interface IAddAppFormField {
     sectionName: string;
     field: any;
-}
-
-export interface IAppFormSection {
-    name: string;
-    fields: IAppFormField[];
 }

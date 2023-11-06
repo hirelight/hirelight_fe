@@ -4,12 +4,8 @@ import React from "react";
 
 import { PdfViewer } from "@/components";
 
-import { profileDatas } from "./data";
+import { profileDatas, profileLayout, candidateSection } from "./data";
 import styles from "./styles.module.scss";
-import WorkExperienceSection from "./components/WorkExperienceSection";
-import EducationSection from "./components/EducationSection";
-import CoverLetterSection from "./components/CoverLetterSection";
-import ContactSection from "./components/ContactSection";
 
 const ProfileSection = () => {
     const [profileTab, setProfileTab] = React.useState(0);
@@ -17,7 +13,10 @@ const ProfileSection = () => {
     return (
         <div className="">
             {profileDatas.questions.length > 0 && (
-                <div role="tablist" className="w-full border-b border-gray-300">
+                <div
+                    role="tablist"
+                    className="w-full border-b border-gray-300 mb-6"
+                >
                     <button
                         type="button"
                         role="tab"
@@ -40,53 +39,55 @@ const ProfileSection = () => {
                     </button>
                 </div>
             )}
-            {profileTab === 0 && (
-                <div>
-                    <div className="py-6 border-b border-gray-300">
-                        <CoverLetterSection
-                            content={profileDatas.cover_letter}
-                        />
-                    </div>
 
-                    <div className="py-6 border-b border-gray-300">
-                        <div className="mb-6">
-                            <strong className="text-sm text-neutral-600 uppercase">
-                                Summary
-                            </strong>
-                        </div>
-                        <div>
-                            <p className="text-sm text-neutral-500">
-                                {profileDatas.summary}
-                            </p>
-                        </div>
+            {candidateSection.map((section, index) => {
+                return (
+                    <div key={index}>
+                        <strong className="text-sm text-neutral-600 uppercase mb-4">
+                            {section.name.replace("_", " ")}
+                        </strong>
+                        {section.subsections.map((field, index) => {
+                            let label = "";
+                            let value: string = "";
+                            // if (field.custom) {
+                            //     const isExist =
+                            //         profileDatas.custom_attributes.find(
+                            //             customField =>
+                            //                 customField.id === field.ref_id
+                            //         );
+                            //     if (isExist) {
+                            //         label = isExist.label;
+                            //         value =
+                            //             typeof isExist.value === "string"
+                            //                 ? isExist.value
+                            //                 : "Not a string";
+                            //     } else {
+                            //         return null;
+                            //     }
+                            // } else {
+                            //     label = field.title;
+                            //     value =
+                            //         typeof profileDatas[field.name] === "string"
+                            //             ? profileDatas[field.name]
+                            //             : null;
+                            // }
+
+                            return (
+                                <div key={index} className="mb-4 text-sm">
+                                    <div className="flex flex-col lg:flex-row">
+                                        <div className="lg:basis-40 mr-6 text-neutral-500 flex gap-2">
+                                            <span>{label}</span>
+                                        </div>
+                                        <div className="w-full flex flex-col gap-2 items-start text-neutral-600">
+                                            <span>{value}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
-                    <div className="py-6 border-b border-gray-300">
-                        <WorkExperienceSection
-                            datas={profileDatas.experience}
-                        />
-                    </div>
-                    <div className="py-6 border-b border-gray-300">
-                        <EducationSection datas={profileDatas.education} />
-                    </div>
-                    <div className="py-6 border-b border-gray-300">
-                        <div className="mb-6">
-                            <strong className="text-sm text-neutral-600 uppercase">
-                                Resume
-                            </strong>
-                        </div>
-                        <div>
-                            <PdfViewer />
-                        </div>
-                    </div>
-                    <div className="py-6">
-                        <ContactSection
-                            email={profileDatas.email}
-                            phone={profileDatas.phone}
-                            address={profileDatas.address}
-                        />
-                    </div>
-                </div>
-            )}
+                );
+            })}
         </div>
     );
 };

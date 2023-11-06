@@ -1,38 +1,71 @@
 export const profileDatas = {
-    account_id: 623684,
-    applicant_id: 78629103,
-    first_name: "Vu",
-    last_name: "Duong",
+    custom_attributes: [
+        {
+            id: 24562,
+            type: "boolean",
+            label: "asdasd",
+            value: true,
+            custom: true,
+        },
+        {
+            id: 24565,
+            type: "free_text",
+            label: "Custom field",
+            custom: true,
+        },
+        {
+            id: 24566,
+            type: "boolean",
+            label: "Test position",
+            custom: true,
+        },
+        {
+            id: "resume",
+            label: "Resume",
+            type: "file",
+            custom: false,
+            value: {
+                pdf_url:
+                    "https://workablehr.s3.amazonaws.com/uploads/627054/3544895/301258603/download/Kien%20Nguyen.pdf?X-Amz-Expires=60000&X-Amz-Date=20231105T155324Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIR2MIE33PRKXR4CA%2F20231105%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=c29e063e73c12aa94c4012fad56b0b5a5053ccd4bf878c6c33deaeb00dd28ad4",
+                filename: "Kien Nguyen.pdf",
+                download_url: "/backend/candidates/301258603/download",
+            },
+        },
+    ],
+    account_id: 627054,
+    applicant_id: 78418586,
+    first_name: "Nguyn",
+    last_name: "Kin",
     anonymized: false,
-    name: "Vu Duong",
-    email: "kienfplms.fe@gmail.com",
+    name: "Nguyn Kin",
+    email: "idchina3080@gmail.com",
     phone: "+84818000299",
     avatars: {
         cropped:
-            "https://dvz3vrza543jw.cloudfront.net/uploads/623684/3474813/293752069/image/cropped_Version%3DOrginal.png",
+            "https://dvz3vrza543jw.cloudfront.net/uploads/627054/3544895/301258603/image/cropped_Logo%20new%20gold%40500x.png",
         extra_large:
-            "https://dvz3vrza543jw.cloudfront.net/uploads/623684/3474813/293752069/image/extra_large_Version%3DOrginal.png",
-        large: "https://dvz3vrza543jw.cloudfront.net/uploads/623684/3474813/293752069/image/large_Version%3DOrginal.png",
-        medium: "https://dvz3vrza543jw.cloudfront.net/uploads/623684/3474813/293752069/image/medium_Version%3DOrginal.png",
-        small: "https://dvz3vrza543jw.cloudfront.net/uploads/623684/3474813/293752069/image/small_Version%3DOrginal.png",
-        mini: "https://dvz3vrza543jw.cloudfront.net/uploads/623684/3474813/293752069/image/mini_Version%3DOrginal.png",
-        tiny: "https://dvz3vrza543jw.cloudfront.net/uploads/623684/3474813/293752069/image/tiny_Version%3DOrginal.png",
+            "https://dvz3vrza543jw.cloudfront.net/uploads/627054/3544895/301258603/image/extra_large_Logo%20new%20gold%40500x.png",
+        large: "https://dvz3vrza543jw.cloudfront.net/uploads/627054/3544895/301258603/image/large_Logo%20new%20gold%40500x.png",
+        medium: "https://dvz3vrza543jw.cloudfront.net/uploads/627054/3544895/301258603/image/medium_Logo%20new%20gold%40500x.png",
+        small: "https://dvz3vrza543jw.cloudfront.net/uploads/627054/3544895/301258603/image/small_Logo%20new%20gold%40500x.png",
+        mini: "https://dvz3vrza543jw.cloudfront.net/uploads/627054/3544895/301258603/image/mini_Logo%20new%20gold%40500x.png",
+        tiny: "https://dvz3vrza543jw.cloudfront.net/uploads/627054/3544895/301258603/image/tiny_Logo%20new%20gold%40500x.png",
     },
-    job_id: 3474813,
-    // talent_pool_id: null,
-    stage_id: 4123815,
+    job_id: 3544895,
+    talent_pool_id: null,
+    stage_id: 4154946,
     recruiter_id: null,
-    headline: "This is my headlines",
-    created_at: "2023-10-08T08:48:09Z",
+    headline: "Intern at FPT Software",
+    created_at: "2023-11-05T14:23:24Z",
     common_source: "Careers page",
     common_source_category: "Company marketing",
     disqualified: false,
-    experience_effective_start_date: "2022-08-01",
-    total_days_of_experience: 433,
-    // tags: [],
-    // sample: false,
-    // snoozed: false,
-    // snoozed_until: null,
+    experience_effective_start_date: null,
+    total_days_of_experience: 90,
+    tags: [],
+    sample: false,
+    snoozed: false,
+    snoozed_until: null,
     location: {
         northeast: "10.8143385302915,106.7863014302915",
         northwest: "10.8143385302915,106.7836034697085",
@@ -47,137 +80,194 @@ export const profileDatas = {
     },
     education: [
         {
-            id: 402346316,
+            id: 415161221,
             degree: "Banchelor",
-            field_of_study: "SE",
-            school: "Hcm Uni",
-            start_date: "2020-09-01",
-            end_date: "2023-09-01",
-            source: "workable",
-        },
-        {
-            id: 402346317,
-            degree: "Diploma",
-            field_of_study: "Software Engineer",
-            school: "Fpt Uni",
-            start_date: "2011-08-01",
-            end_date: "2014-08-01",
+            field_of_study: "Software",
+            school: "FPT Uni",
+            start_date: "2023-05-01",
+            end_date: "2023-06-30",
             source: "workable",
         },
     ],
     experience: [
         {
-            id: 982192373,
-            title: "Senior Develoepr",
-            summary: "Some other Summary",
-            company: "Fpt Soft",
+            id: 1014310583,
+            title: "Intern",
+            summary: "asdasdasdasd",
+            company: "FPT Software",
             industry: "Software",
-            start_date: "2022-09-01",
-            end_date: null,
-            current: true,
-            source: "workable",
-        },
-        {
-            id: 982192374,
-            title: "Trainee",
-            summary: "Some sumary",
-            company: "FpT company",
-            industry: "Software",
-            start_date: "2021-08-01",
-            end_date: "2021-09-01",
+            start_date: "2023-09-01",
+            end_date: "2023-11-30",
             current: false,
             source: "workable",
         },
     ],
     skills: [],
-    summary: "Some of my summary optional",
-    // _score: null,
+    summary: "asdasdasda",
+    _score: null,
     activity_groups: [],
     has_avatar: true,
     has_pending_evaluation: false,
-    // latest_offer: null,
+    latest_offer: null,
     linkedin: {
         linkedin_job_application_id: null,
-        spi_applicant_id: "4afcdc1",
+        spi_applicant_id: "4ac976c",
     },
     rating: null,
     resume: {
         pdf_url:
-            "https://workablehr.s3.amazonaws.com/uploads/623684/3474813/293752069/download/Kien%20Nguyen.pdf?X-Amz-Expires=60000&X-Amz-Date=20231008T125416Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIR2MIE33PRKXR4CA%2F20231008%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=72c15fcd968a404d20bd6e34722d1bb118f5bb6880bce5bf6e18e3e30bc80fc8",
+            "https://workablehr.s3.amazonaws.com/uploads/627054/3544895/301258603/download/Kien%20Nguyen.pdf?X-Amz-Expires=60000&X-Amz-Date=20231105T155324Z&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIR2MIE33PRKXR4CA%2F20231105%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-SignedHeaders=host&X-Amz-Signature=c29e063e73c12aa94c4012fad56b0b5a5053ccd4bf878c6c33deaeb00dd28ad4",
         filename: "Kien Nguyen.pdf",
-        download_url: "/backend/candidates/293752069/download",
+        download_url: "/backend/candidates/301258603/download",
     },
     sibling_count: 0,
     unread: false,
+    is_obfuscated: false,
     texting_consent: "granted",
     has_files: false,
     questions: [
         {
-            id: 7047592,
+            id: 7197549,
             type: "free_text",
-            body: "Test paragraph question",
+            body: "Test paragraph?",
             answer: {
-                id: 612451577,
+                id: 630546105,
                 source: null,
-                body: "some of answer for paragraph",
+                body: "qweqwe",
             },
         },
         {
-            id: 7047593,
+            id: 7197550,
             type: "short_text",
-            body: "Test short question",
+            body: "Test short answer",
             answer: {
-                id: 612451578,
+                id: 630546106,
                 source: null,
-                body: "some of answer for short question",
+                body: "zxczxczxc",
             },
         },
         {
-            id: 7047594,
+            id: 7197551,
             type: "boolean",
-            body: "Are you Vietnamese?",
+            body: "Test yes/no with disqualify on asnwer no",
             answer: {
-                id: 612451579,
+                id: 630546107,
                 source: null,
                 checked: true,
             },
         },
         {
-            id: 7047595,
+            id: 7197552,
+            type: "dropdown",
+            body: "Test dropdown answer",
+            single_answer: true,
+            choices: [
+                {
+                    id: 3547804,
+                    body: "anser1",
+                },
+                {
+                    id: 3547805,
+                    body: "answer 2",
+                },
+                {
+                    id: 3547806,
+                    body: "answer 3",
+                },
+            ],
+            answer: {
+                id: 630546108,
+                source: null,
+                selected: 3547806,
+            },
+        },
+        {
+            id: 7197553,
+            type: "multiple_choice",
+            body: "Test MC question(only one answer allowed)",
+            single_answer: true,
+            choices: [
+                {
+                    id: 3547807,
+                    body: "choice 1",
+                },
+                {
+                    id: 3547808,
+                    body: "choice 2",
+                },
+                {
+                    id: 3547809,
+                    body: "choice 3",
+                },
+            ],
+            answer: {
+                id: 630546109,
+                source: null,
+                selected: [3547808],
+            },
+        },
+        {
+            id: 7197554,
+            type: "multiple_choice",
+            body: "Test MC question",
+            single_answer: false,
+            choices: [
+                {
+                    id: 3547810,
+                    body: "choice 1",
+                },
+                {
+                    id: 3547811,
+                    body: "choice 2",
+                },
+                {
+                    id: 3547812,
+                    body: "choice 3",
+                },
+            ],
+            answer: {
+                id: 630546110,
+                source: null,
+                selected: [3547810, 3547811],
+            },
+        },
+        {
+            id: 7197555,
             type: "date",
-            body: "Which date you can work immediately?",
+            body: "Test Date",
             answer: {
-                id: 612451580,
+                id: 630546111,
                 source: null,
-                body: "2023-10-19",
+                body: "2023-11-17",
             },
         },
         {
-            id: 7047596,
+            id: 7197556,
             type: "numeric",
-            body: "Test number quest?",
+            body: "Test number",
             answer: {
-                id: 612451581,
+                id: 630546112,
                 source: null,
-                body: 123948123,
+                body: 21312451231,
             },
         },
         {
-            id: 7047597,
+            id: 7197557,
             type: "file",
-            body: "Up more file?",
+            body: "Test file",
             answer: {
-                id: 612451582,
+                id: 630546113,
                 source: null,
                 attachment: {
-                    id: 56794465,
-                    filename: "Kien Nguyen.pdf",
-                    filesize: 446459,
-                    url: "/backend/attachments/56794465/download",
+                    id: 57992119,
+                    filename: "UsecaseDiagram-Candidate.drawio.png",
+                    filesize: 367708,
+                    url: "/backend/attachments/57992119/download",
                 },
             },
         },
     ],
+
     social_profiles: [
         {
             type: "facebook",
@@ -192,12 +282,12 @@ export const profileDatas = {
             sources: ["palantir"],
         },
     ],
-    // alternate_emails: [],
-    // alternate_phones: [],
-    cover_letter: "This my first cover letter",
-    // keywords: [],
-    // follower_ids: [],
-    // metadata: {},
+    alternate_emails: [],
+    alternate_phones: [],
+    cover_letter: "asdassssssssss",
+    keywords: [],
+    follower_ids: [],
+    metadata: {},
     avatars_source: {
         type: "candidate",
         icon: null,
@@ -231,7 +321,7 @@ export const profileDatas = {
         "candidate:evaluate": {
             resolution: "ok",
             meta: {
-                stage_ids: [4123815, 4123814],
+                stage_ids: [4154946, 4154945],
             },
         },
         "candidate:export_to_hris": {
@@ -332,13 +422,353 @@ export const profileDatas = {
         },
     },
     address: "Block B Flora Fuji duong D1, Phuoc Long B, q9",
-    // personality_questions: null,
-    // latest_background_check: null,
-    // requisition: null,
-    // pending_evaluations: [],
-    // available_background_check_providers: [],
-    // available_reference_check_providers: [],
-    // timeline_visibility_restricted: false,
-    // has_sent_e_signature_request: false,
-    // has_pending_offer: false,
+    personality_questions: null,
+    latest_background_check: null,
+    requisition: null,
+    pending_evaluations: [],
+    available_background_check_providers: [],
+    available_reference_check_providers: [],
+    timeline_visibility_restricted: false,
+    has_sent_e_signature_request: false,
+    has_pending_offer: false,
 };
+
+export const profileLayout = [
+    {
+        custom: false,
+        id: "cover_letter",
+        label: "Cover letter",
+        fields: [
+            {
+                custom: false,
+                id: "cover_letter",
+                label: "Cover letter",
+                type: "",
+            },
+            {
+                custom: true,
+                id: 24561,
+                label: "asdasda????????",
+                enabled_in_job: false,
+                type: "",
+            },
+            {
+                custom: true,
+                id: 24562,
+                label: "asdasd",
+                type: "",
+            },
+        ],
+    },
+    {
+        custom: false,
+        id: "resume",
+        label: "Resume",
+        fields: [
+            {
+                custom: false,
+                id: "resume",
+                label: "Resume",
+            },
+        ],
+    },
+    {
+        custom: false,
+        id: "summary",
+        label: "Summary",
+        fields: [
+            {
+                custom: false,
+                id: "summary",
+                label: "Summary",
+            },
+        ],
+    },
+    {
+        custom: false,
+        id: "experiences",
+        label: "Work experience",
+        fields: [
+            {
+                custom: false,
+                id: "experiences",
+                label: "Work experience",
+            },
+        ],
+    },
+    {
+        custom: false,
+        id: "educations",
+        label: "Education",
+        fields: [
+            {
+                custom: false,
+                id: "educations",
+                label: "Education",
+            },
+        ],
+    },
+    {
+        custom: false,
+        id: "skills",
+        label: "Skills",
+        fields: [
+            {
+                custom: false,
+                id: "skills",
+                label: "Skills",
+            },
+        ],
+    },
+    {
+        custom: false,
+        id: "keywords",
+        label: "Keyword matches",
+        fields: [
+            {
+                custom: false,
+                id: "keywords",
+                label: "Keyword matches",
+            },
+        ],
+    },
+    {
+        custom: false,
+        id: "contact_details",
+        label: "Contact details",
+        fields: [
+            {
+                custom: false,
+                id: "address",
+                label: "Address",
+            },
+            {
+                custom: false,
+                id: "phone",
+                label: "Phone",
+            },
+            {
+                custom: false,
+                id: "email",
+                label: "Email",
+            },
+        ],
+    },
+    {
+        custom: false,
+        id: "privacy_settings",
+        label: "Contact preferences",
+        fields: [
+            {
+                custom: false,
+                id: "texting_consent",
+                label: "Texting consent",
+            },
+        ],
+    },
+    {
+        custom: false,
+        id: "linkedin_profile_url",
+        label: "Linkedin Profile",
+        fields: [
+            {
+                custom: false,
+                id: "linkedin_profile_url",
+                label: "Linkedin Profile",
+            },
+        ],
+        hidden: true,
+    },
+    {
+        custom: false,
+        id: "social_profiles",
+        label: "Social profiles",
+        fields: [
+            {
+                custom: false,
+                id: "social_profiles",
+                label: "Social profiles",
+            },
+        ],
+    },
+    {
+        custom: true,
+        label: "Custom Section",
+        fields: [
+            {
+                custom: true,
+                ref_id: 24565,
+            },
+            {
+                custom: true,
+                ref_id: 24566,
+            },
+        ],
+    },
+];
+
+export const candidateSection = [
+    {
+        name: "ai_recruiter",
+        subsections: [
+            {
+                name: "evaluation_labels",
+                title: "Evaluation Labels",
+            },
+        ],
+        title: "Ai Recruiter",
+    },
+    {
+        name: "cover_letter",
+        subsections: [
+            {
+                name: "cover_letter",
+                title: "Cover Letter",
+            },
+            {
+                name: "asdasda????????",
+                custom: true,
+                ref_id: 24561,
+                title: "asdasda????????",
+                enabled_in_job: false,
+            },
+            {
+                name: "asdasd",
+                custom: true,
+                ref_id: 24562,
+                title: "asdasd",
+                enabled_in_job: true,
+            },
+        ],
+        title: "Cover Letter",
+    },
+    {
+        name: "resume",
+        subsections: [
+            {
+                name: "resume",
+                title: "Resume",
+            },
+        ],
+        title: "Resume",
+    },
+    {
+        name: "summary",
+        subsections: [
+            {
+                name: "summary",
+                title: "Summary",
+            },
+        ],
+        title: "Summary",
+    },
+    {
+        name: "experiences",
+        subsections: [
+            {
+                name: "experiences",
+                title: "Work Experience",
+            },
+        ],
+        title: "Work Experience",
+    },
+    {
+        name: "educations",
+        subsections: [
+            {
+                name: "educations",
+                title: "Education",
+            },
+        ],
+        title: "Education",
+    },
+    {
+        name: "skills",
+        subsections: [
+            {
+                name: "skills",
+                title: "Skills",
+            },
+        ],
+        title: "Skills",
+    },
+    {
+        name: "keywords",
+        subsections: [
+            {
+                name: "keywords",
+                title: "Keyword Matches",
+            },
+        ],
+        title: "Keyword Matches",
+    },
+    {
+        name: "contact_details",
+        subsections: [
+            {
+                name: "address",
+                title: "address",
+            },
+            {
+                name: "phone",
+                title: "phone",
+            },
+            {
+                name: "email",
+                title: "email",
+            },
+        ],
+        title: "Contact Details",
+    },
+    {
+        name: "privacy_settings",
+        subsections: [
+            {
+                name: "texting_consent",
+                title: "Texting Consent",
+            },
+        ],
+        title: "Contact Preferences",
+    },
+    {
+        name: "linkedin_profile_url",
+        subsections: [
+            {
+                name: "linkedin_profile_url",
+                title: "Linkedin Profile",
+            },
+        ],
+        title: "Linkedin Profile",
+    },
+    {
+        name: "social_profiles",
+        subsections: [
+            {
+                name: "social_profiles",
+                title: "Social Profiles",
+            },
+        ],
+        title: "Social Profiles",
+    },
+    {
+        name: "Custom Section",
+        custom: true,
+        subsections: [
+            {
+                name: "Custom field",
+                custom: true,
+                ref_id: 24565,
+                title: "Custom field",
+                enabled_in_job: true,
+            },
+            {
+                name: "Test position",
+                custom: true,
+                ref_id: 24566,
+                title: "Test position",
+                enabled_in_job: true,
+            },
+        ],
+        title: "Custom Section",
+    },
+];

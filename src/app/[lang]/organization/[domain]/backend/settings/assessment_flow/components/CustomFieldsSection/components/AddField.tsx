@@ -1,27 +1,39 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, HTMLInputTypeAttribute, useState } from "react";
 import { m } from "framer-motion";
 
 import { Button, CustomInput, Selection } from "@/components";
+import { IAddNewField } from "@/interfaces/app-form-template.interface";
+
+const appFormPos = new Map<string, string>([
+    ["personal_information", "Personal information"],
+    ["profile", "Profile"],
+    ["details", "Details"],
+]);
 
 type AddFieldProps = {
-    onAdd: () => void;
+    onAdd: (newField: IAddNewField) => void;
     onCancel: () => void;
 };
 
 const AddField: React.FC<AddFieldProps> = ({ onAdd, onCancel }) => {
-    const [formState, setFormState] = useState({
-        title: "",
-        type: "",
-        selectedOption: "",
+    const [formState, setFormState] = useState<IAddNewField>({
+        appFormSectionId: "",
+        profileSectionId: "",
+        newField: {
+            id: "",
+            custom: true,
+            label: "",
+            type: "",
+            appFormSectionId: "",
+        },
     });
 
     const handleAddFields = (e: FormEvent) => {
         e.preventDefault();
-        console.log(formState);
 
-        onAdd();
+        onAdd(formState);
     };
 
     return (
@@ -29,6 +41,7 @@ const AddField: React.FC<AddFieldProps> = ({ onAdd, onCancel }) => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
+            className="overflow-hidden"
         >
             <div className="py-4">
                 <form
@@ -38,12 +51,18 @@ const AddField: React.FC<AddFieldProps> = ({ onAdd, onCancel }) => {
                     <div className="grid grid-cols-2 gap-2 mb-4">
                         <CustomInput
                             title="Custom field title"
-                            placeholder="Hello World"
-                            value={formState.title}
+                            placeholder="Please select an option"
+                            value={formState.newField.label}
                             onChange={e =>
                                 setFormState({
                                     ...formState,
-                                    title: e.target.value,
+                                    newField: {
+                                        ...formState.newField,
+                                        label: e.target.value,
+                                        id: e.target.value
+                                            .toLowerCase()
+                                            .replace(" ", "_"),
+                                    },
                                 })
                             }
                             required
@@ -53,13 +72,42 @@ const AddField: React.FC<AddFieldProps> = ({ onAdd, onCancel }) => {
                             required
                             items={["Paragraph", "asd"].map(item => ({
                                 label: item,
-                                value: item,
+                                value: "text" as HTMLInputTypeAttribute,
                             }))}
-                            value={formState.type}
+                            value={formState.newField.type}
+                            placeholder="Please select an option"
                             onChange={(content: string) =>
-                                setFormState({ ...formState, type: content })
+                                setFormState({
+                                    ...formState,
+                                    newField: {
+                                        ...formState.newField,
+                                        type: content,
+                                    },
+                                })
                             }
                         />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 mb-4">
+                        <Selection
+                            title="Field type"
+                            required
+                            items={Array.from(appFormPos.entries()).map(
+                                ([key, value]) => ({ label: value, value: key })
+                            )}
+                            value={appFormPos.get(formState.appFormSectionId)}
+                            placeholder="Please select an option"
+                            onChange={(content: string) =>
+                                setFormState({
+                                    ...formState,
+                                    appFormSectionId: content,
+                                    newField: {
+                                        ...formState.newField,
+                                        appFormSectionId: content,
+                                    },
+                                })
+                            }
+                        />
+                        <div></div>
                     </div>
                     <div className="flex flex-col gap-2 text-sm text-neutral-700">
                         <strong>Default setting for new jobs</strong>
@@ -74,7 +122,10 @@ const AddField: React.FC<AddFieldProps> = ({ onAdd, onCancel }) => {
                                     if (e.currentTarget.checked)
                                         setFormState({
                                             ...formState,
-                                            selectedOption: e.target.value,
+                                            newField: {
+                                                ...formState.newField,
+                                                required: true,
+                                            },
                                         });
                                 }}
                             />
@@ -96,7 +147,10 @@ const AddField: React.FC<AddFieldProps> = ({ onAdd, onCancel }) => {
                                     if (e.currentTarget.checked)
                                         setFormState({
                                             ...formState,
-                                            selectedOption: e.target.value,
+                                            newField: {
+                                                ...formState.newField,
+                                                required: false,
+                                            },
                                         });
                                 }}
                             />
@@ -118,7 +172,10 @@ const AddField: React.FC<AddFieldProps> = ({ onAdd, onCancel }) => {
                                     if (e.currentTarget.checked)
                                         setFormState({
                                             ...formState,
-                                            selectedOption: e.target.value,
+                                            newField: {
+                                                ...formState.newField,
+                                                required: undefined,
+                                            },
                                         });
                                 }}
                             />

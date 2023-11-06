@@ -23,7 +23,6 @@ const HeaderBar = () => {
                 </div>
                 <div className="flex gap-4">
                     <LocaleSwitcher />
-                    <ThemeSwitcher />
                 </div>
             </div>
         </div>

@@ -13,7 +13,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 import "nprogress/nprogress.css";
 
-import { ThemeProvider } from "@/components";
 import ReduxProvider from "@/components/ReduxProvider/ReduxProvider";
 import InternationalizationProvider from "@/components/InternationalizationProvider";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
@@ -61,24 +60,22 @@ export default function RootLayout({
                 <TopProgressBar />
                 <ReactQueryProvider>
                     <InternationalizationProvider lang={params.lang}>
-                        <ThemeProvider theme={"light"}>
-                            <ReduxProvider>
-                                <ToastContainer
-                                    position="top-center"
-                                    autoClose={5000}
-                                    hideProgressBar={false}
-                                    newestOnTop={false}
-                                    closeOnClick
-                                    rtl={false}
-                                    pauseOnFocusLoss
-                                    draggable
-                                    pauseOnHover
-                                    theme="light"
-                                />
-                                {children}
-                                <div id="hirelight__portal"></div>
-                            </ReduxProvider>
-                        </ThemeProvider>
+                        <ReduxProvider>
+                            <ToastContainer
+                                position="top-center"
+                                autoClose={5000}
+                                hideProgressBar={false}
+                                newestOnTop={false}
+                                closeOnClick
+                                rtl={false}
+                                pauseOnFocusLoss
+                                draggable
+                                pauseOnHover
+                                theme="light"
+                            />
+                            {children}
+                            <div id="hirelight__portal"></div>
+                        </ReduxProvider>
                     </InternationalizationProvider>
                 </ReactQueryProvider>
                 <Analytics />

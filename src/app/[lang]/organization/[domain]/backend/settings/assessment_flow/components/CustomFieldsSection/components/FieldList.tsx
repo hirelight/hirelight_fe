@@ -15,7 +15,12 @@ const FieldList: React.FC<FieldListProps> = ({ datas, reorderFields }) => {
             animate={{ height: "auto" }}
             exit={{ height: 0 }}
         >
-            <Reorder.Group axis="y" values={datas} onReorder={reorderFields}>
+            <Reorder.Group
+                axis="y"
+                values={datas}
+                onReorder={reorderFields}
+                className="overflow-hidden"
+            >
                 {datas?.map((field: any) => (
                     <FieldCard key={field.id} data={field} />
                 ))}

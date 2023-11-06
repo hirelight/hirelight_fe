@@ -1,0 +1,13 @@
+.wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    @apply p-4 md:px-6 bg-gray-100;
+}
+
+.section__label__toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    @apply text-neutral-600 text-sm p-4 py-6;
+}

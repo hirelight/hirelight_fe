@@ -27,7 +27,6 @@ const HeaderBar = () => {
                     <Bell className="text-white w-8 h-8" />
                     <div className="flex gap-4">
                         <LocaleSwitcher />
-                        <ThemeSwitcher />
                     </div>
                     <Link
                         href={"/settings"}

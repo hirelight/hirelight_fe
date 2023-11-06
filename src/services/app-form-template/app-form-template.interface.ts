@@ -1,4 +1,4 @@
-interface IAppFormTemplateDto {
+export interface IAppFormTemplateDto {
     id: number;
     organizationId: number;
     updaterId: number;
@@ -8,15 +8,13 @@ interface IAppFormTemplateDto {
     updatedTime: Date;
 }
 
-interface ICreateAppFormTemplate {
-    organizationId: number;
-    updaterId: number;
+export interface IEditAppFormTemplateDto {
+    id: number;
     name: string;
     content: string;
 }
 
-interface IEditAppFormTemplate {
-    id: number;
+export interface ICreateAppFormTemplateDto {
     name: string;
     content: string;
 }
