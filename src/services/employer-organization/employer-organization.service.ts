@@ -1,4 +1,5 @@
 import { IResponse } from "@/interfaces/service.interface";
+import { checkResErr } from "@/helpers";
 
 import interceptor from "../interceptor";
 
@@ -15,7 +16,7 @@ const getListAsync = async (): Promise<IResponse<IEmployerDto[]>> => {
         const res =
             await interceptor.get<IResponse<IEmployerDto[]>>(baseEndpoint);
 
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+        checkResErr(res.data);
         return res.data;
     } catch (error) {
         throw error;
@@ -28,7 +29,7 @@ const getByIdAsync = async (id: number) => {
             baseEndpoint + `/${id}`
         );
 
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+        checkResErr(res.data);
         return res.data;
     } catch (error) {
         throw error;
@@ -41,7 +42,7 @@ const deleteByIdAsync = async (id: number) => {
             baseEndpoint + `/${id}`
         );
 
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+        checkResErr(res.data);
         return res.data;
     } catch (error) {
         throw error;
@@ -55,7 +56,7 @@ const inviteEmployerAsync = async (newEmployerDto: INewEmployerDto) => {
             newEmployerDto
         );
 
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+        checkResErr(res.data);
         return res.data;
     } catch (error) {
         throw error;
@@ -69,7 +70,7 @@ const editEmployerAsync = async (editEmployerDto: IEditEmployerDto) => {
             editEmployerDto
         );
 
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+        checkResErr(res.data);
         return res.data;
     } catch (error) {
         throw error;

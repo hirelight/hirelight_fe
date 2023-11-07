@@ -1,4 +1,5 @@
 import { IResponse } from "@/interfaces/service.interface";
+import { checkResErr } from "@/helpers";
 
 import interceptor from "../interceptor";
 
@@ -21,7 +22,7 @@ class AppFormTemplateServices {
                 }
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
 
             return res.data;
         } catch (error) {
@@ -37,7 +38,7 @@ class AppFormTemplateServices {
                 baseEndpoint + `/${id}`
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
 
             return res.data;
         } catch (error) {
@@ -52,7 +53,7 @@ class AppFormTemplateServices {
                 createDto
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
 
             return res.data;
         } catch (error) {
@@ -66,7 +67,7 @@ class AppFormTemplateServices {
                 baseEndpoint + `/${id}`
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
 
             return res.data;
         } catch (error) {
@@ -83,7 +84,7 @@ class AppFormTemplateServices {
                 editDto
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
 
             return res.data;
         } catch (error) {

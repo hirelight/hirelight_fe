@@ -1,5 +1,6 @@
 import endpoints from "@/utils/constants/service-endpoint";
 import { IResponse } from "@/interfaces/service.interface";
+import { checkResErr } from "@/helpers";
 
 import interceptor from "../interceptor";
 
@@ -30,7 +31,7 @@ class EmailTemplateServices implements IEmailTemplateServices {
                 createEmailTemplatesDto
             );
             console.log(res);
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -43,7 +44,7 @@ class EmailTemplateServices implements IEmailTemplateServices {
                 endpoints.EMAIL_TEMPLATE
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
 
             return res.data;
         } catch (error) {
@@ -59,7 +60,7 @@ class EmailTemplateServices implements IEmailTemplateServices {
                 `${endpoints.EMAIL_TEMPLATE}/${id}`
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -75,7 +76,7 @@ class EmailTemplateServices implements IEmailTemplateServices {
                 editEmailTemplateDto
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -88,7 +89,7 @@ class EmailTemplateServices implements IEmailTemplateServices {
                 `${endpoints.EMAIL_TEMPLATE}/${id}`
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -103,7 +104,7 @@ class EmailTemplateServices implements IEmailTemplateServices {
                 IResponse<IEmailTemplateTypeDto[]>
             >(`${endpoints.EMAIL_TEMPLATE_TYPES}`);
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -118,7 +119,7 @@ class EmailTemplateServices implements IEmailTemplateServices {
                 `${endpoints.EMAIL_TEMPLATE_TYPES}/${id}`
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;

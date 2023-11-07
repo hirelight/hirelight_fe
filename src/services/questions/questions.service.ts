@@ -1,4 +1,5 @@
 import { IResponse } from "@/interfaces/service.interface";
+import { checkResErr } from "@/helpers";
 
 import interceptor from "../interceptor";
 
@@ -40,7 +41,7 @@ class QuestionAnswerService implements IQuestionAnswerService {
                 createQuestionAnswerDto
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -52,7 +53,7 @@ class QuestionAnswerService implements IQuestionAnswerService {
             const res = await interceptor.get(baseEndpoint);
             console.log(res);
 
-            // if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -65,7 +66,7 @@ class QuestionAnswerService implements IQuestionAnswerService {
         try {
             const res = await interceptor.get(baseEndpoint + `/${id}`);
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -81,7 +82,7 @@ class QuestionAnswerService implements IQuestionAnswerService {
                 editQuestionAnswerDto
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -92,7 +93,7 @@ class QuestionAnswerService implements IQuestionAnswerService {
         try {
             const res = await interceptor.delete(baseEndpoint + `/${id}`);
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -104,7 +105,7 @@ class QuestionAnswerService implements IQuestionAnswerService {
         try {
             const res = await interceptor.get(baseTagEndpoint);
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -117,7 +118,7 @@ class QuestionAnswerService implements IQuestionAnswerService {
         try {
             const res = await interceptor.get(baseTagEndpoint + `/${id}`);
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -133,7 +134,7 @@ class QuestionAnswerService implements IQuestionAnswerService {
                 createQuestionTagDto
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -149,7 +150,7 @@ class QuestionAnswerService implements IQuestionAnswerService {
                 editQuestionTagDto
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -160,7 +161,7 @@ class QuestionAnswerService implements IQuestionAnswerService {
         try {
             const res = await interceptor.delete(baseTagEndpoint + `/${id}`);
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;

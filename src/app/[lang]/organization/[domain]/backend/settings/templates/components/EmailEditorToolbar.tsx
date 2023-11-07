@@ -30,7 +30,6 @@ interface IEmailEditorToolbar {
     toggleFullscreen: () => void;
     handleVarChange: (value: string) => void;
     onEmailTemplateTypeChange: (id: number) => void;
-    emailTemplateType?: IEmailTemplateTypeDto;
     data?: IEmailTemplatesDto;
 }
 
@@ -39,7 +38,6 @@ const EmailEditorToolbar: React.FC<IEmailEditorToolbar> = ({
     toggleFullscreen,
     handleVarChange,
     onEmailTemplateTypeChange,
-    emailTemplateType,
     data,
 }) => {
     const { emailTemplateTypes } = useAppSelector(

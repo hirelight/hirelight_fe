@@ -14,3 +14,9 @@ export interface QuestionAnswerContentJson {
         correct: boolean;
     }[];
 }
+
+export const QuestionDifficulty = ["Easy", "Medium", "Hard", "Advance"];
+export const QuestionTypes = new Map<string, string>([
+    ["one-answer", "One answer"],
+    ["multiple-answers", "Multiple answers"],
+]);

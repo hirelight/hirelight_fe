@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 import questionAnswerServices from "@/services/questions/questions.service";
 
@@ -11,16 +12,11 @@ import Pagination from "./Pagination";
 type QuestionListProps = {};
 
 const QuestionList: React.FC<QuestionListProps> = ({}) => {
-    const queryClient = useQueryClient();
-    const {
-        data: res,
-        error,
-        isFetched,
-    } = useQuery({
+    const { data: res, error } = useQuery({
         queryKey: ["questions"],
         queryFn: questionAnswerServices.getListAsync,
     });
-
+    if (error) toast.error("Fetch question failure");
     return (
         <div>
             <ul className="flex flex-col gap-2 mb-6">
@@ -30,7 +26,7 @@ const QuestionList: React.FC<QuestionListProps> = ({}) => {
                     </li>
                 ))}
             </ul>
-            <Pagination />
+            {res?.data && res.data.length > 10 && <Pagination />}
         </div>
     );
 };

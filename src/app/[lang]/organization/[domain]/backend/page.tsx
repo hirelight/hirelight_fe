@@ -9,6 +9,7 @@ import jwtDecode from "jwt-decode";
 
 import endpoints from "@/utils/constants/service-endpoint";
 import { IJobDto } from "@/services/job/job.interface";
+import { checkResErr } from "@/helpers/resErrHelpers";
 
 import JobCard from "./components/JobCard";
 import HiringStageBar from "./components/HiringStageBar";
@@ -43,7 +44,7 @@ const getJobList = async (): Promise<IJobDto[]> => {
 
     const jsonRes = await res.json();
 
-    if (jsonRes.statusCode >= 400) throw new Error(jsonRes.message);
+    checkResErr(jsonRes);
 
     return jsonRes.data;
 };

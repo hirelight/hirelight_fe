@@ -1,5 +1,6 @@
 import endpoints from "@/utils/constants/service-endpoint";
 import { IResponse } from "@/interfaces/service.interface";
+import { checkResErr } from "@/helpers";
 
 import interceptor from "../interceptor";
 
@@ -19,7 +20,7 @@ const loginCandidate = async (
             `/identity/candidate/login`,
             loginCandidateDto
         );
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+        checkResErr(res.data);
 
         return res.data;
     } catch (error) {
@@ -35,7 +36,7 @@ const registerCandidate = async (
             `/identity/candidate/register`,
             registerCandidateDto
         );
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+        checkResErr(res.data);
 
         return res.data;
     } catch (error) {
@@ -51,7 +52,7 @@ const loginEmployer = async (
             `/identity/employer/login`,
             loginDto
         );
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+        checkResErr(res.data);
 
         return res.data;
     } catch (error) {
@@ -67,7 +68,7 @@ const registerEmployee = async (
             `/identity/employer/register`,
             registerEmployeeDto
         );
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+        checkResErr(res.data);
 
         return res.data;
     } catch (error) {
@@ -89,7 +90,7 @@ const getOrgAccessToken = async (id: number) => {
             `/identity/employer/organizations/${id}`
         );
 
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+        checkResErr(res.data);
 
         return res.data;
     } catch (error) {
@@ -103,7 +104,7 @@ const getUserInfo = async () => {
             endpoints.IDENTITY_GET_INFO
         );
 
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+        checkResErr(res.data);
 
         return res.data;
     } catch (error) {

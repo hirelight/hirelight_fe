@@ -7,7 +7,10 @@ import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { IQuestionAnswerDto } from "@/services/questions/questions.interface";
-import { QuestionAnswerContentJson } from "@/interfaces/questions.interface";
+import {
+    QuestionAnswerContentJson,
+    QuestionDifficulty,
+} from "@/interfaces/questions.interface";
 import questionAnswerServices from "@/services/questions/questions.service";
 import { DeleteModal, Portal } from "@/components";
 
@@ -27,6 +30,11 @@ type QuestionCardProps = {
 
 const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
     const { content, tagList, difficulty, id } = data;
+    const parsedContent = useMemo(
+        () => JSON.parse(content),
+        [content]
+    ) as QuestionAnswerContentJson;
+    console.log(data, JSON.parse(content));
 
     const queryClient = useQueryClient();
     const deleteMutation = useMutation({
@@ -41,10 +49,6 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
         },
     });
 
-    const parsedContent = useMemo(
-        () => JSON.parse(content),
-        [content]
-    ) as QuestionAnswerContentJson;
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);
 
     const handleDeleteQuestion = async (id: number) => {
@@ -64,8 +68,10 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
             </Portal>
             <div className="bg-white p-4 flex items-stretch">
                 <div className="flex-1">
-                    <h3 className="text-neutral-700 font-semibold mb-4 flex gap-1">
-                        <span>Question {index + 1}:</span>
+                    <h3 className="text-neutral-700 font-semibold mb-4 flex flex-wrap gap-1">
+                        <p className="whitespace-nowrap">
+                            Question {index + 1}:
+                        </p>
                         <div
                             dangerouslySetInnerHTML={{
                                 __html: parsedContent.name,
@@ -108,11 +114,13 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                         ))}
                     </div>
                 </div>
-                <div className="hidden h-20 w-[1px] mx-6 self-center bg-gray-300 md:block"></div>
+                <div className="hidden h-20 w-[1px] mx-6 self-center md:block"></div>
                 <div className="w-[200px] text-sm text-neutral-500 flex flex-col">
                     <p className="font-semibold mb-2">
                         Difficulty:{" "}
-                        <span className="font-normal">{difficulty}</span>
+                        <span className="font-normal">
+                            {QuestionDifficulty[difficulty]}
+                        </span>
                     </p>
                     <div>
                         <div className="flex flex-wrap items-center gap-2">
@@ -127,7 +135,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                             ))}
                         </div>
                     </div>
-                    <div className="flex gap-4 mt-auto">
+                    <div className="flex gap-4 mt-10">
                         <Link href={`questions-bank/${id}/edit`}>
                             <PencilIcon className="w-5 h-5 text-blue_primary_700" />
                         </Link>

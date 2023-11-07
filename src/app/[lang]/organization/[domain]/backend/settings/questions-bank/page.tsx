@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-query";
 
 import questionAnswerServices from "@/services/questions/questions.service";
+import { checkResErr } from "@/helpers/resErrHelpers";
 
 import QuestionList from "./components/QuestionList";
 
@@ -37,7 +38,7 @@ const fetchDatas = async () => {
 
     const jsonRes = await res.json();
 
-    if (jsonRes.statusCode >= 400) throw new Error(jsonRes.message);
+    checkResErr(jsonRes);
 
     return jsonRes.data;
 };

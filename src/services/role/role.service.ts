@@ -1,4 +1,5 @@
 import { IResponse } from "@/interfaces/service.interface";
+import { checkResErr } from "@/helpers";
 
 import interceptor from "../interceptor";
 
@@ -10,7 +11,7 @@ const getListAsync = async (): Promise<IResponse<IRoleDto[]>> => {
     try {
         const res = await interceptor.get<IResponse<IRoleDto[]>>(baseEndpoint);
 
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+        checkResErr(res.data);
         return res.data;
     } catch (error) {
         throw error;
@@ -23,7 +24,7 @@ const getByIdAsync = async (id: number): Promise<IResponse<IRoleDto>> => {
             baseEndpoint + `/${id}`
         );
 
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+        checkResErr(res.data);
         return res.data;
     } catch (error) {
         throw error;

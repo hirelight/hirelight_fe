@@ -1,5 +1,6 @@
 import endpoints from "@/utils/constants/service-endpoint";
 import { IResponse } from "@/interfaces/service.interface";
+import { checkResErr } from "@/helpers";
 
 import interceptor from "../interceptor";
 
@@ -24,7 +25,7 @@ class JobServices implements IJobServices {
                 createJobDto
             );
             console.log(res);
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -37,7 +38,7 @@ class JobServices implements IJobServices {
                 endpoints.JOBPOSTS
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
 
             return res.data;
         } catch (error) {
@@ -51,7 +52,7 @@ class JobServices implements IJobServices {
                 `${endpoints.JOBPOSTS}/${id}`
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -65,7 +66,7 @@ class JobServices implements IJobServices {
                 editJobDto
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -78,7 +79,7 @@ class JobServices implements IJobServices {
                 `${endpoints.JOBPOSTS}/${id}`
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;
@@ -91,7 +92,7 @@ class JobServices implements IJobServices {
                 `${endpoints.JOBPOSTS}/publish/${id}`
             );
 
-            if (res.data.statusCode >= 400) throw new Error(res.data.message);
+            checkResErr(res.data);
             return res.data;
         } catch (error) {
             throw error;

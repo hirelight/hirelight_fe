@@ -3,6 +3,7 @@
 import React from "react";
 import Quill, { QuillOptionsStatic } from "quill";
 import { Inter, Public_Sans, Roboto_Mono } from "next/font/google";
+import { toast } from "react-toastify";
 
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import CustomSpan from "@/components/QuillEditor/CustomSpan";
@@ -12,6 +13,9 @@ import {
 } from "@/services/email-template/email-template.interface";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { fetchEmailTemplateTypes } from "@/redux/thunks/email-templates.thunk";
+import { checkResErr, resizeImage } from "@/helpers";
+import interceptor from "@/services/interceptor";
+import { IResponse } from "@/interfaces/service.interface";
 
 import styles from "./EmailEditor.module.scss";
 import EmailEditorToolbar from "./EmailEditorToolbar";
@@ -80,6 +84,7 @@ const EmailEditor: React.FC<IEmailEditor> = ({
                 if (onChange) {
                     const editorContent =
                         quillInstance.current!!.root.innerHTML;
+                    // console.log(editorContent);
                     onChange(editorContent);
                 }
             }
@@ -87,46 +92,97 @@ const EmailEditor: React.FC<IEmailEditor> = ({
         [onChange]
     );
 
-    const handleSelectVars = (value: string) => {
-        if (quillInstance.current) {
-            const range = quillInstance.current.getSelection();
-            if (range) {
-                quillInstance.current.insertEmbed(
-                    range.index,
-                    "span",
-                    value.slice(1, value.length - 1),
-                    "user"
-                );
+    const uploadImage = async (file: File): Promise<string | null> => {
+        const formData = new FormData();
+        formData.append("formFile", file);
 
-                quillInstance.current.setSelection(
-                    range.index + value.length,
-                    0
-                );
-
-                // Create a synthetic space key event
-                const spaceKeyEvent = new KeyboardEvent("keydown", {
-                    key: " ",
-                    code: "Space",
-                    keyCode: 32,
-                    which: 32,
-                    bubbles: true,
-                    cancelable: true,
-                });
-
-                editorRef.current!!.dispatchEvent(spaceKeyEvent);
+        const res = await interceptor.post<IResponse<any>>(
+            "/assessment-flows/images",
+            formData,
+            {
+                headers: { "Content-Type": "multipart/form-data" },
             }
+        );
+        console.log(res.data);
+        toast.success(res.data.message);
+        checkResErr(res.data);
+
+        return res.data.data;
+    };
+
+    const customImageHandler = React.useCallback(() => {
+        const input = document.createElement("input");
+        input.setAttribute("type", "file");
+        input.setAttribute("accept", "image/*");
+        input.style.display = "none";
+
+        input.addEventListener("change", async () => {
+            if (input.files) {
+                const file = input.files[0];
+                if (file) {
+                    const resizedImage = await resizeImage(file);
+                    const imageUrl = await uploadImage(resizedImage);
+                    if (imageUrl === null) return;
+
+                    const img = new Image();
+                    img.src = imageUrl;
+                    img.addEventListener("load", () => {
+                        // Resize the image based on user input
+                        img.style.width = "auto";
+                        img.style.height = "120px"; // Maintain aspect ratio
+                        const imageUrl = img.src;
+                        insertImage(imageUrl);
+                    });
+                }
+            }
+        });
+
+        input.click();
+    }, []);
+
+    const insertImage = (imageUrl: any) => {
+        const range = quillInstance.current!!.getSelection();
+        if (range) {
+            quillInstance.current!!.insertEmbed(
+                range.index + 1,
+                "image",
+                imageUrl
+            );
+        }
+    };
+
+    const handleSelectVars = (value: string) => {
+        try {
+            if (quillInstance.current) {
+                const range = quillInstance.current.getSelection();
+                if (range) {
+                    quillInstance.current.insertEmbed(
+                        range.index,
+                        "complex",
+                        value.slice(1, value.length - 1)
+                    );
+
+                    quillInstance.current.setSelection(range.index + 1, 0);
+                }
+            }
+        } catch (error) {
+            console.log(error);
         }
     };
 
     React.useEffect(() => {
         if (editorRef.current) {
             if (!quillInstance.current) {
+                CustomSpan.blotName = "complex";
+                CustomSpan.tagName = "span";
                 Quill.register(CustomSpan, true);
-
                 const options: QuillOptionsStatic = {
                     modules: {
                         toolbar: {
                             container: toolbarRef.current,
+                            handlers: {
+                                image: customImageHandler,
+                            },
                         },
                     },
 
@@ -147,7 +203,7 @@ const EmailEditor: React.FC<IEmailEditor> = ({
             if (quillInstance.current)
                 quillInstance.current.off("text-change", () => {});
         };
-    }, [handleTextChange, placeholder, readOnly, value]);
+    }, [customImageHandler, handleTextChange, placeholder, readOnly, value]);
 
     React.useEffect(() => {
         if (emailTemplateTypes.length === 0)
@@ -183,7 +239,6 @@ const EmailEditor: React.FC<IEmailEditor> = ({
                     toggleFullscreen={() => setFullscreen(prev => !prev)}
                     handleVarChange={handleSelectVars}
                     onEmailTemplateTypeChange={onEmailTemplateTypeChange}
-                    emailTemplateType={emailTemplateType}
                 />
             </div>
             <div className="relative flex-1 flex flex-col">

@@ -10,13 +10,11 @@ import { Bold, ImageIcon, Italic, LinkIcon, ListOL, ListUL } from "@/icons";
 import styles from "./QuillEditor.module.scss";
 
 interface IEditorToolbar {
-    quillInstance: Quill | null;
     fullscreen: boolean;
     toggleFullscreen: () => void;
 }
 
 const EditorToolbar: React.FC<IEditorToolbar> = ({
-    quillInstance,
     fullscreen,
     toggleFullscreen,
 }) => {

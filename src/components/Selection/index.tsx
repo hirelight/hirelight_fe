@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { CheckIcon } from "@heroicons/react/24/solid";
 
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import { ChevronDown, SearchIcon } from "@/icons";
@@ -25,12 +26,13 @@ const toBottom: React.CSSProperties = {
 interface ISelection<T = any> {
     title: string;
     placeholder?: string;
-    value?: string;
+    value?: string | string[];
     required?: boolean;
     onChange: (value: T) => void;
     className?: string;
     labelClassName?: string;
     items: { label: string; value: T }[];
+    multiple?: boolean;
 }
 
 const Selection = <T extends object | string>({
@@ -42,11 +44,11 @@ const Selection = <T extends object | string>({
     onChange,
     className,
     labelClassName,
+    multiple = false,
 }: ISelection<T>) => {
     const [show, setShow] = React.useState(false);
     const [search, setSearch] = React.useState("");
-
-    const [selected, setSelected] = React.useState<string>(placeholder);
+    const [selected, setSelected] = React.useState<string[]>([]);
     const dropdownWrapperRef = useOutsideClick<HTMLDivElement>(() => {
         setShow(false);
         dropdownRef.current!!.removeAttribute("style");
@@ -81,15 +83,25 @@ const Selection = <T extends object | string>({
     };
 
     const handleSelectItem = (label: string, value: any) => {
-        setSelected(label);
+        if (!multiple) {
+            setSelected([label]);
+        } else {
+            const isExist = selected.find(item => item === label);
+            if (isExist)
+                setSelected(prev => prev.filter(item => item !== label));
+            else setSelected(prev => prev.concat([label]));
+        }
         onChange(value);
         setShow(false);
         dropdownRef.current!!.removeAttribute("style");
     };
 
     React.useEffect(() => {
-        setSelected(value ? value : placeholder);
-    }, [value, placeholder]);
+        if (value) {
+            if (multiple) setSelected(value as string[]);
+            else setSelected([value as string]);
+        }
+    }, [value, multiple]);
 
     return (
         <div
@@ -106,13 +118,24 @@ const Selection = <T extends object | string>({
                 <button
                     type="button"
                     className={`w-full flex items-center justify-between font-medium bg-white dark:text-white p-2.5 cursor-pointer border border-gray-300 rounded-md text-sm ${
-                        selected === placeholder
+                        selected[0] === placeholder
                             ? "text-neutral-600"
                             : "text-neutral-900"
                     } ${labelClassName}`}
                     onClick={expandSelection}
                 >
-                    {selected}
+                    <p>
+                        {selected.length === 0
+                            ? placeholder
+                            : selected.map((item, index) => (
+                                  <span
+                                      key={index}
+                                      className="after:content-[','] after:mr-1 last:after:hidden"
+                                  >
+                                      {item}
+                                  </span>
+                              ))}
+                    </p>
                     <div>
                         <ChevronDown className="w-4 h-4" strokeWidth={2} />
                     </div>
@@ -139,31 +162,47 @@ const Selection = <T extends object | string>({
                             <button
                                 type="button"
                                 className={`w-full text-left text-neutral-700 p-2.5 cursor-pointer hover:bg-slate-200 `}
-                                onClick={handleSelectItem.bind(
-                                    null,
-                                    placeholder
-                                )}
+                                onClick={() => {
+                                    setSelected([]);
+                                    setShow(false);
+                                    dropdownRef.current!!.removeAttribute(
+                                        "style"
+                                    );
+                                }}
                             >
                                 <span>Select...</span>
                             </button>
                         </li>
                         {items
                             .filter(item => item.label.includes(search))
-                            .map((item, index: number) => (
-                                <li key={index}>
-                                    <button
-                                        type="button"
-                                        className={`w-full text-left text-neutral-700 p-2.5 cursor-pointer hover:bg-slate-200 `}
-                                        onClick={handleSelectItem.bind(
-                                            null,
-                                            item.label,
-                                            item.value
+                            .map((item, index: number) => {
+                                const isSelected = selected.includes(
+                                    item.label
+                                );
+
+                                return (
+                                    <li key={index} className="relative">
+                                        <button
+                                            type="button"
+                                            className={`w-full text-left text-neutral-700 p-2.5 cursor-pointer hover:bg-slate-200 ${
+                                                isSelected ? "bg-slate-100" : ""
+                                            }`}
+                                            onClick={handleSelectItem.bind(
+                                                null,
+                                                item.label,
+                                                item.value
+                                            )}
+                                        >
+                                            <span>{item.label}</span>
+                                        </button>
+                                        {isSelected && (
+                                            <span className="absolute right-4 top-1/2 -translate-y-1/2">
+                                                <CheckIcon className="w-5 h-5 text-blue_primary_700" />
+                                            </span>
                                         )}
-                                    >
-                                        <span>{item.label}</span>
-                                    </button>
-                                </li>
-                            ))}
+                                    </li>
+                                );
+                            })}
                     </ul>
                 </div>
             </div>

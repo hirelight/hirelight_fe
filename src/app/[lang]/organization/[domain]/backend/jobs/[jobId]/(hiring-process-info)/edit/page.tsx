@@ -5,6 +5,7 @@ import { QueryClient } from "@tanstack/react-query";
 
 import endpoints from "@/utils/constants/service-endpoint";
 import { IJobDto } from "@/services/job/job.interface";
+import { checkResErr } from "@/helpers/resErrHelpers";
 
 import EditJobDetailForm from "../components/EditJobDetailForm";
 
@@ -35,7 +36,7 @@ const getJobById = async (id: number): Promise<IJobDto> => {
 
     const jsonRes = await res.json();
 
-    if (jsonRes.statusCode >= 400) throw new Error(jsonRes.message);
+    checkResErr(jsonRes);
 
     return jsonRes.data;
 };

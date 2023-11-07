@@ -1,4 +1,5 @@
 import { IResponse } from "@/interfaces/service.interface";
+import { checkResErr } from "@/helpers";
 
 import interceptor from "../interceptor";
 
@@ -29,7 +30,7 @@ const getJoinedOrganizations = async () => {
         const res = await interceptor.get<IResponse<IOrganizationDto[]>>(
             `/organizations/joined`
         );
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+        checkResErr(res.data);
         return res.data;
     } catch (error) {
         throw error;
@@ -42,7 +43,7 @@ const getOwnedOrganizations = async () => {
             await interceptor.get<IResponse<IOrganizationDto[]>>(
                 `/organizations/owned`
             );
-        if (res.data.statusCode >= 400) throw new Error(res.data.message);
+        checkResErr(res.data);
 
         return res.data;
     } catch (error) {

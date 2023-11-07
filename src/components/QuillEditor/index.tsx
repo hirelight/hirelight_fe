@@ -3,8 +3,12 @@
 import React from "react";
 import Quill, { QuillOptionsStatic } from "quill";
 import { Inter, Public_Sans, Roboto_Mono } from "next/font/google";
+import { toast } from "react-toastify";
 
 import { useOutsideClick } from "@/hooks/useClickOutside";
+import interceptor from "@/services/interceptor";
+import { IResponse } from "@/interfaces/service.interface";
+import { checkResErr, resizeImage } from "@/helpers";
 
 import styles from "./QuillEditor.module.scss";
 import EditorToolbar from "./EditorToolbar";
@@ -34,6 +38,7 @@ interface IQuillEditor {
     theme?: "snow" | "bubble";
     className?: string;
     readOnly?: boolean;
+    required?: boolean;
 }
 
 const QuillEditor = ({
@@ -43,6 +48,7 @@ const QuillEditor = ({
     onChange,
     className = "",
     readOnly = false,
+    required = false,
 }: IQuillEditor) => {
     const wrapperRef = useOutsideClick<HTMLDivElement>(
         theme === "bubble"
@@ -65,6 +71,12 @@ const QuillEditor = ({
         function (delta: any, oldDelta: any, source: any) {
             if (source == "api") {
                 console.log("An API call triggered this change.");
+                console.log(quillInstance.current!!.root.innerHTML);
+                if (onChange) {
+                    const editorContent =
+                        quillInstance.current!!.root.innerHTML;
+                    onChange(editorContent);
+                }
             } else if (source == "user") {
                 if (onChange) {
                     const editorContent =
@@ -76,29 +88,53 @@ const QuillEditor = ({
         [onChange]
     );
 
+    const uploadImage = async (file: File): Promise<string | null> => {
+        const formData = new FormData();
+        formData.append("formFile", file);
+
+        const res = await interceptor.post<IResponse<any>>(
+            "/assessment-flows/images",
+            formData,
+            {
+                headers: { "Content-Type": "multipart/form-data" },
+            }
+        );
+        console.log(res.data);
+        toast.success(res.data.message);
+        checkResErr(res.data);
+
+        return res.data.data;
+    };
+
     const customImageHandler = React.useCallback(() => {
         const input = document.createElement("input");
         input.setAttribute("type", "file");
         input.setAttribute("accept", "image/*");
         input.style.display = "none";
 
-        input.addEventListener("change", () => {
+        input.addEventListener("change", async () => {
             if (input.files) {
                 const file = input.files[0];
                 if (file) {
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        const img = new Image();
-                        img.src = reader.result as string;
-                        img.addEventListener("load", () => {
-                            // Resize the image based on user input
-                            img.style.width = "auto";
-                            img.style.height = "120px"; // Maintain aspect ratio
-                            const imageUrl = img.src;
-                            insertImage(imageUrl);
-                        });
-                    };
-                    reader.readAsDataURL(file);
+                    const resizedImage = await resizeImage(file);
+                    const imageUrl = await uploadImage(resizedImage);
+                    if (imageUrl === null) return;
+
+                    insertImage(imageUrl);
+                    // const reader = new FileReader();
+
+                    // reader.onload = event => {
+                    //     const img = new Image();
+                    //     img.src = reader.result as string;
+                    //     img.addEventListener("load", () => {
+                    //         // Resize the image based on user input
+                    //         img.style.width = "auto";
+                    //         img.style.height = "120px"; // Maintain aspect ratio
+                    //         const imageUrl = img.src;
+                    //         insertImage(imageUrl);
+                    //     });
+                    // };
+                    // reader.readAsDataURL(file);
                 }
             }
         });
@@ -108,12 +144,14 @@ const QuillEditor = ({
 
     const insertImage = (imageUrl: any) => {
         const range = quillInstance.current!!.getSelection();
-        if (range) {
+        if (range && quillInstance.current) {
             quillInstance.current!!.insertEmbed(
-                range.index + 1,
+                range.index,
                 "image",
-                imageUrl
+                imageUrl,
+                "user"
             );
+            quillInstance.current.setSelection(range.index + 1, 0);
         }
     };
 
@@ -148,46 +186,46 @@ const QuillEditor = ({
         };
     }, [customImageHandler, handleTextChange, placeholder, readOnly, value]);
 
-    React.useEffect(() => {
-        if (quillInstance.current) {
-            const imgEls = editorRef.current?.querySelectorAll("img");
-            imgEls?.forEach((imgEl: HTMLImageElement) => {
-                const {
-                    x: editorX,
-                    y: editorY,
-                    width: edtWidht,
-                    height: edtHeight,
-                } = editorRef.current!!.getBoundingClientRect();
-                const {
-                    x: imgX,
-                    y: imgY,
-                    width: imgWidth,
-                    height: imgHeight,
-                } = imgEl.getBoundingClientRect();
-                const imgLeft = imgX - editorX - 15;
-                const imgRight = imgX + imgWidth - editorX - 15;
-                const imgTop = imgY - editorY - 12;
-                const imgBottom = imgY + imgHeight - editorY - 12;
-                console.log(imgLeft, imgRight, imgTop, imgBottom);
-                if (
-                    mousePos.x >= imgLeft &&
-                    mousePos.x <= imgRight &&
-                    mousePos.y >= imgTop &&
-                    mousePos.y <= imgBottom
-                ) {
-                    console.log("Mouse inside img");
-                    resizeRef.current?.setAttribute(
-                        "style",
-                        `left: ${imgLeft}px;top: ${
-                            imgTop + 12
-                        }px; width: ${imgWidth}px;height: ${imgHeight}px; visibility: visible; z-index: 50; background: rgba(0,0,0,.6)`
-                    );
-                } else {
-                    resizeRef.current?.removeAttribute("style");
-                }
-            });
-        }
-    }, [mousePos]);
+    // React.useEffect(() => {
+    //     if (quillInstance.current) {
+    //         const imgEls = editorRef.current?.querySelectorAll("img");
+    //         imgEls?.forEach((imgEl: HTMLImageElement) => {
+    //             const {
+    //                 x: editorX,
+    //                 y: editorY,
+    //                 width: edtWidht,
+    //                 height: edtHeight,
+    //             } = editorRef.current!!.getBoundingClientRect();
+    //             const {
+    //                 x: imgX,
+    //                 y: imgY,
+    //                 width: imgWidth,
+    //                 height: imgHeight,
+    //             } = imgEl.getBoundingClientRect();
+    //             const imgLeft = imgX - editorX - 15;
+    //             const imgRight = imgX + imgWidth - editorX - 15;
+    //             const imgTop = imgY - editorY - 12;
+    //             const imgBottom = imgY + imgHeight - editorY - 12;
+    //             console.log(imgLeft, imgRight, imgTop, imgBottom);
+    //             if (
+    //                 mousePos.x >= imgLeft &&
+    //                 mousePos.x <= imgRight &&
+    //                 mousePos.y >= imgTop &&
+    //                 mousePos.y <= imgBottom
+    //             ) {
+    //                 console.log("Mouse inside img");
+    //                 resizeRef.current?.setAttribute(
+    //                     "style",
+    //                     `left: ${imgLeft}px;top: ${
+    //                         imgTop + 12
+    //                     }px; width: ${imgWidth}px;height: ${imgHeight}px; visibility: visible; z-index: 50; background: rgba(0,0,0,.6)`
+    //                 );
+    //             } else {
+    //                 resizeRef.current?.removeAttribute("style");
+    //             }
+    //         });
+    //     }
+    // }, [mousePos]);
 
     return (
         <>
@@ -214,7 +252,6 @@ const QuillEditor = ({
                     }}
                 >
                     <EditorToolbar
-                        quillInstance={quillInstance.current}
                         fullscreen={fullscreen}
                         toggleFullscreen={() => setFullscreen(prev => !prev)}
                     />

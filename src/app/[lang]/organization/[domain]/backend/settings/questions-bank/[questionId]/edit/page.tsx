@@ -1,6 +1,8 @@
 import React from "react";
 import { cookies } from "next/headers";
 
+import { checkResErr } from "@/helpers/resErrHelpers";
+
 import EditQuestionForm from "./components/EditForm";
 
 const getQuestionData = async (id: number) => {
@@ -26,7 +28,7 @@ const getQuestionData = async (id: number) => {
 
     const jsonRes = await res.json();
 
-    if (jsonRes.statusCode >= 400) throw new Error(jsonRes.message);
+    checkResErr(jsonRes);
 
     return jsonRes.data;
 };
