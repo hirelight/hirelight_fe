@@ -21,6 +21,7 @@ import { delayFunc } from "@/helpers/shareHelpers";
 import { DatePicker, LocationAutocomplete, Selection } from "@/components";
 import { SpinLoading } from "@/icons";
 import jobServices from "@/services/job/job.service";
+import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
 
 import FormInput from "../../components/FormInput";
 
@@ -95,10 +96,16 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
         }
 
         try {
+            const appFormTemplateRes =
+                await appFormTemplateServices.getListAsync();
+            toast.success("Apply app form template success!");
+            const parsedAppForm = JSON.parse(
+                appFormTemplateRes.data[0].content
+            ).app_form;
             const res = await jobServices.createAsync({
                 ...job,
                 content: JSON.stringify(job.content),
-                applicationForm: JSON.stringify(intialAppForm),
+                applicationForm: JSON.stringify(parsedAppForm),
             });
             toast.success(res.message);
             router.push(`/${lang}/backend/jobs/${res.data}/edit`);

@@ -201,7 +201,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
 
     return (
         <div ref={wrapperRef} className="relative">
-            <div className="relative max-w-sm">
+            <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
                     <svg
                         className="w-4 h-4 text-gray-500 dark:text-gray-400"

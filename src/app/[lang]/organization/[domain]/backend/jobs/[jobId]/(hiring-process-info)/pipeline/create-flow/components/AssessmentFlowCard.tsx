@@ -11,20 +11,37 @@ import {
 import React, { useState } from "react";
 
 import { useRaisedShadow } from "@/hooks/use-raised-boxshadow";
-import { AssessmentTypes } from "@/interfaces/assessment.interface";
+import {
+    AssessmentTypeKey,
+    AssessmentTypes,
+} from "@/interfaces/assessment.interface";
+import { IAssessmentFlow } from "@/services/assessment-flows/assessment-flows.interface";
 
-import FlowStageForm from "../AssessmentFlowForm/FlowStageForm";
+import FlowStageForm from "./FlowStageForm";
+
+const defaultStage: AssessmentTypeKey[] = ["SOURCED", "HIRED"];
 
 type AssessmentFlowCardProps = {
-    data: any;
+    data: IAssessmentFlow;
+    updateStage: (updateStage: any) => void;
+    deleteStage: () => void;
 };
 
-const AssessmentFlowCard: React.FC<AssessmentFlowCardProps> = ({ data }) => {
+const AssessmentFlowCard: React.FC<AssessmentFlowCardProps> = ({
+    data,
+    updateStage,
+    deleteStage,
+}) => {
     const dragControls = useDragControls();
     const y = useMotionValue(0);
     const boxShadow = useRaisedShadow(y);
 
     const [showEdit, setShowEdit] = useState(false);
+
+    const handleUpdateStage = (updatedData: any) => {
+        updateStage(updatedData);
+        setShowEdit(false);
+    };
 
     return (
         <>
@@ -39,19 +56,13 @@ const AssessmentFlowCard: React.FC<AssessmentFlowCardProps> = ({ data }) => {
                     <button
                         type="button"
                         className={`hover:cursor-move ${
-                            [
-                                AssessmentTypes.HIRED,
-                                AssessmentTypes.SOURCED,
-                            ].includes(data.assessmentType)
+                            defaultStage.includes(data.assessmentType)
                                 ? "hover:cursor-not-allowed"
                                 : ""
                         }`}
                         onPointerDown={event => {
                             if (
-                                [
-                                    AssessmentTypes.HIRED,
-                                    AssessmentTypes.SOURCED,
-                                ].includes(data.assessmentType) ||
+                                defaultStage.includes(data.assessmentType) ||
                                 showEdit
                             )
                                 return;
@@ -61,9 +72,7 @@ const AssessmentFlowCard: React.FC<AssessmentFlowCardProps> = ({ data }) => {
                         <Bars3Icon className="w-5 h-5" />
                     </button>
                     <div className="flex-1">{data.name}</div>
-                    {![AssessmentTypes.HIRED, AssessmentTypes.SOURCED].includes(
-                        data.assessmentType
-                    ) && (
+                    {!defaultStage.includes(data.assessmentType) && (
                         <div className="flex items-center gap-4 invisible group-hover:visible text-sm font-semibold">
                             <button
                                 type="button"
@@ -75,6 +84,7 @@ const AssessmentFlowCard: React.FC<AssessmentFlowCardProps> = ({ data }) => {
                             <button
                                 type="button"
                                 className="text-red-600 hover:underline hover:text-red-700"
+                                onClick={deleteStage}
                             >
                                 Delete
                             </button>
@@ -116,11 +126,8 @@ const AssessmentFlowCard: React.FC<AssessmentFlowCardProps> = ({ data }) => {
                             }}
                         >
                             <FlowStageForm
-                                data={{
-                                    name: data.name,
-                                    assessmentType: data.assessmentType,
-                                }}
-                                onSave={() => setShowEdit(false)}
+                                data={data}
+                                onSave={data => handleUpdateStage(data)}
                                 onCancel={() => setShowEdit(false)}
                             />
                         </m.div>

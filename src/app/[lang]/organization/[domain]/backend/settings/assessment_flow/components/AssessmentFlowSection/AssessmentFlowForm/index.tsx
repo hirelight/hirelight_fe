@@ -6,7 +6,7 @@ import { Reorder } from "framer-motion";
 
 import { CloseIcon, Logo } from "@/icons";
 import { Button, CustomInput } from "@/components";
-import { AssessmentType } from "@/interfaces/assessment.interface";
+import { AssessmentTypes } from "@/interfaces/assessment.interface";
 
 import AssessmentFlowCard from "../AssessmentFlowCard";
 
@@ -20,22 +20,22 @@ const initialData = {
         {
             id: 0,
             name: "Sourced",
-            type: AssessmentType.Sourced,
+            assessmentType: AssessmentTypes.SOURCED,
         },
         {
             id: 1,
             name: "Hired 2",
-            type: AssessmentType.CVScreening,
+            assessmentType: AssessmentTypes.CV_SCREENING_ASSESSMENT,
         },
         {
             id: 2,
             name: "Hired 4",
-            type: AssessmentType.CVScreening,
+            assessmentType: AssessmentTypes.LIVE_VIDEO_INTERVIEW_ASSESSMENT,
         },
         {
             id: 3,
             name: "Hired",
-            type: AssessmentType.Hired,
+            assessmentType: AssessmentTypes.HIRED,
         },
     ],
 };
@@ -49,7 +49,7 @@ type AssessmentFlowFormProps = {
 type Assessment = {
     id: number;
     name: string;
-    type: AssessmentType;
+    assessmentType: AssessmentTypes;
 };
 
 type AssessmentFlow = {

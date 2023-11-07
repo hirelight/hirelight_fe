@@ -43,16 +43,16 @@ const getJobById = async (id: number): Promise<IJobDto> => {
 };
 
 const JobApplicationForm = async ({ params }: any) => {
-    const data = await getJobById(params.jobId);
+    // const data = await getJobById(params.jobId);
 
     return (
         <main>
             <AppForm
-                job={{
-                    ...data,
-                    content: JSON.parse(data.content),
-                    applicationForm: JSON.parse(data.applicationForm),
-                }}
+            // job={{
+            //     ...data,
+            //     content: JSON.parse(data.content),
+            //     applicationForm: JSON.parse(data.applicationForm),
+            // }}
             />
         </main>
     );

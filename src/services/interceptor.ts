@@ -37,6 +37,7 @@ interceptor.interceptors.response.use(
                 //     return instance(config)
 
                 // })
+                window.location.href = "/login";
             }
         }
 

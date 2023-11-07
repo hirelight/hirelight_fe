@@ -17,13 +17,6 @@ import ReduxProvider from "@/components/ReduxProvider/ReduxProvider";
 import InternationalizationProvider from "@/components/InternationalizationProvider";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
 
-const TopProgressBar = dynamic(
-    () => import("@/components/TopProgressBar/TopProgressBar"),
-    {
-        ssr: false,
-    }
-);
-
 import { Locale, i18n } from "../../i18n.config";
 
 const inter = Inter({
@@ -63,7 +56,6 @@ export default function RootLayout({
             <body
                 className={`${inter.className} ${roboto_mono.className} ${publicSans.className}`}
             >
-                <TopProgressBar />
                 <ReactQueryProvider>
                     <InternationalizationProvider lang={params.lang}>
                         <ReduxProvider>

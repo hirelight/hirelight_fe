@@ -3,21 +3,15 @@
 import React, { useState } from "react";
 
 import { Button, CustomInput, Selection } from "@/components";
-
-enum AssessmentType {
-    Sourced = "Sourced",
-    CVScreening = "CVScreening",
-    OneWayInterview = "OneWayInterview",
-    FaceToFaceInterview = "FaceToFaceInterview",
-    MulChoice = "MulChoice",
-    IntegrationAssessment = "IntegrationAssessment",
-    Hired = "Hired",
-}
+import {
+    AssessmentTypeKey,
+    AssessmentTypes,
+} from "@/interfaces/assessment.interface";
 
 type EditStageFormProps = {
     data: {
         name: string;
-        type: AssessmentType;
+        type: AssessmentTypes;
     };
     onSave: () => void;
     onCancel: () => void;
@@ -29,7 +23,7 @@ const EditStageForm: React.FC<EditStageFormProps> = ({
     data,
 }) => {
     const [name, setName] = useState(data.name);
-    const [type, setType] = useState(AssessmentType.Sourced);
+    const [type, setType] = useState(AssessmentTypes.SOURCED);
 
     return (
         <section className="bg-gray-100 rounded-md">
@@ -45,9 +39,9 @@ const EditStageForm: React.FC<EditStageFormProps> = ({
                 />
                 <Selection
                     title="Assessment type"
-                    items={["Phone Screen"].map(item => ({
-                        label: item,
-                        value: item,
+                    items={Object.keys(AssessmentTypes).map(key => ({
+                        value: key,
+                        label: AssessmentTypes[key as AssessmentTypeKey],
                     }))}
                     onChange={() => {}}
                     required

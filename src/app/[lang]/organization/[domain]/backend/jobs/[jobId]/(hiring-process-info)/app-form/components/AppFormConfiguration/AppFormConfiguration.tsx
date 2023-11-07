@@ -11,7 +11,7 @@ import AppFormSection from "./AppFormSection";
 import AddQuestionModal from "./AddQuestionModal";
 
 type AppFormConfigurationProps = {
-    appFormSections: IAppFormSection[];
+    // appFormSections: IAppFormSection[];
 };
 
 const AppFormConfiguration: React.FC<AppFormConfigurationProps> = ({}) => {

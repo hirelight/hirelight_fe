@@ -1,16 +1,11 @@
 import React from "react";
-import { Metadata } from "next";
 import Link from "next/link";
 
-import LoadingIndicator from "@/components/LoadingIndicator";
+import CreateAssessmentFlowForm from "./components/CreateAssessmentFlowForm";
 
-import PipelineConfig from "./components/PipelineConfig";
+type CreateAssessmentFlowProps = {};
 
-export const metadata: Metadata = {
-    title: "Hirelight - Backend | Pipeline Configuration",
-};
-
-const PipelineConfigurationHome = () => {
+const CreateAssessmentFlow: React.FC<CreateAssessmentFlowProps> = ({}) => {
     return (
         <React.Fragment>
             <div className="flex justify-between items-center">
@@ -30,11 +25,15 @@ const PipelineConfigurationHome = () => {
                     Change flow
                 </Link>
             </div>
-            <div className="p-6 w-full bg-white shadow-lg rounded-md">
-                <PipelineConfig />
+            <div className="bg-white py-6 drop-shadow-md rounded-md">
+                <h2 className="text-xl text-neutral-700 text-center font-medium px-4 xl:px-6 mb-8">
+                    Create new flow
+                </h2>
+
+                <CreateAssessmentFlowForm />
             </div>
         </React.Fragment>
     );
 };
 
-export default PipelineConfigurationHome;
+export default CreateAssessmentFlow;

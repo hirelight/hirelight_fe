@@ -21,13 +21,13 @@ import AppFormFooter from "./AppFormFooter/AppFormFooter";
 import AppFormDesktopView from "./AppFormDesktopView/AppFormDesktopView";
 
 type AppFormProps = {
-    job: Omit<IJobDto, "content" | "applicationForm"> & {
-        content: JobContentJson;
-        applicationForm: IAppFormSection[];
-    };
+    // job: Omit<IJobDto, "content" | "applicationForm"> & {
+    //     content: JobContentJson;
+    //     applicationForm: IAppFormSection[];
+    // };
 };
 
-const AppForm: React.FC<AppFormProps> = ({ job }) => {
+const AppForm: React.FC<AppFormProps> = ({}) => {
     const { jobId } = useParams();
     const dispatch = useAppDispatch();
     const [previewDesktop, setPreviewDesktop] = React.useState(false);
@@ -61,9 +61,7 @@ const AppForm: React.FC<AppFormProps> = ({ job }) => {
             ) : (
                 <form className="drop-shadow-lg">
                     <div className="flex">
-                        <AppFormConfiguration
-                            appFormSections={job.applicationForm}
-                        />
+                        <AppFormConfiguration />
                         <AppFormMobileView />
                     </div>
                     <AppFormFooter />
