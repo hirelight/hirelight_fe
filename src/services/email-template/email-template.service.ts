@@ -72,7 +72,7 @@ class EmailTemplateServices implements IEmailTemplateServices {
     ): Promise<IResponse<any>> => {
         try {
             const res = await interceptor.post<IResponse<any>>(
-                `${endpoints.EMAIL_TEMPLATE}/${editEmailTemplateDto.id}`,
+                `${endpoints.EMAIL_TEMPLATE}`,
                 editEmailTemplateDto
             );
 
