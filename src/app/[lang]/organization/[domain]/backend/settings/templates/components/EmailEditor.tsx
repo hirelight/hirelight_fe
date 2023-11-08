@@ -47,6 +47,11 @@ interface IEmailEditor {
     readOnly?: boolean;
     emailTemplateType?: IEmailTemplateTypeDto;
     onEmailTemplateTypeChange: (id: number) => void;
+    config?: {
+        toolbar?: {
+            visibile: boolean;
+        };
+    };
 }
 
 const EmailEditor: React.FC<IEmailEditor> = ({
@@ -59,6 +64,11 @@ const EmailEditor: React.FC<IEmailEditor> = ({
     emailTemplateType,
     onEmailTemplateTypeChange,
     data,
+    config = {
+        toolbar: {
+            visibile: true,
+        },
+    },
 }) => {
     const wrapperRef = useOutsideClick<HTMLDivElement>(
         theme === "bubble"
