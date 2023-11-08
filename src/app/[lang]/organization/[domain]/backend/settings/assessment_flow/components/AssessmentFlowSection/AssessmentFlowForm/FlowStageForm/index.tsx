@@ -7,16 +7,18 @@ import {
     AssessmentTypeKey,
     AssessmentTypes,
 } from "@/interfaces/assessment.interface";
+import { IAssessmentFlow } from "@/services/assessment-flows/assessment-flows.interface";
 
-const initialData = {
+const initialData: IAssessmentFlow = {
+    index: -1,
     name: "",
-    assessmentType: AssessmentTypes.CV_SCREENING_ASSESSMENT,
+    assessmentType: "CV_SCREENING_ASSESSMENT",
 };
 
 type FlowStageFormProps = {
-    onSave: () => void;
+    onSave: (newStage: IAssessmentFlow) => void;
     onCancel: () => void;
-    data?: typeof initialData;
+    data?: IAssessmentFlow;
 };
 
 const FlowStageForm: React.FC<FlowStageFormProps> = ({
@@ -24,7 +26,7 @@ const FlowStageForm: React.FC<FlowStageFormProps> = ({
     onCancel,
     data = initialData,
 }) => {
-    const [formState, setFormState] = useState(data);
+    const [formState, setFormState] = useState<IAssessmentFlow>(data);
 
     return (
         <section className="border border-gray-300 bg-slate-100 rounded-md">
@@ -45,23 +47,24 @@ const FlowStageForm: React.FC<FlowStageFormProps> = ({
                 />
                 <Selection
                     title="Assessment type"
-                    items={Object.keys(AssessmentTypes).map(key => ({
-                        value: key,
-                        label: AssessmentTypes[key as AssessmentTypeKey],
-                    }))}
-                    value={data ? data.assessmentType : ""}
+                    items={Object.keys(AssessmentTypes)
+                        .slice(1, -1)
+                        .map(key => ({
+                            value: key,
+                            label: AssessmentTypes[key as AssessmentTypeKey],
+                        }))}
+                    value={data ? AssessmentTypes[data.assessmentType] : ""}
                     onChange={content =>
                         setFormState(prev => ({
                             ...prev,
-                            assessmentType:
-                                AssessmentTypes[content as AssessmentTypeKey],
+                            assessmentType: content as AssessmentTypeKey,
                         }))
                     }
                     required
                 />
             </div>
             <div className="p-4 border-t border-gray-300">
-                <Button onClick={onSave}>Done</Button>
+                <Button onClick={onSave.bind(null, formState)}>Done</Button>
                 <button
                     type="button"
                     className="font-semibold text-neutral-500 hover:underline hover:text-neutral-700 ml-4"

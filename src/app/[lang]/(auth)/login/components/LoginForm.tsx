@@ -6,17 +6,12 @@ import { motion } from "framer-motion";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
-import jwt_decode from "jwt-decode";
 import jwtDecode from "jwt-decode";
 
 import authServices from "@/services/auth/auth.service";
-import organizationsServices from "@/services/organizations/organizations.service";
-import { delayFunc } from "@/helpers/shareHelpers";
-import { validWorkEmail } from "@/helpers/validateHelpers";
 import { Portal } from "@/components/index";
 import { GoogleIcon, LinkedInIcon, SpinLoading } from "@/icons";
 import { LoginEmployerDto } from "@/services/auth/auth.interface";
-import { IOrganizationDto } from "@/services/organizations/organizations.interface";
 
 import styles from "./LoginForm.module.scss";
 
@@ -26,7 +21,6 @@ interface ILoginForm {
 
 const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
     const router = useRouter();
-    const { lang } = useParams();
 
     const loginStatus = useSearchParams().get("status");
     const loginId = useSearchParams().get("loginId");

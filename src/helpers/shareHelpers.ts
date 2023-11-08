@@ -1,3 +1,5 @@
+import { AssessmentTypeKey } from "@/interfaces/assessment.interface";
+
 export const debounce = <T extends (...args: any[]) => void>(
     func: T,
     delay: number = 300

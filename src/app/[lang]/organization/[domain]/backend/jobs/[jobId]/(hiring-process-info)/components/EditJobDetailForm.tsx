@@ -93,9 +93,9 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = ({ data }) => {
     const handleSubmitJobDetail = async (e: any) => {
         e.preventDefault();
 
-        if (!validateFormInput()) {
-            return;
-        }
+        // if (!validateFormInput()) {
+        //     return;
+        // }
 
         try {
             // const res = await jobServices.editAsync({
@@ -520,14 +520,14 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = ({ data }) => {
                                     </h3>
                                     <DatePicker
                                         value={new Date(job.endTime)}
-                                        onChange={date =>
+                                        onChange={date => {
                                             dispatch(
                                                 setJob({
                                                     ...job,
                                                     endTime: date,
                                                 })
-                                            )
-                                        }
+                                            );
+                                        }}
                                     />
                                 </div>
                             </div>

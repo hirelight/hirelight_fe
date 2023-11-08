@@ -8,7 +8,7 @@
         {
             "id": 4137587,
             "name": "Sourced",
-            "kind": "sourced",
+            "kind": "SOURCED",
             "base_stage_id": null,
             "confidential": false,
             "marked_as_deleted": false,
@@ -27,7 +27,7 @@
         {
             "id": 4137588,
             "name": "Applied",
-            "kind": "applied",
+            "kind": "CV_SCREENING_ASSESSMENT",
             "base_stage_id": null,
             "confidential": false,
             "marked_as_deleted": false,
@@ -46,7 +46,7 @@
         {
             "id": 4137589,
             "name": "Phone Screen",
-            "kind": "phone-screen",
+            "kind": "ASYNC_VIDEO_INTERVIEW_ASSESSMENT",
             "base_stage_id": null,
             "confidential": false,
             "marked_as_deleted": false,
@@ -69,7 +69,7 @@
         {
             "id": 4137590,
             "name": "Assessment",
-            "kind": "assessment",
+            "kind": "MULTIPLE_CHOICE_QUESTION_ASSESSMENT",
             "base_stage_id": null,
             "confidential": false,
             "marked_as_deleted": false,
@@ -92,7 +92,7 @@
         {
             "id": 4137591,
             "name": "Interview",
-            "kind": "interview",
+            "kind": "LIVE_VIDEO_INTERVIEW_ASSESSMENT",
             "base_stage_id": null,
             "confidential": false,
             "marked_as_deleted": false,
@@ -115,7 +115,7 @@
         {
             "id": 4137592,
             "name": "Offer",
-            "kind": "offer",
+            "kind": "ASYNC_VIDEO_INTERVIEW_ASSESSMENT",
             "base_stage_id": null,
             "confidential": false,
             "marked_as_deleted": false,
@@ -138,7 +138,7 @@
         {
             "id": 4137593,
             "name": "Hired",
-            "kind": "hired",
+            "kind": "HIRED",
             "base_stage_id": null,
             "confidential": false,
             "marked_as_deleted": false,

@@ -5,6 +5,7 @@ import questionKitsReducer from "./slices/question-kits.slice";
 import candidatesReducer from "./slices/candidates.slice";
 import templatesReducer from "./slices/templates.slice";
 import appFormTemplateReducer from "./slices/app-form-template.slice";
+import assessmentFlowTemplatesReducer from "./slices/assessment-flow-templates.slice";
 
 export const store = configureStore({
     reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
         candidates: candidatesReducer,
         templates: templatesReducer,
         appFormTemplate: appFormTemplateReducer,
+        assessmentFlowTemplates: assessmentFlowTemplatesReducer,
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware({ serializableCheck: false }),

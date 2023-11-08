@@ -3,12 +3,15 @@
 import {
     ChatBubbleLeftRightIcon,
     UserIcon,
-    PhoneIcon,
     PencilSquareIcon,
-    CheckCircleIcon,
+    ClipboardDocumentListIcon,
+    VideoCameraIcon,
 } from "@heroicons/react/24/outline";
-import { LockClosedIcon, RectangleStackIcon } from "@heroicons/react/24/solid";
+import { ListBulletIcon, LockClosedIcon } from "@heroicons/react/24/solid";
 import React from "react";
+
+import { AssessmentTypeKey } from "@/interfaces/assessment.interface";
+import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 
 import mockData from "../../mock-data.json";
 
@@ -29,28 +32,11 @@ const AssessmentSliderCard: React.FC<IAssessmentSliderCard> = ({
     hoverVisibility,
     toggleHovervisiblity,
 }) => {
-    const getIconBaseOnKind = (kind: string) => {
-        switch (kind) {
-            case "sourced":
-                return <UserIcon className="w-6 h-6" />;
-            case "applied":
-                return <UserIcon className="w-6 h-6" />;
-            case "phone-screen":
-                return <PhoneIcon className="w-6 h-6" />;
-            case "assessment":
-                return <RectangleStackIcon className="w-6 h-6" />;
-            case "interview":
-                return <ChatBubbleLeftRightIcon className="w-6 h-6" />;
-            case "offer":
-                return <PencilSquareIcon className="w-6 h-6" />;
-            case "hired":
-                return <CheckCircleIcon className="w-6 h-6" />;
-        }
-    };
-
     return (
         <div className={styles.card__wrapper}>
-            {getIconBaseOnKind(data.kind)}
+            <div className="w-6 h-6">
+                {getIconBaseOnAssessmentType(data.kind as AssessmentTypeKey)}
+            </div>
             <span className="mt-2">{data.name}</span>
             <button
                 type="button"

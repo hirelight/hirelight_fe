@@ -93,10 +93,19 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
         e: React.MouseEvent<HTMLSpanElement, MouseEvent>
     ) => {
         const targetTime = e.currentTarget.getAttribute("data-date") as string;
-        setSelectedDate(new Date(parseInt(targetTime)));
-        setCurrentDate(new Date(parseInt(targetTime)));
+        const parseDate = new Date(parseInt(targetTime));
+        setSelectedDate(parseDate);
+        setCurrentDate(parseDate);
         setShowDatepicker(false);
-        onChange(new Date(parseInt(targetTime)));
+        onChange(
+            new Date(
+                `${parseDate.getFullYear()}-${parseDate.getMonth() + 1}-${
+                    parseDate.getDate() < 10
+                        ? `0${parseDate.getDate()}`
+                        : parseDate.getDate()
+                }`
+            )
+        );
         // this.props.onChange(this.state.today);
         // this.setState(prev => (prev.isOpen = !prev.isOpen));
     };

@@ -70,6 +70,7 @@ const jobSlice = createSlice({
     initialState,
     reducers: {
         setJob: (state, action) => {
+            console.log(action.payload);
             state.data = action.payload;
         },
         deleteJob: (state, action) => {},

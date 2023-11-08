@@ -1,19 +1,52 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { PencilIcon } from "@heroicons/react/24/solid";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { AnimatePresence, LazyMotion, domAnimation } from "framer-motion";
 
 import { Logo } from "@/icons";
+import assessmentFlowTemplatesServices from "@/services/assessment-flow-templates/assessment-flow-templates.service";
+import {
+    IAssessmentFlTempDto,
+    ICreateAssessmentFlTempDto,
+} from "@/services/assessment-flow-templates/assessment-flow-templates.interface";
 
 import pageStyles from "../../styles.module.scss";
 
 import AssessmentsSlider from "./AssessmentsSlider";
-import AssessmentFlowForm from "./AssessmentFlowForm";
+import AssessmentFlowForm, {
+    AssessmentFlowTemplate,
+} from "./AssessmentFlowForm";
 import CustomFlowList from "./CustomFlowList";
 
 const AssessmentFlowSection = () => {
     const [showAdding, setShowAdding] = useState(false);
+    const queryClient = useQueryClient();
+    const createTemplateMutation = useMutation({
+        mutationFn: (createDto: ICreateAssessmentFlTempDto) =>
+            assessmentFlowTemplatesServices.createASync(createDto),
+        onSuccess: res => {
+            toast.success(res.message);
+            queryClient.invalidateQueries({
+                queryKey: ["assessment-flow-templates"],
+            });
+        },
+        onError: err => {
+            console.warn(err);
+            toast.error(err.message);
+        },
+    });
+
+    const handleCreateFlow = (createDto: IAssessmentFlTempDto) => {
+        createTemplateMutation.mutate({
+            name: createDto.name,
+            content: createDto.content,
+        });
+        setShowAdding(false);
+    };
 
     return (
         <section className={pageStyles.section__wrapper}>
@@ -69,12 +102,16 @@ const AssessmentFlowSection = () => {
                             </button>
                         </div>
 
-                        {showAdding && (
-                            <AssessmentFlowForm
-                                onSave={() => setShowAdding(false)}
-                                onClose={() => setShowAdding(false)}
-                            />
-                        )}
+                        <LazyMotion features={domAnimation}>
+                            <AnimatePresence>
+                                {showAdding && (
+                                    <AssessmentFlowForm
+                                        onSave={handleCreateFlow}
+                                        onClose={() => setShowAdding(false)}
+                                    />
+                                )}
+                            </AnimatePresence>
+                        </LazyMotion>
 
                         <div>
                             <CustomFlowList />
