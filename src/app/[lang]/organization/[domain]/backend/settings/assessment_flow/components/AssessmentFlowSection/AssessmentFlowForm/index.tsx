@@ -15,7 +15,6 @@ import AssessmentFlowCard from "../AssessmentFlowCard";
 import FlowStageForm from "./FlowStageForm";
 
 const initialData: AssessmentFlowTemplate = {
-    organizationId: 0,
     name: "",
     assessments: [
         {

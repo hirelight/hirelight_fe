@@ -3,6 +3,8 @@ import {
     AssessmentTypes,
 } from "@/interfaces/assessment.interface";
 
+import { IAssessmentDto } from "../assessments/assessments.interface";
+
 export interface IAssessmentFlow {
     name: string;
     assessmentType: AssessmentTypeKey;
@@ -30,22 +32,4 @@ export interface IAssessmentFlowDto {
     createdTime: Date;
     updatedTime: Date;
     assessments: IAssessmentDto[];
-}
-
-export interface IAssessmentDto {
-    id: number;
-    assessmentFlowId: number;
-    assessmentTypeId: number;
-    assessmentTypeName: AssessmentTypeKey;
-    assessmentQuestionAnswerSetId: null;
-    assessmentQuestionAnswerSetContent: null;
-    creatorId: number;
-    description: string;
-    content: string;
-    query: string;
-    duration: string;
-    index: number;
-    createdTime: Date;
-    updatedTime: Date;
-    status: string;
 }

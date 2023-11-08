@@ -1,11 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 import { EllipsisVertical } from "@/icons";
 import { IJobDto } from "@/services/job/job.interface";
+import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
+import { IAssessmentFlowDto } from "@/services";
+import { AssessmentTypes } from "@/interfaces/assessment.interface";
 
 interface IStage {
     name: string;
@@ -44,9 +48,28 @@ interface JobCardProps {
 }
 
 const JobCard: React.FC<JobCardProps> = ({
-    data: { title, area, status, id },
+    data: { title, area, status, id, assessmentFlowId },
 }) => {
     const router = useRouter();
+    const [assessmentFlow, setAssessmentFlow] = useState<IAssessmentFlowDto>();
+
+    useEffect(() => {
+        const fetchWorkflow = async (assessmentFlowId: number) => {
+            try {
+                const flow =
+                    await assessmentFlowsServices.getByIdAsync(
+                        assessmentFlowId
+                    );
+
+                setAssessmentFlow(flow.data);
+                toast.success(flow.message);
+            } catch (error) {
+                toast.error("Fialure");
+            }
+        };
+
+        if (assessmentFlowId) fetchWorkflow(assessmentFlowId);
+    }, [assessmentFlowId]);
 
     return (
         <div className="w-full p-6 bg-white shadow-md rounded-lg">
@@ -78,19 +101,29 @@ const JobCard: React.FC<JobCardProps> = ({
                     </button>
                 </div>
             </div>
-            <div className="hidden md:grid grid-cols-6 mt-2 mb-6">
-                {arrs.map((item, index) => (
-                    <div
-                        key={item.name}
-                        className='text-center items-center p-4 relative after:content-[""] after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:h-3/5 after:w-[1px] after:bg-gray-400 last:after:w-0'
-                    >
-                        <h4 className="text-xl font-medium text-neutral-700 mb-2">
-                            {item.numOfCandidate}
-                        </h4>
-                        <p className="text-neutral-500">{item.name}</p>
-                    </div>
-                ))}
-            </div>
+            <ul className="hidden md:flex items-center justify-between mt-2 mb-6">
+                {assessmentFlow &&
+                    assessmentFlow.assessments.map((assessment, index) => (
+                        <React.Fragment key={assessment.id}>
+                            <li className="text-center items-center p-4">
+                                <h4 className="text-xl font-medium text-neutral-700 mb-2">
+                                    0
+                                </h4>
+                                <p className="text-neutral-500">
+                                    {
+                                        AssessmentTypes[
+                                            assessment.assessmentTypeName
+                                        ]
+                                    }
+                                </p>
+                            </li>
+                            {index !==
+                                assessmentFlow.assessments.length - 1 && (
+                                <div className="w-[1px] h-14 bg-gray-300"></div>
+                            )}
+                        </React.Fragment>
+                    ))}
+            </ul>
             <div className="w-full flex justify-between">
                 <div className="hidden sm:block">
                     <span className="text-neutral-500 text-sm">{status}</span>

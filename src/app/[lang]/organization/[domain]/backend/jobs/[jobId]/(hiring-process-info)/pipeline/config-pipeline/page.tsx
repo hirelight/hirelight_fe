@@ -2,8 +2,6 @@ import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
 
-import LoadingIndicator from "@/components/LoadingIndicator";
-
 import PipelineConfig from "./components/PipelineConfig";
 
 export const metadata: Metadata = {

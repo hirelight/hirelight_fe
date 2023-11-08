@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import React, { ReactNode } from "react";
+import { cookies } from "next/headers";
 
 import HeaderBar from "./components/HeaderBar";
 import styles from "./layout.module.scss";

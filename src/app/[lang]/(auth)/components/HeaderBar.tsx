@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { BellAlertIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 import { cookies } from "next/headers";
 
@@ -8,9 +7,9 @@ import { LocaleSwitcher, ThemeSwitcher } from "@/components";
 
 import InvitationDropDown from "./InvitationDropDown";
 
-const HeaderBar = () => {
-    const token = cookies().get("hirelight_access_token")?.value;
+type HeaderBarProps = {};
 
+const HeaderBar: React.FC<HeaderBarProps> = ({}) => {
     return (
         <div className="text-center w-full  h-fit bg-white dark:bg-blue-950 drop-shadow-md relative z-10">
             <div className="max-w-screen-xl mx-auto flex items-center justify-between p-4 xl:px-6">
@@ -36,7 +35,7 @@ const HeaderBar = () => {
                             <BellAlertIcon className="w-6 h-6" />
                         </button>
                     </div>
-                    {token ? <InvitationDropDown /> : null}
+                    <InvitationDropDown />
                     <LocaleSwitcher />
                 </div>
             </div>

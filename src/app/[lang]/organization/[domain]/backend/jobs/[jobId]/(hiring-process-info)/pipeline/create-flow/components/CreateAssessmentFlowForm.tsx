@@ -206,6 +206,7 @@ const CreateAssessmentFlowForm: React.FC<CreateAssessmentFlowFormProps> = ({
                 </section>
             </div>
             <div className="p-4 flex items-center gap-4 text-sm">
+                <Button className="mr-auto">Apply template</Button>
                 <Button type="submit">Save</Button>
                 <button
                     type="button"

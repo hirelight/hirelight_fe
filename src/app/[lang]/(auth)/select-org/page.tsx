@@ -20,89 +20,7 @@ export const metadata: Metadata = {
     title: "Hirelight - Welcome",
 };
 
-const fetchOwnedOrgs = async (token: string): Promise<IOrganizationDto[]> => {
-    const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_API}${endpoints.ORGANIZATIONS}/owned`,
-        {
-            method: "GET",
-            cache: "no-store",
-            headers: {
-                mode: "cors",
-                credentials: "same-origin",
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-        }
-    );
-
-    if (!res.ok) {
-        throw new Error("Failed to fetch data");
-    }
-
-    const jsonRes = await res.json();
-    console.log(jsonRes);
-
-    checkResErr(jsonRes);
-
-    return jsonRes.data;
-};
-
-const fetchJoinedOrgs = async (token: string): Promise<IOrganizationDto[]> => {
-    const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_API}${endpoints.ORGANIZATIONS}/joined`,
-        {
-            method: "GET",
-            cache: "no-store",
-            headers: {
-                mode: "cors",
-                credentials: "same-origin",
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-        }
-    );
-
-    if (!res.ok) {
-        throw new Error("Failed to fetch data");
-    }
-
-    const jsonRes = await res.json();
-    console.log(jsonRes);
-
-    checkResErr(jsonRes);
-
-    return jsonRes.data;
-};
-
-const getJoinedOrgList = async (token: string): Promise<IOrganizationDto[]> => {
-    const [ownedOrgs, joinedOrgs] = await Promise.all([
-        fetchOwnedOrgs(token),
-        fetchJoinedOrgs(token),
-    ]);
-
-    const orgMap = new Map();
-
-    ownedOrgs?.forEach(org => {
-        if (!orgMap.has(org.id)) orgMap.set(org.id, org);
-    });
-
-    joinedOrgs?.forEach(org => {
-        if (!orgMap.has(org.id)) orgMap.set(org.id, org);
-    });
-
-    return Array.from(orgMap.values());
-};
-
 const SelectOrgPage = async () => {
-    const accessToken = cookies().get("hirelight_access_token");
-    if (!accessToken) redirect("login");
-
-    const queryClient = new QueryClient();
-    await queryClient.prefetchQuery({
-        queryKey: ["joined-owned-organizations"],
-        queryFn: () => getJoinedOrgList(accessToken.value),
-    });
-
     return (
         <div className="min-w-[540px] relative bg-white shadow-lg rounded-md p-8 mx-auto text-center">
             <div className="w-24 h-24 mx-auto mb-6 border border-gray-300 rounded-full overflow-hidden">
@@ -112,9 +30,7 @@ const SelectOrgPage = async () => {
                     className="w-full h-auto object-cover"
                 />
             </div>
-            <HydrationBoundary state={dehydrate(queryClient)}>
-                <JoinedOrgList />
-            </HydrationBoundary>
+            <JoinedOrgList />
             {/* <div className="mt-8 text-sm text-center relative flex flex-col items-center">
             <p className="text-gray-500">{login_page.dont_have_account}</p>
             <Link

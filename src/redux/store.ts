@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 
+import authReducer from "./slices/auth.slice";
 import jobReducer from "./slices/job.slice";
 import questionKitsReducer from "./slices/question-kits.slice";
 import candidatesReducer from "./slices/candidates.slice";
@@ -9,6 +10,7 @@ import assessmentFlowTemplatesReducer from "./slices/assessment-flow-templates.s
 
 export const store = configureStore({
     reducer: {
+        auth: authReducer,
         job: jobReducer,
         questionKits: questionKitsReducer,
         candidates: candidatesReducer,

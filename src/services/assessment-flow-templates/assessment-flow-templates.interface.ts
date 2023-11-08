@@ -5,10 +5,12 @@ export interface ICreateAssessmentFlTempDto {
 
 export interface IEditAssessmentFlTempDto extends ICreateAssessmentFlTempDto {
     id: number;
+    organizationId: number;
 }
 
 export interface IAssessmentFlTempDto {
-    organizationId: number;
+    id?: number;
+    organizationId?: number;
     name: string;
     content: string;
 }

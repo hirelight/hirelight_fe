@@ -12,6 +12,8 @@ import authServices from "@/services/auth/auth.service";
 import { Portal } from "@/components/index";
 import { GoogleIcon, LinkedInIcon, SpinLoading } from "@/icons";
 import { LoginEmployerDto } from "@/services/auth/auth.interface";
+import { fetchAccessToken, loginEmailPwd } from "@/redux/thunks/auth.thunk";
+import { useAppDispatch } from "@/redux/reduxHooks";
 
 import styles from "./LoginForm.module.scss";
 
@@ -21,6 +23,7 @@ interface ILoginForm {
 
 const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
     const router = useRouter();
+    const dispatch = useAppDispatch();
 
     const loginStatus = useSearchParams().get("status");
     const loginId = useSearchParams().get("loginId");
@@ -52,21 +55,11 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
         setLoading(true);
 
         try {
-            const res = await authServices.loginEmployer(loginForm);
-
-            toast.success(res.message);
+            const res: any = await dispatch(loginEmailPwd(loginForm));
             setLoading(false);
 
-            Cookies.set("hirelight_access_token", res.data.accessToken, {
-                domain:
-                    process.env.NODE_ENV === "production"
-                        ? `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
-                        : ".localhost",
-                sameSite: "None",
-                secure: true,
-            });
-
-            if (isAdmin(res.data.accessToken)) return router.push("/admin");
+            if (isAdmin(res.payload.data.accessToken))
+                return router.push("/admin");
 
             router.push(
                 `/select-org?isOrgOwner=${isOrgOwner}&isOrgMember=${isOrgMember}`
@@ -169,44 +162,33 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
     //     [handleRedirect, isOrgMember, isOrgOwner, router, _t]
     // );
 
-    const fetchAccessToken = React.useCallback(
+    const getToken = React.useCallback(
         async (loginId: string) => {
             setPageLoading(true);
             try {
-                const res = await authServices.getAccessToken(loginId);
-                if (res.statusCode === 200) {
-                    Cookies.set(
-                        "hirelight_access_token",
-                        res.data.accessToken,
-                        {
-                            domain: ".localhost",
-                            sameSite: "None",
-                            secure: true,
-                        }
-                    );
-                    router.push(
-                        `/select-org?isOrgOwner=${isOrgOwner}&isOrgMember=${isOrgMember}`
-                    );
-                    // handleRedirectOrgBased(res.data.accessToken);
-                }
+                const res = await dispatch(fetchAccessToken(loginId));
+
+                router.push(
+                    `/select-org?isOrgOwner=${isOrgOwner}&isOrgMember=${isOrgMember}`
+                );
             } catch (error) {
                 console.error(error);
             }
         },
-        [isOrgMember, isOrgOwner, router]
+        [dispatch, isOrgMember, isOrgOwner, router]
     );
 
     React.useEffect(() => {
         const accessToken = Cookies.get("hirelight_access_token");
         if (!accessToken) {
             if (loginStatus && loginId) {
-                fetchAccessToken(loginId);
+                getToken(loginId);
             }
         } else {
             if (isAdmin(accessToken)) router.push("/admin");
             else router.push("select-org");
         }
-    }, [fetchAccessToken, isAdmin, loginId, loginStatus, router]);
+    }, [getToken, isAdmin, loginId, loginStatus, router]);
 
     return (
         <form onSubmit={handleLogin}>

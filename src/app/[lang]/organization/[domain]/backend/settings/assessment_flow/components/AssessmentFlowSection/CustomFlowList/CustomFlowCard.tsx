@@ -5,9 +5,11 @@ import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, LazyMotion, domAnimation } from "framer-motion";
 
-import { IAssessmentFlTempDto } from "@/services/assessment-flow-templates/assessment-flow-templates.interface";
+import {
+    IAssessmentFlTempDto,
+    IEditAssessmentFlTempDto,
+} from "@/services/assessment-flow-templates/assessment-flow-templates.interface";
 import { IAssessmentFlow } from "@/services/assessment-flows/assessment-flows.interface";
-import { IEditAppFormTemplateDto } from "@/services/app-form-template/app-form-template.interface";
 import assessmentFlowTemplatesServices from "@/services/assessment-flow-templates/assessment-flow-templates.service";
 
 import AssessmentFlowForm from "../AssessmentFlowForm";
@@ -23,7 +25,7 @@ const CustomFlowCard: React.FC<CustomFlowCardProps> = ({ data }) => {
 
     const queryClient = useQueryClient();
     const updateTemplateMutation = useMutation({
-        mutationFn: (createDto: IEditAppFormTemplateDto) =>
+        mutationFn: (createDto: IEditAssessmentFlTempDto) =>
             assessmentFlowTemplatesServices.editASync(createDto),
         onSuccess: res => {
             toast.success(res.message);
@@ -38,11 +40,14 @@ const CustomFlowCard: React.FC<CustomFlowCardProps> = ({ data }) => {
     });
 
     const handleEditFlow = (newFlow: IAssessmentFlTempDto) => {
-        updateTemplateMutation.mutate({
-            id: newFlow.organizationId,
-            name: newFlow.name,
-            content: newFlow.content,
-        });
+        if (newFlow.id && newFlow.organizationId)
+            updateTemplateMutation.mutate({
+                id: newFlow.id,
+                organizationId: newFlow.organizationId,
+                name: newFlow.name,
+                content: newFlow.content,
+            });
+        else toast.error("Template id and orgId required!");
         setShowEditing(false);
     };
 

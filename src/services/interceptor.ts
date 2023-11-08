@@ -22,7 +22,6 @@ interceptor.interceptors.request.use((req: InternalAxiosRequestConfig<any>) => {
 interceptor.interceptors.response.use(
     (res: AxiosResponse) => {
         const { code, auto } = res.data;
-
         if (code === 401) {
             if (auto === "yes") {
                 console.log("Get new token");

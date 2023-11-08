@@ -3,49 +3,28 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { toast } from "react-toastify";
 
-import { pipelineStages } from "@/utils/shared/initialDatas";
 import {
     AssessmentTypeKey,
     AssessmentTypes,
 } from "@/interfaces/assessment.interface";
-import jobServices from "@/services/job/job.service";
-import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
-import {
-    IAssessmentDto,
-    IAssessmentFlowDto,
-} from "@/services/assessment-flows/assessment-flows.interface";
+import { IAssessmentDto } from "@/services";
 
 import styles from "./PipelineStages.module.scss";
 
 const defaultStage: AssessmentTypeKey[] = ["SOURCED", "HIRED"];
 interface IPipelineStages {
-    selectedId: AssessmentTypeKey;
-    onSelect: (id: AssessmentTypeKey) => void;
+    stages: IAssessmentDto[];
+    selectedStage: IAssessmentDto;
+    onSelect: (selected: IAssessmentDto) => void;
 }
 
-const PipelineStages = ({ selectedId, onSelect }: IPipelineStages) => {
+const PipelineStages = ({
+    selectedStage,
+    onSelect,
+    stages,
+}: IPipelineStages) => {
     const { jobId } = useParams();
-    const [stages, setStages] = useState<IAssessmentDto[]>([]);
-
-    useEffect(() => {
-        const fetchWorkflow = async () => {
-            try {
-                const jobRes = await jobServices.getByIdAsync(
-                    parseInt(jobId as string)
-                );
-                const flow = await assessmentFlowsServices.getByIdAsync(
-                    jobRes.data.assessmentFlowId
-                );
-                setStages(flow.data.assessments);
-            } catch (error) {
-                toast.error("Fialure");
-            }
-        };
-
-        fetchWorkflow();
-    }, [jobId]);
 
     return (
         <aside>
@@ -62,14 +41,12 @@ const PipelineStages = ({ selectedId, onSelect }: IPipelineStages) => {
                                     ? "cursor-not-allowed opacity-70"
                                     : "hover:bg-gray-400 hover:text-neutral-700"
                             } ${
-                                selectedId === stage.assessmentTypeName
+                                selectedStage.assessmentTypeName ===
+                                stage.assessmentTypeName
                                     ? styles.active
                                     : ""
                             }`}
-                            onClick={onSelect.bind(
-                                null,
-                                stage.assessmentTypeName
-                            )}
+                            onClick={onSelect.bind(null, stage)}
                         >
                             <span>
                                 {AssessmentTypes[stage.assessmentTypeName]}

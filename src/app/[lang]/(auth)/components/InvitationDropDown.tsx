@@ -8,21 +8,23 @@ import Cookies from "js-cookie";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useOutsideClick } from "@/hooks/useClickOutside";
-import employerOrgServices from "@/services/employer-organization/employer-organization.service";
-import { IEmployerInvitationDto } from "@/services/employer-organization/employer-organization.interface";
 import { delayFunc } from "@/helpers";
+import { IEmployerInvitationDto } from "@/services";
+import employerOrgServices from "@/services/employer-organization/employer-organization.service";
 import authServices from "@/services/auth/auth.service";
 import organizationsServices from "@/services/organizations/organizations.service";
+import { useAppSelector } from "@/redux/reduxHooks";
 
 import styles from "./InvitationDropDown.module.scss";
 
 const InvitationDropDown = () => {
     const router = useRouter();
+    const token = useAppSelector(state => state.auth.token);
 
     const [invitations, setInvitations] = useState<IEmployerInvitationDto[]>(
         []
     );
-    const [showDropdown, setShowDropdown] = React.useState(true);
+    const [showDropdown, setShowDropdown] = React.useState(false);
     const dropDownRef = useOutsideClick<HTMLDivElement>(() =>
         setShowDropdown(false)
     );
@@ -84,9 +86,10 @@ const InvitationDropDown = () => {
                 toast.error("Fetch invitations error");
             }
         };
+        if (token) fetchInvitaionList();
+    }, [token]);
 
-        fetchInvitaionList();
-    }, []);
+    if (!token) return null;
 
     return (
         <div ref={dropDownRef} className="relative text-left">

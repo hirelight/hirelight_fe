@@ -12,13 +12,18 @@ import { useParams } from "next/navigation";
 
 import styles from "./PipelineConfigAssessment.module.scss";
 
-const PipelineConfigAssessment = () => {
-    const { assessmentId } = useParams();
+type PipelineConfigAssessmentProps = {
+    assessmentId: number;
+};
+
+const PipelineConfigAssessment: React.FC<PipelineConfigAssessmentProps> = ({
+    assessmentId,
+}) => {
     return (
         <div className="w-full px-6">
             <div className="flex flex-col lg:flex-row gap-8">
                 <Link
-                    href={`config-pipeline/123/face-to-face-assessment/new`}
+                    href={`config-pipeline/${assessmentId}/face-to-face-assessment/new`}
                     className={styles.assessment__wrapper}
                 >
                     <Image
@@ -33,7 +38,7 @@ const PipelineConfigAssessment = () => {
                     </p>
                 </Link>
                 <Link
-                    href={`config-pipeline/123/one-way-assessment/new`}
+                    href={`config-pipeline/${assessmentId}/one-way-assessment/new`}
                     className={styles.assessment__wrapper}
                 >
                     <Image
@@ -50,7 +55,7 @@ const PipelineConfigAssessment = () => {
                     </p>
                 </Link>
                 <Link
-                    href={`config-pipeline/123/multiple-choice-assessment/new`}
+                    href={`config-pipeline/${assessmentId}/multiple-choice-assessment/new`}
                     className={styles.assessment__wrapper}
                 >
                     <Image
