@@ -68,7 +68,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                     process.env.NODE_ENV === "production"
                         ? `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
                         : ".localhost",
-                sameSite: "strict",
+                sameSite: "None",
                 secure: true,
             });
 
@@ -98,7 +98,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
     //                     res.data.accessToken,
     //                     {
     //                         domain: `${org.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-    //                         sameSite: "strict",
+    //                         sameSite: "None",
     //                         secure: true,
     //                     }
     //                 );
@@ -186,7 +186,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                         res.data.accessToken,
                         {
                             domain: ".localhost",
-                            sameSite: "strict",
+                            sameSite: "None",
                             secure: true,
                         }
                     );

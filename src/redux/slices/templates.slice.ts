@@ -1,4 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 import {
     IEmailTemplateTypeDto,
@@ -7,6 +8,7 @@ import {
 
 import {
     deleteEmailTemplateById,
+    editEmailTemplate,
     fetchEmailTemplateTypes,
     fetchEmailTemplates,
 } from "../thunks/email-templates.thunk";
@@ -73,6 +75,19 @@ const templatesSlice = createSlice({
             )
             .addCase(fetchEmailTemplateTypes.rejected, (state, action) => {
                 state.emailTemplates.loading = false;
+            });
+
+        builder
+            .addCase(editEmailTemplate.pending, state => {
+                state.emailTemplates.loading = true;
+            })
+            .addCase(editEmailTemplate.fulfilled, (state, action) => {
+                state.emailTemplates.loading = false;
+                toast.success("Edit email success!");
+            })
+            .addCase(editEmailTemplate.rejected, (state, action) => {
+                state.emailTemplates.loading = false;
+                toast.error("Edit email failure!");
             });
 
         builder

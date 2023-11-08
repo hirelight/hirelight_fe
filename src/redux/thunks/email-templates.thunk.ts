@@ -1,9 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import emailTemplateServices from "@/services/email-template/email-template.service";
+import { IEditEmailTemplatesDto } from "@/services/email-template/email-template.interface";
 
 import {
     DELTE_EMAIL_TEMPLATES_BY_ID,
+    EDIT_EMAIL_TEMPLATE,
     FETCH_EMAIL_TEMPLATES,
     FETCH_EMAIL_TEMPLATE_TYPES,
 } from "../constants";
@@ -22,6 +24,14 @@ export const fetchEmailTemplateTypes = createAsyncThunk(
         const data =
             await emailTemplateServices.getEmailTemplateTypesListAsync();
         return data.data;
+    }
+);
+
+export const editEmailTemplate = createAsyncThunk(
+    EDIT_EMAIL_TEMPLATE,
+    async (editDto: IEditEmailTemplatesDto) => {
+        const data = await emailTemplateServices.editAsync(editDto);
+        return data;
     }
 );
 

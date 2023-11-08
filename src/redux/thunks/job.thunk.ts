@@ -1,12 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import jobServices from "@/services/job/job.service";
-import { ICreateJobDto } from "@/services/job/job.interface";
+import { ICreateJobDto, IEditJobDto } from "@/services/job/job.interface";
 import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
 import { IAppFormSection } from "@/interfaces";
 import { IAppFormTemplateSection } from "@/interfaces/app-form-template.interface";
 
-import { CREATE_NEW_JOBPOST, GET_JOB_BY_ID } from "../constants/job.contant";
+import {
+    CREATE_NEW_JOBPOST,
+    EDIT_JOB,
+    GET_JOB_BY_ID,
+} from "../constants/job.contant";
 
 export const createNewJobPost = createAsyncThunk(
     CREATE_NEW_JOBPOST,
@@ -35,6 +39,15 @@ export const getJobById = createAsyncThunk(
             ...jobAppFormRes.data,
             applicationForm: JSON.stringify(mergeAppForm),
         };
+    }
+);
+
+export const updateJob = createAsyncThunk(
+    EDIT_JOB,
+    async (editJobDto: IEditJobDto) => {
+        const res = await jobServices.editAsync(editJobDto);
+
+        return { ...res, data: editJobDto };
     }
 );
 

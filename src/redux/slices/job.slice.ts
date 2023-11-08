@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 import {
     ICreateJobDto,
@@ -8,7 +9,7 @@ import {
 } from "@/services/job/job.interface";
 import { IAddAppFormField, IAppFormSection } from "@/interfaces";
 
-import { createNewJobPost, getJobById } from "../thunks/job.thunk";
+import { createNewJobPost, getJobById, updateJob } from "../thunks/job.thunk";
 
 export interface IJobSliceInitialState {
     data: Omit<IJobDto, "content" | "applicationForm"> & {
@@ -123,6 +124,24 @@ const jobSlice = createSlice({
                 console.log(action.payload);
             })
             .addCase(createNewJobPost.rejected, (state, action) => {});
+
+        builder
+            .addCase(updateJob.pending, state => {
+                state.loading = true;
+            })
+            .addCase(updateJob.fulfilled, (state, action) => {
+                const { data, message } = action.payload;
+                state.data = {
+                    ...data,
+                    content: JSON.parse(data.content),
+                    applicationForm: JSON.parse(data.applicationForm),
+                } as typeof state.data;
+                state.loading = false;
+                toast.success(message);
+            })
+            .addCase(updateJob.rejected, state => {
+                state.loading = false;
+            });
 
         builder
             .addCase(getJobById.pending, state => {

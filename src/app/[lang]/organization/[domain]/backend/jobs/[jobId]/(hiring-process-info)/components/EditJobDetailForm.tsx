@@ -22,6 +22,7 @@ import {
 } from "@/services/job/job.interface";
 import jobServices from "@/services/job/job.service";
 import { IAppFormSection } from "@/interfaces";
+import { updateJob } from "@/redux/thunks/job.thunk";
 
 import FormInput from "../../../components/FormInput";
 
@@ -97,13 +98,21 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = ({ data }) => {
         }
 
         try {
-            const res = await jobServices.editAsync({
-                ...job,
-                id: data.id,
-                content: JSON.stringify(job.content),
-                applicationForm: JSON.stringify(job.applicationForm),
-            });
-            toast.success(res.message);
+            // const res = await jobServices.editAsync({
+            //     ...job,
+            //     id: data.id,
+            //     content: JSON.stringify(job.content),
+            //     applicationForm: JSON.stringify(job.applicationForm),
+            // });
+            // toast.success(res.message);
+            dispatch(
+                updateJob({
+                    ...job,
+                    id: data.id,
+                    content: JSON.stringify(job.content),
+                    applicationForm: JSON.stringify(job.applicationForm),
+                })
+            );
         } catch (error) {
             console.error(error);
             toast.error("Create job failure");

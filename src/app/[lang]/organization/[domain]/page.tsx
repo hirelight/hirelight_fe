@@ -26,7 +26,7 @@ const DomainPage = ({
                         "hirelight_access_token",
                         accessToken as string,
                         {
-                            sameSite: "strict",
+                            sameSite: "None",
                             secure: true,
                         }
                     );

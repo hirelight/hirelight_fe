@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setJob } from "@/redux/slices/job.slice";
 import jobServices from "@/services/job/job.service";
+import { updateJob } from "@/redux/thunks/job.thunk";
 
 import styles from "./JobHeader.module.scss";
 
@@ -17,6 +18,7 @@ const JobHeader = ({}: IJobHeader) => {
     const pathname = usePathname();
     const { jobId, lang } = useParams();
     const job = useAppSelector(state => state.job.data);
+    const dispatch = useAppDispatch();
 
     const handleSaveAndContinue = async (e: any) => {
         e.preventDefault();
@@ -39,29 +41,48 @@ const JobHeader = ({}: IJobHeader) => {
             switch (stage.toLowerCase()) {
                 case "edit": {
                     if (jobId !== undefined) {
-                        const res = await jobServices.editAsync({
-                            ...job,
-                            id: parseInt(jobId as string),
-                            content: JSON.stringify(job.content),
-                            applicationForm: JSON.stringify(
-                                job.applicationForm
-                            ),
-                        });
-                        toast.success(res.message);
+                        // const res = await jobServices.editAsync({
+                        //     ...job,
+                        //     id: parseInt(jobId as string),
+                        //     content: JSON.stringify(job.content),
+                        //     applicationForm: JSON.stringify(
+                        //         job.applicationForm
+                        //     ),
+                        // });
+                        dispatch(
+                            updateJob({
+                                ...job,
+                                id: parseInt(jobId as string),
+                                content: JSON.stringify(job.content),
+                                applicationForm: JSON.stringify(
+                                    job.applicationForm
+                                ),
+                            })
+                        );
                     }
                     break;
                 }
                 case "app-form":
                     if (jobId !== undefined) {
-                        const res = await jobServices.editAsync({
-                            ...job,
-                            id: parseInt(jobId as string),
-                            content: JSON.stringify(job.content),
-                            applicationForm: JSON.stringify(
-                                job.applicationForm
-                            ),
-                        });
-                        toast.success(res.message);
+                        // const res = await jobServices.editAsync({
+                        //     ...job,
+                        //     id: parseInt(jobId as string),
+                        //     content: JSON.stringify(job.content),
+                        //     applicationForm: JSON.stringify(
+                        //         job.applicationForm
+                        //     ),
+                        // });
+                        // toast.success(res.message);
+                        dispatch(
+                            updateJob({
+                                ...job,
+                                id: parseInt(jobId as string),
+                                content: JSON.stringify(job.content),
+                                applicationForm: JSON.stringify(
+                                    job.applicationForm
+                                ),
+                            })
+                        );
                     }
                     break;
                 case "members":
