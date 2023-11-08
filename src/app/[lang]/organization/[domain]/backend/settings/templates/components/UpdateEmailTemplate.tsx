@@ -19,6 +19,11 @@ const EmailEditorNoSSR = dynamic(() => import("./EmailEditor"), {
     loading: () => <div className="bg-white min-h-[220px]"></div>,
 });
 
+const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
+    ssr: false,
+    loading: () => <div className="bg-white min-h-[220px]"></div>,
+});
+
 interface IUpdateEmailTemplate {
     data: IEmailTemplatesDto;
     onSaveChanges: () => void;
@@ -59,7 +64,7 @@ const UpdateEmailTemplate: React.FC<IUpdateEmailTemplate> = ({
     const [form, setForm] = useState<IEditEmailTemplatesDto>({
         id: data.id,
         name: data.name,
-        title: data.title,
+        subject: data.subject,
         content: data.content,
         emailTemplateTypeId: data.emailTemplateType.id,
     });
@@ -84,13 +89,21 @@ const UpdateEmailTemplate: React.FC<IUpdateEmailTemplate> = ({
             </div>
             <div className="grid grid-cols-3 mb-4 gap-4">
                 <div className="col-span-2">
-                    <CustomInput
-                        type="text"
-                        title={t.form.title.label}
-                        value={form.title}
-                        onChange={(e: any) =>
-                            setForm({ ...form, title: e.target.value })
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <span className="text-red-500 mr-1">*</span>
+                        {t.form.title.label}
+                    </label>
+                    <QuillEditorNoSSR
+                        value={form.subject}
+                        onChange={content =>
+                            setForm({ ...form, subject: content })
                         }
+                        className="bg-white"
+                        config={{
+                            toolbar: {
+                                visibile: false,
+                            },
+                        }}
                     />
                 </div>
                 <div></div>

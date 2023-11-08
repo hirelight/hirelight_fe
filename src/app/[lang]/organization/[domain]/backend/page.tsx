@@ -22,21 +22,19 @@ const getJobList = async (): Promise<IJobDto[]> => {
     const token = cookies().get("hirelight_access_token")!!.value;
     const decoded: any = jwtDecode(token);
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_API}${endpoints.JOBPOSTS}/search`,
+        `${process.env.NEXT_PUBLIC_SERVER_API}${endpoints.JOBPOSTS}/search?OrganizationId=${decoded.organizationId}`,
         {
-            method: "POST",
-            cache: "no-store",
+            method: "GET",
             headers: {
                 mode: "cors",
                 credentials: "same-origin",
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({
-                organizationId: decoded.organizationId,
-            }),
         }
     );
+
+    console.log(res);
 
     if (!res.ok) {
         throw new Error("Failed to fetch data");

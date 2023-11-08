@@ -1,7 +1,7 @@
 export interface ICreateEmailTemplatesDto {
     emailTemplateTypeId: number;
     name: string;
-    title: string;
+    subject: string;
     content: string;
 }
 
@@ -11,7 +11,7 @@ export interface IEmailTemplatesDto {
     updaterId: number;
     emailTemplateType: IEmailTemplateTypeDto;
     name: string;
-    title: string;
+    subject: string;
     content: string;
     parameters: string;
     createdTime: string;
@@ -22,7 +22,7 @@ export interface IEmailTemplatesDto {
 export interface IEditEmailTemplatesDto {
     id: number;
     name: string;
-    title: string;
+    subject: string;
     content: string;
     emailTemplateTypeId: number;
 }

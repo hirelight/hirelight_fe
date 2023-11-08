@@ -74,103 +74,106 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
 
             if (isAdmin(res.data.accessToken)) return router.push("/admin");
 
-            handleRedirectOrgBased(res.data.accessToken);
+            router.push(
+                `/select-org?isOrgOwner=${isOrgOwner}&isOrgMember=${isOrgMember}`
+            );
+            // handleRedirectOrgBased(res.data.accessToken);
         } catch (error) {
             setLoading(false);
             console.error(error);
         }
     };
 
-    const handleRedirect = React.useCallback(
-        async (org: IOrganizationDto) => {
-            try {
-                const res = await authServices.getOrgAccessToken(org.id);
-                if (process.env.NODE_ENV === "development")
-                    router.replace(
-                        `${window.location.protocol}//${org.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?loginId=${loginId}&accessToken=${res.data.accessToken}`
-                    );
-                else {
-                    Cookies.set(
-                        "hirelight_access_token",
-                        res.data.accessToken,
-                        {
-                            domain: `${org.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-                            sameSite: "strict",
-                            secure: true,
-                        }
-                    );
-                    router.replace(
-                        `${window.location.protocol}//${org.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend`
-                    );
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        },
-        [loginId, router]
-    );
+    // const handleRedirect = React.useCallback(
+    //     async (org: IOrganizationDto) => {
+    //         try {
+    //             const res = await authServices.getOrgAccessToken(org.id);
+    //             if (process.env.NODE_ENV === "development")
+    //                 router.replace(
+    //                     `${window.location.protocol}//${org.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?loginId=${loginId}&accessToken=${res.data.accessToken}`
+    //                 );
+    //             else {
+    //                 Cookies.set(
+    //                     "hirelight_access_token",
+    //                     res.data.accessToken,
+    //                     {
+    //                         domain: `${org.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+    //                         sameSite: "strict",
+    //                         secure: true,
+    //                     }
+    //                 );
+    //                 router.replace(
+    //                     `${window.location.protocol}//${org.subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend`
+    //                 );
+    //             }
+    //         } catch (error) {
+    //             console.error(error);
+    //         }
+    //     },
+    //     [loginId, router]
+    // );
 
-    const handleRedirectOrgBased = React.useCallback(
-        async (token: string) => {
-            setPageLoading(true);
-            console.log(isOrgMember, isOrgOwner);
-            try {
-                const userData: any = jwt_decode(token);
+    // const handleRedirectOrgBased = React.useCallback(
+    //     async (token: string) => {
+    //         setPageLoading(true);
+    //         console.log(isOrgMember, isOrgOwner);
+    //         try {
+    //             const userData: any = jwt_decode(token);
 
-                if (!isOrgMember && !isOrgOwner) {
-                    const [ownedOrgRes, joinedOrgRes] = await Promise.all([
-                        organizationsServices.getOwnedOrganizations(),
-                        organizationsServices.getJoinedOrganizations(),
-                    ]);
+    //             if (!isOrgMember && !isOrgOwner) {
+    //                 const [ownedOrgRes, joinedOrgRes] = await Promise.all([
+    //                     organizationsServices.getOwnedOrganizations(),
+    //                     organizationsServices.getJoinedOrganizations(),
+    //                 ]);
 
-                    if (
-                        ownedOrgRes.statusCode === 200 &&
-                        ownedOrgRes.data !== null
-                    )
-                        return handleRedirect(ownedOrgRes.data[0]);
+    //                 if (
+    //                     ownedOrgRes.statusCode === 200 &&
+    //                     ownedOrgRes.data !== null
+    //                 )
+    //                     return handleRedirect(ownedOrgRes.data[0]);
 
-                    if (
-                        joinedOrgRes.statusCode === 200 &&
-                        joinedOrgRes.data !== null
-                    )
-                        return handleRedirect(joinedOrgRes.data[0]);
+    //                 if (
+    //                     joinedOrgRes.statusCode === 200 &&
+    //                     joinedOrgRes.data !== null
+    //                 )
+    //                     return handleRedirect(joinedOrgRes.data[0]);
 
-                    if (!validWorkEmail(userData.emailAddress)) {
-                        setLoginFormErr(prev => ({
-                            ...prev,
-                            errMessage:
-                                _t.login_form.error.personal_email_no_org,
-                        }));
-                        return setPageLoading(false);
-                    } else return router.push("/organization/new");
-                } else if (isOrgMember == "false" && isOrgOwner == "false") {
-                    if (!validWorkEmail(userData.emailAddress)) {
-                        setLoginFormErr(prev => ({
-                            ...prev,
-                            errMessage:
-                                _t.login_form.error.personal_email_no_org,
-                        }));
-                        setPageLoading(false);
-                    } else router.push("/organization/new");
-                } else {
-                    let res;
-                    if (isOrgOwner == "true")
-                        res =
-                            await organizationsServices.getOwnedOrganizations();
-                    else
-                        res =
-                            await organizationsServices.getJoinedOrganizations();
+    //                 if (!validWorkEmail(userData.emailAddress)) {
+    //                     setLoginFormErr(prev => ({
+    //                         ...prev,
+    //                         errMessage:
+    //                             _t.login_form.error.personal_email_no_org,
+    //                     }));
+    //                     return setPageLoading(false);
+    //                 } else return router.push("/organization/new");
+    //             } else if (isOrgMember == "false" && isOrgOwner == "false") {
+    //                 if (!validWorkEmail(userData.emailAddress)) {
+    //                     setLoginFormErr(prev => ({
+    //                         ...prev,
+    //                         errMessage:
+    //                             _t.login_form.error.personal_email_no_org,
+    //                     }));
+    //                     setPageLoading(false);
+    //                 } else router.push("/organization/new");
+    //             } else {
+    //                 let res;
+    //                 if (isOrgOwner == "true")
+    //                     res =
+    //                         await organizationsServices.getOwnedOrganizations();
+    //                 else
+    //                     res =
+    //                         await organizationsServices.getJoinedOrganizations();
 
-                    if (res.statusCode === 200) {
-                        handleRedirect(res.data[0]);
-                    }
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        [handleRedirect, isOrgMember, isOrgOwner, router, _t]
-    );
+    //                 if (res.statusCode === 200) {
+    //                     handleRedirect(res.data[0]);
+    //                 }
+    //             }
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     },
+    //     [handleRedirect, isOrgMember, isOrgOwner, router, _t]
+    // );
 
     const fetchAccessToken = React.useCallback(
         async (loginId: string) => {
@@ -187,14 +190,16 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                             secure: true,
                         }
                     );
-
-                    handleRedirectOrgBased(res.data.accessToken);
+                    router.push(
+                        `/select-org?isOrgOwner=${isOrgOwner}&isOrgMember=${isOrgMember}`
+                    );
+                    // handleRedirectOrgBased(res.data.accessToken);
                 }
             } catch (error) {
                 console.error(error);
             }
         },
-        [handleRedirectOrgBased]
+        [isOrgMember, isOrgOwner, router]
     );
 
     React.useEffect(() => {
@@ -205,16 +210,9 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
             }
         } else {
             if (isAdmin(accessToken)) router.push("/admin");
-            else handleRedirectOrgBased(accessToken);
+            else router.push("select-org");
         }
-    }, [
-        handleRedirectOrgBased,
-        fetchAccessToken,
-        isAdmin,
-        loginId,
-        loginStatus,
-        router,
-    ]);
+    }, [fetchAccessToken, isAdmin, loginId, loginStatus, router]);
 
     return (
         <form onSubmit={handleLogin}>

@@ -6,6 +6,7 @@ import interceptor from "../interceptor";
 import {
     IEditEmployerDto,
     IEmployerDto,
+    IEmployerInvitationDto,
     INewEmployerDto,
 } from "./employer-organization.interface";
 
@@ -77,12 +78,44 @@ const editEmployerAsync = async (editEmployerDto: IEditEmployerDto) => {
     }
 };
 
+const getEmployerInvitationListAsync = async (): Promise<
+    IResponse<IEmployerInvitationDto[]>
+> => {
+    try {
+        const res = await interceptor.get<IResponse<IEmployerInvitationDto[]>>(
+            baseEndpoint + "/user-invitation"
+        );
+
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const acceptEmployerInvitationListAsync = async (
+    orgId: number
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.put<IResponse<any>>(
+            baseEndpoint + "/invitation/" + orgId
+        );
+
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const employerOrgServices = {
     getListAsync,
     inviteEmployerAsync,
     getByIdAsync,
     deleteByIdAsync,
     editEmployerAsync,
+    getEmployerInvitationListAsync,
+    acceptEmployerInvitationListAsync,
 };
 
 export default employerOrgServices;

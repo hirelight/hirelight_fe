@@ -1,0 +1,32 @@
+.dropdown__wrapper {
+    position: absolute;
+    right: 0;
+    z-index: 10;
+    margin-top: 0.5rem;
+    transform-origin: top right;
+    border-radius: 0.375rem;
+    background-color: white;
+
+    @apply min-w-max max-w-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none;
+    &.entering {
+        opacity: 100;
+        transform: scale(100%);
+        visibility: visible;
+        transition: all ease-out 100ms;
+    }
+
+    &.leaving {
+        opacity: 0;
+        transform: scale(95%);
+        visibility: hidden;
+        transition: all ease-in 100ms;
+    }
+}
+
+.dropdown__item {
+    display: flex;
+    padding: 1rem;
+    width: 100%;
+    text-align: left;
+    @apply max-w-sm text-gray-700 text-sm;
+}

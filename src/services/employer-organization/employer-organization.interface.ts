@@ -19,3 +19,20 @@ export interface IEmployerDto {
     updatedTime: Date;
     status: "ACTIVE";
 }
+
+export interface IEmployerInvitationDto {
+    id: number;
+    senderId: number;
+    organizationId: number;
+    organizationName: string;
+    jobPostId: number;
+    jobPostName: string;
+    assessmentId: number;
+    assessmentName: string;
+    invitationTypeId: number;
+    invitationTypeName: string;
+    inviteeEmail: string;
+    authority: string;
+    createdTime: Date;
+    expiredTime: Date;
+}

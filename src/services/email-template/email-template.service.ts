@@ -71,7 +71,7 @@ class EmailTemplateServices implements IEmailTemplateServices {
         editEmailTemplateDto: IEditEmailTemplatesDto
     ): Promise<IResponse<any>> => {
         try {
-            const res = await interceptor.put<IResponse<any>>(
+            const res = await interceptor.post<IResponse<any>>(
                 `${endpoints.EMAIL_TEMPLATE}/${editEmailTemplateDto.id}`,
                 editEmailTemplateDto
             );

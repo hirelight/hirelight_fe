@@ -5,6 +5,21 @@ import interceptor from "../interceptor";
 
 import { ICreateOrgDto, IOrganizationDto } from "./organizations.interface";
 
+const getByIdAsync = async (
+    orgId: number
+): Promise<IResponse<IOrganizationDto>> => {
+    try {
+        const res = await interceptor.get<IResponse<IOrganizationDto>>(
+            "/organizations" + `/${orgId}`
+        );
+
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const createNewOrganization = async (createNewOrgDto: ICreateOrgDto) => {
     try {
         const res = await interceptor.post(`/organizations`, createNewOrgDto);
@@ -51,11 +66,44 @@ const getOwnedOrganizations = async () => {
     }
 };
 
+const getOwnedJoinedOrganizations = async (): Promise<
+    IResponse<IOrganizationDto[]>
+> => {
+    try {
+        const [ownedOrgRes, joinedOrgRes] = await Promise.all([
+            getOwnedOrganizations(),
+            getJoinedOrganizations(),
+        ]);
+
+        const orgMap = new Map<number, IOrganizationDto>();
+
+        ownedOrgRes.data?.forEach(org => {
+            if (!orgMap.has(org.id)) orgMap.set(org.id, org);
+        });
+
+        joinedOrgRes.data?.forEach(org => {
+            if (!orgMap.has(org.id)) orgMap.set(org.id, org);
+        });
+
+        return {
+            title: "Nothing",
+            data: Array.from(orgMap.values()),
+            message: "Get joined & owned orgs success",
+            statusCode: 200,
+            status: 200,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
 const organizationsServices = {
     createNewOrganization,
     getListOrganizations,
     getJoinedOrganizations,
     getOwnedOrganizations,
+    getByIdAsync,
+    getOwnedJoinedOrganizations,
 };
 
 export default organizationsServices;

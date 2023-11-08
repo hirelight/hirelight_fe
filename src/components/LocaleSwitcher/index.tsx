@@ -31,8 +31,9 @@ const LocaleSwitcher = () => {
             <button
                 type="button"
                 onClick={() => setShowDropdown(!showDropdown)}
+                className="relative p-1 rounded-md border border-neutral-400"
             >
-                <LanguageIcon className="w-6 h-6" />
+                <LanguageIcon className="w-6 h-6 text-neutral-700" />
             </button>
             <ul
                 className={`${styles.locale__dropdown__wrapper} ${

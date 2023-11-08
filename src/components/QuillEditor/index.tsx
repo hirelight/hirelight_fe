@@ -12,7 +12,6 @@ import { checkResErr, resizeImage } from "@/helpers";
 
 import styles from "./QuillEditor.module.scss";
 import EditorToolbar from "./EditorToolbar";
-import CustomSpan from "./CustomSpan";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -39,6 +38,11 @@ interface IQuillEditor {
     className?: string;
     readOnly?: boolean;
     required?: boolean;
+    config?: {
+        toolbar?: {
+            visibile: boolean;
+        };
+    };
 }
 
 const QuillEditor = ({
@@ -49,6 +53,11 @@ const QuillEditor = ({
     className = "",
     readOnly = false,
     required = false,
+    config = {
+        toolbar: {
+            visibile: true,
+        },
+    },
 }: IQuillEditor) => {
     const wrapperRef = useOutsideClick<HTMLDivElement>(
         theme === "bubble"
@@ -246,7 +255,11 @@ const QuillEditor = ({
             >
                 <div
                     ref={toolbarRef}
-                    className={styles.toolbar__container}
+                    className={`${styles.toolbar__container} ${
+                        config.toolbar?.visibile
+                            ? ""
+                            : "!invisible !h-0 !overflow-hidden"
+                    }`}
                     style={{
                         display: !readOnly ? "block" : "none",
                     }}
@@ -266,6 +279,9 @@ const QuillEditor = ({
                             publicSans.className,
                             theme === "snow" ? styles.snow : "",
                             readOnly ? "!border-0" : "",
+                            config.toolbar?.visibile
+                                ? "border-t-0"
+                                : "!rounded-md !overflow-hidden",
                         ].join(" ")}
                     ></div>
                 </div>

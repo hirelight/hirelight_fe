@@ -229,7 +229,7 @@
                             "label": "Name"
                         },
                         "title": {
-                            "label": "Title"
+                            "label": "Subject"
                         },
                         "industry": {
                             "label": "Industry"
@@ -278,7 +278,7 @@
                             "label": "Name"
                         },
                         "title": {
-                            "label": "Title"
+                            "label": "Subject"
                         },
                         "industry": {
                             "label": "Industry"

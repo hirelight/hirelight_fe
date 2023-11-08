@@ -17,7 +17,16 @@ import { Locale } from "../../../../../../../../../i18n.config";
 
 const EmailEditorNoSSR = dynamic(() => import("./EmailEditor"), {
     ssr: false,
-    loading: () => <div className="bg-white min-h-[220px]"></div>,
+    loading: () => (
+        <div className="bg-white min-h-[220px] border border-gray-300 rounded-md"></div>
+    ),
+});
+
+const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
+    ssr: false,
+    loading: () => (
+        <div className="bg-white h-11 border border-gray-300 rounded-md"></div>
+    ),
 });
 
 interface IAddEmailTemplate {
@@ -37,7 +46,10 @@ const AddEmailTemplate: React.FC<IAddEmailTemplate> = ({
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationFn: (newEmailTemplate: ICreateEmailTemplatesDto) =>
-            emailTemplateServices.createAsync(newEmailTemplate),
+            emailTemplateServices.createAsync({
+                ...newEmailTemplate,
+                subject: `<p>${newEmailTemplate.subject}</p>`,
+            }),
         onSuccess: res => {
             toast.success(res.message);
             queryClient.invalidateQueries({ queryKey: ["email-templates"] });
@@ -51,7 +63,7 @@ const AddEmailTemplate: React.FC<IAddEmailTemplate> = ({
 
     const [form, setForm] = useState<ICreateEmailTemplatesDto>({
         name: "",
-        title: "",
+        subject: "",
         content: "",
         emailTemplateTypeId:
             emailTemplateTypes.length > 0 ? emailTemplateTypes[0].id : 1,
@@ -88,13 +100,30 @@ const AddEmailTemplate: React.FC<IAddEmailTemplate> = ({
             </div>
             <div className="grid grid-cols-3 mb-4 gap-4">
                 <div className="col-span-2">
-                    <CustomInput
+                    {/* <CustomInput
                         type="text"
                         title={t.form.title.label}
-                        value={form.title}
+                        value={form.subject}
                         onChange={(e: any) =>
-                            setForm({ ...form, title: e.target.value })
+                            setForm({ ...form, subject: e.target.value })
                         }
+                        required
+                    /> */}
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <span className="text-red-500 mr-1">*</span>
+                        {t.form.title.label}
+                    </label>
+                    <QuillEditorNoSSR
+                        value={form.subject}
+                        onChange={content =>
+                            setForm({ ...form, subject: content })
+                        }
+                        className="bg-white"
+                        config={{
+                            toolbar: {
+                                visibile: false,
+                            },
+                        }}
                     />
                 </div>
                 <div></div>
