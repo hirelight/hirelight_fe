@@ -1,7 +1,8 @@
-import React, { FormEvent } from "react";
+import React, { FormEvent, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { useParams } from "next/navigation";
+import { toast } from "react-toastify";
 
 import {
     Button,
@@ -11,6 +12,7 @@ import {
     Selection,
 } from "@/components";
 import { IAssessmentDto, IEditAsyncVideoInterviewDto } from "@/services";
+import assessmentsServices from "@/services/assessments/assessments.service";
 
 import QuestionSection from "./QuestionSection";
 
@@ -20,12 +22,27 @@ const AddNewQuestionSection = dynamic(
 
 const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ssr: false,
-    loading: () => <p>Loading ...</p>,
+    loading: () => <div className="min-h-[300px] border border-gray-300"></div>,
 });
+
+export type AsyncQuestionType = {
+    id?: number;
+    topic: string;
+    questions: {
+        id: number;
+        name: string;
+        config: {
+            thinkTime: string;
+            numOfTakes: string;
+            duration: string;
+        };
+    }[];
+};
 
 type AsyncVideoForm = Omit<IEditAsyncVideoInterviewDto, "content"> & {
     content: {
         welcomeNote: string;
+        sections: AsyncQuestionType[];
     };
 };
 
@@ -33,13 +50,13 @@ const AsyncVideoForm = () => {
     const { assessmentId } = useParams();
 
     const [showCreate, setShowCreate] = React.useState(false);
-    const [questionSections, setQuestionSections] = React.useState<any[]>([]);
     const [formState, setFormState] = React.useState<AsyncVideoForm>({
         id: parseInt(assessmentId as string),
         name: "",
         description: "",
         content: {
             welcomeNote: "",
+            sections: [],
         },
         query: "",
         duration: 0,
@@ -47,9 +64,48 @@ const AsyncVideoForm = () => {
         assessmentQuestionAnswerSetContent: "",
     });
 
-    const handleCreateOneWay = (e: FormEvent) => {
+    const handleCreateOneWay = async (e: FormEvent) => {
         e.preventDefault();
+
+        try {
+            const res = await assessmentsServices.editAsyncVideoInterview({
+                ...formState,
+                content: JSON.stringify(formState.content),
+                duration: 1000,
+            });
+
+            toast.success(res.message);
+            console.log(res);
+        } catch (error) {
+            console.log(error);
+            toast.error("Something went wrong");
+        }
     };
+
+    useEffect(() => {
+        const getById = async (id: number) => {
+            try {
+                const res = await assessmentsServices.getById(id);
+                const parsedContent = JSON.parse(res.data.content);
+                setFormState({
+                    id: res.data.id,
+                    name: res.data.assessmentTypeName,
+                    description: res.data.description,
+                    content: JSON.parse(res.data.content),
+                    query: res.data.query,
+                    duration: res.data.duration,
+                    index: res.data.index,
+                    assessmentQuestionAnswerSetContent:
+                        res.data.assessmentQuestionAnswerSetContent,
+                });
+            } catch (error) {
+                toast.error("Failure");
+            }
+        };
+
+        getById(parseInt(assessmentId as string));
+    }, [assessmentId]);
+
     return (
         <form onSubmit={handleCreateOneWay} className="flex flex-col gap-8">
             <section>
@@ -132,26 +188,33 @@ const AsyncVideoForm = () => {
                     />
                 </div>
 
-                {questionSections.length > 0 && (
+                {formState.content.sections.length > 0 && (
                     <div className="px-4 xl:px-6 mb-6">
                         <ul className="flex flex-col gap-6">
-                            {questionSections.map(section => (
+                            {formState.content.sections.map(section => (
                                 <li key={section.id}>
                                     <QuestionSection
                                         data={section}
-                                        onUpdate={updatedSection =>
-                                            setQuestionSections(prev =>
-                                                prev.map(item => {
-                                                    if (
-                                                        item.id ===
-                                                        updatedSection.id
-                                                    ) {
-                                                        return updatedSection;
-                                                    }
-                                                    return item;
-                                                })
-                                            )
-                                        }
+                                        onUpdate={updatedSection => {
+                                            setFormState(prev => ({
+                                                ...prev,
+                                                content: {
+                                                    ...prev.content,
+                                                    sections:
+                                                        prev.content.sections.map(
+                                                            item => {
+                                                                if (
+                                                                    item.id ===
+                                                                    updatedSection.id
+                                                                ) {
+                                                                    return updatedSection;
+                                                                }
+                                                                return item;
+                                                            }
+                                                        ),
+                                                },
+                                            }));
+                                        }}
                                     />
                                 </li>
                             ))}
@@ -163,16 +226,21 @@ const AsyncVideoForm = () => {
                     {showCreate ? (
                         <AddNewQuestionSection
                             onFinish={() => setShowCreate(false)}
-                            onSaveTopic={(section: any) =>
-                                setQuestionSections(prev =>
-                                    prev.concat([
-                                        {
-                                            ...section,
-                                            id: questionSections.length,
-                                        },
-                                    ])
-                                )
-                            }
+                            onSaveTopic={(section: any) => {
+                                setFormState(prev => ({
+                                    ...prev,
+                                    content: {
+                                        ...prev.content,
+                                        sections: prev.content.sections.concat([
+                                            {
+                                                ...section,
+                                                id: prev.content.sections
+                                                    .length,
+                                            },
+                                        ]),
+                                    },
+                                }));
+                            }}
                         />
                     ) : (
                         <button

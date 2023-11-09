@@ -1,14 +1,34 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 
 import { PdfViewer } from "@/components";
+import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
+import { IAppFormTemplateProfileSection } from "@/interfaces/app-form-template.interface";
 
 import { profileDatas, profileLayout, candidateSection } from "./data";
 import styles from "./styles.module.scss";
 
 const ProfileSection = () => {
     const [profileTab, setProfileTab] = React.useState(0);
+    const [sections, setSections] = useState<IAppFormTemplateProfileSection[]>(
+        []
+    );
+
+    React.useEffect(() => {
+        const fetchLayout = async () => {
+            try {
+                const res = await appFormTemplateServices.getListAsync();
+                const profileLayout = JSON.parse(res.data[0].content).profile;
+
+                setSections(profileLayout);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchLayout();
+    }, []);
 
     return (
         <div className="">
@@ -40,13 +60,13 @@ const ProfileSection = () => {
                 </div>
             )}
 
-            {candidateSection.map((section, index) => {
+            {sections?.map((section, index) => {
                 return (
                     <div key={index}>
                         <strong className="text-sm text-neutral-600 uppercase mb-4">
-                            {section.name.replace("_", " ")}
+                            {section.label}
                         </strong>
-                        {section.subsections.map((field, index) => {
+                        {section.fields.map((field, index) => {
                             let label = "";
                             let value: string = "";
                             // if (field.custom) {
@@ -76,10 +96,10 @@ const ProfileSection = () => {
                                 <div key={index} className="mb-4 text-sm">
                                     <div className="flex flex-col lg:flex-row">
                                         <div className="lg:basis-40 mr-6 text-neutral-500 flex gap-2">
-                                            <span>{label}</span>
+                                            <span>{field.label}</span>
                                         </div>
                                         <div className="w-full flex flex-col gap-2 items-start text-neutral-600">
-                                            <span>{value}</span>
+                                            <span>{field.custom}</span>
                                         </div>
                                     </div>
                                 </div>

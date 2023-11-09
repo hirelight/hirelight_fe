@@ -1,12 +1,17 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { LightBulbIcon } from "@heroicons/react/24/outline";
 import { XCircleIcon } from "@heroicons/react/24/solid";
+import { useParams } from "next/navigation";
+import { toast } from "react-toastify";
 
-import { Button, CustomInput, Modal } from "@/components";
+import { Button, CustomInput, Modal, Selection } from "@/components";
 import permissionServices from "@/services/permission/permission.service";
-import { IPermissionDto } from "@/services";
+import { IOrgEmployerDto, IPermissionDto } from "@/services";
+import collaboratorsServices from "@/services/collaborators/collaborators.service";
+import { useAppSelector } from "@/redux/reduxHooks";
+import organizationsServices from "@/services/organizations/organizations.service";
 
 import PermissionTable from "./PermissionTable";
 
@@ -21,20 +26,60 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
     onClose,
     onSendInvitation,
 }) => {
-    const [email, setEmail] = React.useState("");
+    const { jobId } = useParams();
+
+    const [selectEmployer, setSelectEmployer] =
+        React.useState<IOrgEmployerDto>();
+    const [employers, setEmployers] = useState<IOrgEmployerDto[]>([]);
     const [currentPermissions, setCurrentPermissions] = useState<
         IPermissionDto[]
     >([]);
+    const { authUser }: any = useAppSelector(state => state.auth);
 
     const handleSendInvitation = async (e: FormEvent) => {
         e.preventDefault();
-        try {
-            const res = await permissionServices.getJobPostPermission();
-        } catch (error) {}
+        if (!selectEmployer) return toast.error("Select at least one employer");
+
+        console.log(currentPermissions);
+        // try {
+        //     const res = await collaboratorsServices.sendInvitation({
+        //         jobPostId: parseInt(jobId as string),
+        //         employerId: selectEmployer.employerDto.id,
+        //         permissions: currentPermissions.map(item => ({
+        //             permissionId: item.id,
+        //             permissionName: item.name,
+        //         })),
+        //     });
+
+        //     toast.success(res.message);
+        // } catch (error) {
+        //     toast.error("Send failure");
+        //     console.error(error);
+        // }
 
         setCurrentPermissions([]);
         onClose();
     };
+
+    useEffect(() => {
+        const getEmployers = async () => {
+            try {
+                const res = await organizationsServices.getListEmloyers();
+                const filteredEmployers = res.data.filter(
+                    member =>
+                        member.employerDto.id.toString() !== authUser.userId
+                );
+                console.log(authUser, filteredEmployers);
+                setEmployers(filteredEmployers);
+                setSelectEmployer(filteredEmployers[0]);
+                console.log(res);
+            } catch (error) {
+                toast.error("Get employers failure");
+            }
+        };
+
+        getEmployers();
+    }, []);
 
     return (
         <Modal
@@ -61,7 +106,7 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
                 </div>
                 <div className="p-6">
                     <div className="mb-6">
-                        <CustomInput
+                        {/* <CustomInput
                             id="member-email"
                             title="Email"
                             type="email"
@@ -69,6 +114,15 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
                             value={email}
                             onChange={(e: any) => setEmail(e.target.value)}
                             required
+                        /> */}
+                        <Selection
+                            title="Email"
+                            value={selectEmployer?.employerDto.email}
+                            items={employers.map(item => ({
+                                label: item.employerDto.email,
+                                value: item,
+                            }))}
+                            onChange={value => setSelectEmployer(value)}
                         />
                     </div>
 

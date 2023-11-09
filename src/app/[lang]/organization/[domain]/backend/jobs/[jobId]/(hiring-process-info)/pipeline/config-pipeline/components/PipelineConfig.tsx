@@ -68,7 +68,7 @@ const PipelineConfig: React.FC<PipelineConfigProps> = ({}) => {
                 onSelect={(stage: IAssessmentDto) => setSelectedStage(stage)}
             />
             <div className="flex-1">
-                <PipelineConfigAssessment assessmentId={data.id} />
+                <PipelineConfigAssessment assessmentId={selectedStage.id} />
             </div>
         </div>
     );

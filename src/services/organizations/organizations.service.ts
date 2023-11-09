@@ -3,7 +3,11 @@ import { checkResErr } from "@/helpers";
 
 import interceptor from "../interceptor";
 
-import { ICreateOrgDto, IOrganizationDto } from "./organizations.interface";
+import {
+    ICreateOrgDto,
+    IOrgEmployerDto,
+    IOrganizationDto,
+} from "./organizations.interface";
 
 const getByIdAsync = async (
     orgId: number
@@ -97,6 +101,18 @@ const getOwnedJoinedOrganizations = async (): Promise<
     }
 };
 
+const getListEmloyers = async (): Promise<IResponse<IOrgEmployerDto[]>> => {
+    try {
+        const res = await interceptor.get<IResponse<IOrgEmployerDto[]>>(
+            `/organizations/employers`
+        );
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const organizationsServices = {
     createNewOrganization,
     getListOrganizations,
@@ -104,6 +120,7 @@ const organizationsServices = {
     getOwnedOrganizations,
     getByIdAsync,
     getOwnedJoinedOrganizations,
+    getListEmloyers,
 };
 
 export default organizationsServices;

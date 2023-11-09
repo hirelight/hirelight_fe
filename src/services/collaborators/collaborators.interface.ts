@@ -1,10 +1,9 @@
 export interface ISendCollabInvitationDto {
+    jobPostId: number;
     employerId: number;
-    permissions: [
-        {
-            permissionId: number;
-            assessmentId: number;
-            permissionName: string;
-        },
-    ];
+    permissions: {
+        permissionId: number;
+        assessmentId?: number;
+        permissionName: string;
+    }[];
 }

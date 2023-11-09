@@ -44,17 +44,15 @@ const InvitationDropDown = () => {
         },
     });
 
-    const handleAcceptInvitation = async (orgId: number) => {
+    const handleAcceptInvitation = async (orgId: number, subdomain: string) => {
         acceptInvitationMutation.mutate(orgId);
         await delayFunc(500);
-        handleRedirectOnAccept(orgId);
+        handleRedirectOnAccept(orgId, subdomain);
     };
 
-    const handleRedirectOnAccept = async (orgId: number) => {
+    const handleRedirectOnAccept = async (orgId: number, subdomain: string) => {
         try {
             const res = await authServices.getOrgAccessToken(orgId);
-            const orgRes = await organizationsServices.getByIdAsync(orgId);
-            const { subdomain } = orgRes.data;
             if (
                 process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes(
                     "localhost" || process.env.NODE_ENV === "development"
@@ -137,7 +135,8 @@ const InvitationDropDown = () => {
                                         className="font-medium text-blue_primary_800 hover:text-blue_primary_600 mr-4"
                                         onClick={handleAcceptInvitation.bind(
                                             null,
-                                            invitation.organizationId
+                                            invitation.organizationId,
+                                            invitation.organizationSubdomain
                                         )}
                                     >
                                         Accept

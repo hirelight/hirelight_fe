@@ -23,18 +23,23 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
 type QuestionItemProps = {
     data: {
         id: number;
-        description: string;
-        thinkLength: string;
-        answerLength: string;
-        numOfTakes: number;
+        name: string;
+        config: {
+            thinkTime: string;
+            numOfTakes: string;
+            duration: string;
+        };
     };
     onChange: (value: {
-        description: string;
-        thinkLength: string;
-        answerLength: string;
-        numOfTakes: number;
+        id: number;
+        name: string;
+        config: {
+            thinkTime: string;
+            numOfTakes: string;
+            duration: string;
+        };
     }) => void;
-    onDelete: (id: number) => void;
+    onDelete: () => void;
 };
 
 // setQuestionSection(prev => ({
@@ -81,10 +86,10 @@ const QuestionItem: React.FC<QuestionItemProps> = ({
                         onChange={(value: string) =>
                             onChange({
                                 ...data,
-                                description: value,
+                                name: value,
                             })
                         }
-                        value={data.description || ""}
+                        value={data.name || ""}
                         className="min-h-[144px] h-full bg-white"
                     />
                 </div>
@@ -104,11 +109,16 @@ const QuestionItem: React.FC<QuestionItemProps> = ({
                         onChange={(value: string) =>
                             onChange({
                                 ...data,
-                                thinkLength: value,
+                                config: {
+                                    ...data.config,
+                                    thinkTime: value,
+                                },
                             })
                         }
                         labelClassName="bg-white"
-                        value={data.thinkLength ? data.thinkLength : ""}
+                        value={
+                            data.config.thinkTime ? data.config.thinkTime : ""
+                        }
                     />
                     <Selection
                         title=""
@@ -117,11 +127,14 @@ const QuestionItem: React.FC<QuestionItemProps> = ({
                             value: item,
                         }))}
                         labelClassName="bg-white"
-                        value={data.answerLength ? data.answerLength : ""}
+                        value={data.config.duration ? data.config.duration : ""}
                         onChange={(value: string) =>
                             onChange({
                                 ...data,
-                                answerLength: value,
+                                config: {
+                                    ...data.config,
+                                    duration: value,
+                                },
                             })
                         }
                     />
@@ -134,14 +147,16 @@ const QuestionItem: React.FC<QuestionItemProps> = ({
                         onChange={() => {}}
                         labelClassName="bg-white"
                         value={
-                            data.numOfTakes ? data.numOfTakes.toString() : ""
+                            data.config.numOfTakes
+                                ? data.config.numOfTakes.toString()
+                                : ""
                         }
                     />
                 </div>
                 <button
                     type="button"
                     className={`p-4 h-fit group`}
-                    onClick={() => onDelete(data.id)}
+                    onClick={() => onDelete()}
                 >
                     <TrashIcon className="w-6 h-6 text-red-400 group-hover:text-red-600" />
                 </button>

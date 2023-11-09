@@ -8,7 +8,6 @@ import { IPermissionDto } from "..";
 const getJobPostPermission = async (): Promise<IResponse<IPermissionDto[]>> => {
     try {
         const res = await interceptor.get(endpoints.JOBPOSTS_PERMISSION);
-
         checkResErr(res.data);
 
         return res.data;

@@ -24,25 +24,17 @@ type QuestionSection = {
     topic: string;
     questions: {
         id: number;
-        description: string;
-        thinkLength: string;
-        answerLength: string;
-        numOfTakes: number;
+        name: string;
+        config: {
+            thinkTime: string;
+            numOfTakes: string;
+            duration: string;
+        };
     }[];
 };
 
 type AddNewQuestionSectionProps = {
-    data?: {
-        id?: number;
-        topic: string;
-        questions: {
-            id: number;
-            description: string;
-            thinkLength: string;
-            answerLength: string;
-            numOfTakes: number;
-        }[];
-    };
+    data?: QuestionSection;
     onFinish: () => void;
     onSaveTopic: (section: any) => void;
 };
@@ -63,10 +55,12 @@ const AddNewQuestionSection = ({
 
         const newQuestion = {
             id: generateNewId(questionSection.questions.map(item => item.id)),
-            description: "",
-            thinkLength: "Unlimited time to think",
-            answerLength: "",
-            numOfTakes: 0,
+            name: "",
+            config: {
+                thinkTime: "Unlimited time to think",
+                duration: "",
+                numOfTakes: "3",
+            },
         };
 
         setQuestionSection({
@@ -138,7 +132,7 @@ const AddNewQuestionSection = ({
                                             ),
                                         }));
                                     }}
-                                    onDelete={(id: number) =>
+                                    onDelete={() =>
                                         setQuestionSection(prev => ({
                                             ...prev,
                                             questions: prev.questions.filter(

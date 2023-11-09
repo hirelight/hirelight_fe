@@ -12,11 +12,17 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import moment from "moment";
 
 import { Selection } from "@/components";
 import { SpinLoading } from "@/icons";
+import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
+import { getJobById } from "@/redux/thunks/job.thunk";
+import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
+import { IAssessmentFlowDto } from "@/services";
+import { AssessmentTypes } from "@/interfaces/assessment.interface";
 
 import styles from "./AssessmentInfoHeader.module.scss";
 
@@ -31,7 +37,31 @@ const Tooltip = dynamic(
 );
 
 const AssessmentInfoHeader = () => {
+    const dispatch = useAppDispatch();
     const { jobId, assessmentId } = useParams();
+    const [flow, setFlow] = useState<IAssessmentFlowDto>();
+
+    const job = useAppSelector(state => state.job.data);
+
+    useEffect(() => {
+        const getData = async (id: string) => {
+            const jobRes: any = await dispatch(
+                getJobById(parseInt(id as string))
+            );
+            console.log(jobRes);
+            try {
+                const res = await assessmentFlowsServices.getByIdAsync(
+                    jobRes.payload.assessmentFlowId
+                );
+
+                setFlow(res.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        if (jobId) getData(jobId as string);
+    }, [jobId, dispatch]);
 
     return (
         <div className="bg-white shadow-md mt-8 mb-6">
@@ -39,10 +69,12 @@ const AssessmentInfoHeader = () => {
                 <div className="flex items-center justify-between mb-4">
                     <div>
                         <h1 className="inline text-blue-800 text-4xl font-medium mr-2">
-                            Frontend Dev
+                            {job.title ? job.title : "Job title"}
                         </h1>
                         <span className="text-sm text-gray-500">
-                            Quận 9, TP Hồ Chí Minh, Hồ Chí Minh(Location)
+                            {job.area
+                                ? job.area
+                                : "Quận 9, TP Hồ Chí Minh, Hồ Chí Minh(Location)"}
                         </span>
                     </div>
                     <div className="inline-flex items-center gap-8">
@@ -97,15 +129,22 @@ const AssessmentInfoHeader = () => {
                     <div className="inline-flex items-center gap-2 text-sm text-neutral-500">
                         <div className="flex items-center gap-1">
                             <ClockIcon className="w-4 h-4" />
-                            <span>Full time(workModality)</span>
+                            <span>{job.workModality ?? "Work modality"}</span>
                         </div>
                         <div className="flex items-center gap-1">
                             <CurrencyDollarIcon className="w-4 h-4" />
-                            <span>Negotiate</span>
+                            <span>
+                                {job.minSalary === 0 && job.maxSalary === 0
+                                    ? "Negotiate"
+                                    : `${job.minSalary}${job.currency}-${job.maxSalary}${job.currency}`}
+                            </span>
                         </div>
                         <div className="flex items-center gap-1">
                             <ArrowPathIcon className="w-4 h-4" />
-                            <span>19 minutes ago(Updated time)</span>
+                            <span>
+                                {moment(job.updatedTime).fromNow()}(Updated
+                                time)
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -113,45 +152,34 @@ const AssessmentInfoHeader = () => {
                 {assessmentId && (
                     <div className="w-full">
                         <div role="tablist" className="flex">
-                            {[
-                                "All",
-                                "Sourced",
-                                "Applied",
-                                "Phone screen",
-                                "Assessment",
-                                "Interview",
-                                "Offer",
-                                "Hired",
-                            ].map((item, index) => (
+                            {flow?.assessments?.map((item, index) => (
                                 <div
                                     role="tab"
-                                    key={item}
+                                    key={item.id}
                                     className="flex-1 text-center"
                                 >
                                     <Link
-                                        href={`/backend/jobs/${jobId}/hiring-process/${item
-                                            .toLowerCase()
-                                            .replace(" ", "-")}`}
+                                        href={`/backend/jobs/${jobId}/hiring-process/${item.id.toString()}`}
                                         className={styles.assessment__btn}
                                     >
                                         <span
                                             className={`${
                                                 styles.assessment__btn__text
                                             } ${
-                                                item
-                                                    .toLowerCase()
-                                                    .replace(" ", "-") ===
+                                                item.id.toString() ===
                                                 (assessmentId as string)
-                                                    .toLowerCase()
-                                                    .replace(" ", "-")
                                                     ? styles.active
                                                     : ""
                                             }`}
                                         >
-                                            {item}{" "}
-                                            <span className="ml-1 text-neutral-400">
+                                            {
+                                                AssessmentTypes[
+                                                    item.assessmentTypeName
+                                                ]
+                                            }{" "}
+                                            {/* <span className="ml-1 text-neutral-400">
                                                 {index === 0 ? "-" : index}
-                                            </span>
+                                            </span> */}
                                         </span>
                                     </Link>
                                 </div>

@@ -4,9 +4,18 @@ import { IResponse } from "@/interfaces/service.interface";
 
 import interceptor from "../interceptor";
 
-const sendInvitation = async (): Promise<IResponse<any[]>> => {
+import { ISendCollabInvitationDto } from "./collaborators.interface";
+
+const baseEndpoint = "/job-posts";
+
+const sendInvitation = async (
+    invitation: ISendCollabInvitationDto
+): Promise<IResponse<any>> => {
     try {
-        const res = await interceptor.get(endpoints.JOBPOSTS_PERMISSION);
+        const res = await interceptor.post(
+            baseEndpoint + `/${invitation.jobPostId}/collaborators/invitation`,
+            invitation
+        );
 
         checkResErr(res.data);
 

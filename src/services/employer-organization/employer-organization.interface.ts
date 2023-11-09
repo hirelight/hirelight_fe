@@ -25,6 +25,7 @@ export interface IEmployerInvitationDto {
     senderId: number;
     organizationId: number;
     organizationName: string;
+    organizationSubdomain: string;
     jobPostId: number;
     jobPostName: string;
     assessmentId: number;

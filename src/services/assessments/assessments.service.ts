@@ -4,9 +4,12 @@ import { IResponse } from "@/interfaces/service.interface";
 
 import interceptor from "../interceptor";
 
-import { IEditAsyncVideoInterviewDto } from "./assessments.interface";
+import {
+    IAssessmentDto,
+    IEditAsyncVideoInterviewDto,
+} from "./assessments.interface";
 
-const getById = async (id: number): Promise<IResponse<any>> => {
+const getById = async (id: number): Promise<IResponse<IAssessmentDto>> => {
     try {
         const res = await interceptor.get(endpoints.ASSESSMENTS + `/${id}`);
 

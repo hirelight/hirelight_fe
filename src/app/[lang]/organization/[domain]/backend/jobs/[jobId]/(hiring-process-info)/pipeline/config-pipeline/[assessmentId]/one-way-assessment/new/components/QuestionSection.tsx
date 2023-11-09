@@ -10,23 +10,15 @@ import dynamic from "next/dynamic";
 
 import AddNewQuestionSection from "../../components/AddNewQuestionSection";
 
+import { AsyncQuestionType } from "./AsyncVideoForm";
+
 const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ssr: false,
     loading: () => <p>Loading ...</p>,
 });
 
 interface IQuestionSection {
-    data: {
-        id: number;
-        topic: string;
-        questions: {
-            id: number;
-            description: string;
-            thinkLength: string;
-            answerLength: string;
-            numOfTakes: number;
-        }[];
-    };
+    data: AsyncQuestionType;
     onUpdate: (updatedSection: any) => void;
 }
 
@@ -87,22 +79,21 @@ const QuestionSection = ({ data, onUpdate }: IQuestionSection) => {
                             <span>{index + 1}</span>
                         </div>
                         <div className="flex-1 flex items-center justify-between gap-8 p-4">
-                            <div className="inline-block w-3/5">
-                                <QuillEditorNoSSR
-                                    value={question.description}
-                                    onChange={() => {}}
-                                    readOnly
-                                />
-                            </div>
+                            <div
+                                className="inline-block w-3/5"
+                                dangerouslySetInnerHTML={{
+                                    __html: question.name,
+                                }}
+                            ></div>
                             <div className="flex-1 flex-shrink-0 flex items-center justify-end gap-2 w-fit ml-auto text-sm uppercase font-semibold whitespace-nowrap">
                                 <span className="py-1 px-2.5 rounded-full bg-green-200 text-green-700">
-                                    {question.thinkLength}
+                                    {question.config.thinkTime}
                                 </span>
                                 <span className="py-1 px-2.5 rounded-full bg-blue-200 text-blue-700">
-                                    {question.answerLength} mins to answer
+                                    {question.config.duration} mins to answer
                                 </span>
                                 <span className="py-1 px-2.5 rounded-full bg-gray-200 text-gray-700">
-                                    {question.numOfTakes} takes
+                                    {question.config.numOfTakes} takes
                                 </span>
                             </div>
                         </div>

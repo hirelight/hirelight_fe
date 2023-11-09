@@ -16,13 +16,13 @@ export interface IAssessmentDto {
     assessmentFlowId: number;
     assessmentTypeId: number;
     assessmentTypeName: AssessmentTypeKey;
-    assessmentQuestionAnswerSetId: null;
-    assessmentQuestionAnswerSetContent: null;
+    assessmentQuestionAnswerSetId: number | null;
+    assessmentQuestionAnswerSetContent: string;
     creatorId: number;
     description: string;
     content: string;
     query: string;
-    duration: string;
+    duration: number;
     index: number;
     createdTime: Date;
     updatedTime: Date;

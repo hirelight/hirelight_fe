@@ -56,7 +56,6 @@ const PermissionTable: React.FC<PermissionTableProps> = ({
             try {
                 setLoading(true);
                 const res = await permissionServices.getJobPostPermission();
-
                 setPermissions(res.data);
                 setTemplatePermissions([
                     {
@@ -189,7 +188,7 @@ const PermissionTable: React.FC<PermissionTableProps> = ({
                                             className="px-6 py-4 text-center"
                                         >
                                             <input
-                                                id={isHaving.name}
+                                                id={isHaving.id.toString()}
                                                 type="checkbox"
                                                 value={isHaving.name}
                                                 checked={

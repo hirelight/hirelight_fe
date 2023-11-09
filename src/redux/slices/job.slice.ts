@@ -149,7 +149,6 @@ const jobSlice = createSlice({
                 state.loading = true;
             })
             .addCase(getJobById.fulfilled, (state, action) => {
-                console.log(JSON.parse(action.payload.applicationForm));
                 state.data = {
                     ...action.payload,
                     content: JSON.parse(action.payload.content),
