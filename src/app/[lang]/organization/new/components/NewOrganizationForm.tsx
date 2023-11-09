@@ -51,7 +51,12 @@ const NewOrganizationForm = () => {
                 if (resOrgToken.statusCode !== 200)
                     return toast.error("Get org token failure");
 
-                if (process.env.NODE_ENV === "development")
+                if (
+                    process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes(
+                        "localhost"
+                    ) ||
+                    process.env.NODE_ENV === "development"
+                )
                     router.replace(
                         `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?loginId=${loginId}&accessToken=${resOrgToken.data.accessToken}`
                     );

@@ -14,6 +14,8 @@ import { delayFunc } from "@/helpers/shareHelpers";
 import { Bell } from "@/icons";
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import { LocaleSwitcher, ThemeSwitcher } from "@/components";
+import { useAppDispatch } from "@/redux/reduxHooks";
+import { logout } from "@/redux/slices/auth.slice";
 
 import styles from "./HeaderBar.module.scss";
 
@@ -21,6 +23,8 @@ const HeaderBar = () => {
     const pathname = usePathname();
     const router = useRouter();
     const cite = pathname.split("/")[1];
+
+    const dispatch = useAppDispatch();
 
     const [showAvatarDropdown, setShowAvatarDropdown] = useState(false);
 
@@ -30,16 +34,17 @@ const HeaderBar = () => {
 
     const handleLogout = async () => {
         setShowAvatarDropdown(false);
-        Cookies.remove("hirelight_access_token");
-        Cookies.remove("hirelight_access_token", {
-            domain: `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-            path: "/login",
-        });
-        toast.success("Logout success!");
-        await delayFunc(1000);
+        // Cookies.remove("hirelight_access_token");
+        // Cookies.remove("hirelight_access_token", {
+        //     domain: `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+        //     path: "/login",
+        // });
+        // toast.success("Logout success!");
+        // await delayFunc(1000);
+        dispatch(logout());
 
         router.push(
-            `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`
+            `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login?authEnd=true`
         );
     };
 

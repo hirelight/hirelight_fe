@@ -43,7 +43,11 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
         try {
             setPageLoading(true);
             const res = await authServices.getOrgAccessToken(orgId);
-            if (process.env.NODE_ENV === "development")
+            if (
+                process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes(
+                    "localhost" || process.env.NODE_ENV === "development"
+                )
+            )
                 router.replace(
                     `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?accessToken=${res.data.accessToken}`
                 );

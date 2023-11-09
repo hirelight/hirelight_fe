@@ -20,6 +20,7 @@ export const metadata: Metadata = {
 
 const getJobList = async (): Promise<IJobDto[]> => {
     const token = cookies().get("hirelight_access_token")!!.value;
+    console.log("Token", token);
     const decoded: any = jwtDecode(token);
     const res = await fetch(
         `${process.env.NEXT_PUBLIC_SERVER_API}${endpoints.JOBPOSTS}/search?OrganizationId=${decoded.organizationId}`,
@@ -34,7 +35,7 @@ const getJobList = async (): Promise<IJobDto[]> => {
         }
     );
 
-    console.log(res);
+    console.log(res.headers);
 
     if (!res.ok) {
         throw new Error("Failed to fetch data");

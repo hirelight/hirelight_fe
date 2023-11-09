@@ -39,7 +39,11 @@ const LoginForm = () => {
             const res = await authServices.loginCandidate(formState);
 
             toast.success(res.message);
-            if (process.env.NODE_ENV === "production")
+            if (
+                process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes(
+                    "localhost" || process.env.NODE_ENV === "development"
+                )
+            )
                 Cookies.set("hirelight_access_token", res.data.accessToken, {
                     domain: `jobs.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
                     secure: true,

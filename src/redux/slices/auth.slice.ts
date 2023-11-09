@@ -7,7 +7,9 @@ import { fetchAccessToken, loginEmailPwd } from "../thunks/auth.thunk";
 
 const initialState = {
     token: Cookies.get("hirelight_access_token") ?? "",
-
+    authUser: Cookies.get("hirelight_access_token")
+        ? jwtDecode(Cookies.get("hirelight_access_token")!!)
+        : {},
     authStatus: "idle",
     authError: null,
     editProfileStatus: "idle",
@@ -21,6 +23,11 @@ const authSlice = createSlice({
     reducers: {
         setToken: (state, action) => {
             state.token = action.payload;
+        },
+        logout: state => {
+            state.token = "";
+            state.authUser = {};
+            Cookies.remove("hirelight_access_token");
         },
     },
     extraReducers(builder) {
@@ -62,5 +69,5 @@ const authSlice = createSlice({
     },
 });
 
-export const { setToken } = authSlice.actions;
+export const { setToken, logout } = authSlice.actions;
 export default authSlice.reducer;
