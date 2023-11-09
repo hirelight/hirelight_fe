@@ -44,17 +44,9 @@ const fetchDatas = async () => {
 };
 
 const QuestionsBank = async () => {
-    const queryClient = new QueryClient();
-    await queryClient.prefetchQuery({
-        queryKey: ["questions"],
-        queryFn: fetchDatas,
-    });
-
     return (
         <div className="bg-white rounded-md shadow-md p-4 xl:px-6">
-            <HydrationBoundary state={dehydrate(queryClient)}>
-                <QuestionList />
-            </HydrationBoundary>
+            <QuestionList />
         </div>
     );
 };

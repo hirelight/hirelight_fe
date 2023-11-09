@@ -3,6 +3,7 @@
 import Link from "next/link";
 import React from "react";
 import {
+    ArchiveBoxIcon,
     BuildingOffice2Icon,
     ClipboardDocumentListIcon,
     CreditCardIcon,
@@ -81,6 +82,19 @@ const SettingsSidebar = () => {
                     >
                         <ClipboardDocumentListIcon className="w-6 h-6" />
                         <span>{t.questions_bank}</span>
+                    </Link>
+                </li>
+                <li>
+                    <Link
+                        href={`/${lang}/backend/settings/question-sets`}
+                        className={`${styles.tab__btn} ${
+                            pathname.includes("/backend/settings/question-sets")
+                                ? styles.active
+                                : ""
+                        }`}
+                    >
+                        <ArchiveBoxIcon className="w-6 h-6" />
+                        <span>{t.question_sets}</span>
                     </Link>
                 </li>
 

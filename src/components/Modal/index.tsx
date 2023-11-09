@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 
 import { delayFunc } from "@/helpers/shareHelpers";
 import { useOutsideClick } from "@/hooks/useClickOutside";
@@ -27,7 +27,7 @@ const Modal = ({
     });
     const backdropRef = React.useRef<HTMLDivElement>(null);
 
-    const closeModal = async () => {
+    const closeModal = useCallback(async () => {
         if (backdropRef.current)
             backdropRef.current.classList.replace(
                 styles.entering,
@@ -38,7 +38,7 @@ const Modal = ({
             modalRef.current.classList.toggle(styles.entering);
         await delayFunc(200);
         onClose();
-    };
+    }, [modalRef, onClose]);
 
     if (!isOpen) {
         return null;

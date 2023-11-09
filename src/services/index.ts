@@ -33,3 +33,6 @@ export * from "./role/role.service";
 
 export * from "./permission/permission.interface";
 export * from "./permission/permission.service";
+
+export * from "./question-sets/question-sets.interface";
+export * from "./question-sets/question-sets.service";

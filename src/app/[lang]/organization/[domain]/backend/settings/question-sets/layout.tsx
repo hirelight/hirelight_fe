@@ -2,7 +2,7 @@ import React from "react";
 
 import HeaderBar from "./components/HeaderBar";
 
-const QuestionBankLayout = ({ children }: { children: React.ReactNode }) => {
+const QuestionSetLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <React.Fragment>
             <HeaderBar />
@@ -11,4 +11,4 @@ const QuestionBankLayout = ({ children }: { children: React.ReactNode }) => {
     );
 };
 
-export default QuestionBankLayout;
+export default QuestionSetLayout;

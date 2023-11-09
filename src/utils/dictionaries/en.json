@@ -305,7 +305,8 @@
                 "billing": "Billing",
                 "integrations": "Integrations",
                 "your_profile": "Your profile",
-                "questions_bank": "Questions bank"
+                "questions_bank": "Questions bank",
+                "question_sets": "Questions sets"
             }
         }
     }

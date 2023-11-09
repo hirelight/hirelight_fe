@@ -7,11 +7,13 @@ import candidatesReducer from "./slices/candidates.slice";
 import templatesReducer from "./slices/templates.slice";
 import appFormTemplateReducer from "./slices/app-form-template.slice";
 import assessmentFlowTemplatesReducer from "./slices/assessment-flow-templates.slice";
+import questionReducer from "./slices/question.slice";
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
         job: jobReducer,
+        question: questionReducer,
         questionKits: questionKitsReducer,
         candidates: candidatesReducer,
         templates: templatesReducer,

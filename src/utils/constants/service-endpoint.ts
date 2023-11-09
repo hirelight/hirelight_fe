@@ -17,6 +17,8 @@ const JOBPOSTS = "/jobposts";
 const JOBPOSTS_PERMISSION = "/job-posts/permissions";
 const PERMISSION = "/permissions";
 
+const QUESTION_ANSWER_SETS = "/question-answer-sets";
+
 const endpoints = {
     ORGANIZATIONS,
     JOBPOSTS,
@@ -29,6 +31,7 @@ const endpoints = {
     ASSESSMENT_FLOW_TEMPLATES,
     JOBPOSTS_PERMISSION,
     PERMISSION,
+    QUESTION_ANSWER_SETS,
 };
 
 export default endpoints;

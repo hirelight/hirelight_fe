@@ -51,7 +51,6 @@ class QuestionAnswerService implements IQuestionAnswerService {
     getListAsync = async (): Promise<IResponse<IQuestionAnswerDto[]>> => {
         try {
             const res = await interceptor.get(baseEndpoint);
-            console.log(res);
 
             checkResErr(res.data);
             return res.data;

@@ -10,6 +10,7 @@ import { IQuestionAnswerDto } from "@/services/questions/questions.interface";
 import {
     QuestionAnswerContentJson,
     QuestionDifficulty,
+    QuestionTypes,
 } from "@/interfaces/questions.interface";
 import questionAnswerServices from "@/services/questions/questions.service";
 import { DeleteModal, Portal } from "@/components";
@@ -34,7 +35,6 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
         () => JSON.parse(content),
         [content]
     ) as QuestionAnswerContentJson;
-    console.log(data, JSON.parse(content));
 
     const queryClient = useQueryClient();
     const deleteMutation = useMutation({
@@ -78,50 +78,68 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                             }}
                         ></div>
                     </h3>
-                    <div
-                        className={`grid grid-cols-1 md:grid-cols-${
-                            answers.length > 4 ? 1 : 2
-                        } gap-6`}
-                    >
-                        {parsedContent.answers.map((answer, index) => (
-                            <div
-                                key={index}
-                                className={`${styles.answer__wrapper}`}
-                            >
-                                <input
-                                    id={`question1-answer-${answer.name}`}
-                                    type={
-                                        parsedContent.type === "one-answer"
-                                            ? "radio"
-                                            : "checkbox"
-                                    }
-                                    checked={answer.correct}
-                                    value={answer.name}
-                                    name="question1-answer"
-                                    className={`${styles.answer__input}`}
-                                    readOnly
-                                />
-                                <label
-                                    htmlFor={`question1-answer-${answer.name}`}
-                                    className={`${styles.answer__label}`}
-                                    dangerouslySetInnerHTML={{
-                                        __html: answer.name,
-                                    }}
+                    {parsedContent.type !== "essay" && (
+                        <div
+                            className={`grid grid-cols-1 md:grid-cols-${
+                                answers.length > 4 ? 1 : 2
+                            } gap-6`}
+                        >
+                            {parsedContent.answers?.map((answer, index) => (
+                                <div
+                                    key={index}
+                                    className={`${styles.answer__wrapper}`}
                                 >
-                                    {/* {answer.name} */}
-                                </label>
-                            </div>
-                        ))}
-                    </div>
+                                    <input
+                                        id={`answerno-${index}-${parsedContent.name}`}
+                                        type={
+                                            parsedContent.type === "one-answer"
+                                                ? "radio"
+                                                : "checkbox"
+                                        }
+                                        checked={answer.correct}
+                                        value={answer.name}
+                                        name="question1-answer"
+                                        className={`${styles.answer__input}`}
+                                        readOnly
+                                    />
+                                    <label
+                                        htmlFor={`answerno-${index}-${parsedContent.name}`}
+                                        className={`${styles.answer__label}`}
+                                        dangerouslySetInnerHTML={{
+                                            __html: answer.name,
+                                        }}
+                                    >
+                                        {/* {answer.name} */}
+                                    </label>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    {parsedContent.type === "essay" &&
+                        parsedContent.description && (
+                            <p
+                                dangerouslySetInnerHTML={{
+                                    __html: parsedContent.description,
+                                }}
+                                className="md:col-span-1 text-sm text-gray-600"
+                            ></p>
+                        )}
                 </div>
                 <div className="hidden h-20 w-[1px] mx-6 self-center md:block"></div>
                 <div className="w-[200px] text-sm text-neutral-500 flex flex-col">
+                    <p className="font-semibold mb-2">
+                        Type:{" "}
+                        <span className="font-normal">
+                            {QuestionTypes.get(parsedContent.type)}
+                        </span>
+                    </p>
                     <p className="font-semibold mb-2">
                         Difficulty:{" "}
                         <span className="font-normal">
                             {QuestionDifficulty[difficulty]}
                         </span>
                     </p>
+
                     <div>
                         <div className="flex flex-wrap items-center gap-2">
                             <span className="font-semibold mr-2">Tags:</span>
