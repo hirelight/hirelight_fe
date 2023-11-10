@@ -8,25 +8,15 @@ export const metadata: Metadata = {
     title: "Hirelight - Backend | Pipeline Configuration",
 };
 
-const PipelineConfigurationHome = () => {
+const PipelineConfigurationHome = ({ params }: any) => {
+    const { flowId } = params;
     return (
         <React.Fragment>
             <div className="flex justify-between items-center">
                 <h3 className="flex-1 text-lg font-medium text-neutral-700 mb-4 px-6">
                     Default pipeline
                 </h3>
-                <Link
-                    href={"create-flow"}
-                    className="text-sm font-medium text-blue_primary_800 hover:underline mr-4"
-                >
-                    Create new flow
-                </Link>
-                <Link
-                    href={"select-pipeline"}
-                    className="text-sm font-medium text-blue_primary_800 hover:underline mr-4 xl:mr-6"
-                >
-                    Change flow
-                </Link>
+                <Link href={`${flowId}/edit`}>Change pipeline</Link>
             </div>
             <div className="p-6 w-full bg-white shadow-lg rounded-md">
                 <PipelineConfig />

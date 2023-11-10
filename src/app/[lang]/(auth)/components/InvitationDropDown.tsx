@@ -14,6 +14,7 @@ import employerOrgServices from "@/services/employer-organization/employer-organ
 import authServices from "@/services/auth/auth.service";
 import organizationsServices from "@/services/organizations/organizations.service";
 import { useAppSelector } from "@/redux/reduxHooks";
+import collaboratorsServices from "@/services/collaborators/collaborators.service";
 
 import styles from "./InvitationDropDown.module.scss";
 
@@ -82,7 +83,7 @@ const InvitationDropDown = () => {
             try {
                 const res =
                     await employerOrgServices.getEmployerInvitationListAsync();
-                console.log(res);
+
                 setInvitations(res.data);
             } catch (error) {
                 toast.error("Fetch invitations error");

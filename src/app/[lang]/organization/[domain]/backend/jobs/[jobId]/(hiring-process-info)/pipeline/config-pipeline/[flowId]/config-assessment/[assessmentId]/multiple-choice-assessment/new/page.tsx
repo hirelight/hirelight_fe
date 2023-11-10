@@ -1,6 +1,6 @@
 import React from "react";
 
-import CreateAssessmentForm from "./components/CreateAssessmentForm";
+import CreateAssessment from "./components/CreateAssessment";
 
 const NewMCAssessment = () => {
     return (
@@ -8,7 +8,7 @@ const NewMCAssessment = () => {
             <h2 className="text-xl text-neutral-700 text-center font-medium px-4 xl:px-6 mb-8">
                 Create multiple choice question set
             </h2>
-            <CreateAssessmentForm />
+            <CreateAssessment />
         </div>
     );
 };

@@ -18,13 +18,11 @@ const initialData: AssessmentFlowTemplate = {
     name: "",
     assessments: [
         {
-            index: -1,
             name: "Sourced",
             assessmentType: "SOURCED",
         },
 
         {
-            index: -4,
             name: "Hired",
             assessmentType: "HIRED",
         },
@@ -51,14 +49,10 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
 
     const handleCreateFlow = (e: FormEvent) => {
         e.preventDefault();
-        const orderedFlows = formState.assessments.map((item, index) => ({
-            ...item,
-            index: index,
-        }));
 
         onSave({
             ...formState,
-            content: JSON.stringify(orderedFlows),
+            content: JSON.stringify(formState.assessments),
         });
     };
 
@@ -125,7 +119,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                         <CloseIcon />
                     </button>
                 </div>
-                <form onSubmit={handleCreateFlow}>
+                <div>
                     <div className="p-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 mb-6">
                             <CustomInput
@@ -236,7 +230,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                         </section>
                     </div>
                     <div className="p-4 flex items-center gap-4 text-sm">
-                        <Button type="submit">Save</Button>
+                        <Button onClick={handleCreateFlow}>Save</Button>
                         <button
                             type="button"
                             className="font-semibold text-neutral-500 hover:underline hover:text-neutral-700"
@@ -245,7 +239,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                             Cancel
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
         </m.div>
     );

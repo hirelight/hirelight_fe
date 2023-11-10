@@ -16,7 +16,7 @@ interface IJobHeader {}
 
 const JobHeader = ({}: IJobHeader) => {
     const pathname = usePathname();
-    const { jobId, lang } = useParams();
+    const { lang } = useParams();
     const job = useAppSelector(state => state.job.data);
     const dispatch = useAppDispatch();
 
@@ -26,13 +26,13 @@ const JobHeader = ({}: IJobHeader) => {
         const stage = pathname.split("/")[5];
         switch (stage.toLowerCase()) {
             case "edit":
-                redirectLink = `/${lang}/backend/jobs/${jobId}/app-form`;
+                redirectLink = `/${lang}/backend/jobs/${job.id}/app-form`;
                 break;
             case "app-form":
-                redirectLink = `/${lang}/backend/jobs/${jobId}/members`;
+                redirectLink = `/${lang}/backend/jobs/${job.id}/members`;
                 break;
             case "members":
-                redirectLink = `/${lang}/backend/jobs/${jobId}/pipeline/config-pipeline`;
+                redirectLink = `/${lang}/backend/jobs/${job.id}/pipeline/config-pipeline`;
                 break;
         }
 
@@ -40,53 +40,32 @@ const JobHeader = ({}: IJobHeader) => {
             const stage = pathname.split("/")[5];
             switch (stage.toLowerCase()) {
                 case "edit": {
-                    if (jobId !== undefined) {
-                        // const res = await jobServices.editAsync({
-                        //     ...job,
-                        //     id: parseInt(jobId as string),
-                        //     content: JSON.stringify(job.content),
-                        //     applicationForm: JSON.stringify(
-                        //         job.applicationForm
-                        //     ),
-                        // });
-                        dispatch(
-                            updateJob({
-                                ...job,
-                                id: parseInt(jobId as string),
-                                content: JSON.stringify(job.content),
-                                applicationForm: JSON.stringify(
-                                    job.applicationForm
-                                ),
-                            })
-                        );
-                    }
+                    dispatch(
+                        updateJob({
+                            ...job,
+                            id: job.id,
+                            content: JSON.stringify(job.content),
+                            applicationForm: JSON.stringify(
+                                job.applicationForm
+                            ),
+                        })
+                    );
                     break;
                 }
                 case "app-form":
-                    if (jobId !== undefined) {
-                        // const res = await jobServices.editAsync({
-                        //     ...job,
-                        //     id: parseInt(jobId as string),
-                        //     content: JSON.stringify(job.content),
-                        //     applicationForm: JSON.stringify(
-                        //         job.applicationForm
-                        //     ),
-                        // });
-                        // toast.success(res.message);
-                        dispatch(
-                            updateJob({
-                                ...job,
-                                id: parseInt(jobId as string),
-                                content: JSON.stringify(job.content),
-                                applicationForm: JSON.stringify(
-                                    job.applicationForm
-                                ),
-                            })
-                        );
-                    }
+                    dispatch(
+                        updateJob({
+                            ...job,
+                            id: job.id,
+                            content: JSON.stringify(job.content),
+                            applicationForm: JSON.stringify(
+                                job.applicationForm
+                            ),
+                        })
+                    );
                     break;
                 case "members":
-                    redirectLink = `/backend/jobs/${jobId}/pipeline/config-pipeline`;
+                    redirectLink = `/backend/jobs/${job.id}/pipeline/config-pipeline`;
                     break;
             }
         } catch (error) {}
@@ -123,7 +102,7 @@ const JobHeader = ({}: IJobHeader) => {
                 <div className={styles.stage__wrapper}>
                     <div className={styles.section__wrapper}>
                         <Link
-                            href={`/${lang}/backend/jobs/${jobId}/edit`}
+                            href={`/${lang}/backend/jobs/${job.id}/edit`}
                             className={`${styles.section__container} ${
                                 pathname.includes("edit") ||
                                 pathname.includes("jobs/new")
@@ -150,7 +129,7 @@ const JobHeader = ({}: IJobHeader) => {
                             }`}
                         >
                             <Link
-                                href={`/${lang}/backend/jobs/${jobId}/app-form`}
+                                href={`/${lang}/backend/jobs/${job.id}/app-form`}
                                 tabIndex={-1}
                                 className={`h-full ${
                                     pathname.includes("app-form")
@@ -177,7 +156,7 @@ const JobHeader = ({}: IJobHeader) => {
                             }`}
                         >
                             <Link
-                                href={`/${lang}/backend/jobs/${jobId}/members`}
+                                href={`/${lang}/backend/jobs/${job.id}/members`}
                                 tabIndex={-1}
                                 className={`h-full ${
                                     pathname.includes("members")
@@ -204,7 +183,13 @@ const JobHeader = ({}: IJobHeader) => {
                             }`}
                         >
                             <Link
-                                href={`/${lang}/backend/jobs/${jobId}/pipeline/config-pipeline`}
+                                href={`/${lang}/backend/jobs/${
+                                    job.id
+                                }/pipeline/${
+                                    job.assessmentFlowId
+                                        ? `config-pipeline/${job.assessmentFlowId}`
+                                        : "select-pipeline"
+                                }`}
                                 tabIndex={-1}
                                 className={`h-full ${
                                     pathname.includes("pipeline")

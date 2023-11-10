@@ -27,7 +27,7 @@ const initialState: IJobSliceInitialState = {
     data: {
         id: 0,
         creatorId: 0,
-        assessmentFlowId: 0,
+        assessmentFlowId: null,
         organizationId: 0,
         title: "",
         content: {
@@ -70,7 +70,6 @@ const jobSlice = createSlice({
     initialState,
     reducers: {
         setJob: (state, action) => {
-            console.log(action.payload);
             state.data = action.payload;
         },
         deleteJob: (state, action) => {},

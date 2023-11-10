@@ -3,12 +3,16 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-import { Button, CustomInput, Modal, Portal } from "@/components";
+import {
+    Button,
+    CustomInput,
+    Modal,
+    Portal,
+    QuestionPicker,
+} from "@/components";
 import { IQuesAnsSetDto, IQuestionAnswerDto } from "@/services";
 import questionAnsSetServices from "@/services/question-sets/question-sets.service";
-
-import QuestionCard from "../QuestionPicker/QuestionCard";
-import QuestionPicker from "../QuestionPicker";
+import QuestionPickerCard from "@/components/QuestionPicker/QuestionPickerCard";
 
 type QuestionSetFormProps = {
     data?: Omit<IQuesAnsSetDto, "content"> & {
@@ -89,7 +93,7 @@ const QuestionSetForm: React.FC<QuestionSetFormProps> = ({ data }) => {
             <ul className={"flex flex-col gap-2 mb-6"}>
                 {pickedQuestions.map((item, index) => (
                     <li key={item.id}>
-                        <QuestionCard
+                        <QuestionPickerCard
                             data={item}
                             questionNo={index}
                             pickedQuestions={pickedQuestions}

@@ -68,7 +68,7 @@ const AsyncVideoForm = () => {
         e.preventDefault();
 
         try {
-            const res = await assessmentsServices.editAsyncVideoInterview({
+            const res = await assessmentsServices.editAsync({
                 ...formState,
                 content: JSON.stringify(formState.content),
                 duration: 1000,
@@ -86,18 +86,20 @@ const AsyncVideoForm = () => {
         const getById = async (id: number) => {
             try {
                 const res = await assessmentsServices.getById(id);
-                const parsedContent = JSON.parse(res.data.content);
-                setFormState({
-                    id: res.data.id,
-                    name: res.data.assessmentTypeName,
-                    description: res.data.description,
-                    content: JSON.parse(res.data.content),
-                    query: res.data.query,
-                    duration: res.data.duration,
-                    index: res.data.index,
-                    assessmentQuestionAnswerSetContent:
-                        res.data.assessmentQuestionAnswerSetContent,
-                });
+                if (res.data !== null)
+                    setFormState(prev => ({
+                        id: res.data.id,
+                        name: res.data.name,
+                        description: res.data.description ?? "",
+                        content: res.data.content
+                            ? JSON.parse(res.data.content)
+                            : prev.content,
+                        query: res.data.query ?? "",
+                        duration: res.data.duration ?? 0,
+                        index: res.data.index,
+                        assessmentQuestionAnswerSetContent:
+                            res.data.assessmentQuestionAnswerSetContent ?? "",
+                    }));
             } catch (error) {
                 toast.error("Failure");
             }

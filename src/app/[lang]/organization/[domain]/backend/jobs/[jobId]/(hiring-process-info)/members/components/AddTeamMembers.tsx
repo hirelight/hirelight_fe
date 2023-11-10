@@ -1,16 +1,21 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { UsersIcon } from "@heroicons/react/24/outline";
+import { useParams } from "next/navigation";
 
 import { teamMembers } from "@/utils/shared/initialDatas";
 import { Button, ButtonOutline, Portal, Selection } from "@/components";
+import collaboratorsServices from "@/services/collaborators/collaborators.service";
+import { useUserInfo } from "@/hooks/useUserInfo";
+import { IUserDto } from "@/services";
+import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
 
-import NewMemberModal from "./NewMemberModal";
 import styles from "./AddTeamMembers.module.scss";
+import NewMemberModal from "./NewMemberModal";
 
 const internalMembers = [
     {
@@ -46,35 +51,70 @@ const internalMembers = [
 ];
 
 const AddTeamMebers = () => {
-    const [datas, setDatas] = React.useState<typeof teamMembers>([]);
+    const { jobId } = useParams();
+    const userData = useUserInfo<IUserDto>();
+
+    const [datas, setDatas] = React.useState<ICollaboratorDto[]>([]);
     const [showModal, setShowModal] = React.useState(false);
     const [selectedInternal, setSelectedInternal] = React.useState<any>();
 
-    const handleRemoveMember = (memberId: any) => {
-        setDatas(prev => prev.filter(member => member.id !== memberId));
+    const handleRemoveMember = async (memberId: number) => {
+        try {
+            const res = await collaboratorsServices.deleteCollaborator(
+                parseInt(jobId as string),
+                memberId
+            );
+
+            toast.success(res.message);
+            setDatas(prev => prev.filter(member => member.id !== memberId));
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const handleAddMemeber = (newMember: any) => {
         const existingMember = datas.find(
-            member => member.email === newMember.email
+            member => member.employerDto.email === newMember.email
         );
         if (existingMember) return toast.error("Member already added");
 
-        setDatas([
-            ...datas,
-            {
-                id: datas.length + 1,
-                full_name:
-                    newMember.fullName.charAt(0).toUpperCase() +
-                    newMember.fullName.slice(1),
-                email: newMember.email,
-                status: "SA",
-                permission: newMember.permission.name,
-                avatarUrl:
-                    "https://robohash.org/natusmagnambeatae.png?size=50x50&set=set1",
-            },
-        ]);
+        // setDatas([
+        //     ...datas,
+        //     {
+        //         id: datas.length + 1,
+        //         full_name:
+        //             newMember.fullName.charAt(0).toUpperCase() +
+        //             newMember.fullName.slice(1),
+        //         email: newMember.email,
+        //         status: "SA",
+        //         permission: newMember.permission.name,
+        //         avatarUrl:
+        //             "https://robohash.org/natusmagnambeatae.png?size=50x50&set=set1",
+        //     },
+        // ]);
     };
+
+    useEffect(() => {
+        const getCollaborators = async (jobId: number) => {
+            try {
+                const res =
+                    await collaboratorsServices.getCollaboratorList(jobId);
+                console.log(userData);
+                setDatas(
+                    res.data.filter(
+                        collaborator =>
+                            collaborator.employerDto.email !==
+                            userData!!.emailAddress
+                    )
+                );
+                console.log(res);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        getCollaborators(parseInt(jobId as string));
+    }, [jobId, userData]);
 
     return (
         <div className="relative rounded-md border border-slate-200">
@@ -101,12 +141,6 @@ const AddTeamMebers = () => {
                                 </th>
                                 <th
                                     scope="col"
-                                    className="p-6 hidden md:table-cell"
-                                >
-                                    Permission
-                                </th>
-                                <th
-                                    scope="col"
                                     className="p-6 hidden lg:table-cell"
                                 >
                                     Status
@@ -124,24 +158,28 @@ const AddTeamMebers = () => {
                                         <div className="flex items-center gap-2">
                                             <span className="inline-block h-8 w-8 rounded-full bg-white border border-slate-500 overflow-auto">
                                                 <Image
-                                                    src={member.avatarUrl}
+                                                    src={
+                                                        process.env
+                                                            .NEXT_PUBLIC_AVATAR_URL as string
+                                                    }
                                                     alt="member avatar"
                                                     width={32}
                                                     height={32}
                                                     unoptimized
                                                 />
                                             </span>
-                                            {member.full_name}
+                                            {member.employerDto.firstName +
+                                                `${
+                                                    member.employerDto
+                                                        .lastName ?? ""
+                                                }`}
                                         </div>
                                     </td>
                                     <td className="px-6 py-4 hidden lg:table-cell">
-                                        {member.email}
-                                    </td>
-                                    <td className="px-6 py-4 hidden md:table-cell">
-                                        {member.permission}
+                                        {member.employerDto.email}
                                     </td>
                                     <td className="px-6 py-4 hidden lg:table-cell">
-                                        {member.status}
+                                        {member.employerDto.status}
                                     </td>
                                     <td>
                                         <button
@@ -178,9 +216,8 @@ const AddTeamMebers = () => {
                         New Memebers
                     </h1>
                     <p className="text-sm text-neutral-500">
-                        Bạn có thể thêm các thành viên tài khoản khác vào nhóm
-                        của mình hoặc mời mọi người tham gia Workable để cộng
-                        tác trong công việc này.
+                        You can add other members to your team to collaborate on
+                        this work.
                     </p>
                 </div>
                 <div className="w-full flex items-center justify-between gap-4 flex-wrap">
@@ -213,7 +250,8 @@ const AddTeamMebers = () => {
 
                                 const existingMember = datas.find(
                                     member =>
-                                        member.email === selectedInternal.email
+                                        member.employerDto.email ===
+                                        selectedInternal.email
                                 );
                                 if (existingMember)
                                     return toast.error("Member already added");

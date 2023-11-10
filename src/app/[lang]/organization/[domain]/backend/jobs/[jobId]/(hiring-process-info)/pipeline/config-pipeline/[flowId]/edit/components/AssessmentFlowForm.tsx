@@ -3,66 +3,45 @@
 import React, { FormEvent, useState } from "react";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { Reorder } from "framer-motion";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 import { CloseIcon, Logo } from "@/icons";
 import { Button, CustomInput, DatePicker } from "@/components";
 import { AssessmentTypes } from "@/interfaces/assessment.interface";
-import { ICreateAssessmentFlowDto } from "@/services/assessment-flows/assessment-flows.interface";
+import {
+    IAssessmentFlowDto,
+    ICreateAssessmentFlowDto,
+    IEditAssessmentFlowDto,
+} from "@/services/assessment-flows/assessment-flows.interface";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
 
 import AssessmentFlowCard from "./AssessmentFlowCard";
 import FlowStageForm from "./FlowStageForm";
 
-const initialData: ICreateAssessmentFlowDto = {
-    name: "",
-    startTime: new Date(),
-    endTime: new Date(),
-    jobPostId: 0,
-    assessments: [
-        {
-            name: "Sourced",
-            assessmentType: "SOURCED",
-            index: -1,
-        },
-        {
-            name: "Hired",
-            assessmentType: "HIRED",
-            index: -1,
-        },
-    ],
+type AssessmentFlowFormProps = {
+    data: IEditAssessmentFlowDto;
 };
 
-type CreateAssessmentFlowFormProps = {
-    data?: typeof initialData;
-};
-
-const CreateAssessmentFlowForm: React.FC<CreateAssessmentFlowFormProps> = ({
-    data = initialData,
-}) => {
-    const { jobId } = useParams();
+const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
+    const { jobId, lang } = useParams();
+    const router = useRouter();
 
     const [showAddStage, setShowAddStage] = useState(false);
-    const [formState, setFormState] = useState<ICreateAssessmentFlowDto>({
-        ...data,
-        jobPostId: parseInt(jobId as string),
-    });
+    const [formState, setFormState] = useState<IEditAssessmentFlowDto>(data);
 
-    const handleCreateFlow = async (e: FormEvent) => {
+    const handleUpdateFlow = async (e: FormEvent) => {
         e.preventDefault();
         try {
-            const res = await assessmentFlowsServices.createAsync({
+            const res = await assessmentFlowsServices.editAsync({
                 ...formState,
-                assessments: formState.assessments
-                    .slice(1, -1)
-                    .map((assessment, index) => ({
-                        ...assessment,
-                        index: index + 1,
-                    })),
+                assessments: formState.assessments.slice(1, -1),
             });
 
             toast.success(res.message);
+            router.push(
+                `/${lang}/backend/jobs/${jobId}/pipeline/config-pipeline`
+            );
         } catch (error) {
             toast.error("Create flow error");
         }
@@ -108,7 +87,7 @@ const CreateAssessmentFlowForm: React.FC<CreateAssessmentFlowFormProps> = ({
     };
 
     return (
-        <form onSubmit={handleCreateFlow}>
+        <div>
             <div className="p-4">
                 <div className="mb-4">
                     <CustomInput
@@ -129,6 +108,7 @@ const CreateAssessmentFlowForm: React.FC<CreateAssessmentFlowFormProps> = ({
                             Start time
                         </h3>
                         <DatePicker
+                            value={new Date(formState.startTime)}
                             onChange={date =>
                                 setFormState(prev => ({
                                     ...prev,
@@ -142,6 +122,7 @@ const CreateAssessmentFlowForm: React.FC<CreateAssessmentFlowFormProps> = ({
                             End time
                         </h3>
                         <DatePicker
+                            value={new Date(formState.endTime)}
                             onChange={date =>
                                 setFormState(prev => ({
                                     ...prev,
@@ -205,19 +186,19 @@ const CreateAssessmentFlowForm: React.FC<CreateAssessmentFlowFormProps> = ({
                     )}
                 </section>
             </div>
-            <div className="p-4 flex items-center gap-4 text-sm">
-                <Button className="mr-auto">Apply template</Button>
-                <Button type="submit">Save</Button>
+            <div className="p-4 flex items-center justify-end gap-4 text-sm">
+                {/* <Button className="mr-auto">Apply template</Button> */}
+                <Button onClick={handleUpdateFlow}>Save changes</Button>
                 <button
                     type="button"
                     className="font-semibold text-neutral-500 hover:underline hover:text-neutral-700"
-                    onClick={() => {}}
+                    onClick={() => router.back()}
                 >
                     Cancel
                 </button>
             </div>
-        </form>
+        </div>
     );
 };
 
-export default CreateAssessmentFlowForm;
+export default AssessmentFlowForm;

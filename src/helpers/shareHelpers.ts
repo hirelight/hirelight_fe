@@ -19,6 +19,15 @@ export const delayFunc = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms));
 };
 
+export function humanReadable(seconds: number) {
+    let h = seconds / 3600;
+    let m = (seconds / 60) % 60;
+    let s = seconds % 60;
+    return `${h > 9 ? h : `0${h}`}:${m > 9 ? m : `0${m}`}:${
+        s > 9 ? s : `0${s}`
+    }`;
+}
+
 export const resizeImage = async (file: File) => {
     const img = new Image();
     const reader = new FileReader();

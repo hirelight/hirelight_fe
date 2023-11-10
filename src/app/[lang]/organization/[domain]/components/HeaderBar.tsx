@@ -18,6 +18,7 @@ import { useAppDispatch } from "@/redux/reduxHooks";
 import { logout } from "@/redux/slices/auth.slice";
 
 import styles from "./HeaderBar.module.scss";
+import InvitationDropDown from "./InvitationDropDown";
 
 const HeaderBar = () => {
     const pathname = usePathname();
@@ -115,6 +116,7 @@ const HeaderBar = () => {
                 </nav>
                 <div className="flex gap-8 items-center">
                     <Bell className="text-blue_primary_800 w-8 h-8" />
+                    <InvitationDropDown />
                     <div className="flex gap-4">
                         <LocaleSwitcher />
                     </div>

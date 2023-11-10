@@ -48,18 +48,9 @@ const industries = [
     "Design",
 ];
 
-type EditJobDetailFormProps = {
-    data: Omit<IJobDto, "content" | "applicationForm"> & {
-        content: JobContentJson;
-        applicationForm: IAppFormSection[];
-    };
-};
+type EditJobDetailFormProps = {};
 
-const EditJobDetailForm: React.FC<EditJobDetailFormProps> = ({ data }) => {
-    const pathname = usePathname();
-    const router = useRouter();
-    const params = useParams();
-
+const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
     const [loading, setLoading] = React.useState(false);
 
     const [descriptionLength, setDescriptionLength] = React.useState({
@@ -98,30 +89,19 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = ({ data }) => {
         // }
 
         try {
-            // const res = await jobServices.editAsync({
-            //     ...job,
-            //     id: data.id,
-            //     content: JSON.stringify(job.content),
-            //     applicationForm: JSON.stringify(job.applicationForm),
-            // });
-            // toast.success(res.message);
             dispatch(
                 updateJob({
                     ...job,
-                    id: data.id,
+                    id: job.id,
                     content: JSON.stringify(job.content),
                     applicationForm: JSON.stringify(job.applicationForm),
                 })
             );
         } catch (error) {
             console.error(error);
-            toast.error("Create job failure");
+            toast.error("Edit job failure");
         }
     };
-
-    useEffect(() => {
-        dispatch(setJob(data));
-    }, [data, dispatch]);
 
     return (
         <>

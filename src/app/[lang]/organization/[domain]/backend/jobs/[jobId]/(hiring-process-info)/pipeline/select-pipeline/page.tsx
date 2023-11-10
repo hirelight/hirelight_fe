@@ -1,5 +1,6 @@
 import React from "react";
 import { cookies } from "next/headers";
+import Link from "next/link";
 
 import { IAssessmentFlTempDto } from "@/services/assessment-flow-templates/assessment-flow-templates.interface";
 import { IAssessmentFlow } from "@/services/assessment-flows/assessment-flows.interface";
@@ -42,18 +43,31 @@ const SelectPipeline = async () => {
     const datas = await fetchTemplates(accessToken);
 
     return (
-        <div className="w-full bg-white shadow-lg rounded-md">
-            <div className="p-6">
-                {datas.length > 0 && (
-                    <ChangePipeline
-                        datas={datas.map(item => ({
-                            ...item,
-                            assessments: JSON.parse(item.content),
-                        }))}
-                    />
-                )}
+        <React.Fragment>
+            <div className="flex justify-between items-center">
+                <h3 className="flex-1 text-lg font-medium text-neutral-700 mb-4 px-6">
+                    Apply templates
+                </h3>
+                <Link
+                    href={"create-flow"}
+                    className="text-sm font-medium text-blue_primary_800 hover:underline mr-4"
+                >
+                    Create new flow
+                </Link>
             </div>
-        </div>
+            <div className="w-full bg-white shadow-lg rounded-md">
+                <div className="p-6">
+                    {datas.length > 0 && (
+                        <ChangePipeline
+                            datas={datas.map(item => ({
+                                ...item,
+                                assessments: JSON.parse(item.content),
+                            }))}
+                        />
+                    )}
+                </div>
+            </div>
+        </React.Fragment>
     );
 };
 

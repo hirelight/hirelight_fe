@@ -11,122 +11,118 @@ import {
     IEmailTemplatesDto,
 } from "./email-template.interface";
 
-interface IEmailTemplateServices {
-    getListAsync: () => Promise<IResponse<IEmailTemplatesDto[]>>;
-    getByIdAsync: (id: number) => Promise<IResponse<IEmailTemplatesDto>>;
-    createAsync: (
-        createDto: ICreateEmailTemplatesDto
-    ) => Promise<IResponse<any>>;
-    editAsync: (editDto: IEditEmailTemplatesDto) => Promise<IResponse<any>>;
-    deleteByIdAsync: (id: number) => Promise<IResponse<any>>;
-}
+const createAsync = async (
+    createEmailTemplatesDto: ICreateEmailTemplatesDto
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.post<IResponse<any>>(
+            `${endpoints.EMAIL_TEMPLATE}`,
+            createEmailTemplatesDto
+        );
+        console.log(res);
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-class EmailTemplateServices implements IEmailTemplateServices {
-    createAsync = async (
-        createEmailTemplatesDto: ICreateEmailTemplatesDto
-    ): Promise<IResponse<any>> => {
-        try {
-            const res = await interceptor.post<IResponse<any>>(
-                `${endpoints.EMAIL_TEMPLATE}`,
-                createEmailTemplatesDto
-            );
-            console.log(res);
-            checkResErr(res.data);
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+const getListAsync = async (): Promise<IResponse<IEmailTemplatesDto[]>> => {
+    try {
+        const res = await interceptor.get<IResponse<IEmailTemplatesDto[]>>(
+            endpoints.EMAIL_TEMPLATE
+        );
 
-    getListAsync = async (): Promise<IResponse<IEmailTemplatesDto[]>> => {
-        try {
-            const res = await interceptor.get<IResponse<IEmailTemplatesDto[]>>(
-                endpoints.EMAIL_TEMPLATE
-            );
+        checkResErr(res.data);
 
-            checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+const getByIdAsync = async (
+    id: number
+): Promise<IResponse<IEmailTemplatesDto>> => {
+    try {
+        const res = await interceptor.get<IResponse<IEmailTemplatesDto>>(
+            `${endpoints.EMAIL_TEMPLATE}/${id}`
+        );
 
-    getByIdAsync = async (
-        id: number
-    ): Promise<IResponse<IEmailTemplatesDto>> => {
-        try {
-            const res = await interceptor.get<IResponse<IEmailTemplatesDto>>(
-                `${endpoints.EMAIL_TEMPLATE}/${id}`
-            );
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+const editAsync = async (
+    editEmailTemplateDto: IEditEmailTemplatesDto
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.post<IResponse<any>>(
+            `${endpoints.EMAIL_TEMPLATE}`,
+            editEmailTemplateDto
+        );
 
-    editAsync = async (
-        editEmailTemplateDto: IEditEmailTemplatesDto
-    ): Promise<IResponse<any>> => {
-        try {
-            const res = await interceptor.post<IResponse<any>>(
-                `${endpoints.EMAIL_TEMPLATE}`,
-                editEmailTemplateDto
-            );
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+const deleteByIdAsync = async (id: number): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.delete<IResponse<any>>(
+            `${endpoints.EMAIL_TEMPLATE}/${id}`
+        );
 
-    deleteByIdAsync = async (id: number): Promise<IResponse<any>> => {
-        try {
-            const res = await interceptor.delete<IResponse<any>>(
-                `${endpoints.EMAIL_TEMPLATE}/${id}`
-            );
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+const getEmailTemplateTypesListAsync = async (): Promise<
+    IResponse<IEmailTemplateTypeDto[]>
+> => {
+    try {
+        const res = await interceptor.get<IResponse<IEmailTemplateTypeDto[]>>(
+            `${endpoints.EMAIL_TEMPLATE_TYPES}`
+        );
 
-    getEmailTemplateTypesListAsync = async (): Promise<
-        IResponse<IEmailTemplateTypeDto[]>
-    > => {
-        try {
-            const res = await interceptor.get<
-                IResponse<IEmailTemplateTypeDto[]>
-            >(`${endpoints.EMAIL_TEMPLATE_TYPES}`);
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+const getEmailTemplateTypesByIdAsync = async (
+    id: number
+): Promise<IResponse<IEmailTemplateTypeDto>> => {
+    try {
+        const res = await interceptor.get<IResponse<IEmailTemplateTypeDto>>(
+            `${endpoints.EMAIL_TEMPLATE_TYPES}/${id}`
+        );
 
-    getEmailTemplateTypesByIdAsync = async (
-        id: number
-    ): Promise<IResponse<IEmailTemplateTypeDto>> => {
-        try {
-            const res = await interceptor.get<IResponse<IEmailTemplateTypeDto>>(
-                `${endpoints.EMAIL_TEMPLATE_TYPES}/${id}`
-            );
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
-}
-
-const emailTemplateService = new EmailTemplateServices();
+const emailTemplateService = {
+    createAsync,
+    getListAsync,
+    getByIdAsync,
+    editAsync,
+    deleteByIdAsync,
+    getEmailTemplateTypesListAsync,
+    getEmailTemplateTypesByIdAsync,
+};
 
 export default emailTemplateService;

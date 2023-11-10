@@ -35,7 +35,7 @@ interface ISelection<T = any> {
     multiple?: boolean;
 }
 
-const Selection = <T extends object | string>({
+const Selection = <T extends object | any>({
     title,
     placeholder = "Select...",
     items,

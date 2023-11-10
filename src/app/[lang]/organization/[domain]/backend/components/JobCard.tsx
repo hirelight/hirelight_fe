@@ -4,12 +4,12 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useQuery } from "@tanstack/react-query";
 
 import { EllipsisVertical } from "@/icons";
 import { IJobDto } from "@/services/job/job.interface";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
 import { IAssessmentFlowDto } from "@/services";
-import { AssessmentTypes } from "@/interfaces/assessment.interface";
 
 interface IStage {
     name: string;
@@ -51,25 +51,12 @@ const JobCard: React.FC<JobCardProps> = ({
     data: { title, area, status, id, assessmentFlowId },
 }) => {
     const router = useRouter();
-    const [assessmentFlow, setAssessmentFlow] = useState<IAssessmentFlowDto>();
-
-    useEffect(() => {
-        const fetchWorkflow = async (assessmentFlowId: number) => {
-            try {
-                const flow =
-                    await assessmentFlowsServices.getByIdAsync(
-                        assessmentFlowId
-                    );
-
-                setAssessmentFlow(flow.data);
-                toast.success(flow.message);
-            } catch (error) {
-                toast.error("Fialure");
-            }
-        };
-
-        if (assessmentFlowId) fetchWorkflow(assessmentFlowId);
-    }, [assessmentFlowId]);
+    const { data: flowRes } = useQuery({
+        queryKey: ["getOneAssessmentFlow", assessmentFlowId],
+        queryFn: () => {
+            return assessmentFlowsServices.getByIdAsync(assessmentFlowId!!);
+        },
+    });
 
     return (
         <div className="w-full p-6 bg-white shadow-md rounded-lg">
@@ -101,27 +88,20 @@ const JobCard: React.FC<JobCardProps> = ({
                     </button>
                 </div>
             </div>
-            <ul className="hidden md:flex items-center justify-between mt-2 mb-6">
-                {assessmentFlow &&
-                    assessmentFlow.assessments.map((assessment, index) => (
-                        <React.Fragment key={assessment.id}>
-                            <li className="text-center items-center p-4">
-                                <h4 className="text-xl font-medium text-neutral-700 mb-2">
-                                    0
-                                </h4>
-                                <p className="text-neutral-500">
-                                    {
-                                        AssessmentTypes[
-                                            assessment.assessmentTypeName
-                                        ]
-                                    }
-                                </p>
-                            </li>
-                            {index !==
-                                assessmentFlow.assessments.length - 1 && (
-                                <div className="w-[1px] h-14 bg-gray-300"></div>
-                            )}
-                        </React.Fragment>
+            <ul className="hidden w-full md:flex items-center justify-around mt-2 mb-6">
+                {flowRes &&
+                    flowRes.data.assessments?.map((assessment, index) => (
+                        <li
+                            key={assessment.id}
+                            className="w-full flex flex-col items-center border-r border-gray-300 last:border-none p-4"
+                        >
+                            <h4 className="text-xl font-medium text-neutral-700 mb-2">
+                                0
+                            </h4>
+                            <p className="text-neutral-500">
+                                {assessment.name}
+                            </p>
+                        </li>
                     ))}
             </ul>
             <div className="w-full flex justify-between">

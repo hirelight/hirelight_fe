@@ -15,6 +15,7 @@ import ThemeSwitcher from "./ThemeSwitcher";
 import PopoverWarning from "./PopoverWarning";
 import Pagination from "./Pagination";
 import DatePicker from "./DatePicker";
+import QuestionPicker from "./QuestionPicker";
 
 export {
     Modal,
@@ -34,4 +35,5 @@ export {
     ThemeSwitcher,
     PopoverWarning,
     DatePicker,
+    QuestionPicker,
 };

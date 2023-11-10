@@ -21,7 +21,7 @@ export interface JobContentJson {
 export interface IJobDto extends ICreateJobDto {
     id: number;
     creatorId: number;
-    assessmentFlowId: number;
+    assessmentFlowId: number | null;
     organizationId: number;
     employmentType: string;
     keywords: string;

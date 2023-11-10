@@ -10,89 +10,94 @@ import {
 } from "./app-form-template.interface";
 
 const baseEndpoint = "/applicationformtemplates";
-class AppFormTemplateServices {
-    getListAsync = async (): Promise<IResponse<IAppFormTemplateDto[]>> => {
-        try {
-            const res = await interceptor.get<IResponse<IAppFormTemplateDto[]>>(
-                baseEndpoint + "/search",
-                {
-                    params: {
-                        name: "Default",
-                    },
-                }
-            );
 
-            checkResErr(res.data);
+const getListAsync = async (): Promise<IResponse<IAppFormTemplateDto[]>> => {
+    try {
+        const res = await interceptor.get<IResponse<IAppFormTemplateDto[]>>(
+            baseEndpoint + "/search",
+            {
+                params: {
+                    name: "Default",
+                },
+            }
+        );
 
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+        checkResErr(res.data);
 
-    getByIdAsync = async (
-        id: number
-    ): Promise<IResponse<IAppFormTemplateDto>> => {
-        try {
-            const res = await interceptor.get<IResponse<IAppFormTemplateDto>>(
-                baseEndpoint + `/${id}`
-            );
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
+const getByIdAsync = async (
+    id: number
+): Promise<IResponse<IAppFormTemplateDto>> => {
+    try {
+        const res = await interceptor.get<IResponse<IAppFormTemplateDto>>(
+            baseEndpoint + `/${id}`
+        );
 
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+        checkResErr(res.data);
 
-    createAsync = async (createDto: ICreateAppFormTemplateDto) => {
-        try {
-            const res = await interceptor.post<IResponse<any>>(
-                baseEndpoint,
-                createDto
-            );
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
+const createAsync = async (createDto: ICreateAppFormTemplateDto) => {
+    try {
+        const res = await interceptor.post<IResponse<any>>(
+            baseEndpoint,
+            createDto
+        );
 
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+        checkResErr(res.data);
 
-    deleteByIdAsync = async (id: number): Promise<IResponse<any>> => {
-        try {
-            const res = await interceptor.delete<IResponse<any>>(
-                baseEndpoint + `/${id}`
-            );
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
+const deleteByIdAsync = async (id: number): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.delete<IResponse<any>>(
+            baseEndpoint + `/${id}`
+        );
 
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+        checkResErr(res.data);
 
-    editAsync = async (
-        editDto: IEditAppFormTemplateDto
-    ): Promise<IResponse<any>> => {
-        try {
-            const res = await interceptor.put<IResponse<any>>(
-                baseEndpoint,
-                editDto
-            );
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
+const editAsync = async (
+    editDto: IEditAppFormTemplateDto
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.put<IResponse<any>>(
+            baseEndpoint,
+            editDto
+        );
 
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
-}
+        checkResErr(res.data);
 
-const appFormTemplateServices = new AppFormTemplateServices();
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const appFormTemplateServices = {
+    getByIdAsync,
+    getListAsync,
+    editAsync,
+    deleteByIdAsync,
+    createAsync,
+};
 
 export default appFormTemplateServices;

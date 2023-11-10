@@ -1,20 +1,16 @@
 "use client";
 
-import React, { useEffect } from "react";
-import Image from "next/image";
+import React from "react";
 import { toast } from "react-toastify";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 import { Button, CustomInput, DatePicker } from "@/components";
-import { ChevronDown } from "@/icons";
-import assessmentFlowTemplatesServices from "@/services/assessment-flow-templates/assessment-flow-templates.service";
 import { IAssessmentFlTempDto } from "@/services/assessment-flow-templates/assessment-flow-templates.interface";
-import {
-    IAssessmentFlow,
-    ICreateAssessmentFlowDto,
-} from "@/services/assessment-flows/assessment-flows.interface";
+import { IAssessmentFlow } from "@/services/assessment-flows/assessment-flows.interface";
 import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
+import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
+import { setAssessmentFlow } from "@/redux/slices/assessment-flow.slice";
 
 interface IChangePipeline {
     datas: (Omit<IAssessmentFlTempDto, "content"> & {
@@ -24,25 +20,38 @@ interface IChangePipeline {
 
 const ChangePipeline = ({ datas }: IChangePipeline) => {
     const { jobId } = useParams();
+    const flowId = useSearchParams().get("flowId");
 
-    const [formState, setFormState] = React.useState<ICreateAssessmentFlowDto>({
-        name: "",
-        startTime: new Date(),
-        endTime: new Date(),
-        jobPostId: parseInt(jobId as string),
-        assessments: datas[0].assessments,
-    });
+    const dispatch = useAppDispatch();
+    const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
 
     const handleCreateFlow = async () => {
         try {
             const res = await assessmentFlowsServices.createAsync({
-                ...formState,
-                assessments: formState.assessments
-                    .slice(1, -1)
-                    .map((assessment, index) => ({
-                        ...assessment,
-                        index: index + 1,
-                    })),
+                ...assessmentFlow,
+                assessments: assessmentFlow.assessments.map(item => ({
+                    name: item.name,
+                    assessmentType: item.assessmentTypeName,
+                })),
+                jobPostId: parseInt(jobId as string),
+            });
+
+            toast.success(res.message);
+        } catch (error) {
+            toast.error("Create flow error");
+        }
+    };
+
+    const handleUpdateFlow = async () => {
+        if (!assessmentFlow.id) return toast.error("Id requried");
+        try {
+            const res = await assessmentFlowsServices.editAsync({
+                ...assessmentFlow,
+                id: assessmentFlow.id,
+                assessments: assessmentFlow.assessments.map(item => ({
+                    name: item.name,
+                    assessmentType: item.assessmentTypeName,
+                })),
             });
 
             toast.success(res.message);
@@ -56,12 +65,14 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
             <div className="mb-4 grid grid-cols-1 md:grid-cols-2">
                 <CustomInput
                     title="Name"
-                    value={formState.name}
+                    value={assessmentFlow.name}
                     onChange={e =>
-                        setFormState(prev => ({
-                            ...prev,
-                            name: e.target.value,
-                        }))
+                        dispatch(
+                            setAssessmentFlow({
+                                ...assessmentFlow,
+                                name: e.target.value,
+                            })
+                        )
                     }
                     required
                 />
@@ -73,11 +84,14 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                         Start time
                     </h3>
                     <DatePicker
+                        value={assessmentFlow.startTime}
                         onChange={date =>
-                            setFormState(prev => ({
-                                ...prev,
-                                startTime: date,
-                            }))
+                            dispatch(
+                                setAssessmentFlow({
+                                    ...assessmentFlow,
+                                    startTime: date,
+                                })
+                            )
                         }
                     />
                 </div>
@@ -86,15 +100,46 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                         End time
                     </h3>
                     <DatePicker
+                        value={assessmentFlow.endTime}
                         onChange={date =>
-                            setFormState(prev => ({
-                                ...prev,
-                                endTime: date,
-                            }))
+                            dispatch(
+                                setAssessmentFlow({
+                                    ...assessmentFlow,
+                                    endTime: date,
+                                })
+                            )
                         }
                     />
                 </div>
             </div>
+
+            {assessmentFlow.id && (
+                <>
+                    <h3 className="ml-2 text-xl font-semibold text-neutral-900 dark:text-gray-300 mb-4">
+                        {assessmentFlow.name}
+                    </h3>
+                    <ul className="flex gap-2 mb-8">
+                        {assessmentFlow.assessments.map(stage => (
+                            <li
+                                key={stage.name}
+                                className="flex-1 flex-shrink-0 w-0 min-w-0 text-center py-3 px-4 rounded-md flex flex-col items-center justify-between bg-white shadow-lg border border-gray-200"
+                            >
+                                <div className="w-8 h-8 text-neutral-700 mb-2">
+                                    {getIconBaseOnAssessmentType(
+                                        stage.assessmentTypeName
+                                    )}
+                                </div>
+                                <span className="text-sm text-neutral-700 font-medium max-w-full whitespace-nowrap text-ellipsis overflow-hidden ">
+                                    {stage.name}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                    <h4 className="text-sm font-semibold text-neutral-900 dark:text-gray-300 mb-8">
+                        Select another flow
+                    </h4>
+                </>
+            )}
 
             <React.Fragment>
                 {datas?.map((flow, index) => {
@@ -111,17 +156,23 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                                         defaultChecked={index === 0}
                                         onChange={e => {
                                             if (e.currentTarget.checked) {
-                                                setFormState(prev => ({
-                                                    ...prev,
+                                                setAssessmentFlow({
+                                                    ...assessmentFlow,
                                                     assessments:
-                                                        flow.assessments,
-                                                }));
+                                                        flow.assessments
+                                                            .slice(1, -1)
+                                                            .map(item => ({
+                                                                name: item.name,
+                                                                assessmentTypeName:
+                                                                    item.assessmentType,
+                                                            })),
+                                                });
                                             }
                                         }}
                                     />
                                     <label
                                         htmlFor={`pipeline-${flow.id}`}
-                                        className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                        className="ml-2 text-sm font-medium text-neutral-900 dark:text-gray-300"
                                     >
                                         {flow.name}
                                     </label>
@@ -129,7 +180,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                                 <ul className="flex gap-2 mb-6">
                                     {flow.assessments.map(stage => (
                                         <li
-                                            key={stage.index}
+                                            key={stage.name}
                                             className="flex-1 flex-shrink-0 w-0 min-w-0 text-center py-3 px-4 rounded-md flex flex-col items-center justify-between bg-white shadow-lg border border-gray-200"
                                         >
                                             <div className="w-8 h-8 text-neutral-700 mb-2">
@@ -149,7 +200,11 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                 })}
 
                 <div className="w-fit">
-                    <Button onClick={handleCreateFlow}>Save changes</Button>
+                    <Button
+                        onClick={flowId ? handleUpdateFlow : handleCreateFlow}
+                    >
+                        Save changes
+                    </Button>
                 </div>
             </React.Fragment>
         </div>

@@ -3,10 +3,113 @@ import { checkResErr } from "@/helpers";
 import { IResponse } from "@/interfaces/service.interface";
 
 import interceptor from "../interceptor";
+import { IEmployerInvitationDto } from "..";
 
-import { ISendCollabInvitationDto } from "./collaborators.interface";
+import {
+    ICollaboratorDto,
+    IEditCollaboratorDto,
+    ISendCollabInvitationDto,
+} from "./collaborators.interface";
 
 const baseEndpoint = "/job-posts";
+
+const getCollaboratorList = async (
+    jobPostId: number
+): Promise<IResponse<ICollaboratorDto[]>> => {
+    try {
+        const res = await interceptor.get<IResponse<ICollaboratorDto[]>>(
+            baseEndpoint + `/${jobPostId}/collaborators`
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const getCollaboratorById = async (
+    jobPostId: number,
+    memberId: number
+): Promise<IResponse<ICollaboratorDto>> => {
+    try {
+        const res = await interceptor.get<IResponse<ICollaboratorDto>>(
+            baseEndpoint + `/${jobPostId}/collaborators/${memberId}`
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const editCollaborator = async (
+    editDto: IEditCollaboratorDto
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.put<IResponse<any>>(
+            baseEndpoint + `/${editDto.jobPostId}/collaborators`,
+            editDto
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const deleteCollaborator = async (
+    jobPostId: number,
+    memberId: number
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.delete<IResponse<any>>(
+            baseEndpoint + `/${jobPostId}/collaborators/${memberId}`
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const acceptJobCollabInvitation = async (
+    jobPostId: number
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.put<IResponse<any>>(
+            baseEndpoint + `/${jobPostId}/collaborators/invitation`
+        );
+
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const getCollabInvitations = async (): Promise<
+    IResponse<IEmployerInvitationDto[]>
+> => {
+    try {
+        const res = await interceptor.get<IResponse<IEmployerInvitationDto[]>>(
+            baseEndpoint + `/1/collaborators/user-invitation`
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
 const sendInvitation = async (
     invitation: ISendCollabInvitationDto
@@ -38,8 +141,14 @@ const getPermissionById = async (id: number): Promise<IResponse<any>> => {
 };
 
 const collaboratorsServices = {
+    getCollaboratorList,
+    getCollaboratorById,
+    editCollaborator,
+    deleteCollaborator,
+    acceptJobCollabInvitation,
     sendInvitation,
     getPermissionById,
+    getCollabInvitations,
 };
 
 export default collaboratorsServices;

@@ -1,14 +1,11 @@
 "use client";
 
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams } from "next/navigation";
 
-import {
-    AssessmentTypeKey,
-    AssessmentTypes,
-} from "@/interfaces/assessment.interface";
+import { AssessmentTypeKey } from "@/interfaces/assessment.interface";
 import { IAssessmentDto } from "@/services";
+import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 
 import styles from "./PipelineStages.module.scss";
 
@@ -24,13 +21,11 @@ const PipelineStages = ({
     onSelect,
     stages,
 }: IPipelineStages) => {
-    const { jobId } = useParams();
-
     return (
         <aside>
-            <ul className="flex flex-col gap-3">
+            <ul className={styles.stage__list}>
                 {stages?.map(stage => (
-                    <li key={stage.id}>
+                    <li key={stage.id} className={styles.stage__item}>
                         <button
                             type="button"
                             disabled={defaultStage.includes(
@@ -41,16 +36,18 @@ const PipelineStages = ({
                                     ? "cursor-not-allowed opacity-70"
                                     : "hover:bg-gray-400 hover:text-neutral-700"
                             } ${
-                                selectedStage.assessmentTypeName ===
-                                stage.assessmentTypeName
+                                selectedStage.id === stage.id
                                     ? styles.active
                                     : ""
                             }`}
                             onClick={onSelect.bind(null, stage)}
                         >
-                            <span>
-                                {AssessmentTypes[stage.assessmentTypeName]}
-                            </span>
+                            <div className="w-8 h-8">
+                                {getIconBaseOnAssessmentType(
+                                    stage.assessmentTypeName
+                                )}
+                            </div>
+                            <strong>{stage.name}</strong>
                         </button>
                     </li>
                 ))}

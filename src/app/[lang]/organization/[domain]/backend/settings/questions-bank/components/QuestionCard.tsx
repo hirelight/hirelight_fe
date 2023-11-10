@@ -2,9 +2,14 @@
 
 import React, { useMemo, useState } from "react";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+    PencilIcon as PencilSolid,
+    TrashIcon as TrashSolid,
+} from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { IQuestionAnswerDto } from "@/services/questions/questions.interface";
 import {
@@ -68,15 +73,15 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
             </Portal>
             <div className="bg-white p-4 flex items-stretch">
                 <div className="flex-1">
-                    <h3 className="text-neutral-700 font-semibold mb-4 flex flex-wrap gap-1">
+                    <h3 className="text-neutral-700 font-semibold mb-4 flex gap-1">
                         <p className="whitespace-nowrap">
-                            Question {index + 1}:
+                            Question {index + 1}:{" "}
                         </p>
-                        <div
+                        <span
                             dangerouslySetInnerHTML={{
                                 __html: parsedContent.name,
                             }}
-                        ></div>
+                        ></span>
                     </h3>
                     {parsedContent.type !== "essay" && (
                         <div
@@ -154,14 +159,21 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                         </div>
                     </div>
                     <div className="flex gap-4 mt-10">
-                        <Link href={`questions-bank/${id}/edit`}>
-                            <PencilIcon className="w-5 h-5 text-blue_primary_700" />
+                        <Link
+                            href={`questions-bank/${id}/edit`}
+                            className="group"
+                        >
+                            <PencilIcon className="w-5 h-5 text-blue_primary_700 group-hover:hidden" />
+
+                            <PencilSolid className="w-5 h-5 hidden text-blue_primary_700 group-hover:block" />
                         </Link>
                         <button
                             type="button"
                             onClick={() => setShowDeleteAlert(true)}
+                            className="group"
                         >
-                            <TrashIcon className="w-5 h-5 text-red-500" />
+                            <TrashIcon className="w-5 h-5 text-red-500 group-hover:hidden" />
+                            <TrashSolid className="w-5 h-5 text-red-500 hidden group-hover:block" />
                         </button>
                     </div>
                 </div>

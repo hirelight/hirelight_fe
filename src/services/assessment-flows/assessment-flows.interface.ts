@@ -8,7 +8,6 @@ import { IAssessmentDto } from "../assessments/assessments.interface";
 export interface IAssessmentFlow {
     name: string;
     assessmentType: AssessmentTypeKey;
-    index: number;
 }
 
 export interface ICreateAssessmentFlowDto {
@@ -21,6 +20,10 @@ export interface ICreateAssessmentFlowDto {
 
 export interface IEditAssessmentFlowDto {
     id: number;
+    name: string;
+    startTime: Date;
+    endTime: Date;
+    assessments: IAssessmentFlow[];
 }
 
 export interface IAssessmentFlowDto {

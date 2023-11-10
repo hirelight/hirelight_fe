@@ -54,8 +54,8 @@ const CustomFlowCard: React.FC<CustomFlowCardProps> = ({ data }) => {
     return (
         <>
             <div className="px-4 py-6 bg-gray-100 flex items-center justify-between text-sm group">
-                <div className="flex items-center gap-2">
-                    <span>{data.name}</span>
+                <div className="flex items-center gap-2 text-neutral-700">
+                    <strong>{data.name}</strong>
                     &#8226;
                     <span>{data.assessments.length} stages</span>
                 </div>

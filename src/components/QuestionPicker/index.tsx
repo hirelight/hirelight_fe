@@ -1,7 +1,5 @@
 "use client";
 
-"use client";
-
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 
@@ -14,7 +12,7 @@ import {
 import { IQuestionAnswerDto } from "@/services";
 import { Button, ButtonOutline } from "@/components";
 
-import QuestionCard from "./QuestionCard";
+import QuestionPickerCard from "./QuestionPickerCard";
 import styles from "./styles.module.scss";
 
 type QuestionPickerProps = {
@@ -80,7 +78,7 @@ const QuestionPicker: React.FC<QuestionPickerProps> = ({
                     ?.filter(item => filterOnSearch(item))
                     .map((item, index) => (
                         <li key={item.id}>
-                            <QuestionCard
+                            <QuestionPickerCard
                                 data={item}
                                 questionNo={index}
                                 pickedQuestions={curPicks}

@@ -7,7 +7,11 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { PlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import {
+    ArrowDownTrayIcon,
+    ArrowUpTrayIcon,
+    TrashIcon,
+} from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 
 import {
@@ -17,7 +21,6 @@ import {
     Portal,
     Selection,
 } from "@/components";
-import { delayFunc } from "@/helpers/shareHelpers";
 import questionAnswerServices from "@/services/questions/questions.service";
 import {
     ICreateQuestionDto,
@@ -28,10 +31,11 @@ import {
     QuestionDifficulty,
     QuestionTypes,
 } from "@/interfaces/questions.interface";
-import { IResponse } from "@/interfaces/service.interface";
 import { checkResErr } from "@/helpers";
 
 import AddQuestionTagModal from "./components/AddQuestionTagModal";
+
+const templateFile = `http://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/questions-template.xlsx`;
 
 const initialAnswers = new Array(4).fill({
     name: "",
@@ -225,14 +229,69 @@ const CreateQuestionPage = () => {
         });
     };
 
+    const handleUploadQuestions = async (file: File) => {
+        console.log(file);
+        const formData = new FormData();
+
+        formData.append("formFile", file);
+
+        try {
+            const res =
+                await questionAnswerServices.uploadQuestionsAsync(formData);
+            toast.success(res.message);
+            console.log(res);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const downloadFileAtUrl = () => {
+        const fileName = templateFile.split("/").pop();
+        const aTag = document.createElement("a");
+        aTag.href = templateFile;
+        aTag.setAttribute("download", fileName!!);
+        document.body.appendChild(aTag);
+
+        aTag.click();
+        aTag.remove();
+    };
+
     return (
         <>
             <form
                 onSubmit={handleCreateQuestion}
                 className="w-full bg-white rounded-md shadow-md p-4 xl:px-6"
             >
-                <h1 className="text-xl text-blue_primary_800 font-semibold text-center mb-4">
+                <h1 className="text-xl text-blue_primary_800 font-semibold text-center mb-4 relative">
                     Create multiple choice question
+                    {/* <button
+                        type="button"
+                        className="w-6 h-6 absolute top-1/2 right-0 -translate-y-1/2 cursor-pointer target:"
+                        onClick={customImageHandler}
+                    >
+                        <ArrowUpTrayIcon />
+                    </button> */}
+                    <div className="flex gap-4 absolute top-1/2 right-0 -translate-y-1/2">
+                        <button
+                            type="button"
+                            onClick={downloadFileAtUrl}
+                            className="w-6 h-6 block"
+                        >
+                            <ArrowDownTrayIcon />
+                        </button>
+                        <label className="w-6 h-6 block">
+                            <ArrowUpTrayIcon />
+                            <input
+                                type="file"
+                                className="sr-only"
+                                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                onChange={e => {
+                                    const files = e.target.files;
+                                    if (files) handleUploadQuestions(files[0]);
+                                }}
+                            />
+                        </label>
+                    </div>
                 </h1>
 
                 <div className="mb-4">

@@ -1,5 +1,6 @@
 import { IResponse } from "@/interfaces/service.interface";
 import { checkResErr } from "@/helpers";
+import endpoints from "@/utils/constants/service-endpoint";
 
 import interceptor from "../interceptor";
 
@@ -12,162 +13,176 @@ import {
     IQuestionTagDto,
 } from "./questions.interface";
 
-const baseEndpoint = "/question-answers";
-const baseTagEndpoint = "/tags";
+const createAsync = async (
+    createQuestionAnswerDto: ICreateQuestionDto
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.post(
+            endpoints.QUESTION_ANSWERS,
+            createQuestionAnswerDto
+        );
 
-interface IQuestionAnswerService {
-    getListAsync: () => Promise<IResponse<IQuestionAnswerDto[]>>;
-    getByIdAsync: (id: number) => Promise<IResponse<IQuestionAnswerDto>>;
-    createAsync: (createDto: ICreateQuestionDto) => Promise<IResponse<any>>;
-    editAsync: (editDto: IEditQuestionAnswerDto) => Promise<IResponse<any>>;
-    deleteByIdAsync: (id: number) => Promise<IResponse<any>>;
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-    getTagListAsync: () => Promise<IResponse<IQuestionTagDto[]>>;
-    getTagByIdAsync: (id: number) => Promise<IResponse<IQuestionTagDto>>;
-    createTagAsync: (
-        createDto: ICreateQuestionTagDto
-    ) => Promise<IResponse<any>>;
-    editTagAsync: (editDto: IEditQuestionTagDto) => Promise<IResponse<any>>;
-    deleteTagByIdAsync: (id: number) => Promise<IResponse<any>>;
-}
+const uploadQuestionsAsync = async (
+    formData: FormData
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.post(
+            endpoints.QUESTION_ANSWERS + "/files",
+            formData,
+            {
+                headers: { "Content-Type": "multipart/form-data" },
+            }
+        );
 
-class QuestionAnswerService implements IQuestionAnswerService {
-    createAsync = async (
-        createQuestionAnswerDto: ICreateQuestionDto
-    ): Promise<IResponse<any>> => {
-        try {
-            const res = await interceptor.post(
-                `${baseEndpoint}`,
-                createQuestionAnswerDto
-            );
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+const getListAsync = async (): Promise<IResponse<IQuestionAnswerDto[]>> => {
+    try {
+        const res = await interceptor.get(endpoints.QUESTION_ANSWERS);
 
-    getListAsync = async (): Promise<IResponse<IQuestionAnswerDto[]>> => {
-        try {
-            const res = await interceptor.get(baseEndpoint);
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+const getByIdAsync = async (
+    id: number
+): Promise<IResponse<IQuestionAnswerDto>> => {
+    try {
+        const res = await interceptor.get(
+            endpoints.QUESTION_ANSWERS + `/${id}`
+        );
 
-    getByIdAsync = async (
-        id: number
-    ): Promise<IResponse<IQuestionAnswerDto>> => {
-        try {
-            const res = await interceptor.get(baseEndpoint + `/${id}`);
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+const editAsync = async (
+    editQuestionAnswerDto: IEditQuestionAnswerDto
+): Promise<IResponse<IQuestionAnswerDto>> => {
+    try {
+        const res = await interceptor.put(
+            endpoints.QUESTION_ANSWERS + `/${editQuestionAnswerDto.id}`,
+            editQuestionAnswerDto
+        );
 
-    editAsync = async (
-        editQuestionAnswerDto: IEditQuestionAnswerDto
-    ): Promise<IResponse<IQuestionAnswerDto>> => {
-        try {
-            const res = await interceptor.put(
-                baseEndpoint + `/${editQuestionAnswerDto.id}`,
-                editQuestionAnswerDto
-            );
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+const deleteByIdAsync = async (id: number): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.delete(
+            endpoints.QUESTION_ANSWERS + `/${id}`
+        );
 
-    deleteByIdAsync = async (id: number): Promise<IResponse<any>> => {
-        try {
-            const res = await interceptor.delete(baseEndpoint + `/${id}`);
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+// ***************Question Tag**********************
+const getTagListAsync = async (): Promise<IResponse<IQuestionTagDto[]>> => {
+    try {
+        const res = await interceptor.get(endpoints.TAGS);
 
-    // ***************Question Tag**********************
-    getTagListAsync = async (): Promise<IResponse<IQuestionTagDto[]>> => {
-        try {
-            const res = await interceptor.get(baseTagEndpoint);
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+const getTagByIdAsync = async (
+    id: number
+): Promise<IResponse<IQuestionTagDto>> => {
+    try {
+        const res = await interceptor.get(endpoints.TAGS + `/${id}`);
 
-    getTagByIdAsync = async (
-        id: number
-    ): Promise<IResponse<IQuestionTagDto>> => {
-        try {
-            const res = await interceptor.get(baseTagEndpoint + `/${id}`);
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+const createTagAsync = async (
+    createQuestionTagDto: ICreateQuestionTagDto
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.post(
+            `${endpoints.TAGS}`,
+            createQuestionTagDto
+        );
 
-    createTagAsync = async (
-        createQuestionTagDto: ICreateQuestionTagDto
-    ): Promise<IResponse<any>> => {
-        try {
-            const res = await interceptor.post(
-                `${baseTagEndpoint}`,
-                createQuestionTagDto
-            );
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+const editTagAsync = async (
+    editQuestionTagDto: IEditQuestionTagDto
+): Promise<IResponse<IQuestionTagDto>> => {
+    try {
+        const res = await interceptor.put(
+            endpoints.TAGS + `/${editQuestionTagDto.id}`,
+            editQuestionTagDto
+        );
 
-    editTagAsync = async (
-        editQuestionTagDto: IEditQuestionTagDto
-    ): Promise<IResponse<IQuestionTagDto>> => {
-        try {
-            const res = await interceptor.put(
-                baseTagEndpoint + `/${editQuestionTagDto.id}`,
-                editQuestionTagDto
-            );
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
+const deleteTagByIdAsync = async (id: number): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.delete(endpoints.TAGS + `/${id}`);
 
-    deleteTagByIdAsync = async (id: number): Promise<IResponse<any>> => {
-        try {
-            const res = await interceptor.delete(baseTagEndpoint + `/${id}`);
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
-            checkResErr(res.data);
-            return res.data;
-        } catch (error) {
-            throw error;
-        }
-    };
-}
-
-const questionAnswerServices = new QuestionAnswerService();
+const questionAnswerServices = {
+    createAsync,
+    getListAsync,
+    getByIdAsync,
+    editAsync,
+    deleteByIdAsync,
+    getTagListAsync,
+    getTagByIdAsync,
+    createTagAsync,
+    editTagAsync,
+    deleteTagByIdAsync,
+    uploadQuestionsAsync,
+};
 
 export default questionAnswerServices;

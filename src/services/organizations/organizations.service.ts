@@ -1,5 +1,6 @@
 import { IResponse } from "@/interfaces/service.interface";
 import { checkResErr } from "@/helpers";
+import endpoints from "@/utils/constants/service-endpoint";
 
 import interceptor from "../interceptor";
 
@@ -14,7 +15,7 @@ const getByIdAsync = async (
 ): Promise<IResponse<IOrganizationDto>> => {
     try {
         const res = await interceptor.get<IResponse<IOrganizationDto>>(
-            "/organizations" + `/${orgId}`
+            endpoints.ORGANIZATIONS + `/${orgId}`
         );
 
         checkResErr(res.data);
@@ -26,7 +27,10 @@ const getByIdAsync = async (
 
 const createNewOrganization = async (createNewOrgDto: ICreateOrgDto) => {
     try {
-        const res = await interceptor.post(`/organizations`, createNewOrgDto);
+        const res = await interceptor.post(
+            endpoints.ORGANIZATIONS,
+            createNewOrgDto
+        );
 
         return res.data;
     } catch (error) {
@@ -36,7 +40,9 @@ const createNewOrganization = async (createNewOrgDto: ICreateOrgDto) => {
 
 const getListOrganizations = async () => {
     try {
-        const res = await interceptor.get<IResponse<any>>(`/organizations`);
+        const res = await interceptor.get<IResponse<any>>(
+            endpoints.ORGANIZATIONS
+        );
 
         return res.data;
     } catch (error) {
@@ -47,7 +53,7 @@ const getListOrganizations = async () => {
 const getJoinedOrganizations = async () => {
     try {
         const res = await interceptor.get<IResponse<IOrganizationDto[]>>(
-            `/organizations/joined`
+            endpoints.ORGANIZATIONS + `/joined`
         );
         checkResErr(res.data);
         return res.data;
@@ -58,10 +64,9 @@ const getJoinedOrganizations = async () => {
 
 const getOwnedOrganizations = async () => {
     try {
-        const res =
-            await interceptor.get<IResponse<IOrganizationDto[]>>(
-                `/organizations/owned`
-            );
+        const res = await interceptor.get<IResponse<IOrganizationDto[]>>(
+            endpoints.ORGANIZATIONS + `/owned`
+        );
         checkResErr(res.data);
 
         return res.data;
@@ -104,7 +109,7 @@ const getOwnedJoinedOrganizations = async (): Promise<
 const getListEmloyers = async (): Promise<IResponse<IOrgEmployerDto[]>> => {
     try {
         const res = await interceptor.get<IResponse<IOrgEmployerDto[]>>(
-            `/organizations/employers`
+            endpoints.ORGANIZATIONS + `/employers`
         );
 
         return res.data;

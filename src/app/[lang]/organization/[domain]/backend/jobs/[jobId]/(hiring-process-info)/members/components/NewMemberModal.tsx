@@ -41,21 +41,21 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
         if (!selectEmployer) return toast.error("Select at least one employer");
 
         console.log(currentPermissions);
-        // try {
-        //     const res = await collaboratorsServices.sendInvitation({
-        //         jobPostId: parseInt(jobId as string),
-        //         employerId: selectEmployer.employerDto.id,
-        //         permissions: currentPermissions.map(item => ({
-        //             permissionId: item.id,
-        //             permissionName: item.name,
-        //         })),
-        //     });
+        try {
+            const res = await collaboratorsServices.sendInvitation({
+                jobPostId: parseInt(jobId as string),
+                employerId: selectEmployer.employerDto.id,
+                permissions: currentPermissions.map(item => ({
+                    permissionId: item.id,
+                    permissionName: item.name,
+                })),
+            });
 
-        //     toast.success(res.message);
-        // } catch (error) {
-        //     toast.error("Send failure");
-        //     console.error(error);
-        // }
+            toast.success(res.message);
+        } catch (error) {
+            toast.error("Send failure");
+            console.error(error);
+        }
 
         setCurrentPermissions([]);
         onClose();

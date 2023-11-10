@@ -10,7 +10,6 @@ import {
 import { IAssessmentFlow } from "@/services/assessment-flows/assessment-flows.interface";
 
 const initialData: IAssessmentFlow = {
-    index: -1,
     name: "",
     assessmentType: "CV_SCREENING_ASSESSMENT",
 };
@@ -29,7 +28,13 @@ const FlowStageForm: React.FC<FlowStageFormProps> = ({
     const [formState, setFormState] = useState<IAssessmentFlow>(data);
 
     return (
-        <section className="border border-gray-300 bg-slate-100 rounded-md">
+        <form
+            onSubmit={e => {
+                e.preventDefault();
+                onSave(formState);
+            }}
+            className="border border-gray-300 bg-slate-100 rounded-md"
+        >
             <h4 className="p-4 border-b border-gray-300">
                 {formState.name ? formState.name : "Add a stage name"}
             </h4>
@@ -64,7 +69,7 @@ const FlowStageForm: React.FC<FlowStageFormProps> = ({
                 />
             </div>
             <div className="p-4 border-t border-gray-300">
-                <Button onClick={onSave.bind(null, formState)}>Done</Button>
+                <Button type="submit">Done</Button>
                 <button
                     type="button"
                     className="font-semibold text-neutral-500 hover:underline hover:text-neutral-700 ml-4"
@@ -73,7 +78,7 @@ const FlowStageForm: React.FC<FlowStageFormProps> = ({
                     Cancel
                 </button>
             </div>
-        </section>
+        </form>
     );
 };
 

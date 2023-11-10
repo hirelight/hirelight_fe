@@ -13,7 +13,6 @@ import {
 const getListAsync = async (): Promise<IResponse<IAssessmentFlTempDto[]>> => {
     try {
         const res = await interceptor.get(endpoints.ASSESSMENT_FLOW_TEMPLATES);
-        console.log(res);
         checkResErr(res.data);
 
         return res.data;

@@ -1,5 +1,6 @@
 import { IResponse } from "@/interfaces/service.interface";
 import { checkResErr } from "@/helpers";
+import endpoints from "@/utils/constants/service-endpoint";
 
 import interceptor from "../interceptor";
 
@@ -10,12 +11,11 @@ import {
     INewEmployerDto,
 } from "./employer-organization.interface";
 
-const baseEndpoint = "/organizations/employers";
-
 const getListAsync = async (): Promise<IResponse<IEmployerDto[]>> => {
     try {
-        const res =
-            await interceptor.get<IResponse<IEmployerDto[]>>(baseEndpoint);
+        const res = await interceptor.get<IResponse<IEmployerDto[]>>(
+            endpoints.ORGANIZATIONS_EMPLOYER
+        );
 
         checkResErr(res.data);
         return res.data;
@@ -27,7 +27,7 @@ const getListAsync = async (): Promise<IResponse<IEmployerDto[]>> => {
 const getByIdAsync = async (id: number) => {
     try {
         const res = await interceptor.get<IResponse<IEmployerDto>>(
-            baseEndpoint + `/${id}`
+            endpoints.ORGANIZATIONS_EMPLOYER + `/${id}`
         );
 
         checkResErr(res.data);
@@ -40,7 +40,7 @@ const getByIdAsync = async (id: number) => {
 const deleteByIdAsync = async (id: number) => {
     try {
         const res = await interceptor.delete<IResponse<any>>(
-            baseEndpoint + `/${id}`
+            endpoints.ORGANIZATIONS_EMPLOYER + `/${id}`
         );
 
         checkResErr(res.data);
@@ -53,7 +53,7 @@ const deleteByIdAsync = async (id: number) => {
 const inviteEmployerAsync = async (newEmployerDto: INewEmployerDto) => {
     try {
         const res = await interceptor.post<IResponse<any>>(
-            baseEndpoint + "/invitation",
+            endpoints.ORGANIZATIONS_EMPLOYER + "/invitation",
             newEmployerDto
         );
 
@@ -67,8 +67,23 @@ const inviteEmployerAsync = async (newEmployerDto: INewEmployerDto) => {
 const editEmployerAsync = async (editEmployerDto: IEditEmployerDto) => {
     try {
         const res = await interceptor.put<IResponse<any>>(
-            baseEndpoint,
+            endpoints.ORGANIZATIONS_EMPLOYER,
             editEmployerDto
+        );
+
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const getInternalInvitationsList = async (): Promise<
+    IResponse<IEmployerInvitationDto[]>
+> => {
+    try {
+        const res = await interceptor.get<IResponse<IEmployerInvitationDto[]>>(
+            endpoints.ORGANIZATIONS_EMPLOYER + "/invitation"
         );
 
         checkResErr(res.data);
@@ -83,7 +98,7 @@ const getEmployerInvitationListAsync = async (): Promise<
 > => {
     try {
         const res = await interceptor.get<IResponse<IEmployerInvitationDto[]>>(
-            baseEndpoint + "/user-invitation"
+            endpoints.ORGANIZATIONS_EMPLOYER + "/user-invitation"
         );
 
         checkResErr(res.data);
@@ -98,7 +113,7 @@ const acceptEmployerInvitationListAsync = async (
 ): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.put<IResponse<any>>(
-            baseEndpoint + "/invitation/" + orgId
+            endpoints.ORGANIZATIONS_EMPLOYER + "/invitation/" + orgId
         );
 
         checkResErr(res.data);
@@ -116,6 +131,7 @@ const employerOrgServices = {
     editEmployerAsync,
     getEmployerInvitationListAsync,
     acceptEmployerInvitationListAsync,
+    getInternalInvitationsList,
 };
 
 export default employerOrgServices;

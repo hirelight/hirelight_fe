@@ -6,19 +6,28 @@ import banner from "/public/images/interviewee_auth_bg.png";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
 import jwtDecode from "jwt-decode";
+import { redirect } from "next/navigation";
+import {
+    HydrationBoundary,
+    QueryClient,
+    dehydrate,
+} from "@tanstack/react-query";
 
 import endpoints from "@/utils/constants/service-endpoint";
 import { IJobDto } from "@/services/job/job.interface";
 import { checkResErr } from "@/helpers/resErrHelpers";
+import getQueryClient from "@/utils/react-query/getQueryClient";
+import { IResponse } from "@/interfaces/service.interface";
 
 import JobCard from "./components/JobCard";
 import HiringStageBar from "./components/HiringStageBar";
+import JobList from "./components/JobList";
 
 export const metadata: Metadata = {
     title: "Hirelight Backend",
 };
 
-const getJobList = async (): Promise<IJobDto[]> => {
+const getJobList = async (): Promise<IResponse<IJobDto[]>> => {
     const token = cookies().get("hirelight_access_token")!!.value;
     const decoded: any = jwtDecode(token);
     const res = await fetch(
@@ -42,11 +51,15 @@ const getJobList = async (): Promise<IJobDto[]> => {
 
     checkResErr(jsonRes);
 
-    return jsonRes.data;
+    return jsonRes;
 };
 
 const Backend = async () => {
-    const datas = await getJobList();
+    const queryClient = getQueryClient();
+    await queryClient.prefetchQuery({
+        queryKey: ["jobs"],
+        queryFn: getJobList,
+    });
 
     return (
         <main className="relative">
@@ -58,14 +71,9 @@ const Backend = async () => {
                 />
             </div>
             <div className="max-w-screen-xl mx-auto px-4">
-                <HiringStageBar />
-                <ul className="space-y-6">
-                    {datas.map(job => (
-                        <li key={job.id}>
-                            <JobCard data={job} />
-                        </li>
-                    ))}
-                </ul>
+                <HydrationBoundary state={dehydrate(queryClient)}>
+                    <JobList />
+                </HydrationBoundary>
             </div>
         </main>
     );

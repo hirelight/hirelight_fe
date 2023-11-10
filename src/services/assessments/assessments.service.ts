@@ -21,12 +21,12 @@ const getById = async (id: number): Promise<IResponse<IAssessmentDto>> => {
     }
 };
 
-const editAsyncVideoInterview = async (
+const editAsync = async (
     editDto: IEditAsyncVideoInterviewDto
 ): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.put(
-            endpoints.ASSESSMENTS + `/async-video-interview/${editDto.id}`,
+            endpoints.ASSESSMENTS + `/${editDto.id}`,
             editDto
         );
 
@@ -40,7 +40,7 @@ const editAsyncVideoInterview = async (
 
 const assessmentsServices = {
     getById,
-    editAsyncVideoInterview,
+    editAsync,
 };
 
 export default assessmentsServices;
