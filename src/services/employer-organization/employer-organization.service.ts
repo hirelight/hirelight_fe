@@ -6,14 +6,14 @@ import interceptor from "../interceptor";
 
 import {
     IEditEmployerDto,
-    IEmployerDto,
     IEmployerInvitationDto,
     INewEmployerDto,
+    IOrgEmployerDto,
 } from "./employer-organization.interface";
 
-const getListAsync = async (): Promise<IResponse<IEmployerDto[]>> => {
+const getListAsync = async (): Promise<IResponse<IOrgEmployerDto[]>> => {
     try {
-        const res = await interceptor.get<IResponse<IEmployerDto[]>>(
+        const res = await interceptor.get<IResponse<IOrgEmployerDto[]>>(
             endpoints.ORGANIZATIONS_EMPLOYER
         );
 
@@ -26,7 +26,7 @@ const getListAsync = async (): Promise<IResponse<IEmployerDto[]>> => {
 
 const getByIdAsync = async (id: number) => {
     try {
-        const res = await interceptor.get<IResponse<IEmployerDto>>(
+        const res = await interceptor.get<IResponse<IOrgEmployerDto>>(
             endpoints.ORGANIZATIONS_EMPLOYER + `/${id}`
         );
 

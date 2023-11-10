@@ -104,7 +104,7 @@ const JobHeader = ({}: IJobHeader) => {
                         <Link
                             href={`/${lang}/backend/jobs/${job.id}/edit`}
                             className={`${styles.section__container} ${
-                                pathname.includes("edit") ||
+                                pathname.includes(`/${job.id}/edit`) ||
                                 pathname.includes("jobs/new")
                                     ? styles.active
                                     : ""
@@ -131,11 +131,7 @@ const JobHeader = ({}: IJobHeader) => {
                             <Link
                                 href={`/${lang}/backend/jobs/${job.id}/app-form`}
                                 tabIndex={-1}
-                                className={`h-full ${
-                                    pathname.includes("app-form")
-                                        ? "pointer-events-none"
-                                        : ""
-                                }`}
+                                className={`h-full`}
                             >
                                 <h3 className={styles.section__title}>
                                     Application Form
@@ -158,11 +154,7 @@ const JobHeader = ({}: IJobHeader) => {
                             <Link
                                 href={`/${lang}/backend/jobs/${job.id}/members`}
                                 tabIndex={-1}
-                                className={`h-full ${
-                                    pathname.includes("members")
-                                        ? "pointer-events-none"
-                                        : ""
-                                }`}
+                                className={`h-full`}
                             >
                                 <h3 className={styles.section__title}>
                                     Team Members
@@ -191,11 +183,7 @@ const JobHeader = ({}: IJobHeader) => {
                                         : "select-pipeline"
                                 }`}
                                 tabIndex={-1}
-                                className={`h-full ${
-                                    pathname.includes("pipeline")
-                                        ? "pointer-events-none"
-                                        : ""
-                                }`}
+                                className={`h-full`}
                             >
                                 <h3 className={styles.section__title}>
                                     Workflow

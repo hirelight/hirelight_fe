@@ -24,7 +24,7 @@ type AssessmentFlowFormProps = {
 };
 
 const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
-    const { jobId, lang } = useParams();
+    const { jobId, lang, flowId } = useParams();
     const router = useRouter();
 
     const [showAddStage, setShowAddStage] = useState(false);
@@ -40,7 +40,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
 
             toast.success(res.message);
             router.push(
-                `/${lang}/backend/jobs/${jobId}/pipeline/config-pipeline`
+                `/${lang}/backend/jobs/${jobId}/pipeline/config-pipeline/${flowId}`
             );
         } catch (error) {
             toast.error("Create flow error");

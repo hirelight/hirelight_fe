@@ -7,24 +7,34 @@ import faceToFace from "/public/images/face-to-face-assessment.png";
 import oneWay from "/public/images/one-way-assessment.png";
 import testAssessment from "/public/images/test-assessment.png";
 
-import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+
+import { IAssessmentDto } from "@/services";
 
 import styles from "./PipelineConfigAssessment.module.scss";
 
 type PipelineConfigAssessmentProps = {
+    selectedStage: IAssessmentDto;
     assessmentId: number;
 };
 
 const PipelineConfigAssessment: React.FC<PipelineConfigAssessmentProps> = ({
+    selectedStage,
     assessmentId,
 }) => {
+    const router = useRouter();
+    const { flowId } = useParams();
     return (
         <div className="w-full px-6">
             <div className="flex flex-col lg:flex-row gap-8">
-                <Link
-                    href={`config-pipeline/${assessmentId}/face-to-face-assessment/new`}
+                <button
+                    type="button"
                     className={styles.assessment__wrapper}
+                    onClick={() =>
+                        router.push(
+                            `${flowId}/config-assessment/${assessmentId}/face-to-face-assessment/new`
+                        )
+                    }
                 >
                     <Image
                         src={faceToFace}
@@ -36,10 +46,15 @@ const PipelineConfigAssessment: React.FC<PipelineConfigAssessmentProps> = ({
                         Thêm bộ công cụ phỏng vấn từ các mẫu hoặc công việc hiện
                         có để sử dụng trong các cuộc phỏng vấn để đánh giá.
                     </p>
-                </Link>
-                <Link
-                    href={`config-pipeline/${assessmentId}/one-way-assessment/new`}
+                </button>
+                <button
+                    type="button"
                     className={styles.assessment__wrapper}
+                    onClick={() =>
+                        router.push(
+                            `${flowId}/config-assessment/${assessmentId}/one-way-assessment/new`
+                        )
+                    }
                 >
                     <Image
                         src={oneWay}
@@ -53,10 +68,22 @@ const PipelineConfigAssessment: React.FC<PipelineConfigAssessmentProps> = ({
                         Tạo và áp dụng quy trình đánh giá phỏng vấn video có cấu
                         trúc.
                     </p>
-                </Link>
-                <Link
-                    href={`config-pipeline/${assessmentId}/multiple-choice-assessment/new`}
-                    className={styles.assessment__wrapper}
+                </button>
+                <button
+                    type="button"
+                    className={`${styles.assessment__wrapper} ${
+                        [
+                            "LIVE_VIDEO_INTERVIEW_ASSESSMENT",
+                            "ASYNC_VIDEO_INTERVIEW_ASSESSMENT",
+                        ].includes(selectedStage.assessmentTypeName)
+                            ? "cursor-not-allowed opacity-50"
+                            : ""
+                    } transition-opacity`}
+                    onClick={() =>
+                        router.push(
+                            `${flowId}/config-assessment/${assessmentId}/multiple-choice-assessment/new`
+                        )
+                    }
                 >
                     <Image
                         src={testAssessment}
@@ -69,7 +96,7 @@ const PipelineConfigAssessment: React.FC<PipelineConfigAssessmentProps> = ({
                         đưa ra quyết định tuyển dụng khách quan dựa trên dữ
                         liệu.
                     </p>
-                </Link>
+                </button>
             </div>
         </div>
     );

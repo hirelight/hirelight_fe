@@ -8,14 +8,13 @@ import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { fetchAssessmentFlowById } from "@/redux/thunks/assessment-flow.thunk";
 
 const WrapperPipeline = ({ children }: { children: React.ReactNode }) => {
-    const { flowId } = useParams();
-
     const dispatch = useAppDispatch();
     const { loading, data } = useAppSelector(state => state.assessmentFlow);
+    const { assessmentFlowId } = useAppSelector(state => state.job.data);
     useEffect(() => {
-        if (flowId && !data.id)
-            dispatch(fetchAssessmentFlowById(parseInt(flowId as string)));
-    }, [flowId, dispatch, data.id]);
+        if (assessmentFlowId)
+            dispatch(fetchAssessmentFlowById(assessmentFlowId));
+    }, [assessmentFlowId, dispatch, data.id]);
     if (loading)
         return (
             <div className="p-12 flex items-center justify-center">

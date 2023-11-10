@@ -2,7 +2,7 @@
 
 import { resolve } from "path";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { delayFunc } from "@/helpers/shareHelpers";
 import { SpinLoading } from "@/icons";
@@ -26,10 +26,11 @@ const DeleteModal = ({
     title,
     description,
     show = false,
+    loading = false,
 }: IDeleteModal) => {
     const backdropRef = React.useRef<HTMLDivElement>(null);
     const panelRef = React.useRef<HTMLDivElement>(null);
-    const [loading, setLoading] = React.useState(false);
+    const [isLoading, setIsLoading] = useState(loading);
 
     const closeModal = async () => {
         if (backdropRef.current)
@@ -41,7 +42,6 @@ const DeleteModal = ({
         if (panelRef.current)
             panelRef.current.classList.toggle(styles.entering);
         await delayFunc(200);
-        setLoading(false);
         onClose();
     };
 
@@ -51,11 +51,14 @@ const DeleteModal = ({
     };
 
     const handleConfirm = async () => {
-        setLoading(true);
         await delayFunc(2000);
         await closeModal();
-        if (onConfirm) onConfirm();
+        if (onConfirm) await onConfirm();
     };
+
+    React.useEffect(() => {
+        setIsLoading(loading);
+    }, [loading]);
 
     if (!show) {
         return null;
@@ -147,7 +150,7 @@ const DeleteModal = ({
                                 className="inline-flex w-full items-center justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                                 onClick={handleConfirm}
                             >
-                                {loading && <SpinLoading className="mr-3" />}
+                                {isLoading && <SpinLoading className="mr-3" />}
                                 {title?.includes("Delete")
                                     ? "Delete"
                                     : "Deactivate"}

@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 
 import { Button, CustomInput } from "@/components";
 import employerOrgServices from "@/services/employer-organization/employer-organization.service";
+import { SpinLoading } from "@/icons";
 
 const roles = [
     {
@@ -81,6 +82,7 @@ const roles = [
 ];
 
 const AddNewMember = () => {
+    const [isLoading, setIsLoading] = useState(false);
     const [formState, setFormState] = useState({
         employerEmail: "",
         roleId: roles[0].id,
@@ -88,14 +90,16 @@ const AddNewMember = () => {
 
     const handleAddEmployer = async (e: FormEvent) => {
         e.preventDefault();
-
+        setIsLoading(true);
         try {
             const res =
                 await employerOrgServices.inviteEmployerAsync(formState);
 
             toast.success(res.message);
+            setIsLoading(false);
         } catch (error) {
             toast.error("Add new member failure");
+            setIsLoading(false);
         }
     };
 
@@ -194,7 +198,11 @@ const AddNewMember = () => {
                     </div>
                 </div>
                 <div>
-                    <Button type="submit" className="mr-2">
+                    <Button
+                        type="submit"
+                        className="mr-2 inline-flex items-center justify-center"
+                    >
+                        {isLoading && <SpinLoading className="mr-3" />}
                         Invite member
                     </Button>
 

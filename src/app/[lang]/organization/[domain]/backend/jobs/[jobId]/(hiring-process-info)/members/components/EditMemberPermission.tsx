@@ -1,54 +1,50 @@
 "use client";
 
 import React, { FormEvent, useEffect, useState } from "react";
+import { LightBulbIcon } from "@heroicons/react/24/outline";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
 
-import { Button, Modal, Selection } from "@/components";
+import { Button, CustomInput, Modal, Selection } from "@/components";
+import permissionServices from "@/services/permission/permission.service";
 import { IOrgEmployerDto, IPermissionDto } from "@/services";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
 import { useAppSelector } from "@/redux/reduxHooks";
+import organizationsServices from "@/services/organizations/organizations.service";
+import {
+    ICollabPermission,
+    ICollaboratorDto,
+} from "@/services/collaborators/collaborators.interface";
 import { SpinLoading } from "@/icons";
-import employerOrgServices from "@/services/employer-organization/employer-organization.service";
 
 import PermissionTable from "./PermissionTable";
 
-interface NewMemberModalProps {
+interface EditMemberPermissionProps {
+    member: ICollaboratorDto;
     isOpen: boolean;
     onClose: () => void;
-    onSendInvitation: (newMember: any) => void;
 }
 
-const NewMemberModal: React.FC<NewMemberModalProps> = ({
+const EditMemberPermission: React.FC<EditMemberPermissionProps> = ({
     isOpen = false,
     onClose,
-    onSendInvitation,
+    member,
 }) => {
     const { jobId } = useParams();
-
-    const [isLoading, setIsLoading] = useState(false);
-    const [selectEmployer, setSelectEmployer] =
-        React.useState<IOrgEmployerDto>();
-    const [employers, setEmployers] = useState<IOrgEmployerDto[]>([]);
     const [currentPermissions, setCurrentPermissions] = useState<
-        IPermissionDto[]
-    >([]);
-    const { authUser }: any = useAppSelector(state => state.auth);
+        ICollabPermission[]
+    >(member.permissions);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleSendInvitation = async (e: FormEvent) => {
+    const handleUpdatePermission = async (e: FormEvent) => {
         e.preventDefault();
-        if (!selectEmployer) return toast.error("Select at least one employer");
-
         setIsLoading(true);
         try {
-            const res = await collaboratorsServices.sendInvitation({
+            const res = await collaboratorsServices.editCollaborator({
                 jobPostId: parseInt(jobId as string),
-                employerId: selectEmployer.employerDto.id,
-                permissions: currentPermissions.map(item => ({
-                    permissionId: item.id,
-                    permissionName: item.name,
-                })),
+                employerId: member.employerDto.id,
+                permissions: currentPermissions,
             });
 
             toast.success(res.message);
@@ -56,31 +52,9 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
             toast.error("Send failure");
             console.error(error);
         }
-
-        setCurrentPermissions([]);
         setIsLoading(false);
         onClose();
     };
-
-    useEffect(() => {
-        const getEmployers = async () => {
-            try {
-                const res = await employerOrgServices.getListAsync();
-                const filteredEmployers = res.data.filter(
-                    member =>
-                        member.employerDto.id.toString() !== authUser.userId
-                );
-                setEmployers(filteredEmployers);
-                setSelectEmployer(filteredEmployers[0]);
-                console.log(res);
-            } catch (error) {
-                toast.error("Get employers failure");
-            }
-        };
-
-        getEmployers();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     return (
         <Modal
@@ -89,7 +63,7 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
             onClose={onClose}
             className="bg-white rounded-md"
         >
-            <form onSubmit={handleSendInvitation}>
+            <form onSubmit={handleUpdatePermission}>
                 <div className="p-6 border-b border-gray-300 relative">
                     <h1 className="text-2xl font-medium text-neutral-900">
                         Invite a new member
@@ -107,37 +81,38 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
                 </div>
                 <div className="p-6">
                     <div className="mb-6">
-                        {/* <CustomInput
+                        <CustomInput
                             id="member-email"
                             title="Email"
                             type="email"
                             placeholder="Email"
-                            value={email}
-                            onChange={(e: any) => setEmail(e.target.value)}
+                            value={member.employerDto.firstName}
                             required
-                        /> */}
-                        <Selection
-                            title="Email"
-                            value={selectEmployer?.employerDto.email}
-                            items={employers.map(item => ({
-                                label: item.employerDto.email,
-                                value: item,
-                            }))}
-                            onChange={value => setSelectEmployer(value)}
+                            readOnly
                         />
                     </div>
 
                     <PermissionTable
-                        curPemissions={currentPermissions}
+                        curPemissions={currentPermissions.map(item => ({
+                            name: item.permissionName,
+                            id: item.permissionId,
+                            assessmentId: item.assessmentId,
+                        }))}
                         onChange={(newPermissions: IPermissionDto[]) =>
-                            setCurrentPermissions(newPermissions)
+                            setCurrentPermissions(
+                                newPermissions.map(item => ({
+                                    permissionName: item.name,
+                                    permissionId: item.id,
+                                    assessmentId: item.assessmentId,
+                                }))
+                            )
                         }
                     />
                 </div>
 
                 <div className="p-6 border-t border-gray-300 text-right">
                     <Button type="submit">
-                        {isLoading && <SpinLoading className="mr-2" />}Send
+                        {isLoading && <SpinLoading className="mr-3" />}Send
                         invitation
                     </Button>
                 </div>
@@ -146,4 +121,4 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
     );
 };
 
-export default NewMemberModal;
+export default EditMemberPermission;

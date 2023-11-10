@@ -5,19 +5,35 @@ export interface INewEmployerDto {
     roleId: number;
 }
 
+export interface IOrgEmployerDto {
+    id: number;
+    employerDto: {
+        id: number;
+        email: string;
+        username: string;
+        firstName: string;
+        lastName: string;
+        status: string;
+    };
+    organizationId: number;
+    role: {
+        id: number;
+        name: string;
+        permissions: [
+            {
+                id: number;
+                name: string;
+            },
+        ];
+    };
+    createdTime: Date;
+    updatedTime: Date;
+    status: string;
+}
+
 export interface IEditEmployerDto {
     employerEmail: string;
     roleId: number;
-}
-
-export interface IEmployerDto {
-    id: number;
-    employerId: number;
-    organizationId: number;
-    role: IRoleDto;
-    createdTime: Date;
-    updatedTime: Date;
-    status: "ACTIVE";
 }
 
 export interface IEmployerInvitationDto {

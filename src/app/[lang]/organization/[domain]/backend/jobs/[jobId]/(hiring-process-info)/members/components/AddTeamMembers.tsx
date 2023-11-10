@@ -1,13 +1,11 @@
 "use client";
 
 import React, { useEffect } from "react";
-import Image from "next/image";
 import { toast } from "react-toastify";
-import { TrashIcon } from "@heroicons/react/24/solid";
 import { UsersIcon } from "@heroicons/react/24/outline";
 import { useParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 
-import { teamMembers } from "@/utils/shared/initialDatas";
 import { Button, ButtonOutline, Portal, Selection } from "@/components";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
 import { useUserInfo } from "@/hooks/useUserInfo";
@@ -16,39 +14,7 @@ import { ICollaboratorDto } from "@/services/collaborators/collaborators.interfa
 
 import styles from "./AddTeamMembers.module.scss";
 import NewMemberModal from "./NewMemberModal";
-
-const internalMembers = [
-    {
-        full_name: "Tran Nhat Hoang",
-        email: "hoangnt@gmail.com",
-        status: "LA",
-        permission: "Limited access",
-        avatarUrl:
-            "https://robohash.org/natusmagnambeatae.png?size=50x50&set=set1",
-    },
-    {
-        full_name: "Pham Trong Thanh",
-        email: "thanhpt@gmail.com",
-        status: "SA",
-        permission: "Standard access",
-        avatarUrl: "https://robohash.org/quiaeos.png?size=50x50&set=set1",
-    },
-    {
-        full_name: "Quach Heng Toni",
-        email: "toniqh@gmail.com",
-        status: "FA",
-        permission: "Full access",
-        avatarUrl: "https://robohash.org/etcumat.png?size=50x50&set=set1",
-    },
-    {
-        full_name: "Nguyen Thanh Kien",
-        email: "kiennt@gmail.com",
-        status: "FA",
-        permission: "Full access",
-        avatarUrl:
-            "https://robohash.org/voluptatibusaliquamnatus.png?size=50x50&set=set1",
-    },
-];
+import CollaboratorList from "./CollaboratorList";
 
 const AddTeamMebers = () => {
     const { jobId } = useParams();
@@ -57,64 +23,24 @@ const AddTeamMebers = () => {
     const [datas, setDatas] = React.useState<ICollaboratorDto[]>([]);
     const [showModal, setShowModal] = React.useState(false);
     const [selectedInternal, setSelectedInternal] = React.useState<any>();
-
-    const handleRemoveMember = async (memberId: number) => {
-        try {
-            const res = await collaboratorsServices.deleteCollaborator(
-                parseInt(jobId as string),
-                memberId
-            );
-
-            toast.success(res.message);
-            setDatas(prev => prev.filter(member => member.id !== memberId));
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    const {
+        data: res,
+        error,
+        isLoading,
+    } = useQuery({
+        queryKey: [`jobpost-${jobId as string}-collaborators`],
+        queryFn: () =>
+            collaboratorsServices.getCollaboratorList(
+                parseInt(jobId as string)
+            ),
+    });
 
     const handleAddMemeber = (newMember: any) => {
         const existingMember = datas.find(
             member => member.employerDto.email === newMember.email
         );
         if (existingMember) return toast.error("Member already added");
-
-        // setDatas([
-        //     ...datas,
-        //     {
-        //         id: datas.length + 1,
-        //         full_name:
-        //             newMember.fullName.charAt(0).toUpperCase() +
-        //             newMember.fullName.slice(1),
-        //         email: newMember.email,
-        //         status: "SA",
-        //         permission: newMember.permission.name,
-        //         avatarUrl:
-        //             "https://robohash.org/natusmagnambeatae.png?size=50x50&set=set1",
-        //     },
-        // ]);
     };
-
-    useEffect(() => {
-        const getCollaborators = async (jobId: number) => {
-            try {
-                const res =
-                    await collaboratorsServices.getCollaboratorList(jobId);
-                console.log(userData);
-                setDatas(
-                    res.data.filter(
-                        collaborator =>
-                            collaborator.employerDto.email !==
-                            userData!!.emailAddress
-                    )
-                );
-                console.log(res);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        getCollaborators(parseInt(jobId as string));
-    }, [jobId, userData]);
 
     return (
         <div className="relative rounded-md border border-slate-200">
@@ -125,78 +51,9 @@ const AddTeamMebers = () => {
                     onSendInvitation={handleAddMemeber}
                 />
             </Portal>
-            {datas.length > 0 ? (
+            {res && res?.data!!.length > 0 ? (
                 <div className={styles.table__wrapper}>
-                    <table className="w-full text-sm text-left text-gray-500  dark:text-gray-400 overflow-hidden">
-                        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b dark:border-gray-700 relative shadow-md">
-                            <tr>
-                                <th scope="col" className="p-6">
-                                    Member name
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="p-6 hidden lg:table-cell"
-                                >
-                                    Email
-                                </th>
-                                <th
-                                    scope="col"
-                                    className="p-6 hidden lg:table-cell"
-                                >
-                                    Status
-                                </th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {datas.map(member => (
-                                <tr
-                                    key={member.id}
-                                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                                >
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center gap-2">
-                                            <span className="inline-block h-8 w-8 rounded-full bg-white border border-slate-500 overflow-auto">
-                                                <Image
-                                                    src={
-                                                        process.env
-                                                            .NEXT_PUBLIC_AVATAR_URL as string
-                                                    }
-                                                    alt="member avatar"
-                                                    width={32}
-                                                    height={32}
-                                                    unoptimized
-                                                />
-                                            </span>
-                                            {member.employerDto.firstName +
-                                                `${
-                                                    member.employerDto
-                                                        .lastName ?? ""
-                                                }`}
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 hidden lg:table-cell">
-                                        {member.employerDto.email}
-                                    </td>
-                                    <td className="px-6 py-4 hidden lg:table-cell">
-                                        {member.employerDto.status}
-                                    </td>
-                                    <td>
-                                        <button
-                                            type="button"
-                                            onClick={handleRemoveMember.bind(
-                                                null,
-                                                member.id
-                                            )}
-                                            className="group"
-                                        >
-                                            <TrashIcon className="text-red-500 group-hover:text-red-700 w-6 h-6" />
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <CollaboratorList datas={res.data} />
                 </div>
             ) : (
                 <div className="w-full flex flex-col items-center py-6">
@@ -225,22 +82,8 @@ const AddTeamMebers = () => {
                         <div className="flex-1 md:flex-auto">
                             <Selection
                                 title=""
-                                items={internalMembers.map(item => ({
-                                    label: item.email,
-                                    value: item.email,
-                                }))}
-                                value={
-                                    selectedInternal
-                                        ? selectedInternal.email
-                                        : ""
-                                }
-                                onChange={(value: string) => {
-                                    setSelectedInternal({
-                                        ...internalMembers.find(
-                                            member => member.email === value
-                                        )!!,
-                                    });
-                                }}
+                                items={[]}
+                                onChange={(value: string) => {}}
                             />
                         </div>
                         <Button

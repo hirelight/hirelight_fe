@@ -17,29 +17,3 @@ export interface IOrganizationDto {
     location: string | null;
     ownerId: number;
 }
-
-export interface IOrgEmployerDto {
-    id: number;
-    employerDto: {
-        id: number;
-        email: string;
-        username: string;
-        firstName: string;
-        lastName: string;
-        status: string;
-    };
-    organizationId: number;
-    role: {
-        id: number;
-        name: string;
-        permissions: [
-            {
-                id: number;
-                name: string;
-            },
-        ];
-    };
-    createdTime: Date;
-    updatedTime: Date;
-    status: string;
-}
