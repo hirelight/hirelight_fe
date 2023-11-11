@@ -20,7 +20,10 @@ import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 
 import FlowStageForm from "../AssessmentFlowForm/FlowStageForm";
 
-const defaultStage: AssessmentTypeKey[] = ["SOURCED", "HIRED"];
+const defaultStage: AssessmentTypeKey[] = [
+    "SOURCED_ASSESSMENT",
+    "HIRED_ASSESSMENT",
+];
 
 type AssessmentFlowCardProps = {
     data: IAssessmentFlow;

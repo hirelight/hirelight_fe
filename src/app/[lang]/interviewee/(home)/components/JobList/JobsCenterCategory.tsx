@@ -1,7 +1,7 @@
 import React from "react";
 
-import RadioCategory from "./RadioCategory";
-import FilterDrawer from "./FilterDrawer";
+import RadioCategory from "../RadioCategory";
+import FilterDrawer from "../FilterDrawer";
 
 const JobsCenterCategory = () => {
     return (

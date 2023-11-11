@@ -1,4 +1,8 @@
+import { toast } from "react-toastify";
+
 import { AssessmentTypeKey } from "@/interfaces/assessment.interface";
+import { IResponse } from "@/interfaces/service.interface";
+import interceptor from "@/services/interceptor";
 
 export const debounce = <T extends (...args: any[]) => void>(
     func: T,
@@ -67,4 +71,21 @@ export const resizeImage = async (file: File) => {
         };
         reader.readAsDataURL(file);
     });
+};
+
+export const uploadImage = async (file: File): Promise<string | null> => {
+    const formData = new FormData();
+    formData.append("formFile", file);
+
+    const res = await interceptor.post<IResponse<any>>(
+        "/assessment-flows/images",
+        formData,
+        {
+            headers: { "Content-Type": "multipart/form-data" },
+        }
+    );
+    console.log(res.data);
+    toast.success(res.data.message);
+
+    return res.data.data;
 };

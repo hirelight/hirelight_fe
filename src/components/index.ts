@@ -16,6 +16,7 @@ import PopoverWarning from "./PopoverWarning";
 import Pagination from "./Pagination";
 import DatePicker from "./DatePicker";
 import QuestionPicker from "./QuestionPicker";
+import AppFormView from "./ApplicationFormView";
 
 export {
     Modal,
@@ -36,4 +37,5 @@ export {
     PopoverWarning,
     DatePicker,
     QuestionPicker,
+    AppFormView,
 };

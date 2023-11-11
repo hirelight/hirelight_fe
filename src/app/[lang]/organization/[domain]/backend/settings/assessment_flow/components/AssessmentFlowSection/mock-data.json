@@ -138,7 +138,7 @@
         {
             "id": 4137593,
             "name": "Hired",
-            "kind": "HIRED",
+            "kind": "HIRED_ASSESSMENT",
             "base_stage_id": null,
             "confidential": false,
             "marked_as_deleted": false,

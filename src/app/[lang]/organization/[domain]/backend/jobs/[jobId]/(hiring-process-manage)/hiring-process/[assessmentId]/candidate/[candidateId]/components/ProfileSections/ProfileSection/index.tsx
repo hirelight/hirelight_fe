@@ -5,6 +5,8 @@ import React, { useState } from "react";
 import { PdfViewer } from "@/components";
 import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
 import { IAppFormTemplateProfileSection } from "@/interfaces/app-form-template.interface";
+import { useAppSelector } from "@/redux/reduxHooks";
+import { IAppFormSection } from "@/interfaces";
 
 import { profileDatas, profileLayout, candidateSection } from "./data";
 import styles from "./styles.module.scss";
@@ -14,12 +16,40 @@ const ProfileSection = () => {
     const [sections, setSections] = useState<IAppFormTemplateProfileSection[]>(
         []
     );
+    const formDetails = useAppSelector(
+        state => state.applicantProfile.data.content
+    );
 
     React.useEffect(() => {
         const fetchLayout = async () => {
             try {
                 const res = await appFormTemplateServices.getListAsync();
-                const profileLayout = JSON.parse(res.data[0].content).profile;
+                let profileLayout = JSON.parse(res.data[0].content)
+                    .profile as IAppFormTemplateProfileSection[];
+                const fieldMap = new Map<string, any>();
+
+                console.log(
+                    "Data",
+                    profileLayout,
+                    formDetails.map(section => section.fields).flat(1)
+                );
+                formDetails
+                    .map(section => section.fields)
+                    .flat(1)
+                    .forEach(section => {
+                        if (!fieldMap.has(section.id))
+                            fieldMap.set(section.id, section);
+                    });
+
+                profileLayout = profileLayout.map(section => ({
+                    ...section,
+                    fields: section.fields.map(item => {
+                        const isHaving = fieldMap.get(item.id);
+                        return isHaving ? isHaving : item;
+                    }),
+                }));
+
+                console.log(profileLayout);
 
                 setSections(profileLayout);
             } catch (error) {
@@ -28,7 +58,7 @@ const ProfileSection = () => {
         };
 
         fetchLayout();
-    }, []);
+    }, [formDetails]);
 
     return (
         <div className="">
@@ -67,31 +97,6 @@ const ProfileSection = () => {
                             {section.label}
                         </strong>
                         {section.fields.map((field, index) => {
-                            let label = "";
-                            let value: string = "";
-                            // if (field.custom) {
-                            //     const isExist =
-                            //         profileDatas.custom_attributes.find(
-                            //             customField =>
-                            //                 customField.id === field.ref_id
-                            //         );
-                            //     if (isExist) {
-                            //         label = isExist.label;
-                            //         value =
-                            //             typeof isExist.value === "string"
-                            //                 ? isExist.value
-                            //                 : "Not a string";
-                            //     } else {
-                            //         return null;
-                            //     }
-                            // } else {
-                            //     label = field.title;
-                            //     value =
-                            //         typeof profileDatas[field.name] === "string"
-                            //             ? profileDatas[field.name]
-                            //             : null;
-                            // }
-
                             return (
                                 <div key={index} className="mb-4 text-sm">
                                     <div className="flex flex-col lg:flex-row">
@@ -99,7 +104,12 @@ const ProfileSection = () => {
                                             <span>{field.label}</span>
                                         </div>
                                         <div className="w-full flex flex-col gap-2 items-start text-neutral-600">
-                                            <span>{field.custom}</span>
+                                            <span>
+                                                {field.custom}:{" "}
+                                                {field.value
+                                                    ? field.value
+                                                    : "No data"}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

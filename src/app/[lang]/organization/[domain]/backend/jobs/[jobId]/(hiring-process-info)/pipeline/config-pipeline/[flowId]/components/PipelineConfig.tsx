@@ -17,7 +17,9 @@ const PipelineConfig: React.FC<PipelineConfigProps> = ({}) => {
     >(
         assessmentFlow.assessments.find(
             assessment =>
-                !["SOURCED", "HIRED"].includes(assessment.assessmentTypeName)
+                !["SOURCED_ASSESSMENT", "HIRED_ASSESSMENT"].includes(
+                    assessment.assessmentTypeName
+                )
         )
     );
 

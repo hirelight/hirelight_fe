@@ -5,6 +5,7 @@ import React, { FormEvent, useState } from "react";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 import { Button } from "@/components";
 import { delayFunc } from "@/helpers/shareHelpers";
@@ -22,7 +23,7 @@ const LoginForm = () => {
     });
 
     const [loading, setLoading] = React.useState(false);
-
+    const [showPassword, setShowPassword] = useState(false);
     const [formErr, setFormErr] = useState({
         emailError: "",
         passwordError: "",
@@ -30,11 +31,7 @@ const LoginForm = () => {
 
     const handleSubmitLogin = async (e: FormEvent) => {
         e.preventDefault();
-        setFormErr({
-            ...formErr,
-            passwordError: "Password incorrect!",
-        });
-
+        setLoading(true);
         try {
             const res = await authServices.loginCandidate(formState);
 
@@ -45,19 +42,18 @@ const LoginForm = () => {
                 )
             )
                 Cookies.set("hirelight_access_token", res.data.accessToken, {
-                    domain: `jobs.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
                     secure: true,
                 });
             else
                 Cookies.set("hirelight_access_token", res.data.accessToken, {
+                    domain: `jobs.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
                     secure: true,
                 });
-            setLoading(false);
             router.push("/");
         } catch (error) {
-            setLoading(false);
             console.error(error);
         }
+        setLoading(false);
     };
 
     return (
@@ -114,22 +110,31 @@ const LoginForm = () => {
                     </div>
                 </div>
                 <div className="mt-2">
-                    <input
-                        id="password"
-                        name="password"
-                        type="password"
-                        value={formState.password}
-                        onChange={e => {
-                            setFormState({
-                                ...formState,
-                                password: e.target.value,
-                            });
-                            setFormErr({ ...formErr, passwordError: "" });
-                        }}
-                        autoComplete="current-password"
-                        required
-                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    />
+                    <div className="relative">
+                        <input
+                            id="password"
+                            name="password"
+                            type={showPassword ? "text" : "password"}
+                            value={formState.password}
+                            onChange={e => {
+                                setFormState({
+                                    ...formState,
+                                    password: e.target.value,
+                                });
+                                setFormErr({ ...formErr, passwordError: "" });
+                            }}
+                            autoComplete="current-password"
+                            required
+                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                        <button
+                            type="button"
+                            className="w-5 h-5 absolute top-1/2 right-2 -translate-y-1/2"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
+                        </button>
+                    </div>
                     {formErr.passwordError && (
                         <p className="mt-2 text-sm text-red-600 dark:text-red-500">
                             <span className="font-medium">Oh, snapp!</span>{" "}

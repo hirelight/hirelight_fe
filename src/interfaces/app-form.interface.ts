@@ -7,7 +7,7 @@ export enum EAppFormOption {
 }
 
 export interface IAppFormField extends React.HTMLProps<HTMLInputElement> {
-    id?: string;
+    id: string;
     label: string;
     helper?: string;
     fields?: {
@@ -32,6 +32,7 @@ export interface IAppFormField extends React.HTMLProps<HTMLInputElement> {
 }
 
 export interface IAppFormSection {
+    id: string;
     custom?: boolean;
     name: string;
     fields: IAppFormField[];
@@ -45,4 +46,10 @@ export interface ISetAppFormField {
 export interface IAddAppFormField {
     sectionName: string;
     field: any;
+}
+
+export enum AppFormDefaultSection {
+    PERSONAL_INFORMATION = "personal_information",
+    PROFILE = "profile",
+    DETAILS = "details",
 }

@@ -9,7 +9,10 @@ import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 
 import styles from "./PipelineStages.module.scss";
 
-const defaultStage: AssessmentTypeKey[] = ["SOURCED", "HIRED"];
+const defaultStage: AssessmentTypeKey[] = [
+    "SOURCED_ASSESSMENT",
+    "HIRED_ASSESSMENT",
+];
 interface IPipelineStages {
     stages: IAssessmentDto[];
     selectedStage?: IAssessmentDto;

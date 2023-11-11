@@ -2,15 +2,23 @@ import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
+import { IJobDto, JobContentJson } from "@/services";
+import { IAppFormSection } from "@/interfaces";
+import { AppFormView } from "@/components";
+
 import AppFormDesktopView from "../AppFormDesktopView/AppFormDesktopView";
 
 import styles from "./ApplyFormModal.module.scss";
 
 type ApplyFormModalProps = {
+    job: Omit<IJobDto, "content" | "applicationForm"> & {
+        content: JobContentJson;
+        applicationForm: IAppFormSection[];
+    };
     close: () => void;
 };
 
-const ApplyFormModal: React.FC<ApplyFormModalProps> = ({ close }) => {
+const ApplyFormModal: React.FC<ApplyFormModalProps> = ({ job, close }) => {
     return (
         <div className="fixed inset-0 z-50">
             <motion.div
@@ -37,7 +45,7 @@ const ApplyFormModal: React.FC<ApplyFormModalProps> = ({ close }) => {
                 }}
                 className={styles.modal__wrapper}
             >
-                <AppFormDesktopView />
+                <AppFormView data={job} onApply={() => close()} />
                 <button
                     type="button"
                     className="absolute -top-4 right-3 -translate-y-full"

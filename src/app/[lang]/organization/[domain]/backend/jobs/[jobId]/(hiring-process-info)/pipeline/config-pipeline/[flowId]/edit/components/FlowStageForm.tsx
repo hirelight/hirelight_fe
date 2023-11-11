@@ -9,7 +9,10 @@ import {
 } from "@/interfaces/assessment.interface";
 import { IAssessmentFlow } from "@/services/assessment-flows/assessment-flows.interface";
 
-const defaultStage: AssessmentTypeKey[] = ["SOURCED", "HIRED"];
+const defaultStage: AssessmentTypeKey[] = [
+    "SOURCED_ASSESSMENT",
+    "HIRED_ASSESSMENT",
+];
 
 const initialData: IAssessmentFlow = {
     name: "",

@@ -48,12 +48,10 @@ const AssessmentInfoHeader = () => {
             const jobRes: any = await dispatch(
                 getJobById(parseInt(id as string))
             );
-            console.log(jobRes);
             try {
                 const res = await assessmentFlowsServices.getByIdAsync(
                     jobRes.payload.assessmentFlowId
                 );
-
                 setFlow(res.data);
             } catch (error) {
                 console.error(error);

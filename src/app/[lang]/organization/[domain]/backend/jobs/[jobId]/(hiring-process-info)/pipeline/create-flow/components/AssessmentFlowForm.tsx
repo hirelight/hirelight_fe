@@ -23,11 +23,11 @@ const initialData: ICreateAssessmentFlowDto = {
     assessments: [
         {
             name: "Sourced",
-            assessmentType: "SOURCED",
+            assessmentType: "SOURCED_ASSESSMENT",
         },
         {
             name: "Hired",
-            assessmentType: "HIRED",
+            assessmentType: "HIRED_ASSESSMENT",
         },
     ],
 };

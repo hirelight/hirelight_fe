@@ -21,7 +21,7 @@ export const getIconBaseOnAssessmentType = (type: AssessmentTypeKey) => {
             return <ChatBubbleLeftRightIcon />;
         case "MULTIPLE_CHOICE_QUESTION_ASSESSMENT":
             return <ListBulletIcon />;
-        case "HIRED":
+        case "HIRED_ASSESSMENT":
             return <PencilSquareIcon />;
         default:
             return <UserIcon />;

@@ -19,7 +19,10 @@ import { IAssessmentFlow } from "@/services/assessment-flows/assessment-flows.in
 
 import FlowStageForm from "./FlowStageForm";
 
-const defaultStage: AssessmentTypeKey[] = ["SOURCED", "HIRED"];
+const defaultStage: AssessmentTypeKey[] = [
+    "SOURCED_ASSESSMENT",
+    "HIRED_ASSESSMENT",
+];
 
 type AssessmentFlowCardProps = {
     data: IAssessmentFlow & { id: number };

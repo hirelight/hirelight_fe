@@ -18,17 +18,12 @@ import {
 import { toast } from "react-toastify";
 
 import { Logo } from "@/icons";
-import { intialAppForm } from "@/utils/shared/initialDatas";
-import { IAppFormField } from "@/interfaces";
 import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
 import {
     IAppFormTemplate,
     IAppFormTemplateProfileSection,
-    IAppFormTemplateSection,
 } from "@/interfaces/app-form-template.interface";
-import { useAppDispatch } from "@/redux/reduxHooks";
 import { Button } from "@/components";
-import { setAppFormTemplate } from "@/redux/slices/app-form-template.slice";
 import { IAppFormTemplateDto } from "@/services/app-form-template/app-form-template.interface";
 
 import pageStyles from "../../styles.module.scss";

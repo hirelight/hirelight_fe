@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import {
     currencyList,
     experienceLevels,
-    intialAppForm,
     workModalities,
 } from "@/utils/shared/initialDatas";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";

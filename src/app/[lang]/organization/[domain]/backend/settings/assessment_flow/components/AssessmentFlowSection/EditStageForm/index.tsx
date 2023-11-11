@@ -23,7 +23,7 @@ const EditStageForm: React.FC<EditStageFormProps> = ({
     data,
 }) => {
     const [name, setName] = useState(data.name);
-    const [type, setType] = useState(AssessmentTypes.SOURCED);
+    const [type, setType] = useState(AssessmentTypes.SOURCED_ASSESSMENT);
 
     return (
         <section className="bg-gray-100 rounded-md">

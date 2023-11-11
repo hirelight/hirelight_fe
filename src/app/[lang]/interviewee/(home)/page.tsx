@@ -1,27 +1,19 @@
-"use client";
-
 import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 
 import background from "/public/images/interviewee_auth_bg.png";
 
 import { Metadata } from "next";
-import { AnimatePresence, motion } from "framer-motion";
 
 import { MapPin, SearchIcon } from "@/icons";
 
-import JobCard from "./components/JobCard";
-import JobsCenterPagination from "./components/JobsCenterPagination";
-import JobsCenterCategory from "./components/JobsCenterCategory";
-import JobDescriptionBeside from "./components/JobDescriptionBeside";
+import JobList from "./components/JobList";
 
-// export const metadata: Metadata = {
-//     title: "Jobs by Hirelight",
-// };
+export const metadata: Metadata = {
+    title: "Jobs by Hirelight",
+};
 
 const JobsCenter = () => {
-    const [showJD, setShowJD] = useState(false);
-
     return (
         <main className="w-full bg-slate-100">
             <div className="w-full py-8 sm:py-10 md:py-16 lg:py-20 relative shadow-md">
@@ -81,71 +73,7 @@ const JobsCenter = () => {
                 </div>
             </div>
             <div className="max-w-screen-xl mx-auto  px-4 md:px-10 flex flex-col lg:flex-row gap-6 py-6 relative">
-                {/* <JobsCenterCategory /> */}
-                <div className="flex-1 px-8 py-6 bg-white rounded-lg shadow-lg border border-slate-200">
-                    <div className="flex justify-between">
-                        <div className="w-full">
-                            <div className="w-full flex justify-between">
-                                <h3 className="text-neutral-700 font-semibold text-xl mb-6">
-                                    20 jobs associated
-                                </h3>
-                            </div>
-
-                            <div>
-                                <ul className="flex flex-col gap-3">
-                                    {new Array(8)
-                                        .fill("")
-                                        .map((item, index) => (
-                                            <li
-                                                key={index}
-                                                onClick={() => setShowJD(true)}
-                                            >
-                                                <JobCard
-                                                    companyName="Hirelight Company"
-                                                    jobTitle="Software Engineer"
-                                                    location="District 9, Ho Chi Minh city"
-                                                    type="Full time"
-                                                    salary="negotiate"
-                                                    description="Mollit in laborum tempor Lorem incididunt irure. Aute eu ex ad sunt. Pariatur sint culpa do incididunt eiusmod eiusmod culpa. laborum tempor Lorem incididunt."
-                                                />
-                                            </li>
-                                        ))}
-                                </ul>
-                            </div>
-                        </div>
-
-                        <AnimatePresence>
-                            {showJD && (
-                                <motion.div
-                                    initial={{ width: 0 }}
-                                    animate={{
-                                        width: "100%",
-                                        transition: {
-                                            duration: 0.3,
-                                            ease: "easeOut",
-                                        },
-                                    }}
-                                    exit={{
-                                        width: 0,
-                                        transition: {
-                                            duration: 0.3,
-                                            ease: "easeIn",
-                                        },
-                                    }}
-                                    className="max-w-[45%] w-full max-h-screen h-fit sticky top-0 overflow-hidden overflow-y-auto"
-                                >
-                                    <JobDescriptionBeside
-                                        close={() => setShowJD(false)}
-                                    />
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
-
-                    <div className="flex justify-center items-center mt-6">
-                        <JobsCenterPagination />
-                    </div>
-                </div>
+                <JobList />
             </div>
         </main>
     );

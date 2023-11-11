@@ -1,0 +1,21 @@
+.view__wrapper {
+    width: 100%;
+    max-height: 100vh;
+    overflow-y: auto;
+    @apply shadow-lg;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: rgb(222, 222, 222);
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: rgb(151, 151, 151);
+        border-radius: 12px;
+    }
+}

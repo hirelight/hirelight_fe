@@ -22,10 +22,17 @@ const createAsync = async (
     }
 };
 
-const getListAsync = async (orgId: number): Promise<IResponse<IJobDto[]>> => {
+const getListAsync = async (orgId?: number): Promise<IResponse<IJobDto[]>> => {
     try {
         const res = await interceptor.get<IResponse<IJobDto[]>>(
-            endpoints.JOBPOSTS + `/search?OrganizationId=${orgId}`
+            endpoints.JOBPOSTS + `/search`,
+            {
+                params: orgId
+                    ? {
+                          OrganizationId: orgId,
+                      }
+                    : {},
+            }
         );
 
         checkResErr(res.data);

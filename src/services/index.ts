@@ -36,3 +36,6 @@ export * from "./permission/permission.service";
 
 export * from "./question-sets/question-sets.interface";
 export * from "./question-sets/question-sets.service";
+
+export * from "./applicant-profile/applicant-profile.interface";
+export * from "./applicant-profile/applicant-profile.service";

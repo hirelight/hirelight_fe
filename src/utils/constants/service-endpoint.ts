@@ -25,6 +25,8 @@ const TAGS = "/tags";
 
 const QUESTION_ANSWERS = "/question-answers";
 
+const APPLICANT_PROFILES = "/applicant-profiles";
+
 const endpoints = {
     TAGS,
     ORGANIZATIONS,
@@ -42,6 +44,7 @@ const endpoints = {
     PERMISSION,
     QUESTION_ANSWER_SETS,
     ROLES,
+    APPLICANT_PROFILES,
 };
 
 export default endpoints;
