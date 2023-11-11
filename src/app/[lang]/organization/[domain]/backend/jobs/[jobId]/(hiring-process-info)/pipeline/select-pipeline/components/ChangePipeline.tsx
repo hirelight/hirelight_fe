@@ -2,7 +2,7 @@
 
 import React from "react";
 import { toast } from "react-toastify";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import { Button, CustomInput, DatePicker } from "@/components";
 import { IAssessmentFlTempDto } from "@/services/assessment-flow-templates/assessment-flow-templates.interface";
@@ -21,6 +21,7 @@ interface IChangePipeline {
 const ChangePipeline = ({ datas }: IChangePipeline) => {
     const { jobId } = useParams();
     const flowId = useSearchParams().get("flowId");
+    const router = useRouter();
 
     const dispatch = useAppDispatch();
     const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
@@ -29,14 +30,18 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
         try {
             const res = await assessmentFlowsServices.createAsync({
                 ...assessmentFlow,
-                assessments: assessmentFlow.assessments.map(item => ({
-                    name: item.name,
-                    assessmentType: item.assessmentTypeName,
-                })),
+                assessments: assessmentFlow.assessments
+                    .slice(1, -1)
+                    .map(item => ({
+                        name: item.name,
+                        assessmentType: item.assessmentTypeName,
+                    })),
                 jobPostId: parseInt(jobId as string),
             });
 
             toast.success(res.message);
+            dispatch(setAssessmentFlow(res.data));
+            router.push(`config-pipeline/${res.data.id}`);
         } catch (error) {
             toast.error("Create flow error");
         }
@@ -50,11 +55,13 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                 id: assessmentFlow.id,
                 assessments: assessmentFlow.assessments.map(item => ({
                     name: item.name,
+                    id: item.id,
                     assessmentType: item.assessmentTypeName,
                 })),
             });
 
             toast.success(res.message);
+            router.push(`config-pipeline/${assessmentFlow.id}`);
         } catch (error) {
             toast.error("Create flow error");
         }
@@ -84,7 +91,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                         Start time
                     </h3>
                     <DatePicker
-                        value={assessmentFlow.startTime}
+                        value={new Date(assessmentFlow.startTime)}
                         onChange={date =>
                             dispatch(
                                 setAssessmentFlow({
@@ -100,7 +107,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                         End time
                     </h3>
                     <DatePicker
-                        value={assessmentFlow.endTime}
+                        value={new Date(assessmentFlow.endTime)}
                         onChange={date =>
                             dispatch(
                                 setAssessmentFlow({
@@ -156,17 +163,19 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                                         defaultChecked={index === 0}
                                         onChange={e => {
                                             if (e.currentTarget.checked) {
-                                                setAssessmentFlow({
-                                                    ...assessmentFlow,
-                                                    assessments:
-                                                        flow.assessments
-                                                            .slice(1, -1)
-                                                            .map(item => ({
-                                                                name: item.name,
-                                                                assessmentTypeName:
-                                                                    item.assessmentType,
-                                                            })),
-                                                });
+                                                dispatch(
+                                                    setAssessmentFlow({
+                                                        ...assessmentFlow,
+                                                        assessments:
+                                                            flow.assessments.map(
+                                                                item => ({
+                                                                    name: item.name,
+                                                                    assessmentTypeName:
+                                                                        item.assessmentType,
+                                                                })
+                                                            ),
+                                                    })
+                                                );
                                             }
                                         }}
                                     />

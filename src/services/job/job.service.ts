@@ -76,6 +76,19 @@ const deleteByIdAsync = async (id: number): Promise<IResponse<any>> => {
     }
 };
 
+const requestPublishJob = async (id: number): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.put<IResponse<any>>(
+            `${endpoints.JOBPOSTS}/request-publish/${id}`
+        );
+
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const publishJobAsync = async (id: number): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.put<IResponse<any>>(
@@ -96,6 +109,7 @@ const jobServices = {
     editAsync,
     deleteByIdAsync,
     publishJobAsync,
+    requestPublishJob,
 };
 
 export default jobServices;

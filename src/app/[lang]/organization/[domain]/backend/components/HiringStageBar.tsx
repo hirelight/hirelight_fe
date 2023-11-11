@@ -24,15 +24,19 @@ const HiringStageBar: React.FC<HiringStageBarProps> = ({
 }) => {
     const { lang } = useParams();
 
-    const numOfDrafts = useRef<number>(
-        jobList.filter(job => job.status === JobPostStatus.DRAFT).length
+    const numOfDrafts = useMemo(
+        () => jobList.filter(job => job.status === JobPostStatus.DRAFT).length,
+        [jobList]
     );
-    const numOfPublished = useRef<number>(
-        jobList.filter(job => job.status === JobPostStatus.ACTIVE).length
+    const numOfPublished = useMemo(
+        () => jobList.filter(job => job.status === JobPostStatus.ACTIVE).length,
+        [jobList]
     );
-    const numOfPending = useRef<number>(
-        jobList.filter(job => job.status === JobPostStatus.PENDING_APPROVAL)
-            .length
+    const numOfPending = useMemo(
+        () =>
+            jobList.filter(job => job.status === JobPostStatus.PENDING_APPROVAL)
+                .length,
+        [jobList]
     );
 
     const stageBtnWrapperRef = useOutsideClick<HTMLUListElement>(() => {
@@ -85,9 +89,9 @@ const HiringStageBar: React.FC<HiringStageBarProps> = ({
                         >
                             Draft
                         </button>
-                        {numOfDrafts.current > 0 && (
+                        {numOfDrafts > 0 && (
                             <span className={styles.stageButtonBadge}>
-                                {numOfDrafts.current}
+                                {numOfDrafts}
                             </span>
                         )}
                     </li>
@@ -105,9 +109,9 @@ const HiringStageBar: React.FC<HiringStageBarProps> = ({
                             )}
                         >
                             Published
-                            {numOfPublished.current > 0 && (
+                            {numOfPublished > 0 && (
                                 <span className={styles.stageButtonBadge}>
-                                    {numOfPublished.current}
+                                    {numOfPublished}
                                 </span>
                             )}
                         </button>
@@ -126,9 +130,9 @@ const HiringStageBar: React.FC<HiringStageBarProps> = ({
                             )}
                         >
                             Pending approval
-                            {numOfPending.current > 0 && (
+                            {numOfPending > 0 && (
                                 <span className={styles.stageButtonBadge}>
-                                    {numOfPending.current}
+                                    {numOfPending}
                                 </span>
                             )}
                         </button>

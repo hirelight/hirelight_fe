@@ -4,12 +4,13 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { EllipsisVertical } from "@/icons";
+import { EllipsisVertical, SpinLoading } from "@/icons";
 import { IJobDto } from "@/services/job/job.interface";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
 import { IAssessmentFlowDto } from "@/services";
+import jobServices from "@/services/job/job.service";
 
 interface IStage {
     name: string;
@@ -51,12 +52,41 @@ const JobCard: React.FC<JobCardProps> = ({
     data: { title, area, status, id, assessmentFlowId },
 }) => {
     const router = useRouter();
+    const queryClient = useQueryClient();
+    const [isLoading, setIsLoading] = useState(false);
+
     const { data: flowRes } = useQuery({
         queryKey: ["getOneAssessmentFlow", assessmentFlowId],
         queryFn: () => {
-            return assessmentFlowsServices.getByIdAsync(assessmentFlowId!!);
+            return assessmentFlowId
+                ? assessmentFlowsServices.getByIdAsync(assessmentFlowId)
+                : null;
         },
     });
+    const publishJobMutations = useMutation({
+        mutationKey: [`publish-job-${id}`],
+        mutationFn: (id: number) => jobServices.publishJobAsync(id),
+        onSuccess: res => {
+            queryClient.invalidateQueries({ queryKey: ["jobs"] });
+            toast.success(res.message, {
+                position: "bottom-right",
+                autoClose: 1000,
+            });
+        },
+        onError: error => {
+            console.error(error);
+            toast.error("Publish failure", {
+                position: "bottom-right",
+                autoClose: 1000,
+            });
+        },
+    });
+
+    const handlePublishJob = async (id: number) => {
+        setIsLoading(true);
+        await publishJobMutations.mutateAsync(id);
+        setIsLoading(false);
+    };
 
     return (
         <div className="w-full p-6 bg-white shadow-md rounded-lg">
@@ -76,8 +106,9 @@ const JobCard: React.FC<JobCardProps> = ({
                     <button
                         type="button"
                         className="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-1 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 hidden md:block"
+                        onClick={handlePublishJob.bind(null, id)}
                     >
-                        Publish
+                        {isLoading && <SpinLoading className="mr-2" />}Publish
                     </button>
                     <button
                         type="button"

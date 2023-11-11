@@ -14,13 +14,11 @@ import { IAssessmentDto } from "@/services";
 import styles from "./PipelineConfigAssessment.module.scss";
 
 type PipelineConfigAssessmentProps = {
-    selectedStage: IAssessmentDto;
-    assessmentId: number;
+    selectedStage?: IAssessmentDto;
 };
 
 const PipelineConfigAssessment: React.FC<PipelineConfigAssessmentProps> = ({
     selectedStage,
-    assessmentId,
 }) => {
     const router = useRouter();
     const { flowId } = useParams();
@@ -30,11 +28,12 @@ const PipelineConfigAssessment: React.FC<PipelineConfigAssessmentProps> = ({
                 <button
                     type="button"
                     className={styles.assessment__wrapper}
-                    onClick={() =>
+                    onClick={() => {
+                        if (!selectedStage) return;
                         router.push(
-                            `${flowId}/config-assessment/${assessmentId}/face-to-face-assessment/new`
-                        )
-                    }
+                            `${flowId}/config-assessment/${selectedStage.id}/face-to-face-assessment/new`
+                        );
+                    }}
                 >
                     <Image
                         src={faceToFace}
@@ -50,11 +49,12 @@ const PipelineConfigAssessment: React.FC<PipelineConfigAssessmentProps> = ({
                 <button
                     type="button"
                     className={styles.assessment__wrapper}
-                    onClick={() =>
+                    onClick={() => {
+                        if (!selectedStage) return;
                         router.push(
-                            `${flowId}/config-assessment/${assessmentId}/one-way-assessment/new`
-                        )
-                    }
+                            `${flowId}/config-assessment/${selectedStage.id}/one-way-assessment/new`
+                        );
+                    }}
                 >
                     <Image
                         src={oneWay}
@@ -72,6 +72,7 @@ const PipelineConfigAssessment: React.FC<PipelineConfigAssessmentProps> = ({
                 <button
                     type="button"
                     className={`${styles.assessment__wrapper} ${
+                        selectedStage &&
                         [
                             "LIVE_VIDEO_INTERVIEW_ASSESSMENT",
                             "ASYNC_VIDEO_INTERVIEW_ASSESSMENT",
@@ -79,11 +80,12 @@ const PipelineConfigAssessment: React.FC<PipelineConfigAssessmentProps> = ({
                             ? "cursor-not-allowed opacity-50"
                             : ""
                     } transition-opacity`}
-                    onClick={() =>
+                    onClick={() => {
+                        if (!selectedStage) return;
                         router.push(
-                            `${flowId}/config-assessment/${assessmentId}/multiple-choice-assessment/new`
-                        )
-                    }
+                            `${flowId}/config-assessment/${selectedStage.id}/multiple-choice-assessment/new`
+                        );
+                    }}
                 >
                     <Image
                         src={testAssessment}

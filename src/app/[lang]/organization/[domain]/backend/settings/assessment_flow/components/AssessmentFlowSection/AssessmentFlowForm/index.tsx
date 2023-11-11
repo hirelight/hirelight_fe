@@ -175,10 +175,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                             </strong>
                             <Reorder.Group
                                 axis="y"
-                                values={formState.assessments.slice(
-                                    1,
-                                    formState.assessments.length - 1
-                                )}
+                                values={formState.assessments.slice(1, -1)}
                                 onReorder={newOrder =>
                                     setFormState(prev => ({
                                         ...prev,

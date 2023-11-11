@@ -113,7 +113,7 @@ const jobSlice = createSlice({
         },
 
         resetJobSliceState: state => {
-            return initialState;
+            state = initialState as any;
         },
     },
 
@@ -137,7 +137,10 @@ const jobSlice = createSlice({
                     applicationForm: JSON.parse(data.applicationForm),
                 } as typeof state.data;
                 state.loading = false;
-                toast.success(message);
+                toast.success(message, {
+                    position: "bottom-right",
+                    autoClose: 1000,
+                });
             })
             .addCase(updateJob.rejected, state => {
                 state.loading = false;

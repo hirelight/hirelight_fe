@@ -12,9 +12,9 @@ import {
 
 const createAsync = async (
     createEmailTemplatesDto: ICreateAssessmentFlowDto
-): Promise<IResponse<any>> => {
+): Promise<IResponse<IAssessmentFlowDto>> => {
     try {
-        const res = await interceptor.post<IResponse<any>>(
+        const res = await interceptor.post<IResponse<IAssessmentFlowDto>>(
             `${endpoints.ASSESSMENT_FLOWS}`,
             createEmailTemplatesDto
         );

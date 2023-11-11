@@ -1,14 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setJob } from "@/redux/slices/job.slice";
 import jobServices from "@/services/job/job.service";
 import { updateJob } from "@/redux/thunks/job.thunk";
+import { SpinLoading } from "@/icons";
 
 import styles from "./JobHeader.module.scss";
 
@@ -18,7 +20,29 @@ const JobHeader = ({}: IJobHeader) => {
     const pathname = usePathname();
     const { lang } = useParams();
     const job = useAppSelector(state => state.job.data);
+    const jobLoading = useAppSelector(state => state.job.loading);
     const dispatch = useAppDispatch();
+
+    const [isLoading, setIsLoading] = useState(false);
+    const queryClient = useQueryClient();
+    const requestPublishMutation = useMutation({
+        mutationKey: [`publish-job-${job.id}`],
+        mutationFn: (id: number) => jobServices.requestPublishJob(id),
+        onSuccess: res => {
+            queryClient.invalidateQueries({ queryKey: ["jobs"] });
+            toast.success(res.message, {
+                position: "bottom-right",
+                autoClose: 1000,
+            });
+        },
+        onError: error => {
+            console.error(error);
+            toast.error("Publish failure", {
+                position: "bottom-right",
+                autoClose: 1000,
+            });
+        },
+    });
 
     const handleSaveAndContinue = async (e: any) => {
         e.preventDefault();
@@ -71,6 +95,13 @@ const JobHeader = ({}: IJobHeader) => {
         } catch (error) {}
     };
 
+    const handleRequestPublish = async (id: number) => {
+        setIsLoading(true);
+        await requestPublishMutation.mutateAsync(id);
+
+        setIsLoading(false);
+    };
+
     return (
         <div
             className={[
@@ -87,15 +118,18 @@ const JobHeader = ({}: IJobHeader) => {
                         <button
                             type="button"
                             className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                            onClick={handleSaveAndContinue}
                         >
-                            Save draft
+                            {jobLoading && <SpinLoading className="mr-2" />}Save
+                            draft
                         </button>
                         <button
                             type="button"
                             className="text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                            onClick={handleSaveAndContinue}
+                            onClick={handleRequestPublish.bind(null, job.id)}
                         >
-                            Save & continue
+                            {isLoading && <SpinLoading className="mr-2" />}
+                            Request publish
                         </button>
                     </div>
                 </div>

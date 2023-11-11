@@ -12,7 +12,7 @@ import styles from "./PipelineStages.module.scss";
 const defaultStage: AssessmentTypeKey[] = ["SOURCED", "HIRED"];
 interface IPipelineStages {
     stages: IAssessmentDto[];
-    selectedStage: IAssessmentDto;
+    selectedStage?: IAssessmentDto;
     onSelect: (selected: IAssessmentDto) => void;
 }
 
@@ -36,7 +36,7 @@ const PipelineStages = ({
                                     ? "cursor-not-allowed opacity-70"
                                     : "hover:bg-gray-400 hover:text-neutral-700"
                             } ${
-                                selectedStage.id === stage.id
+                                selectedStage && selectedStage.id === stage.id
                                     ? styles.active
                                     : ""
                             }`}

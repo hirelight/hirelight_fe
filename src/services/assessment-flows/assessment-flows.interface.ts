@@ -23,7 +23,11 @@ export interface IEditAssessmentFlowDto {
     name: string;
     startTime: Date;
     endTime: Date;
-    assessments: IAssessmentFlow[];
+    assessments: {
+        name: string;
+        id: number;
+        assessmentType: AssessmentTypeKey;
+    }[];
 }
 
 export interface IAssessmentFlowDto {

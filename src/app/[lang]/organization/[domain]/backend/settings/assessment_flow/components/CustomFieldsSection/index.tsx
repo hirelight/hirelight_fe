@@ -1,6 +1,12 @@
 "use client";
 
-import React, { createContext, useEffect, useMemo, useState } from "react";
+import React, {
+    createContext,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import {
@@ -26,7 +32,6 @@ import { setAppFormTemplate } from "@/redux/slices/app-form-template.slice";
 import { IAppFormTemplateDto } from "@/services/app-form-template/app-form-template.interface";
 
 import pageStyles from "../../styles.module.scss";
-import sections from "../../custom-field.json";
 
 import styles from "./styles.module.scss";
 import FormSectionCard from "./components/FormSectionCard";
@@ -34,12 +39,16 @@ import AppFormSection from "./components/AppFormSection/AppFormSection";
 import AddProfleSectionForm from "./components/AddProfileSectionForm";
 
 type CustomFieldsSectionState = {
-    appFormTemplate: Omit<IAppFormTemplateDto, "content"> & {
+    appFormTemplate: Omit<IAppFormTemplateDto, "content" | "organizationId"> & {
         content: IAppFormTemplate;
+        organizationId: number | null;
     };
     setAppFormTemplate: React.Dispatch<
         React.SetStateAction<
-            Omit<IAppFormTemplateDto, "content"> & { content: IAppFormTemplate }
+            Omit<IAppFormTemplateDto, "content" | "organizationId"> & {
+                content: IAppFormTemplate;
+                organizationId: number | null;
+            }
         >
     >;
 };
@@ -59,7 +68,10 @@ type CustomFieldsSectionProps = {};
 
 const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
     const [appFormTemplate, setAppFormTemplate] = useState<
-        Omit<IAppFormTemplateDto, "content"> & { content: IAppFormTemplate }
+        Omit<IAppFormTemplateDto, "content" | "organizationId"> & {
+            content: IAppFormTemplate;
+            organizationId: number | null;
+        }
     >({
         id: 0,
         name: "",
@@ -67,7 +79,7 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
             app_form: [],
             profile: [],
         },
-        organizationId: 0,
+        organizationId: null,
         createdTime: new Date(),
         updatedTime: new Date(),
         updaterId: 0,
@@ -81,44 +93,44 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
 
     const [showAddSection, setShowAddSection] = React.useState(false);
 
+    const fetchAppFormTemplate = useCallback(async () => {
+        try {
+            const res =
+                await appFormTemplateServices.getDefaultAppFormTemplate();
+
+            const parsedContent: IAppFormTemplate = JSON.parse(
+                res.data.content
+            );
+            setAppFormTemplate({ ...res.data, content: parsedContent });
+        } catch {
+            toast.error("Fetch app form template failure!");
+        }
+    }, []);
+
     const handleSaveAppFormTemplateChanges = async () => {
         try {
-            const res = await appFormTemplateServices.editAsync({
-                ...appFormTemplate,
-                content: JSON.stringify(appFormTemplate.content),
-            });
-            toast.success(res.message);
+            if (appFormTemplate.organizationId) {
+                const res = await appFormTemplateServices.editAsync({
+                    ...appFormTemplate,
+                    content: JSON.stringify(appFormTemplate.content),
+                });
+                toast.success(res.message);
+            } else {
+                const res = await appFormTemplateServices.createAsync({
+                    name: "Org Default",
+                    content: JSON.stringify(appFormTemplate.content),
+                });
+                fetchAppFormTemplate();
+                toast.success(res.message);
+            }
         } catch (error) {
             toast.error("Save failure!");
         }
     };
 
     useEffect(() => {
-        const fetchAppFormTemplate = async () => {
-            try {
-                const res = await appFormTemplateServices.getListAsync();
-                const parsedContent: IAppFormTemplate = JSON.parse(
-                    res.data[0].content
-                );
-                setAppFormTemplate({ ...res.data[0], content: parsedContent });
-            } catch {
-                toast.error("Fetch app form template failure!");
-            }
-        };
-        // const create = async () => {
-        //     try {
-        //         const res = await appFormTemplateServices.createAsync({
-        //             name: "Default",
-        //             content: JSON.stringify(sections),
-        //         });
-        //         toast.success("Success");
-        //     } catch (error) {
-        //         toast.error("Fialure");
-        //     }
-        // };
-        // create();
         fetchAppFormTemplate();
-    }, []);
+    }, [fetchAppFormTemplate]);
 
     return (
         <CustomFieldsSectionContext.Provider

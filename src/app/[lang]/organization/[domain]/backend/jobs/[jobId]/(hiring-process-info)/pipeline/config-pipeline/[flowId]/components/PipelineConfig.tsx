@@ -12,9 +12,13 @@ type PipelineConfigProps = {};
 
 const PipelineConfig: React.FC<PipelineConfigProps> = ({}) => {
     const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
-    console.log(assessmentFlow);
-    const [selectedStage, setSelectedStage] = React.useState<IAssessmentDto>(
-        assessmentFlow.assessments[1]
+    const [selectedStage, setSelectedStage] = React.useState<
+        IAssessmentDto | undefined
+    >(
+        assessmentFlow.assessments.find(
+            assessment =>
+                !["SOURCED", "HIRED"].includes(assessment.assessmentTypeName)
+        )
     );
 
     return (
@@ -25,10 +29,7 @@ const PipelineConfig: React.FC<PipelineConfigProps> = ({}) => {
                 onSelect={(stage: IAssessmentDto) => setSelectedStage(stage)}
             />
             <div className="flex-1">
-                <PipelineConfigAssessment
-                    selectedStage={selectedStage}
-                    assessmentId={selectedStage.id}
-                />
+                <PipelineConfigAssessment selectedStage={selectedStage} />
             </div>
         </div>
     );

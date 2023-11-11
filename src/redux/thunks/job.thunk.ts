@@ -25,11 +25,11 @@ export const getJobById = createAsyncThunk(
     async (id: number) => {
         const [jobAppFormRes, appFormTemplateRes] = await Promise.all([
             jobServices.getByIdAsync(id),
-            appFormTemplateServices.getListAsync(),
+            appFormTemplateServices.getDefaultAppFormTemplate(),
         ]);
         const jobAppFormParsed = JSON.parse(jobAppFormRes.data.applicationForm);
         const appFormTemplateParsed = JSON.parse(
-            appFormTemplateRes.data[0].content
+            appFormTemplateRes.data.content
         );
         const mergeAppForm = mergeAppFormFields(
             jobAppFormParsed,
@@ -66,13 +66,14 @@ const mergeAppFormFields = (
         const isExist = myMap.get(key);
         if (isExist) {
             const fieldMap = new Map();
+            isExist.fields.forEach((srcField: any) => {
+                if (!fieldMap.has(srcField.id))
+                    fieldMap.set(srcField.id, srcField);
+            });
+
             section.fields.forEach((mergeField: any) => {
                 if (!fieldMap.has(mergeField.id))
                     fieldMap.set(mergeField.id, mergeField);
-            });
-            isExist.fields.forEach((srcField: any) => {
-                if (fieldMap.has(srcField.id))
-                    fieldMap.set(srcField.id, srcField);
             });
 
             myMap.set(key, {

@@ -9,6 +9,8 @@ import { toast } from "react-toastify";
 import { Button, CustomInput, DatePicker } from "@/components";
 import { ICreateAssessmentFlowDto } from "@/services/assessment-flows/assessment-flows.interface";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
+import { useAppDispatch } from "@/redux/reduxHooks";
+import { setAssessmentFlow } from "@/redux/slices/assessment-flow.slice";
 
 import AssessmentFlowCard from "./AssessmentFlowCard";
 import FlowStageForm from "./FlowStageForm";
@@ -40,6 +42,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
     const { jobId, lang } = useParams();
     const router = useRouter();
 
+    const dispatch = useAppDispatch();
     const [showAddStage, setShowAddStage] = useState(false);
     const [formState, setFormState] = useState<ICreateAssessmentFlowDto>({
         ...data,
@@ -59,9 +62,8 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
             });
 
             toast.success(res.message);
-            router.push(
-                `/${lang}/backend/jobs/${jobId}/pipeline/config-pipeline`
-            );
+            dispatch(setAssessmentFlow(res.data));
+            router.push(`config-pipeline/${res.data.id}`);
         } catch (error) {
             toast.error("Create flow error");
         }

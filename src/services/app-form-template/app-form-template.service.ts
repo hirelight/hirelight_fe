@@ -30,6 +30,25 @@ const getListAsync = async (): Promise<IResponse<IAppFormTemplateDto[]>> => {
     }
 };
 
+const getDefaultAppFormTemplate = async (): Promise<
+    IResponse<IAppFormTemplateDto>
+> => {
+    try {
+        const res = await getListAsync();
+
+        let data: IAppFormTemplateDto;
+        if (res.data.length > 1)
+            data = res.data.find(item => item.name === "Org Default")!!;
+        else data = res.data[0];
+        return {
+            ...res,
+            data: data,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
 const getByIdAsync = async (
     id: number
 ): Promise<IResponse<IAppFormTemplateDto>> => {
@@ -98,6 +117,7 @@ const appFormTemplateServices = {
     editAsync,
     deleteByIdAsync,
     createAsync,
+    getDefaultAppFormTemplate,
 };
 
 export default appFormTemplateServices;

@@ -1,23 +1,17 @@
 "use client";
 
 import React, { FormEvent, useState } from "react";
-import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { Reorder } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-import { CloseIcon, Logo } from "@/icons";
 import { Button, CustomInput, DatePicker } from "@/components";
-import { AssessmentTypes } from "@/interfaces/assessment.interface";
-import {
-    IAssessmentFlowDto,
-    ICreateAssessmentFlowDto,
-    IEditAssessmentFlowDto,
-} from "@/services/assessment-flows/assessment-flows.interface";
+import { IEditAssessmentFlowDto } from "@/services/assessment-flows/assessment-flows.interface";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
+import { useAppDispatch } from "@/redux/reduxHooks";
+import { fetchAssessmentFlowById } from "@/redux/thunks/assessment-flow.thunk";
 
 import AssessmentFlowCard from "./AssessmentFlowCard";
-import FlowStageForm from "./FlowStageForm";
 
 type AssessmentFlowFormProps = {
     data: IEditAssessmentFlowDto;
@@ -27,7 +21,8 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
     const { jobId, lang, flowId } = useParams();
     const router = useRouter();
 
-    const [showAddStage, setShowAddStage] = useState(false);
+    const dispatch = useAppDispatch();
+
     const [formState, setFormState] = useState<IEditAssessmentFlowDto>(data);
 
     const handleUpdateFlow = async (e: FormEvent) => {
@@ -39,6 +34,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
             });
 
             toast.success(res.message);
+            dispatch(fetchAssessmentFlowById(parseInt(flowId as string)));
             router.push(
                 `/${lang}/backend/jobs/${jobId}/pipeline/config-pipeline/${flowId}`
             );
@@ -56,34 +52,13 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
         }));
     };
 
-    const handleUpdateStage = (updateStage: any, index: number) => {
+    const handleUpdateStage = (updateStage: any, pos: number) => {
         setFormState(prev => ({
             ...prev,
             assessments: prev.assessments.map((assessment, assessmentPos) =>
-                assessmentPos === index ? updateStage : assessment
+                assessmentPos === pos ? updateStage : assessment
             ),
         }));
-    };
-
-    const handleAddNewStage = (newStage: any) => {
-        if (formState.assessments.length >= 10)
-            return alert("Maximum assessments: 10");
-
-        setFormState(prev => {
-            const prevStages = prev.assessments.slice(
-                0,
-                prev.assessments.length - 1
-            );
-
-            return {
-                ...prev,
-                assessments: prevStages.concat([
-                    newStage,
-                    prev.assessments[prev.assessments.length - 1],
-                ]),
-            };
-        });
-        setShowAddStage(false);
     };
 
     return (
@@ -139,10 +114,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                     </strong>
                     <Reorder.Group
                         axis="y"
-                        values={formState.assessments.slice(
-                            1,
-                            formState.assessments.length - 1
-                        )}
+                        values={formState.assessments.slice(1, -1)}
                         onReorder={newOrder =>
                             setFormState(prev => ({
                                 ...prev,
@@ -159,7 +131,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                     >
                         {formState.assessments?.map((assessment, index) => (
                             <AssessmentFlowCard
-                                key={assessment.name}
+                                key={assessment.id}
                                 data={assessment}
                                 updateStage={updateStage =>
                                     handleUpdateStage(updateStage, index)
@@ -169,7 +141,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                         ))}
                     </Reorder.Group>
 
-                    {showAddStage ? (
+                    {/* {showAddStage ? (
                         <FlowStageForm
                             onSave={handleAddNewStage}
                             onCancel={() => setShowAddStage(false)}
@@ -183,7 +155,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                             <PlusCircleIcon className="w-6 h-6" />
                             <span>Add new assessment</span>
                         </button>
-                    )}
+                    )} */}
                 </section>
             </div>
             <div className="p-4 flex items-center justify-end gap-4 text-sm">

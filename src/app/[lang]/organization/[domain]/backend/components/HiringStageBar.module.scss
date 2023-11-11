@@ -14,12 +14,12 @@
         height: 2px;
         width: 0;
         border-radius: 100%;
+        transition: all ease 150ms;
     }
     &:hover {
         color: $blue-primary-800;
         &::after {
             width: 70%;
-            transition: all ease 150ms;
         }
     }
     &.active {
@@ -27,7 +27,6 @@
         font-weight: 500;
         &::after {
             width: 70%;
-            transition: all ease 150ms;
         }
     }
 }

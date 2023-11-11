@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import LoadingIndicator from "@/components/LoadingIndicator";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
@@ -10,13 +10,20 @@ import { getJobById } from "@/redux/thunks/job.thunk";
 const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
     const { jobId } = useParams();
     const dispatch = useAppDispatch();
-    const { data, loading } = useAppSelector(state => state.job);
+    const { data } = useAppSelector(state => state.job);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        dispatch(getJobById(parseInt(jobId as string)));
+        const fetchJob = async () => {
+            setIsLoading(true);
+            await dispatch(getJobById(parseInt(jobId as string)));
+            setIsLoading(false);
+        };
+
+        fetchJob();
     }, [jobId, dispatch]);
 
-    if (data.id === 0 || loading)
+    if (data.id === 0 || isLoading)
         return (
             <div className="p-12 flex items-center justify-center">
                 <LoadingIndicator />

@@ -22,7 +22,7 @@ import FlowStageForm from "./FlowStageForm";
 const defaultStage: AssessmentTypeKey[] = ["SOURCED", "HIRED"];
 
 type AssessmentFlowCardProps = {
-    data: IAssessmentFlow;
+    data: IAssessmentFlow & { id: number };
     updateStage: (updateStage: any) => void;
     deleteStage: () => void;
 };

@@ -39,13 +39,11 @@ const assessmentFlowSlice = createSlice({
             })
             .addCase(fetchAssessmentFlowById.fulfilled, (state, action) => {
                 const { data, message } = action.payload;
-                console.log(data);
                 state.data = {
                     ...data,
                     startTime: new Date(data.startTime),
                     endTime: new Date(data.endTime),
                 };
-                toast.success(message);
                 state.loading = false;
             })
             .addCase(fetchAssessmentFlowById.rejected, (state, action) => {

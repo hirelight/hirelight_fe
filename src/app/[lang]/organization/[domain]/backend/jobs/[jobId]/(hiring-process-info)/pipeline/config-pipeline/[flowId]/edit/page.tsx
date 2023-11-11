@@ -66,6 +66,7 @@ const EditFlowPage: React.FC<EditFlowPageProps> = async ({ params }: any) => {
                         endTime: data.endTime,
                         assessments: data.assessments.map(item => ({
                             name: item.name,
+                            id: item.id,
                             assessmentType: item.assessmentTypeName,
                         })),
                     }}

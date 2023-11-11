@@ -1,33 +1,38 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import { useParams, usePathname, useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { usePathname, useRouter } from "next/navigation";
 
-import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
-import { setJob } from "@/redux/slices/job.slice";
 import jobServices from "@/services/job/job.service";
-import { intialAppForm } from "@/utils/shared/initialDatas";
+import { ICreateJobDto, JobContentJson } from "@/services";
+import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
 
 import styles from "./NewJobHeader.module.scss";
 
-interface INewJobHeader {}
+interface NewJobHeaderProps {
+    form: Omit<ICreateJobDto, "content"> & {
+        content: JobContentJson;
+    };
+}
 
-const NewJobHeader = ({}: INewJobHeader) => {
+const NewJobHeader = ({ form }: NewJobHeaderProps) => {
     const router = useRouter();
-    const pathname = usePathname();
-    const title = useAppSelector(state => state.job.data.title);
-    const job = useAppSelector(state => state.job.data);
 
     const handleSaveAndContinue = async (e: any) => {
         e.preventDefault();
 
         try {
+            const appFormTemplateRes =
+                await appFormTemplateServices.getDefaultAppFormTemplate();
+
+            let parsedAppForm = JSON.parse(
+                appFormTemplateRes.data.content
+            ).app_form;
+
             const res = await jobServices.createAsync({
-                ...job,
-                content: JSON.stringify(job),
-                applicationForm: JSON.stringify(intialAppForm),
+                ...form,
+                content: JSON.stringify(form),
+                applicationForm: JSON.stringify(parsedAppForm),
             });
             router.push(`${res.data}/edit`);
         } catch (error) {}
@@ -43,7 +48,7 @@ const NewJobHeader = ({}: INewJobHeader) => {
             <div className="max-w-screen-xl mx-auto py-5 px-4 xl:px-6 flex-shrink-0">
                 <div className="w-full flex items-center justify-between mb-4">
                     <h4 className="text-2xl text-neutral-700 font-medium">
-                        {title ? title : "New Job"}
+                        {form.title ? form.title : "New Job"}
                     </h4>
                     <div className="hidden md:block">
                         <button
@@ -79,19 +84,11 @@ const NewJobHeader = ({}: INewJobHeader) => {
                     </div>
                     <div className={styles.section__wrapper}>
                         <div
-                            className={`${styles.section__container} ${
-                                pathname.includes("app-form")
-                                    ? styles.active
-                                    : ""
-                            } ${styles.disabled}`}
+                            className={`${styles.section__container} ${styles.disabled}`}
                         >
                             <div
                                 tabIndex={-1}
-                                className={`h-full ${
-                                    pathname.includes("app-form")
-                                        ? "pointer-events-none"
-                                        : ""
-                                }`}
+                                className={`h-full pointer-events-none`}
                             >
                                 <h3 className={styles.section__title}>
                                     Application Form
@@ -105,19 +102,11 @@ const NewJobHeader = ({}: INewJobHeader) => {
 
                     <div className={styles.section__wrapper}>
                         <div
-                            className={`${styles.section__container} ${
-                                pathname.includes("members")
-                                    ? styles.active
-                                    : ""
-                            } ${styles.disabled}`}
+                            className={`${styles.section__container} ${styles.disabled}`}
                         >
                             <div
                                 tabIndex={-1}
-                                className={`h-full ${
-                                    pathname.includes("members")
-                                        ? "pointer-events-none"
-                                        : ""
-                                }`}
+                                className={`h-full pointer-events-none`}
                             >
                                 <h3 className={styles.section__title}>
                                     Team Members
@@ -131,19 +120,11 @@ const NewJobHeader = ({}: INewJobHeader) => {
                     </div>
                     <div>
                         <div
-                            className={`${styles.section__container} ${
-                                pathname.includes("pipeline")
-                                    ? styles.active
-                                    : ""
-                            } ${styles.disabled}`}
+                            className={`${styles.section__container} ${styles.disabled}`}
                         >
                             <div
                                 tabIndex={-1}
-                                className={`h-full ${
-                                    pathname.includes("pipeline")
-                                        ? "pointer-events-none"
-                                        : ""
-                                }`}
+                                className={`h-full pointer-events-none`}
                             >
                                 <h3 className={styles.section__title}>
                                     Workflow
