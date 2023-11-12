@@ -17,10 +17,9 @@ const JobList = () => {
     const [selectedJob, setSelectedJob] = useState<IJobDto>();
 
     const { data: jobsRes } = useQuery({
-        queryKey: ["jobs"],
+        queryKey: ["jobs-candidate"],
         queryFn: () => jobServices.getListAsync(),
     });
-    console.log(jobsRes);
     return (
         <>
             {/* <JobsCenterCategory /> */}

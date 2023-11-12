@@ -42,7 +42,7 @@ const ProfileHeader = () => {
                                 {" "}
                                 {personalDetail.current.fields.find(
                                     item => item.id === "headline"
-                                )!!.value ?? ""}
+                                )?.value ?? ""}
                             </span>
                         </div>
                         <div>
@@ -56,7 +56,7 @@ const ProfileHeader = () => {
                                 <span>
                                     {personalDetail.current.fields.find(
                                         item => item.id === "address"
-                                    )!!.value ?? ""}
+                                    )?.value ?? ""}
                                 </span>
                             </span>
                             <span className="flex items-center gap-1">
@@ -65,7 +65,7 @@ const ProfileHeader = () => {
                                     {" "}
                                     {personalDetail.current.fields.find(
                                         item => item.id === "phone"
-                                    )!!.value ?? ""}
+                                    )?.value ?? ""}
                                 </span>
                             </span>
                         </div>

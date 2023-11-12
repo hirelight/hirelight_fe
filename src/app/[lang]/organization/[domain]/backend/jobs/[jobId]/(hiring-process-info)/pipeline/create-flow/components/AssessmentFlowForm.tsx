@@ -11,6 +11,7 @@ import { ICreateAssessmentFlowDto } from "@/services/assessment-flows/assessment
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
 import { useAppDispatch } from "@/redux/reduxHooks";
 import { setAssessmentFlow } from "@/redux/slices/assessment-flow.slice";
+import { fetchAssessmentFlowById } from "@/redux/thunks/assessment-flow.thunk";
 
 import AssessmentFlowCard from "./AssessmentFlowCard";
 import FlowStageForm from "./FlowStageForm";
@@ -62,7 +63,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
             });
 
             toast.success(res.message);
-            dispatch(setAssessmentFlow(res.data));
+            dispatch(fetchAssessmentFlowById(res.data.id));
             router.push(`config-pipeline/${res.data.id}`);
         } catch (error) {
             toast.error("Create flow error");

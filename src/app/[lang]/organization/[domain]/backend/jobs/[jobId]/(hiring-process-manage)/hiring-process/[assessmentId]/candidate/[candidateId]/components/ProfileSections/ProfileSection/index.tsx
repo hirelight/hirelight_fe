@@ -4,9 +4,13 @@ import React, { useState } from "react";
 
 import { PdfViewer } from "@/components";
 import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
-import { IAppFormTemplateProfileSection } from "@/interfaces/app-form-template.interface";
+import {
+    IAppFormTemplateField,
+    IAppFormTemplateProfileSection,
+} from "@/interfaces/app-form-template.interface";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { IAppFormSection } from "@/interfaces";
+import { IAppFormField, IAppFormSection } from "@/interfaces";
+import PDFViewer from "@/components/PdfViewer";
 
 import { profileDatas, profileLayout, candidateSection } from "./data";
 import styles from "./styles.module.scss";
@@ -19,6 +23,25 @@ const ProfileSection = () => {
     const formDetails = useAppSelector(
         state => state.applicantProfile.data.content
     );
+
+    const getDetailByField = (field: IAppFormTemplateField) => {
+        if (field.id === "resume")
+            return <PDFViewer src={field.value!!.value as string} />;
+        else
+            return (
+                <div className="flex flex-col lg:flex-row">
+                    <div className="lg:basis-40 mr-6 text-neutral-500 flex gap-2">
+                        <span>{field.label}</span>
+                    </div>
+                    <div className="w-full flex flex-col gap-2 items-start text-neutral-600">
+                        <span>
+                            {field.custom}:{" "}
+                            {field.value ? field.value : "No data"}
+                        </span>
+                    </div>
+                </div>
+            );
+    };
 
     React.useEffect(() => {
         const fetchLayout = async () => {
@@ -41,15 +64,19 @@ const ProfileSection = () => {
                             fieldMap.set(section.id, section);
                     });
 
-                profileLayout = profileLayout.map(section => ({
-                    ...section,
-                    fields: section.fields.map(item => {
-                        const isHaving = fieldMap.get(item.id);
-                        return isHaving ? isHaving : item;
-                    }),
-                }));
-
-                console.log(profileLayout);
+                profileLayout = profileLayout
+                    .map(section => ({
+                        ...section,
+                        fields: section.fields
+                            .map(item => {
+                                const isHaving = fieldMap.get(item.id);
+                                return isHaving ? isHaving : item;
+                            })
+                            .filter(item => item.value !== undefined),
+                    }))
+                    .filter(
+                        section => !section.fields.every(item => !item.value)
+                    );
 
                 setSections(profileLayout);
             } catch (error) {
@@ -92,26 +119,14 @@ const ProfileSection = () => {
 
             {sections?.map((section, index) => {
                 return (
-                    <div key={index}>
-                        <strong className="text-sm text-neutral-600 uppercase mb-4">
+                    <div key={index} className="mb-4">
+                        <strong className="block text-sm text-neutral-600 uppercase mb-2">
                             {section.label}
                         </strong>
                         {section.fields.map((field, index) => {
                             return (
                                 <div key={index} className="mb-4 text-sm">
-                                    <div className="flex flex-col lg:flex-row">
-                                        <div className="lg:basis-40 mr-6 text-neutral-500 flex gap-2">
-                                            <span>{field.label}</span>
-                                        </div>
-                                        <div className="w-full flex flex-col gap-2 items-start text-neutral-600">
-                                            <span>
-                                                {field.custom}:{" "}
-                                                {field.value
-                                                    ? field.value
-                                                    : "No data"}
-                                            </span>
-                                        </div>
-                                    </div>
+                                    {getDetailByField(field)}
                                 </div>
                             );
                         })}

@@ -1,0 +1,83 @@
+[
+    {
+        "name": "firstname",
+        "value": "Nguyn"
+    },
+    {
+        "name": "lastname",
+        "value": "Kin"
+    },
+    {
+        "name": "email",
+        "value": "ngkien299@gmail.com"
+    },
+    {
+        "name": "address",
+        "value": "Block B Flora Fuji duong D1, Phuoc Long B, q9"
+    },
+    {
+        "name": "avatar",
+        "value": {
+            "url": "https://workable-application-form.s3.amazonaws.com/tmp/ttl-1d/production/4c0ef285-bbde-9cc6-9e93-f3fcc654dbc2?AWSAccessKeyId=AKIA27KPZUMHP7SV6K43&Expires=1699793561&Signature=m6BROX5568Z6Z17Aq0bNgAbfz7U%3D",
+            "name": "Overal- Architecture-Diagram.drawio (2).png"
+        }
+    },
+    {
+        "name": "summary",
+        "value": "asdasd"
+    },
+    {
+        "name": "resume",
+        "value": {
+            "url": "https://workable-application-form.s3.amazonaws.com/tmp/ttl-1d/production/d6dee672-fa5c-982a-b222-7a8492ec3ef6?AWSAccessKeyId=AKIA27KPZUMHP7SV6K43&Expires=1699793565&Signature=okCnvRAvDepQE6In1o2mNZs9e4g%3D",
+            "name": "Kien Nguyen.pdf"
+        }
+    },
+    {
+        "name": "cover_letter",
+        "value": "asdasd"
+    },
+    {
+        "name": "CA_24562",
+        "value": "true"
+    },
+    {
+        "name": "QA_7197549",
+        "value": "asd"
+    },
+    {
+        "name": "QA_7197550",
+        "value": "sad"
+    },
+    {
+        "name": "QA_7197551",
+        "value": "true"
+    },
+    {
+        "name": "QA_7197552",
+        "value": "3547805"
+    },
+    {
+        "name": "QA_7197553",
+        "value": ["3547807"]
+    },
+    {
+        "name": "QA_7197554",
+        "value": ["3547810", "3547811"]
+    },
+    {
+        "name": "QA_7197555",
+        "value": "2023-11-16T00:00:00.000Z"
+    },
+    {
+        "name": "QA_7197556",
+        "value": 123123
+    },
+    {
+        "name": "QA_7197557",
+        "value": {
+            "url": "https://workable-application-form.s3.amazonaws.com/tmp/ttl-1d/production/f3d60f53-f8d2-9c4b-97bb-0bc6ac2e1b37?AWSAccessKeyId=AKIA27KPZUMHP7SV6K43&Expires=1699793588&Signature=ghKUqdjotXXewZeNaVfN05GIOO8%3D",
+            "name": "FINAL-131023-HĐ-TNM-MC-THANH-THANH-HUYỀN.docx"
+        }
+    }
+]

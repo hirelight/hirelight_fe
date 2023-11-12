@@ -1,9 +1,11 @@
 "use client";
 
 import React, { DetailedHTMLProps, InputHTMLAttributes } from "react";
+import { toast } from "react-toastify";
 
 import { SpinLoading } from "@/icons";
 import { uploadImage } from "@/helpers";
+import fileServices from "@/services/file-service/file.service";
 
 import styles from "./styles.module.scss";
 
@@ -32,24 +34,33 @@ const CustomFileInput = (props: ICustomFileInput) => {
     const handleFileChange = async (fileList: File[]) => {
         const reader = new FileReader();
 
-        if (fileList.length > 0) {
-            if (isImageFile(fileList[0].name)) {
-                const image = await uploadImage(fileList[0]);
-                console.log(image);
-            }
-            reader.onloadstart = () => {
-                setLoading(true);
-            };
-            reader.onload = () => {};
-
-            reader.onprogress = ev => {
-                setProgressPer(Math.round((ev.loaded / ev.total) * 100));
-            };
-
-            reader.onloadend = () => setLoading(false);
+        if (fileList.length > 0 && inputRef.current) {
+            const formData = new FormData();
+            formData.append("formFile", fileList[0]);
+            const res = await fileServices.uploadFile(formData);
+            console.log(res);
+            toast.success(res.message);
+            (
+                document.getElementById(
+                    props.id + "_fileName"
+                )!! as HTMLInputElement
+            ).value = fileList[0].name;
+            inputRef.current.value = res.data;
             setFile(fileList[0]);
+            // reader.onloadstart = () => {
+            //     setLoading(true);
+            //     console.log(fileList[0]);
+            // };
+            // reader.onload = () => {};
 
-            reader.readAsText(fileList[0]);
+            // reader.onprogress = ev => {
+            //     setProgressPer(Math.round((ev.loaded / ev.total) * 100));
+            // };
+
+            // reader.onloadend = () => setLoading(false);
+            // setFile(fileList[0]);
+
+            // reader.readAsText(fileList[0]);
         }
     };
 
@@ -80,6 +91,18 @@ const CustomFileInput = (props: ICustomFileInput) => {
                 console.log(`… file[${i}].name = ${file.name}`);
             });
         }
+    };
+
+    const handleUploadFile = () => {
+        const inputFile = document.createElement("input");
+        inputFile.type = "file";
+        document.body.appendChild(inputFile);
+        inputFile.addEventListener("change", e => {
+            handleFileChange(Array.from((e.target as any)!!.files));
+        });
+
+        inputFile.click();
+        inputFile.remove();
     };
 
     return (
@@ -131,11 +154,7 @@ const CustomFileInput = (props: ICustomFileInput) => {
                             <button
                                 type="button"
                                 className="inline-block text-blue_primary_800 font-medium hover:underline"
-                                onClick={() => {
-                                    if (inputRef.current) {
-                                        inputRef.current.click();
-                                    }
-                                }}
+                                onClick={handleUploadFile}
                             >
                                 Upload a file
                             </button>{" "}
@@ -148,14 +167,18 @@ const CustomFileInput = (props: ICustomFileInput) => {
             </div>
             <input
                 ref={inputRef}
-                type="file"
-                className="absolute top-0 left-0 h-0 w-0 overflow-hidden invisible"
+                type="text"
+                className="sr-only"
                 id={props.id}
                 name={props.name}
-                onChange={e => {
-                    if (e.target.files && e.target.files.length > 0)
-                        handleFileChange(Array.from(e.target.files));
-                }}
+                onChange={() => {}}
+            />
+            <input
+                type="text"
+                className="sr-only"
+                id={props.id + "_fileName"}
+                name={props.name}
+                onChange={() => {}}
             />
         </div>
     );

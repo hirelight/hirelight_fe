@@ -72,10 +72,15 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
 
         for (let i = 0; i < elements.length; i++) {
             const element = elements[i];
-
-            // console.log(element.id, element.value);
             if (fieldMap.has(element.id)) {
-                fieldMap.get(element.id)!!.value = element.value;
+                const type = fieldMap.get(element.id)!!.type;
+                fieldMap.get(element.id)!!.value =
+                    type === "file"
+                        ? {
+                              value: element.value,
+                              name: elements[element.id + "_fileName"].value,
+                          }
+                        : element.value;
             }
         }
 
@@ -106,7 +111,8 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
         } catch (error) {
             console.error(error);
         }
-        (e.currentTarget as HTMLFormElement).reset();
+        if ((e.currentTarget as HTMLFormElement).reset)
+            (e.currentTarget as HTMLFormElement).reset();
         if (onApply) onApply();
     };
 

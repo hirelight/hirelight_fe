@@ -126,9 +126,15 @@ export default function PDFViewer({ src = defaultUrl }) {
     };
 
     const handleDownloadFile = () => {
-        document.title = "My new title";
-        window.print();
-        return false;
+        // document.title = "My new title";
+        const fileName = "Custom filename";
+        const aTag = document.createElement("a");
+        aTag.href = src;
+        aTag.setAttribute("download", fileName);
+        document.body.appendChild(aTag);
+
+        aTag.click();
+        aTag.remove();
     };
 
     useEffect(() => {
@@ -188,11 +194,7 @@ export default function PDFViewer({ src = defaultUrl }) {
                         />
                     </div>
                     <div className="flex gap-4">
-                        <button
-                            type="button"
-                            href={defaultUrl}
-                            // onClick={handleDownloadFile}
-                        >
+                        <button type="button" onClick={handleDownloadFile}>
                             <ArrowDownTrayIcon className="w-6 h-6" />
                         </button>
                         <ReactToPrint content={() => componentRef.current}>

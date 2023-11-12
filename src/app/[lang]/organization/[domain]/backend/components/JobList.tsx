@@ -16,7 +16,10 @@ const JobList = () => {
     const userData = useUserInfo<IUserDto>();
     const { data: jobsRes } = useQuery({
         queryKey: ["jobs"],
-        queryFn: () => jobServices.getListAsync(userData!!.organizationId),
+        queryFn: () =>
+            jobServices.getListAsync({
+                OrganizationId: userData!!.organizationId,
+            }),
     });
     const [selectedStatus, setSelectedStatus] = useState(JobPostStatus.DRAFT);
 

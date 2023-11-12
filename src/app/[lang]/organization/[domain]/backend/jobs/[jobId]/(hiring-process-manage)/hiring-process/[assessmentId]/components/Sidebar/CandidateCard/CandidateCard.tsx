@@ -59,7 +59,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
                             <p>
                                 {parsedContent.current[0].fields.find(
                                     item => item.id === "headline"
-                                )!!.value ?? ""}
+                                )?.value ?? ""}
                             </p>
                         </div>
                         <div>

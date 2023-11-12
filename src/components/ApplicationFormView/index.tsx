@@ -38,7 +38,12 @@ const AppFormView: React.FC<AppFormViewProps> = ({ data, onApply }) => {
                     <div className="max-w-3xl py-10 mx-auto">
                         <AppFormSection
                             jobPostId={data.id}
-                            datas={data.applicationForm}
+                            datas={data.applicationForm.map(sec => ({
+                                ...sec,
+                                fields: sec.fields.filter(
+                                    f => f.required !== undefined
+                                ),
+                            }))}
                             onApply={onApply}
                         />
                     </div>

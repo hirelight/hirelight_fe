@@ -1,4 +1,9 @@
-import { HTMLInputTypeAttribute } from "react";
+import {
+    AllHTMLAttributes,
+    DetailedHTMLProps,
+    HTMLInputTypeAttribute,
+    InputHTMLAttributes,
+} from "react";
 
 export enum EAppFormOption {
     MANDATORY = "Mandatory",
@@ -6,7 +11,11 @@ export enum EAppFormOption {
     OFF = "Off",
 }
 
-export interface IAppFormField extends React.HTMLProps<HTMLInputElement> {
+export interface IAppFormField
+    extends DetailedHTMLProps<
+        InputHTMLAttributes<HTMLInputElement>,
+        HTMLInputElement
+    > {
     id: string;
     label: string;
     helper?: string;
@@ -29,6 +38,7 @@ export interface IAppFormField extends React.HTMLProps<HTMLInputElement> {
     maxFileSize?: number;
     singleOption?: boolean;
     options?: { name: string; value: string }[];
+    value?: any | string | number;
 }
 
 export interface IAppFormSection {
