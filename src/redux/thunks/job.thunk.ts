@@ -22,7 +22,7 @@ export const createNewJobPost = createAsyncThunk(
 
 export const getJobById = createAsyncThunk(
     GET_JOB_BY_ID,
-    async (id: number) => {
+    async (id: string) => {
         const [jobAppFormRes, appFormTemplateRes] = await Promise.all([
             jobServices.getByIdAsync(id),
             appFormTemplateServices.getDefaultAppFormTemplate(),
@@ -51,7 +51,7 @@ export const updateJob = createAsyncThunk(
     }
 );
 
-const mergeAppFormFields = (
+export const mergeAppFormFields = (
     sourceArr: IAppFormSection[],
     mergeArr: IAppFormTemplateSection[]
 ) => {

@@ -45,9 +45,7 @@ const AssessmentInfoHeader = () => {
 
     useEffect(() => {
         const getData = async (id: string) => {
-            const jobRes: any = await dispatch(
-                getJobById(parseInt(id as string))
-            );
+            const jobRes: any = await dispatch(getJobById(id as string));
             try {
                 const res = await assessmentFlowsServices.getByIdAsync(
                     jobRes.payload.assessmentFlowId

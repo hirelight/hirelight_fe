@@ -5,24 +5,18 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
 
-import {
-    currencyList,
-    experienceLevels,
-    workModalities,
-} from "@/utils/shared/initialDatas";
+import { experienceLevels, workModalities } from "@/utils/shared/initialDatas";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setJob, setJobError } from "@/redux/slices/job.slice";
-import { delayFunc } from "@/helpers/shareHelpers";
-import { DatePicker, LocationAutocomplete, Selection } from "@/components";
-import { SpinLoading } from "@/icons";
 import {
-    ICreateJobDto,
-    IJobDto,
-    JobContentJson,
-} from "@/services/job/job.interface";
-import jobServices from "@/services/job/job.service";
-import { IAppFormSection } from "@/interfaces";
+    CustomInput,
+    DatePicker,
+    LocationAutocomplete,
+    Selection,
+} from "@/components";
+import { SpinLoading } from "@/icons";
 import { updateJob } from "@/redux/thunks/job.thunk";
+import currencies from "@/utils/shared/currencies.json";
 
 import FormInput from "../../../components/FormInput";
 
@@ -33,62 +27,105 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     loading: () => <p>Loading ...</p>,
 });
 
-const industries = [
-    "Accounting",
-    "Airlines/Aviation",
-    "Alternative Dispute Resolution",
-    "Business Analyst",
-    "Financial Analyst",
-    "Data Analyst",
-    "Art/Creative",
-    "Business Development",
-    "Consulting",
-    "Customer Service",
-    "Distribution",
-    "Design",
-];
-
 type EditJobDetailFormProps = {};
 
 const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
     const [loading, setLoading] = React.useState(false);
 
-    const [descriptionLength, setDescriptionLength] = React.useState({
-        description: 0,
-        requirements: 0,
-        benefits: 0,
-    });
-
     const dispatch = useAppDispatch();
     const job = useAppSelector(state => state.job.data);
     const jobErr = useAppSelector(state => state.job.error);
 
-    const validateFormInput = (): boolean => {
-        if (job.maxSalary && job.minSalary && job.minSalary > job.maxSalary) {
-            dispatch(
-                setJobError({
-                    status: true,
-                    content: {
-                        ...jobErr.content,
-                        maxSalaryErr:
-                            "Make sure that 'To' has larger amount than 'From'",
-                    },
-                })
+    const [contentLength, setContentLength] = useState({
+        description: 0,
+        requirements: 0,
+        benefits: 0,
+    });
+    const [formErr, setFormErr] = useState({
+        titleErr: "",
+        areaArr: "",
+        contentErr: {
+            descriptionErr: "",
+            requirementsErr: "",
+            benefitsErr: "",
+            contentErr: "",
+        },
+        salaryErr: "",
+        jobPublishTimeErr: "",
+    });
+
+    const isInvalidFormInput = (): boolean => {
+        let statusErr = false;
+        const { title, area, maxSalary, minSalary, startTime, endTime } = job;
+
+        let errors = formErr;
+
+        if (title.length === 0) errors.titleErr = "Job title required";
+
+        if (area.length === 0) errors.areaArr = "Area required";
+
+        if (contentLength.description === 0)
+            errors.contentErr.descriptionErr = "Description required";
+
+        if (contentLength.requirements === 0)
+            errors.contentErr.requirementsErr = "Requirements required";
+
+        if (
+            Object.values(contentLength).reduce((prev, cur) => prev + cur) < 700
+        )
+            errors.contentErr.contentErr =
+                "Description content must minimum 700 characters";
+
+        if (minSalary > 0 && maxSalary > 0 && minSalary >= maxSalary)
+            errors.salaryErr = "Min salary must be lower than max salary";
+
+        if (new Date(startTime).getTime() > new Date(endTime).getTime())
+            errors.jobPublishTimeErr =
+                "Start time must be earlier than end time";
+
+        if (new Date(endTime).getTime() <= new Date().getTime())
+            errors.jobPublishTimeErr = "End time must be in the future";
+
+        const checkError = (errs: any) => {
+            for (let key of Object.keys(errs)) {
+                if (typeof errs[key as any] === "object") {
+                    checkError(errs[key as any]);
+                } else {
+                    if (errs[key as any] !== "") {
+                        statusErr = true;
+                        break;
+                    }
+                }
+            }
+        };
+        checkError(errors);
+
+        if (statusErr) {
+            setFormErr({ ...errors });
+            toast.error(
+                <div>
+                    <p>Invalid input</p>
+                    <p>Check issue in red!</p>
+                </div>,
+                {
+                    position: "top-center",
+                    autoClose: 1500,
+                }
             );
-            return false;
         }
 
-        return true;
+        return statusErr;
     };
 
     const handleSubmitJobDetail = async (e: any) => {
         e.preventDefault();
 
-        // if (!validateFormInput()) {
-        //     return;
-        // }
+        if (isInvalidFormInput()) {
+            return;
+        }
 
         try {
+            console.log(job.applicationForm);
             dispatch(
                 updateJob({
                     ...job,
@@ -120,9 +157,8 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                         </h2>
                         <div className={`${styles.form__section__wrapper}`}>
                             <div className="mb-4 md:mb-6">
-                                <FormInput
+                                <CustomInput
                                     title="Job title"
-                                    required={true}
                                     id="job-title"
                                     name="job-title"
                                     type="text"
@@ -136,7 +172,13 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                                 title: e.target.value,
                                             })
                                         );
+                                        setFormErr({
+                                            ...formErr,
+                                            titleErr: "",
+                                        });
                                     }}
+                                    required={true}
+                                    errorText={formErr.titleErr}
                                 />
                             </div>
                         </div>
@@ -162,7 +204,6 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                             <div className="mb-4 md:mb-6">
                                 <LocationAutocomplete
                                     title="Job area"
-                                    required={true}
                                     id="job-area"
                                     name="job-area"
                                     type="text"
@@ -175,38 +216,14 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                                 area: value,
                                             })
                                         );
+                                        setFormErr({
+                                            ...formErr,
+                                            areaArr: "",
+                                        });
                                     }}
+                                    required={true}
+                                    errorText={formErr.areaArr}
                                 />
-                                {/* <div className="w-full">
-                                    <label
-                                        htmlFor={"job-location"}
-                                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                    >
-                                        <span className="text-red-500 mr-1">
-                                            *
-                                        </span>
-                                        Job location
-                                    </label>
-                                    <input
-                                        type="text"
-                                        ref={locationInputRef}
-                                        placeholder="Example: District 7, Ho Chi Minh"
-                                        value={
-                                            job?.location ? job.location : ""
-                                        }
-                                        className={[
-                                            "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500",
-                                        ].join(" ")}
-                                        onChange={e => {
-                                            dispatch(
-                                                setJob({
-                                                    ...job,
-                                                    location: e.target.value,
-                                                })
-                                            );
-                                        }}
-                                    />
-                                </div> */}
                             </div>
                         </div>
                         <div className="hidden md:block absolute -right-8 top-1/2 translate-x-full -translate-y-1/2 w-screen">
@@ -234,16 +251,18 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                 </h3>
                                 <div className="border border-slate-600 rounded-lg min-h-[600px] p-3 md:p-6 relative overflow-hidden">
                                     <div className="mb-6 flex flex-col min-h-[220px]">
-                                        <h4 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Description
-                                        </h4>
                                         <QuillEditorNoSSR
+                                            label="Description"
                                             theme="bubble"
                                             value={job.content.description}
                                             placeholder="Enter the job description here; include key areas of
                     responsibility and what the candidate might do on a typical
                     day."
-                                            onChange={(value: string) => {
+                                            onChange={(value: string, text) => {
+                                                setContentLength(prev => ({
+                                                    ...prev,
+                                                    description: text.length,
+                                                }));
                                                 dispatch(
                                                     setJob({
                                                         ...job,
@@ -253,21 +272,42 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                                         },
                                                     })
                                                 );
+                                                setFormErr({
+                                                    ...formErr,
+                                                    contentErr: {
+                                                        ...formErr.contentErr,
+                                                        descriptionErr: "",
+                                                        contentErr: "",
+                                                    },
+                                                });
                                             }}
                                             className="flex-1"
                                         />
+                                        {formErr.contentErr.descriptionErr !==
+                                            "" && (
+                                            <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                                                <span className="font-medium">
+                                                    {
+                                                        formErr.contentErr
+                                                            .descriptionErr
+                                                    }
+                                                </span>
+                                            </p>
+                                        )}
                                     </div>
                                     <div className="mb-6 flex flex-col min-h-[220px]">
-                                        <h4 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Requirements
-                                        </h4>
                                         <QuillEditorNoSSR
+                                            label="Requirements"
                                             theme="bubble"
                                             value={job.content.requirements}
                                             placeholder="Enter the job description here; include key areas of
                     responsibility and what the candidate might do on a typical
                     day."
-                                            onChange={(value: string) => {
+                                            onChange={(value: string, text) => {
+                                                setContentLength(prev => ({
+                                                    ...prev,
+                                                    requirements: text.length,
+                                                }));
                                                 dispatch(
                                                     setJob({
                                                         ...job,
@@ -277,21 +317,41 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                                         },
                                                     })
                                                 );
+                                                setFormErr({
+                                                    ...formErr,
+                                                    contentErr: {
+                                                        ...formErr.contentErr,
+                                                        requirementsErr: "",
+                                                        contentErr: "",
+                                                    },
+                                                });
                                             }}
                                             className="flex-1"
                                         />
+                                        {formErr.contentErr.requirementsErr && (
+                                            <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                                                <span className="font-medium">
+                                                    {
+                                                        formErr.contentErr
+                                                            .requirementsErr
+                                                    }{" "}
+                                                </span>
+                                            </p>
+                                        )}
                                     </div>
                                     <div className="mb-6 flex flex-col min-h-[220px]">
-                                        <h4 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Benefits
-                                        </h4>
                                         <QuillEditorNoSSR
+                                            label="Benefits"
                                             theme="bubble"
                                             value={job.content.benefits}
                                             placeholder="Enter the job description here; include key areas of
                     responsibility and what the candidate might do on a typical
                     day."
-                                            onChange={(value: string) => {
+                                            onChange={(value: string, text) => {
+                                                setContentLength(prev => ({
+                                                    ...prev,
+                                                    benefits: text.length,
+                                                }));
                                                 dispatch(
                                                     setJob({
                                                         ...job,
@@ -301,20 +361,32 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                                         },
                                                     })
                                                 );
+                                                setFormErr({
+                                                    ...formErr,
+                                                    contentErr: {
+                                                        ...formErr.contentErr,
+                                                        contentErr: "",
+                                                    },
+                                                });
                                             }}
                                             className="flex-1"
                                         />
                                     </div>
 
-                                    <div className="absolute bottom-0 right-0 left-0 p-1 bg-gray-200">
-                                        <span className="text-xs text-gray-500">
+                                    <div
+                                        className={`absolute bottom-0 right-0 left-0 p-1 text-xs ${
+                                            formErr.contentErr.contentErr
+                                                ? "bg-red-400 text-red-700 font-medium"
+                                                : "text-gray-500 bg-gray-200"
+                                        }`}
+                                    >
+                                        <span>
                                             Minimum 700 characters.{" "}
-                                            {(job.content.description?.length ||
-                                                0) +
-                                                (job.content.benefits?.length ||
-                                                    0) +
-                                                (job.content.requirements
-                                                    ?.length || 0)}{" "}
+                                            {Object.values(
+                                                contentLength
+                                            ).reduce(
+                                                (prev, cur) => prev + cur
+                                            )}{" "}
                                             characters used.
                                         </span>
                                     </div>
@@ -373,6 +445,11 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                         );
                                     }}
                                 />
+                                <CustomInput
+                                    title="Keywords"
+                                    type="text"
+                                    onChange={() => {}}
+                                />
                             </div>
                         </div>
                     </section>
@@ -391,9 +468,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                         type="number"
                                         min={0}
                                         step={1000}
-                                        value={
-                                            job.minSalary ? job.minSalary : ""
-                                        }
+                                        value={job.minSalary}
                                         onChange={e => {
                                             dispatch(
                                                 setJob({
@@ -403,6 +478,10 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                                     ),
                                                 })
                                             );
+                                            setFormErr({
+                                                ...formErr,
+                                                salaryErr: "",
+                                            });
                                         }}
                                     />
                                 </div>
@@ -413,9 +492,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                         type="number"
                                         step={1000}
                                         min={0}
-                                        value={
-                                            job.maxSalary ? job.maxSalary : ""
-                                        }
+                                        value={job.maxSalary}
                                         onChange={e => {
                                             {
                                                 dispatch(
@@ -426,15 +503,10 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                                         ),
                                                     })
                                                 );
-                                                dispatch(
-                                                    setJobError({
-                                                        ...jobErr,
-                                                        content: {
-                                                            ...jobErr.content,
-                                                            maxSalaryErr: "",
-                                                        },
-                                                    })
-                                                );
+                                                setFormErr({
+                                                    ...formErr,
+                                                    salaryErr: "",
+                                                });
                                             }
                                         }}
                                         errorText={jobErr.content.maxSalaryErr}
@@ -443,31 +515,41 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                 <div className="col-span-2">
                                     <Selection
                                         title="Currency"
-                                        items={currencyList.map(item => ({
-                                            label: `${item.name} (${item.code})`,
-                                            value: `${item.name} (${item.code})`,
-                                        }))}
-                                        value={job.currency ? job.currency : ""}
-                                        onChange={
-                                            (value: string) => {
-                                                dispatch(
-                                                    setJob({
-                                                        ...job,
-                                                        currency: value,
-                                                    })
-                                                );
-                                            }
-                                            // setFormState({
-                                            //     ...formState,
-                                            //     annualSalary: {
-                                            //         ...formState.annualSalary,
-                                            //         currency: value,
-                                            //     },
-                                            // })
+                                        items={Object.values(currencies).map(
+                                            item => ({
+                                                label: `${item.name} (${item.code})`,
+                                                value: item,
+                                            })
+                                        )}
+                                        value={
+                                            job.currency
+                                                ? currencies[
+                                                      job.currency as keyof typeof currencies
+                                                  ].name
+                                                : ""
                                         }
+                                        onChange={value => {
+                                            dispatch(
+                                                setJob({
+                                                    ...job,
+                                                    currency: value.code,
+                                                })
+                                            );
+                                            setFormErr({
+                                                ...formErr,
+                                                salaryErr: "",
+                                            });
+                                        }}
                                     />
                                 </div>
                             </div>
+                            {formErr.salaryErr && (
+                                <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                                    <span className="font-medium">
+                                        {formErr.salaryErr}{" "}
+                                    </span>
+                                </p>
+                            )}
                         </div>
                     </section>
 
@@ -484,14 +566,19 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                     </h3>
                                     <DatePicker
                                         value={new Date(job.startTime)}
-                                        onChange={date =>
+                                        pos={"top"}
+                                        onChange={date => {
                                             dispatch(
                                                 setJob({
                                                     ...job,
                                                     startTime: date,
                                                 })
-                                            )
-                                        }
+                                            );
+                                            setFormErr({
+                                                ...formErr,
+                                                jobPublishTimeErr: "",
+                                            });
+                                        }}
                                     />
                                 </div>
                                 <div>
@@ -499,6 +586,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                         End time
                                     </h3>
                                     <DatePicker
+                                        pos={"top"}
                                         value={new Date(job.endTime)}
                                         onChange={date => {
                                             dispatch(
@@ -507,10 +595,21 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                                     endTime: date,
                                                 })
                                             );
+                                            setFormErr({
+                                                ...formErr,
+                                                jobPublishTimeErr: "",
+                                            });
                                         }}
                                     />
                                 </div>
                             </div>
+                            {formErr.jobPublishTimeErr && (
+                                <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                                    <span className="font-medium">
+                                        {formErr.jobPublishTimeErr}{" "}
+                                    </span>
+                                </p>
+                            )}
                         </div>
                     </section>
 
@@ -526,7 +625,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                             Save & continue
                         </button>
                         <button
-                            type="button"
+                            type="submit"
                             className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                         >
                             Save draft

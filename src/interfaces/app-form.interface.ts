@@ -1,5 +1,4 @@
 import {
-    AllHTMLAttributes,
     DetailedHTMLProps,
     HTMLInputTypeAttribute,
     InputHTMLAttributes,
@@ -28,10 +27,12 @@ export interface IAppFormField
         type: HTMLInputTypeAttribute;
     }[];
     type:
+        | "multiple_choice"
+        | "dropdown"
+        | "boolean"
         | "group"
         | "multiple"
         | "text-area"
-        | "add-file"
         | HTMLInputTypeAttribute;
     supportedFileTypes?: string[];
     supportedMimeTypes?: string[];
@@ -39,6 +40,7 @@ export interface IAppFormField
     singleOption?: boolean;
     options?: { name: string; value: string }[];
     value?: any | string | number;
+    custom: boolean;
 }
 
 export interface IAppFormSection {
@@ -58,8 +60,77 @@ export interface IAddAppFormField {
     field: any;
 }
 
+export interface IEditAppFormField {
+    sectionName: string;
+    field: any;
+}
+
+export interface IDelteCustomField {
+    sectionName: string;
+    fieldId: string;
+}
+
 export enum AppFormDefaultSection {
     PERSONAL_INFORMATION = "personal_information",
     PROFILE = "profile",
     DETAILS = "details",
+}
+
+export const AppFormInputTypes: {
+    label: string;
+    type:
+        | "multiple_choice"
+        | "dropdown"
+        | "boolean"
+        | "group"
+        | "multiple"
+        | "text-area"
+        | HTMLInputTypeAttribute;
+}[] = [
+    {
+        label: "Paragraph",
+        type: "text-area",
+    },
+    {
+        label: "Short answer",
+        type: "text",
+    },
+    {
+        label: "Yes/No",
+        type: "boolean",
+    },
+    {
+        label: "Dropdown",
+        type: "dropdown",
+    },
+    {
+        label: "Multiple choice",
+        type: "multiple_choice",
+    },
+    {
+        label: "Date",
+        type: "date",
+    },
+    {
+        label: "Number",
+        type: "number",
+    },
+    {
+        label: "File upload",
+        type: "file",
+    },
+];
+
+export interface ICustomField extends IAppFormField {
+    enabled: boolean;
+    rejecting: boolean;
+    answers_count: number | null;
+    position: number;
+    single_answer: boolean;
+    choices_attributes: {
+        id: string;
+        name: string;
+        position: number;
+        enabled: boolean;
+    }[];
 }

@@ -1,83 +1,433 @@
 [
     {
-        "name": "firstname",
-        "value": "Nguyn"
+        "custom": false,
+        "id": "personal_information",
+        "name": "Personal information",
+        "fields": [
+            {
+                "id": "name",
+                "required": true,
+                "label": "Name",
+                "type": "text",
+                "maxLength": 127,
+                "value": "Nguyn Thnh Kin"
+            },
+            {
+                "id": "email",
+                "required": true,
+                "label": "Email",
+                "type": "email",
+                "maxLength": 255,
+                "value": "ngkien299@gmail.com"
+            },
+            {
+                "id": "headline",
+                "required": false,
+                "label": "Headline",
+                "type": "text",
+                "maxLength": 255,
+                "value": "Headline"
+            },
+            {
+                "id": "phone",
+                "required": false,
+                "label": "Phone",
+                "type": "phone",
+                "helper": "The hiring team may use this number to contact you about this job.",
+                "maxLength": 255,
+                "value": "+84818000299"
+            },
+            {
+                "id": "address",
+                "required": false,
+                "label": "Address",
+                "type": "text",
+                "value": "Block B Flora Fuji duong D1, Phuoc Long B, q9"
+            },
+            {
+                "id": "avatar",
+                "required": false,
+                "label": "Photo",
+                "type": "file",
+                "supportedFileTypes": [".jpg", ".jpeg", ".gif", ".png"],
+                "supportedMimeTypes": ["image/jpeg", "image/gif", "image/png"],
+                "maxFileSize": 12000000,
+                "value": {
+                    "value": "http://localhost:5555/api/v1/assessment-flows/files/d40ad7bf-8d11-4460-9332-8a7abae09096Logo new gold@500x.png",
+                    "name": "Logo new gold@500x.png"
+                }
+            }
+        ]
     },
     {
-        "name": "lastname",
-        "value": "Kin"
+        "custom": false,
+        "id": "profile",
+        "name": "Profile",
+        "fields": [
+            {
+                "id": "education",
+                "required": false,
+                "label": "Education",
+                "type": "group",
+                "fields": [
+                    {
+                        "id": "school",
+                        "required": true,
+                        "label": "School",
+                        "type": "text",
+                        "maxLength": 255
+                    },
+                    {
+                        "id": "field_of_study",
+                        "required": false,
+                        "label": "Field of study",
+                        "type": "text",
+                        "maxLength": 255
+                    },
+                    {
+                        "id": "degree",
+                        "required": false,
+                        "label": "Degree",
+                        "type": "text",
+                        "maxLength": 255
+                    },
+                    {
+                        "id": "start_date",
+                        "required": false,
+                        "label": "Start date",
+                        "type": "date"
+                    },
+                    {
+                        "id": "end_date",
+                        "required": false,
+                        "label": "End date",
+                        "type": "date"
+                    }
+                ],
+                "value": "Some education school"
+            },
+            {
+                "id": "experience",
+                "required": false,
+                "label": "Experience",
+                "type": "group",
+                "fields": [
+                    {
+                        "id": "title",
+                        "required": true,
+                        "label": "Title",
+                        "type": "text",
+                        "maxLength": 255
+                    },
+                    {
+                        "id": "company",
+                        "required": false,
+                        "label": "Company",
+                        "type": "text",
+                        "maxLength": 255
+                    },
+                    {
+                        "id": "industry",
+                        "required": false,
+                        "label": "Industry",
+                        "type": "text",
+                        "maxLength": 255
+                    },
+                    {
+                        "id": "summary",
+                        "required": false,
+                        "label": "Summary",
+                        "type": "paragraph"
+                    },
+                    {
+                        "id": "start_date",
+                        "required": false,
+                        "label": "Start date",
+                        "type": "date"
+                    },
+                    {
+                        "id": "end_date",
+                        "required": false,
+                        "label": "End date",
+                        "type": "date"
+                    },
+                    {
+                        "id": "current",
+                        "required": false,
+                        "label": "I currently work here",
+                        "type": "boolean"
+                    }
+                ],
+                "value": "Some company have worked"
+            },
+            {
+                "id": "summary",
+                "required": false,
+                "label": "Summary",
+                "type": "paragraph",
+                "value": "Some sumamary"
+            },
+            {
+                "id": "resume",
+                "required": false,
+                "label": "Resume",
+                "type": "file",
+                "supportedFileTypes": [".pdf", ".doc", ".docx", ".odt", ".rtf"],
+                "supportedMimeTypes": [
+                    "application/pdf",
+                    "application/msword",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "application/vnd.oasis.opendocument.text",
+                    "application/rtf"
+                ],
+                "maxFileSize": 12000000,
+                "value": {
+                    "value": "http://localhost:5555/api/v1/assessment-flows/files/ee372e74-cfaa-4869-b9ef-e12c7f38a95eKien Nguyen_Resume.pdf",
+                    "name": "Kien Nguyen_Resume.pdf"
+                }
+            }
+        ]
     },
     {
-        "name": "email",
-        "value": "ngkien299@gmail.com"
-    },
-    {
-        "name": "address",
-        "value": "Block B Flora Fuji duong D1, Phuoc Long B, q9"
-    },
-    {
-        "name": "avatar",
-        "value": {
-            "url": "https://workable-application-form.s3.amazonaws.com/tmp/ttl-1d/production/4c0ef285-bbde-9cc6-9e93-f3fcc654dbc2?AWSAccessKeyId=AKIA27KPZUMHP7SV6K43&Expires=1699793561&Signature=m6BROX5568Z6Z17Aq0bNgAbfz7U%3D",
-            "name": "Overal- Architecture-Diagram.drawio (2).png"
-        }
-    },
-    {
-        "name": "summary",
-        "value": "asdasd"
-    },
-    {
-        "name": "resume",
-        "value": {
-            "url": "https://workable-application-form.s3.amazonaws.com/tmp/ttl-1d/production/d6dee672-fa5c-982a-b222-7a8492ec3ef6?AWSAccessKeyId=AKIA27KPZUMHP7SV6K43&Expires=1699793565&Signature=okCnvRAvDepQE6In1o2mNZs9e4g%3D",
-            "name": "Kien Nguyen.pdf"
-        }
-    },
-    {
-        "name": "cover_letter",
-        "value": "asdasd"
-    },
-    {
-        "name": "CA_24562",
-        "value": "true"
-    },
-    {
-        "name": "QA_7197549",
-        "value": "asd"
-    },
-    {
-        "name": "QA_7197550",
-        "value": "sad"
-    },
-    {
-        "name": "QA_7197551",
-        "value": "true"
-    },
-    {
-        "name": "QA_7197552",
-        "value": "3547805"
-    },
-    {
-        "name": "QA_7197553",
-        "value": ["3547807"]
-    },
-    {
-        "name": "QA_7197554",
-        "value": ["3547810", "3547811"]
-    },
-    {
-        "name": "QA_7197555",
-        "value": "2023-11-16T00:00:00.000Z"
-    },
-    {
-        "name": "QA_7197556",
-        "value": 123123
-    },
-    {
-        "name": "QA_7197557",
-        "value": {
-            "url": "https://workable-application-form.s3.amazonaws.com/tmp/ttl-1d/production/f3d60f53-f8d2-9c4b-97bb-0bc6ac2e1b37?AWSAccessKeyId=AKIA27KPZUMHP7SV6K43&Expires=1699793588&Signature=ghKUqdjotXXewZeNaVfN05GIOO8%3D",
-            "name": "FINAL-131023-HĐ-TNM-MC-THANH-THANH-HUYỀN.docx"
-        }
+        "custom": false,
+        "id": "details",
+        "name": "Details",
+        "fields": [
+            {
+                "id": "cover_letter",
+                "required": false,
+                "label": "Cover letter",
+                "type": "paragraph",
+                "value": "Some cover letter"
+            },
+            {
+                "id": "QA_0117431e-f7dc-43cb-a591-4909d684b4b1",
+                "label": "dropdown question",
+                "type": "dropdown",
+                "required": true,
+                "custom": true,
+                "enabled": true,
+                "answers_count": null,
+                "choices_attributes": [
+                    {
+                        "id": "CA_534b8236-768b-41d3-b874-411ce74faab7",
+                        "name": "a1",
+                        "position": 0,
+                        "enabled": true
+                    },
+                    {
+                        "id": "CA_993f9d71-57ae-47c3-b64a-5cb2cdae4f29",
+                        "name": "a2",
+                        "position": 1,
+                        "enabled": true
+                    }
+                ],
+                "single_answer": false,
+                "position": 0,
+                "rejecting": false,
+                "value": "a2"
+            },
+            {
+                "id": "QA_d66ba80d-85f0-495b-9e18-e8d997812149",
+                "label": "Paragraph question",
+                "type": "text-area",
+                "required": true,
+                "custom": true,
+                "enabled": true,
+                "answers_count": null,
+                "choices_attributes": [
+                    {
+                        "id": "CA_f271695a-394b-43f6-81e1-216831b9df7f",
+                        "name": "",
+                        "position": 0,
+                        "enabled": true
+                    }
+                ],
+                "single_answer": false,
+                "position": 0,
+                "rejecting": false,
+                "value": "Some paragraph"
+            },
+            {
+                "id": "QA_9cdd8fcd-7918-454e-992a-173a0999cd05",
+                "label": "Short quest",
+                "type": "text",
+                "required": true,
+                "custom": true,
+                "enabled": true,
+                "answers_count": null,
+                "choices_attributes": [
+                    {
+                        "id": "CA_745ad57d-615c-442f-a12d-c888f1632bec",
+                        "name": "",
+                        "position": 0,
+                        "enabled": true
+                    }
+                ],
+                "single_answer": false,
+                "position": 0,
+                "rejecting": false,
+                "value": "Short answer"
+            },
+            {
+                "id": "QA_71e12a02-6b56-4028-8196-701e1a5ed9ba",
+                "label": "Boolean ques",
+                "type": "boolean",
+                "required": true,
+                "custom": true,
+                "enabled": true,
+                "answers_count": null,
+                "choices_attributes": [
+                    {
+                        "id": "CA_0eb1737e-06a7-4746-9a91-7484952ff368",
+                        "name": "",
+                        "position": 0,
+                        "enabled": true
+                    }
+                ],
+                "single_answer": false,
+                "position": 0,
+                "rejecting": true,
+                "value": "true"
+            },
+            {
+                "id": "QA_8a9cdebc-f767-4a4f-a4ba-9a8215b82ab8",
+                "label": "One answer ques",
+                "type": "multiple_choice",
+                "required": true,
+                "custom": true,
+                "enabled": true,
+                "answers_count": null,
+                "choices_attributes": [
+                    {
+                        "id": "CA_d95618df-8f40-4f30-a080-e5cdac4a5aa3",
+                        "name": "one1",
+                        "position": 0,
+                        "enabled": true
+                    },
+                    {
+                        "id": "CA_8d701d98-15cc-41b8-9ada-3920a13d189c",
+                        "name": "one2",
+                        "position": 1,
+                        "enabled": true
+                    },
+                    {
+                        "id": "CA_7ae495cb-55a9-4ea8-a394-86335970323c",
+                        "name": "one3",
+                        "position": 2,
+                        "enabled": true
+                    },
+                    {
+                        "id": "CA_4f469573-d480-4fa7-8056-ae4597a387ce",
+                        "name": "one4",
+                        "position": 3,
+                        "enabled": true
+                    }
+                ],
+                "single_answer": true,
+                "position": 0,
+                "rejecting": false,
+                "value": "one3"
+            },
+            {
+                "id": "QA_7420cd2a-c609-49de-8e32-edd306e73d65",
+                "label": "Multiple ques",
+                "type": "multiple_choice",
+                "required": true,
+                "custom": true,
+                "enabled": true,
+                "answers_count": null,
+                "choices_attributes": [
+                    {
+                        "id": "CA_9ef35b12-bedb-4f5d-895c-56fd785f030c",
+                        "name": "mul1",
+                        "position": 0,
+                        "enabled": true
+                    },
+                    {
+                        "id": "CA_85d8daeb-a4b5-4aa7-b999-1b5d8ea5e082",
+                        "name": "mul2",
+                        "position": 1,
+                        "enabled": true
+                    },
+                    {
+                        "id": "CA_d4d8dae8-b383-4849-812c-f98a6a3a7eee",
+                        "name": "mul3",
+                        "position": 2,
+                        "enabled": true
+                    }
+                ],
+                "single_answer": false,
+                "position": 0,
+                "rejecting": false,
+                "value": ["mul1", "mul3"]
+            },
+            {
+                "id": "QA_53aa8865-1452-42c1-9636-a3860cd703b1",
+                "label": "Date ques",
+                "type": "date",
+                "required": true,
+                "custom": true,
+                "enabled": true,
+                "answers_count": null,
+                "choices_attributes": [
+                    {
+                        "id": "CA_04062bbf-9865-436a-a976-d6b3a50bd061",
+                        "name": "",
+                        "position": 0,
+                        "enabled": true
+                    }
+                ],
+                "single_answer": false,
+                "position": 0,
+                "rejecting": false,
+                "value": "25/11/2023"
+            },
+            {
+                "id": "QA_2dd53646-75ab-46f9-b9d4-7ea2758ee20c",
+                "label": "Num ques",
+                "type": "number",
+                "required": true,
+                "custom": true,
+                "enabled": true,
+                "answers_count": null,
+                "choices_attributes": [
+                    {
+                        "id": "CA_83bd9507-12b0-402e-b3e1-dc204dae93c5",
+                        "name": "",
+                        "position": 0,
+                        "enabled": true
+                    }
+                ],
+                "single_answer": false,
+                "position": 0,
+                "rejecting": false,
+                "value": "25"
+            },
+            {
+                "id": "QA_4ed9d670-4608-4255-82e6-29353b6f4f69",
+                "label": "File ques",
+                "type": "file",
+                "required": true,
+                "custom": true,
+                "enabled": true,
+                "answers_count": null,
+                "choices_attributes": [
+                    {
+                        "id": "CA_8c186bb2-53ce-4e0f-a308-e71159ac9547",
+                        "name": "",
+                        "position": 0,
+                        "enabled": true
+                    }
+                ],
+                "single_answer": false,
+                "position": 0,
+                "rejecting": false,
+                "value": {
+                    "value": "http://localhost:5555/api/v1/assessment-flows/files/47b135b4-23ca-4dba-8f0e-16cea5f2fbccquestions-template.xlsx",
+                    "name": "questions-template.xlsx"
+                }
+            }
+        ]
     }
 ]

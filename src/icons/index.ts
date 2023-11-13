@@ -26,6 +26,7 @@ import GoogleIcon from "./GoogleIcon";
 import LinkedInIcon from "./LinkedInIcon";
 import MinusBigIcon from "./MinusBigIcon";
 import Logo from "./Logo";
+import CheckToSlot from "./CheckToSlot";
 
 export {
     Logo,
@@ -45,6 +46,7 @@ export {
     Plus,
     Upload,
     EllipsisVertical,
+    CheckToSlot,
     Bold,
     Italic,
     ListOL,

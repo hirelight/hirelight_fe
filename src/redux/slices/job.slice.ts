@@ -7,7 +7,13 @@ import {
     IJobDto,
     JobContentJson,
 } from "@/services/job/job.interface";
-import { IAddAppFormField, IAppFormSection } from "@/interfaces";
+import {
+    IAddAppFormField,
+    IAppFormSection,
+    ICustomField,
+    IDelteCustomField,
+    IEditAppFormField,
+} from "@/interfaces";
 
 import { createNewJobPost, getJobById, updateJob } from "../thunks/job.thunk";
 
@@ -112,6 +118,50 @@ const jobSlice = createSlice({
             );
         },
 
+        editCustomField: (state, action: PayloadAction<IEditAppFormField>) => {
+            state.data.applicationForm = state.data.applicationForm.map(
+                section => {
+                    if (section.name === action.payload.sectionName) {
+                        return {
+                            ...section,
+                            fields: section.fields.map(item => {
+                                if (
+                                    item.custom &&
+                                    (item as ICustomField).id ===
+                                        action.payload.field.id
+                                )
+                                    return action.payload.field;
+
+                                return item;
+                            }),
+                        };
+                    }
+
+                    return section;
+                }
+            );
+        },
+
+        deleteCustomField: (
+            state,
+            action: PayloadAction<IDelteCustomField>
+        ) => {
+            state.data.applicationForm = state.data.applicationForm.map(
+                section => {
+                    if (section.name === action.payload.sectionName) {
+                        return {
+                            ...section,
+                            fields: section.fields.filter(
+                                item => item.id !== action.payload.fieldId
+                            ),
+                        };
+                    }
+
+                    return section;
+                }
+            );
+        },
+
         resetJobSliceState: state => {
             state = initialState as any;
         },
@@ -171,5 +221,7 @@ export const {
     resetJobSliceState,
     setAppForm,
     addAppFormField,
+    editCustomField,
+    deleteCustomField,
 } = jobSlice.actions;
 export default jobSlice.reducer;

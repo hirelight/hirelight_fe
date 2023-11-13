@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { FieldErrors, FieldValues } from "react-hook-form";
 
 import { AssessmentTypeKey } from "@/interfaces/assessment.interface";
 import { IResponse } from "@/interfaces/service.interface";
@@ -88,4 +89,19 @@ export const uploadImage = async (file: File): Promise<string | null> => {
     toast.success(res.data.message);
 
     return res.data.data;
+};
+
+export const findInputError = (
+    errors: FieldErrors<FieldValues>,
+    name: string
+) => {
+    const filtered = Object.keys(errors)
+        .filter(key => key.includes(name))
+        .reduce((cur, key) => Object.assign(cur, { error: errors[key] }), {});
+
+    return filtered;
+};
+
+export const isFormInvalid = (err: FieldErrors<FieldValues>) => {
+    return Object.keys(err).length > 0;
 };

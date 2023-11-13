@@ -2,10 +2,11 @@
 
 import React from "react";
 
-import { IAppFormField, IAppFormSection } from "@/interfaces";
+import { IAppFormField, IAppFormSection, ICustomField } from "@/interfaces";
 
 import styles from "./AppFormSection.module.scss";
 import AppFormSectionField from "./AppFormSectionField";
+import CustomFieldOnType from "./CustomFieldOnType";
 
 interface AppFormSectionProps {
     data: IAppFormSection;
@@ -25,7 +26,14 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                         key={field.label}
                         className="border-b last-of-type:border-none border-gray-300"
                     >
-                        <AppFormSectionField sectionName={name} data={field} />
+                        {field.custom ? (
+                            <CustomFieldOnType field={field as ICustomField} />
+                        ) : (
+                            <AppFormSectionField
+                                sectionName={name}
+                                data={field}
+                            />
+                        )}
                     </li>
                 ))}
             </ul>

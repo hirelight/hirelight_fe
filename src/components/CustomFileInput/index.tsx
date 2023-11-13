@@ -24,7 +24,7 @@ const CustomFileInput = (props: ICustomFileInput) => {
     const wrapperRef = React.useRef<HTMLDivElement>(null);
     const [file, setFile] = React.useState<File>();
     const [progressPer, setProgressPer] = React.useState(0);
-    const [loading, setLoading] = React.useState(true);
+    const [loading, setLoading] = React.useState(false);
 
     function isImageFile(filename: string) {
         const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
@@ -38,7 +38,6 @@ const CustomFileInput = (props: ICustomFileInput) => {
             const formData = new FormData();
             formData.append("formFile", fileList[0]);
             const res = await fileServices.uploadFile(formData);
-            console.log(res);
             toast.success(res.message);
             (
                 document.getElementById(
@@ -47,20 +46,18 @@ const CustomFileInput = (props: ICustomFileInput) => {
             ).value = fileList[0].name;
             inputRef.current.value = res.data;
             setFile(fileList[0]);
-            // reader.onloadstart = () => {
-            //     setLoading(true);
-            //     console.log(fileList[0]);
-            // };
-            // reader.onload = () => {};
+            reader.onloadstart = () => {
+                setLoading(true);
+            };
+            reader.onload = () => {};
 
-            // reader.onprogress = ev => {
-            //     setProgressPer(Math.round((ev.loaded / ev.total) * 100));
-            // };
+            reader.onprogress = ev => {
+                setProgressPer(Math.round((ev.loaded / ev.total) * 100));
+            };
 
-            // reader.onloadend = () => setLoading(false);
-            // setFile(fileList[0]);
+            reader.onloadend = () => setLoading(false);
 
-            // reader.readAsText(fileList[0]);
+            reader.readAsText(fileList[0]);
         }
     };
 
@@ -158,7 +155,7 @@ const CustomFileInput = (props: ICustomFileInput) => {
                             >
                                 Upload a file
                             </button>{" "}
-                            <span className="text-ellipsis">
+                            <span className="text-ellipsis overflow-hidden">
                                 or drag and drop here
                             </span>
                         </React.Fragment>

@@ -30,6 +30,7 @@ const JobList = () => {
                 curStatus={selectedStatus}
                 onChange={newStatus => setSelectedStatus(newStatus)}
             />
+
             <ul className="space-y-6">
                 {jobsRes?.data
                     ?.filter(job => job.status === selectedStatus)

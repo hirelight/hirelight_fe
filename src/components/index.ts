@@ -17,6 +17,7 @@ import Pagination from "./Pagination";
 import DatePicker from "./DatePicker";
 import QuestionPicker from "./QuestionPicker";
 import AppFormView from "./ApplicationFormView";
+import QuillEditorProvider from "./QuillEditor/QuillEditorProvider";
 
 export {
     Modal,
@@ -38,4 +39,5 @@ export {
     DatePicker,
     QuestionPicker,
     AppFormView,
+    QuillEditorProvider,
 };

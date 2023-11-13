@@ -5,16 +5,16 @@ import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 import { ButtonOutline, DeleteModal, Portal } from "@/components";
-import { useAppDispatch } from "@/redux/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { delayFunc } from "@/helpers/shareHelpers";
 import { SpinLoading } from "@/icons";
+import { updateJob } from "@/redux/thunks/job.thunk";
 
 const AppFormFooter = () => {
     const dispatch = useAppDispatch();
     const [showModal, setShowModal] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
-    const { jobId } = useParams();
-    const router = useRouter();
+    const job = useAppSelector(state => state.job.data);
 
     const handleShowConfirmModal = () => {
         setShowModal(true);
@@ -23,9 +23,15 @@ const AppFormFooter = () => {
 
     const handleSaveDraft = async () => {
         setLoading(true);
-        await delayFunc(2000);
+        await dispatch(
+            updateJob({
+                ...job,
+                id: job.id,
+                content: JSON.stringify(job.content),
+                applicationForm: JSON.stringify(job.applicationForm),
+            })
+        );
         setLoading(false);
-        toast.success("Update application form success");
     };
 
     return (

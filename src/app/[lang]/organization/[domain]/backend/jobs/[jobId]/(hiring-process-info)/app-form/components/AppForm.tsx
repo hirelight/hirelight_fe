@@ -2,7 +2,8 @@
 
 import React from "react";
 
-import { ButtonOutline } from "@/components";
+import { AppFormView, ButtonOutline } from "@/components";
+import { useAppSelector } from "@/redux/reduxHooks";
 
 import AppFormConfiguration from "./AppFormConfiguration/AppFormConfiguration";
 import AppFormMobileView from "./AppFormMobileView/AppFormMobileView";
@@ -13,6 +14,7 @@ type AppFormProps = {};
 
 const AppForm: React.FC<AppFormProps> = ({}) => {
     const [previewDesktop, setPreviewDesktop] = React.useState(false);
+    const job = useAppSelector(state => state.job.data);
 
     return (
         <div>
@@ -28,7 +30,7 @@ const AppForm: React.FC<AppFormProps> = ({}) => {
                 </ButtonOutline>
             </div>
             {previewDesktop ? (
-                <AppFormDesktopView />
+                <AppFormView data={job} />
             ) : (
                 <form className="drop-shadow-lg">
                     <div className="flex">

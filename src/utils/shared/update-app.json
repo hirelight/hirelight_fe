@@ -1,0 +1,359 @@
+{
+    "id": 3545438,
+    "language": "en",
+    "title": "React JS",
+    "state": "published",
+    "subject_to_gdpr": false,
+    "has_new_requirements": true,
+    "form_structure": {
+        "personal_information": [
+            {
+                "field": "name"
+            },
+            {
+                "field": "email"
+            },
+            {
+                "field": "headline",
+                "id": "headline"
+            },
+            {
+                "field": "phone",
+                "id": "phone"
+            },
+            {
+                "field": "address",
+                "id": "address"
+            },
+            {
+                "field": "avatar",
+                "id": "avatar"
+            }
+        ],
+        "candidate_profile": [
+            {
+                "field": "education",
+                "id": "education"
+            },
+            {
+                "field": "experience",
+                "id": "experience"
+            },
+            {
+                "field": "summary",
+                "id": "summary"
+            },
+            {
+                "field": "resume",
+                "id": "resume"
+            },
+            {
+                "custom": true,
+                "field": "custom",
+                "ref_id": 24719,
+                "id": 24719,
+                "type": "boolean",
+                "enabled": true,
+                "label": "Custom Field",
+                "hint": null,
+                "provider": "candidate",
+                "visibility_mask": 38,
+                "visibility_roles": [
+                    "hiring_manager",
+                    "admin",
+                    "recruiting_admin"
+                ],
+                "visibility_data": [
+                    {
+                        "name": "hiring_manager",
+                        "display_name": "hiring managers",
+                        "selected": true,
+                        "disabled": true
+                    },
+                    {
+                        "name": "simple",
+                        "display_name": "standard members",
+                        "selected": false,
+                        "disabled": false
+                    },
+                    {
+                        "name": "reviewer",
+                        "display_name": "reviewers",
+                        "selected": false,
+                        "disabled": false
+                    },
+                    {
+                        "name": "recruiter",
+                        "display_name": "recruiter",
+                        "selected": false,
+                        "disabled": false
+                    }
+                ],
+                "translations": [
+                    {
+                        "en": {
+                            "label": "Custom Field"
+                        }
+                    }
+                ]
+            }
+        ],
+        "application_details": [
+            {
+                "field": "cover_letter",
+                "id": "cover_letter"
+            }
+        ]
+    },
+    "workplace": "on_site",
+    "save_as_default": false,
+    "form_settings": {
+        "24719": "enabled",
+        "summary": "enabled",
+        "education": "enabled",
+        "experience": "enabled",
+        "resume": "enabled",
+        "phone": "enabled",
+        "headline": "enabled",
+        "address": "enabled",
+        "avatar": "enabled",
+        "cover_letter": "enabled"
+    },
+    "questions_attributes": [
+        {
+            "enabled": true,
+            "body": "Paragraph question",
+            "rejecting": false,
+            "answers_count": null,
+            "position": 0,
+            "destroyable": false,
+            "type": "free_text",
+            "id": 7236522,
+            "required": true,
+            "single_answer": false,
+            "is_edited": false,
+            "original_question": {
+                "enabled": true,
+                "body": "Paragraph question",
+                "rejecting": false,
+                "answers_count": null,
+                "position": 0,
+                "destroyable": false,
+                "type": "free_text",
+                "id": 7236522,
+                "required": true,
+                "single_answer": false,
+                "is_edited": true,
+                "choices_attributes": []
+            },
+            "choices_attributes": []
+        },
+        {
+            "enabled": true,
+            "body": "Short answer question",
+            "rejecting": false,
+            "answers_count": null,
+            "position": 1,
+            "destroyable": false,
+            "type": "short_text",
+            "id": 7236523,
+            "required": true,
+            "single_answer": false,
+            "choices_attributes": []
+        },
+        {
+            "enabled": true,
+            "body": "Yes no question with disqualify",
+            "rejecting": true,
+            "answers_count": null,
+            "position": 2,
+            "destroyable": false,
+            "type": "boolean",
+            "id": 7236524,
+            "required": true,
+            "single_answer": false,
+            "choices_attributes": []
+        },
+        {
+            "enabled": true,
+            "body": "Yse no without disqualify",
+            "rejecting": false,
+            "answers_count": null,
+            "position": 3,
+            "destroyable": false,
+            "type": "boolean",
+            "id": 7236525,
+            "required": true,
+            "single_answer": false,
+            "choices_attributes": []
+        },
+        {
+            "enabled": true,
+            "body": "Dropdown question",
+            "rejecting": false,
+            "answers_count": null,
+            "position": 4,
+            "destroyable": false,
+            "type": "dropdown",
+            "id": 7236526,
+            "required": true,
+            "single_answer": false,
+            "choices_attributes": [
+                {
+                    "id": 3597293,
+                    "body": "ans 1",
+                    "position": 0,
+                    "enabled": true
+                },
+                {
+                    "id": 3597294,
+                    "body": "ans 2",
+                    "position": 1,
+                    "enabled": true
+                },
+                {
+                    "id": 3597295,
+                    "body": "ans 3",
+                    "position": 2,
+                    "enabled": true
+                },
+                {
+                    "id": 3597296,
+                    "body": "ans4",
+                    "position": 3,
+                    "enabled": true
+                }
+            ]
+        },
+        {
+            "enabled": true,
+            "body": "Multi ple quest one only",
+            "rejecting": false,
+            "answers_count": null,
+            "position": 5,
+            "destroyable": false,
+            "single_answer": true,
+            "type": "multiple_choice",
+            "id": 7236527,
+            "required": true,
+            "choices_attributes": [
+                {
+                    "id": 3597297,
+                    "body": "as1",
+                    "position": 0,
+                    "enabled": true
+                },
+                {
+                    "id": 3597298,
+                    "body": "as2",
+                    "position": 1,
+                    "enabled": true
+                },
+                {
+                    "id": 3597299,
+                    "body": "as3",
+                    "position": 2,
+                    "enabled": true
+                }
+            ]
+        },
+        {
+            "enabled": true,
+            "body": "Multiple ques",
+            "rejecting": false,
+            "answers_count": null,
+            "position": 6,
+            "destroyable": false,
+            "single_answer": false,
+            "type": "multiple_choice",
+            "id": 7236528,
+            "required": true,
+            "choices_attributes": [
+                {
+                    "id": 3597300,
+                    "body": "as1",
+                    "position": 0,
+                    "enabled": true
+                },
+                {
+                    "id": 3597301,
+                    "body": "as2",
+                    "position": 1,
+                    "enabled": true
+                },
+                {
+                    "id": 3597302,
+                    "body": "as3",
+                    "position": 2,
+                    "enabled": true
+                },
+                {
+                    "id": 3597303,
+                    "body": "as4",
+                    "position": 3,
+                    "enabled": true
+                }
+            ]
+        },
+        {
+            "enabled": true,
+            "body": "Number ques",
+            "rejecting": false,
+            "answers_count": null,
+            "position": 7,
+            "destroyable": false,
+            "type": "numeric",
+            "id": 7236530,
+            "required": true,
+            "single_answer": false,
+            "choices_attributes": []
+        },
+        {
+            "enabled": true,
+            "body": "Date question",
+            "rejecting": false,
+            "answers_count": null,
+            "position": 8,
+            "destroyable": false,
+            "type": "date",
+            "id": 7236529,
+            "required": true,
+            "single_answer": false,
+            "choices_attributes": []
+        },
+        {
+            "enabled": true,
+            "body": "File upload",
+            "rejecting": false,
+            "answers_count": null,
+            "position": 9,
+            "destroyable": false,
+            "type": "file",
+            "id": 7236531,
+            "required": true,
+            "single_answer": false,
+            "choices_attributes": []
+        },
+        {
+            "position": 10,
+            "type": "boolean",
+            "single_answer": false,
+            "enabled": true,
+            "rejecting": false,
+            "required": true,
+            "is_edited": false,
+            "original_question": {
+                "position": 10,
+                "type": "boolean",
+                "single_answer": false,
+                "enabled": true,
+                "rejecting": false,
+                "required": true,
+                "is_edited": true,
+                "body": "Tessting",
+                "choices_attributes": []
+            },
+            "body": "Tessting"
+        }
+    ]
+}

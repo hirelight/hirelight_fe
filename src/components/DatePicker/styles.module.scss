@@ -20,4 +20,8 @@
     &.selected {
         @apply bg-blue-700 text-white dark:bg-blue-600;
     }
+
+    &.disabled {
+        @apply text-neutral-500 cursor-not-allowed;
+    }
 }

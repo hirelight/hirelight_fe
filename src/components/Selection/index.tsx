@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { DetailedHTMLProps, InputHTMLAttributes } from "react";
 import { CheckIcon } from "@heroicons/react/24/solid";
 
 import { useOutsideClick } from "@/hooks/useClickOutside";
@@ -23,29 +23,40 @@ const toBottom: React.CSSProperties = {
     visibility: "visible",
 };
 
-interface ISelection<T = any> {
+type CustomSelection<T = any> = Omit<
+    DetailedHTMLProps<
+        InputHTMLAttributes<HTMLSelectElement>,
+        HTMLSelectElement
+    >,
+    "value" | "onChange"
+> & {
+    value?: string | string[];
+    onChange: (value: T) => void;
+};
+
+interface ISelection<T = any> extends CustomSelection<T> {
     title: string;
     placeholder?: string;
-    value?: string | string[];
     required?: boolean;
-    onChange: (value: T) => void;
     className?: string;
     labelClassName?: string;
     items: { label: string; value: T }[];
     multiple?: boolean;
 }
 
-const Selection = <T extends object | any>({
-    title,
-    placeholder = "Select...",
-    items,
-    value,
-    required = false,
-    onChange,
-    className,
-    labelClassName,
-    multiple = false,
-}: ISelection<T>) => {
+const Selection = <T extends object | any>(props: ISelection<T>) => {
+    const {
+        title,
+        placeholder = "Select...",
+        items,
+        value,
+        required = false,
+        onChange,
+        className,
+        labelClassName,
+        multiple = false,
+        id,
+    } = props;
     const [show, setShow] = React.useState(false);
     const [search, setSearch] = React.useState("");
     const [selected, setSelected] = React.useState<string[]>([]);
@@ -94,6 +105,13 @@ const Selection = <T extends object | any>({
         onChange(value);
         setShow(false);
         dropdownRef.current!!.removeAttribute("style");
+        if (props.id) {
+            const selectEl = document.getElementById(
+                props.id
+            ) as HTMLSelectElement;
+
+            selectEl.value = value;
+        }
     };
 
     React.useEffect(() => {
@@ -174,7 +192,11 @@ const Selection = <T extends object | any>({
                             </button>
                         </li>
                         {items
-                            .filter(item => item.label.includes(search))
+                            .filter(item =>
+                                item.label
+                                    .toLowerCase()
+                                    .includes(search.toLowerCase())
+                            )
                             .map((item, index: number) => {
                                 const isSelected = selected.includes(
                                     item.label
@@ -205,6 +227,13 @@ const Selection = <T extends object | any>({
                             })}
                     </ul>
                 </div>
+                <select name={props.name} id={props.id} className="sr-only">
+                    {items.map((item, index) => (
+                        <option tabIndex={-1} key={index} value={item.label}>
+                            {item.label}
+                        </option>
+                    ))}
+                </select>
             </div>
         </div>
     );

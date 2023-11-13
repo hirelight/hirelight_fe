@@ -2,28 +2,61 @@
 
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import LoadingIndicator from "@/components/LoadingIndicator";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
-import { getJobById } from "@/redux/thunks/job.thunk";
+import { getJobById, mergeAppFormFields } from "@/redux/thunks/job.thunk";
+import jobServices from "@/services/job/job.service";
+import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
+import { setJob } from "@/redux/slices/job.slice";
 
 const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
     const { jobId } = useParams();
     const dispatch = useAppDispatch();
-    const { data } = useAppSelector(state => state.job);
-    const [isLoading, setIsLoading] = useState(false);
+    const {
+        data: queryRes,
+        error,
+        isSuccess,
+        isLoading,
+    } = useQuery({
+        queryKey: [`job-${jobId}`],
+        queryFn: async () => {
+            const [jobAppFormRes, appFormTemplateRes] = await Promise.all([
+                jobServices.getByIdAsync(jobId as string),
+                appFormTemplateServices.getDefaultAppFormTemplate(),
+            ]);
+            const jobAppFormParsed = JSON.parse(
+                jobAppFormRes.data.applicationForm
+            );
+            const appFormTemplateParsed = JSON.parse(
+                appFormTemplateRes.data.content
+            );
+            console.log(jobAppFormParsed);
+
+            const mergeAppForm = mergeAppFormFields(
+                jobAppFormParsed,
+                appFormTemplateParsed.app_form
+            );
+            return {
+                ...jobAppFormRes.data,
+                applicationForm: JSON.stringify(mergeAppForm),
+            };
+        },
+    });
 
     useEffect(() => {
-        const fetchJob = async () => {
-            setIsLoading(true);
-            await dispatch(getJobById(parseInt(jobId as string)));
-            setIsLoading(false);
-        };
+        if (isSuccess)
+            dispatch(
+                setJob({
+                    ...queryRes,
+                    content: JSON.parse(queryRes.content),
+                    applicationForm: JSON.parse(queryRes.applicationForm),
+                })
+            );
+    }, [isSuccess, queryRes, dispatch]);
 
-        fetchJob();
-    }, [jobId, dispatch]);
-
-    if (data.id === 0 || isLoading)
+    if (isLoading)
         return (
             <div className="p-12 flex items-center justify-center">
                 <LoadingIndicator />

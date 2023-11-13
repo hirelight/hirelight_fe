@@ -59,23 +59,25 @@ const AppFormSectionField: React.FC<AppFormSectionFieldProps> = ({
     return (
         <div className={`py-6 flex justify-between items-center `}>
             <span className="">{data.label}</span>
-            <div className="flex gap-2">
-                {(["Name", "Email"].includes(data.label)
-                    ? ["Mandatory"]
-                    : ["Mandatory", "Optional", "Off"]
-                ).map((option: any) => (
-                    <button
-                        key={option}
-                        type="button"
-                        className={`${styles.option__wrapper} ${
-                            selected === option ? styles.active : ""
-                        }`}
-                        onClick={handleSelectType.bind(null, option)}
-                    >
-                        {option}
-                    </button>
-                ))}
-            </div>
+            {!data.custom && (
+                <div className="flex gap-2">
+                    {(["Name", "Email"].includes(data.label)
+                        ? ["Mandatory"]
+                        : ["Mandatory", "Optional", "Off"]
+                    ).map((option: any) => (
+                        <button
+                            key={option}
+                            type="button"
+                            className={`${styles.option__wrapper} ${
+                                selected === option ? styles.active : ""
+                            }`}
+                            onClick={handleSelectType.bind(null, option)}
+                        >
+                            {option}
+                        </button>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

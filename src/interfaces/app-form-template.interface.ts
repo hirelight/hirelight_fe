@@ -20,7 +20,6 @@ export interface IAppFormTemplate {
     app_form: IAppFormTemplateSection[];
 }
 export interface IAppFormTemplateField extends IAppFormField {
-    custom: boolean;
     appFormSectionId?: string;
 }
 

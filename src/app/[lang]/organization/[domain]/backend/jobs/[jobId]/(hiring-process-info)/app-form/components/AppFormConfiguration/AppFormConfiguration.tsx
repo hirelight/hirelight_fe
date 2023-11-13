@@ -19,7 +19,6 @@ const AppFormConfiguration: React.FC<AppFormConfigurationProps> = ({}) => {
     const appFormSections = useAppSelector(
         state => state.job.data.applicationForm
     );
-    console.log(appFormSections);
     return (
         <React.Fragment>
             <Portal>

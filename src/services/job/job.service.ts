@@ -39,7 +39,7 @@ const getListAsync = async (params?: any): Promise<IResponse<IJobDto[]>> => {
     }
 };
 
-const getByIdAsync = async (id: number): Promise<IResponse<IJobDto>> => {
+const getByIdAsync = async (id: string): Promise<IResponse<IJobDto>> => {
     try {
         const res = await interceptor.get<IResponse<IJobDto>>(
             `${endpoints.JOBPOSTS}/${id}`

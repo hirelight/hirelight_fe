@@ -1,0 +1,344 @@
+[
+    {
+        "name": "Personal information",
+        "fields": [
+            {
+                "id": "firstname",
+                "required": true,
+                "label": "First name",
+                "type": "text",
+                "maxLength": 127
+            },
+            {
+                "id": "lastname",
+                "required": true,
+                "label": "Last name",
+                "type": "text",
+                "maxLength": 127
+            },
+            {
+                "id": "email",
+                "required": true,
+                "label": "Email",
+                "type": "email",
+                "maxLength": 255
+            },
+            {
+                "id": "headline",
+                "required": false,
+                "label": "Headline",
+                "type": "text",
+                "maxLength": 255
+            },
+            {
+                "id": "phone",
+                "required": false,
+                "label": "Phone",
+                "type": "phone",
+                "helper": "The hiring team may use this number to contact you about this job.",
+                "maxLength": 255
+            },
+            {
+                "id": "address",
+                "required": false,
+                "label": "Address",
+                "type": "text"
+            },
+            {
+                "id": "avatar",
+                "required": false,
+                "label": "Photo",
+                "type": "file",
+                "supportedFileTypes": [".jpg", ".jpeg", ".gif", ".png"],
+                "supportedMimeTypes": ["image/jpeg", "image/gif", "image/png"],
+                "maxFileSize": 12000000
+            }
+        ]
+    },
+    {
+        "name": "Profile",
+        "fields": [
+            {
+                "id": "education",
+                "required": false,
+                "label": "Education",
+                "type": "group",
+                "fields": [
+                    {
+                        "id": "school",
+                        "required": true,
+                        "label": "School",
+                        "type": "text",
+                        "maxLength": 255
+                    },
+                    {
+                        "id": "field_of_study",
+                        "required": false,
+                        "label": "Field of study",
+                        "type": "text",
+                        "maxLength": 255
+                    },
+                    {
+                        "id": "degree",
+                        "required": false,
+                        "label": "Degree",
+                        "type": "text",
+                        "maxLength": 255
+                    },
+                    {
+                        "id": "start_date",
+                        "required": false,
+                        "label": "Start date",
+                        "type": "date"
+                    },
+                    {
+                        "id": "end_date",
+                        "required": false,
+                        "label": "End date",
+                        "type": "date"
+                    }
+                ]
+            },
+            {
+                "id": "experience",
+                "required": false,
+                "label": "Experience",
+                "type": "group",
+                "fields": [
+                    {
+                        "id": "title",
+                        "required": true,
+                        "label": "Title",
+                        "type": "text",
+                        "maxLength": 255
+                    },
+                    {
+                        "id": "company",
+                        "required": false,
+                        "label": "Company",
+                        "type": "text",
+                        "maxLength": 255
+                    },
+                    {
+                        "id": "industry",
+                        "required": false,
+                        "label": "Industry",
+                        "type": "text",
+                        "maxLength": 255
+                    },
+                    {
+                        "id": "summary",
+                        "required": false,
+                        "label": "Summary",
+                        "type": "paragraph"
+                    },
+                    {
+                        "id": "start_date",
+                        "required": false,
+                        "label": "Start date",
+                        "type": "date"
+                    },
+                    {
+                        "id": "end_date",
+                        "required": false,
+                        "label": "End date",
+                        "type": "date"
+                    },
+                    {
+                        "id": "current",
+                        "required": false,
+                        "label": "I currently work here",
+                        "type": "boolean"
+                    }
+                ]
+            },
+            {
+                "id": "summary",
+                "required": false,
+                "label": "Summary",
+                "type": "paragraph"
+            },
+            {
+                "id": "resume",
+                "required": false,
+                "label": "Resume",
+                "type": "file",
+                "supportedFileTypes": [".pdf", ".doc", ".docx", ".odt", ".rtf"],
+                "supportedMimeTypes": [
+                    "application/pdf",
+                    "application/msword",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "application/vnd.oasis.opendocument.text",
+                    "application/rtf"
+                ],
+                "maxFileSize": 12000000
+            },
+            {
+                "id": "CA_24719",
+                "required": false,
+                "label": "Custom Field",
+                "type": "boolean"
+            }
+        ]
+    },
+    {
+        "name": "Details",
+        "fields": [
+            {
+                "id": "cover_letter",
+                "required": false,
+                "label": "Cover letter",
+                "type": "paragraph"
+            },
+            {
+                "id": "QA_7236522",
+                "required": true,
+                "label": "Paragraph question",
+                "type": "paragraph"
+            },
+            {
+                "id": "QA_7236523",
+                "required": true,
+                "label": "Short answer question",
+                "type": "text",
+                "maxLength": 127
+            },
+            {
+                "id": "QA_7236524",
+                "required": true,
+                "label": "Yes no question with disqualify",
+                "type": "boolean"
+            },
+            {
+                "id": "QA_7236525",
+                "required": true,
+                "label": "Yse no without disqualify",
+                "type": "boolean"
+            },
+            {
+                "id": "QA_7236526",
+                "required": true,
+                "label": "Dropdown question",
+                "type": "dropdown",
+                "options": [
+                    {
+                        "name": "3597293",
+                        "value": "ans 1"
+                    },
+                    {
+                        "name": "3597294",
+                        "value": "ans 2"
+                    },
+                    {
+                        "name": "3597295",
+                        "value": "ans 3"
+                    },
+                    {
+                        "name": "3597296",
+                        "value": "ans4"
+                    }
+                ],
+                "singleOption": true
+            },
+            {
+                "id": "QA_7236527",
+                "required": true,
+                "label": "Multi ple quest one only",
+                "type": "multiple",
+                "options": [
+                    {
+                        "name": "3597297",
+                        "value": "as1"
+                    },
+                    {
+                        "name": "3597298",
+                        "value": "as2"
+                    },
+                    {
+                        "name": "3597299",
+                        "value": "as3"
+                    }
+                ],
+                "singleOption": true
+            },
+            {
+                "id": "QA_7236528",
+                "required": true,
+                "label": "Multiple ques",
+                "type": "multiple",
+                "options": [
+                    {
+                        "name": "3597300",
+                        "value": "as1"
+                    },
+                    {
+                        "name": "3597301",
+                        "value": "as2"
+                    },
+                    {
+                        "name": "3597302",
+                        "value": "as3"
+                    },
+                    {
+                        "name": "3597303",
+                        "value": "as4"
+                    }
+                ],
+                "singleOption": false
+            },
+            {
+                "id": "QA_7236529",
+                "required": true,
+                "label": "Date question",
+                "type": "date"
+            },
+            {
+                "id": "QA_7236530",
+                "required": true,
+                "label": "Number ques",
+                "type": "number",
+                "max": 9999999999999
+            },
+            {
+                "id": "QA_7236531",
+                "required": true,
+                "label": "File upload",
+                "type": "file",
+                "supportedFileTypes": [
+                    ".pdf",
+                    ".doc",
+                    ".docx",
+                    ".odt",
+                    ".rtf",
+                    ".ppt",
+                    ".pptx",
+                    ".png",
+                    ".jpg",
+                    ".jpeg",
+                    ".gif",
+                    ".tiff",
+                    ".xlsx",
+                    ".xls",
+                    ".zip"
+                ],
+                "supportedMimeTypes": [
+                    "application/pdf",
+                    "application/msword",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "application/vnd.oasis.opendocument.text",
+                    "application/rtf",
+                    "application/vnd.ms-powerpoint",
+                    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                    "image/png",
+                    "image/jpeg",
+                    "image/gif",
+                    "image/tiff",
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "application/vnd.ms-excel",
+                    "application/zip"
+                ],
+                "maxFileSize": 20000000
+            }
+        ]
+    }
+]

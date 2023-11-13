@@ -1,9 +1,15 @@
 import { TrashIcon } from "@heroicons/react/24/solid";
 import React from "react";
 
-import { CustomFileInput, CustomInput, CustomTextArea } from "@/components";
+import {
+    CustomFileInput,
+    CustomInput,
+    CustomTextArea,
+    DatePicker,
+    Selection,
+} from "@/components";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { IAppFormField, IAppFormSection } from "@/interfaces";
+import { IAppFormField, IAppFormSection, ICustomField } from "@/interfaces";
 import LoadingIndicator from "@/components/LoadingIndicator";
 
 type AppFormMobileSectionProps = {};
@@ -44,6 +50,30 @@ const AppFormMobileSection: React.FC<AppFormMobileSectionProps> = ({}) => {
                             type={field.type}
                             required={field.required}
                         />
+                    </div>
+                );
+            case "boolean":
+                return (
+                    <div key={field.label} className=" mb-6">
+                        <YesNoInput field={field as ICustomField} />
+                    </div>
+                );
+            case "multiple_choice":
+                return (
+                    <div key={field.id} className="mb-6">
+                        <MultipleChoiceInpuit field={field as ICustomField} />
+                    </div>
+                );
+            case "date":
+                return (
+                    <div key={field.id} className="mb-6">
+                        <DateInput field={field as ICustomField} />
+                    </div>
+                );
+            case "dropdown":
+                return (
+                    <div key={field.id} className="mb-6">
+                        <SelectionInput field={field as ICustomField} />
                     </div>
                 );
             default:
@@ -118,3 +148,119 @@ const AppFormMobileSection: React.FC<AppFormMobileSectionProps> = ({}) => {
 };
 
 export default AppFormMobileSection;
+
+const DateInput = ({ field }: { field: ICustomField }) => {
+    return (
+        <>
+            <label
+                htmlFor={field.id}
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+                {field.required && <span className="text-red-500 mr-1">*</span>}
+                {field.label}
+            </label>
+            <DatePicker id={field.id} onChange={() => {}} />
+        </>
+    );
+};
+
+const SelectionInput = ({ field }: { field: ICustomField }) => {
+    return (
+        <Selection
+            title={field.label}
+            id={field.id}
+            items={field.choices_attributes.map(item => ({
+                label: item.name,
+                value: item.name,
+            }))}
+            placeholder="Selection an option..."
+            onChange={() => {}}
+        />
+    );
+};
+
+const MultipleChoiceInpuit = ({ field }: { field: ICustomField }) => {
+    return (
+        <>
+            <label
+                htmlFor={field.id}
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+                {field.required && <span className="text-red-500 mr-1">*</span>}
+                {field.label}
+            </label>
+            <fieldset
+                role="radiogroup"
+                data-ui={field.id}
+                className="space-y-2"
+            >
+                {field.choices_attributes.map(choice => (
+                    <div key={choice.id} className="flex items-center">
+                        <input
+                            id={choice.id}
+                            type={field.single_answer ? "radio" : "checkbox"}
+                            value={choice.name}
+                            name={field.single_answer ? field.id : undefined}
+                            tabIndex={-1}
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                        />
+                        <label
+                            htmlFor={choice.id}
+                            className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                        >
+                            {choice.name}
+                        </label>
+                    </div>
+                ))}
+            </fieldset>
+        </>
+    );
+};
+
+const YesNoInput = ({ field }: { field: ICustomField }) => {
+    return (
+        <>
+            <label
+                htmlFor={field.id}
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+                {field.required && <span className="text-red-500 mr-1">*</span>}
+                {field.label}
+            </label>
+            <fieldset role="radiogroup" data-ui={field.id} className="flex">
+                <div className="flex items-center px-4 border border-gray-300 dark:border-gray-700 rounded-tl rounded-bl">
+                    <input
+                        id={`${field.id}-yes`}
+                        type="radio"
+                        value="true"
+                        tabIndex={-1}
+                        name={field.id}
+                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    />
+                    <label
+                        htmlFor={`${field.id}-yes`}
+                        className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                        Yes
+                    </label>
+                </div>
+                <div className="flex items-center px-4 border border-gray-300 dark:border-gray-700 rounded-tr rounded-br">
+                    <input
+                        id={`${field.id}-no`}
+                        type="radio"
+                        value="false"
+                        tabIndex={-1}
+                        name={field.id}
+                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    />
+                    <label
+                        htmlFor={`${field.id}-no`}
+                        className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >
+                        No
+                    </label>
+                </div>
+            </fieldset>
+        </>
+    );
+};

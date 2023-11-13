@@ -8,6 +8,6 @@ export const getProfileById = createAsyncThunk(
         const res =
             await applicantProfileServices.getJobPostProfileById(candidateId);
 
-        return { ...res, data: res.data[0] };
+        return { ...res, data: res.data[1] };
     }
 );

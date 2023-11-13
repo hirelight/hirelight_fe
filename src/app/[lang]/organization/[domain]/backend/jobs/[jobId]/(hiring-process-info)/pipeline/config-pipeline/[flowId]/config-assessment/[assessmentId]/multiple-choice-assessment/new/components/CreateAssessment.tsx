@@ -5,6 +5,7 @@ import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
+import { toast } from "react-toastify";
 
 import {
     Button,
@@ -30,12 +31,13 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
 type ICreateMCAssessment = Omit<IEditAssessmentDto, "content" | "query"> & {
     content: {
         welcomeNote: string;
-        questions: IQuestionAnswerDto[];
-        shuffleQuestion: boolean;
-        shuffleAnswer: boolean;
-        autoEvaluate: {
-            enabled: boolean;
-            accuracy: string | null;
+        config: {
+            shuffleQuestion: boolean;
+            shuffleAnswer: boolean;
+            autoEvaluate: {
+                enabled: boolean;
+                accuracy: string | null;
+            };
         };
     };
     query: {
@@ -61,12 +63,13 @@ const CreateAssessment = () => {
         description: "",
         content: {
             welcomeNote: "",
-            questions: [],
-            shuffleQuestion: false,
-            shuffleAnswer: false,
-            autoEvaluate: {
-                enabled: false,
-                accuracy: "",
+            config: {
+                shuffleQuestion: false,
+                shuffleAnswer: false,
+                autoEvaluate: {
+                    enabled: false,
+                    accuracy: "",
+                },
             },
         },
         query: {
@@ -90,7 +93,10 @@ const CreateAssessment = () => {
                 ...formState,
                 content: JSON.stringify(formState.content),
                 query: JSON.stringify(formState.query),
+                assessmentQuestionAnswerSetContent:
+                    JSON.stringify(pickedQuestions),
             });
+            toast.success(res.message);
         } catch (error) {
             console.error(error);
         }
@@ -116,6 +122,10 @@ const CreateAssessment = () => {
                     assessmentQuestionAnswerSetContent:
                         res.data.assessmentQuestionAnswerSetContent ?? "",
                 }));
+                if (res.data.assessmentQuestionAnswerSetContent)
+                    setPickedQuestions(
+                        JSON.parse(res.data.assessmentQuestionAnswerSetContent)
+                    );
             } catch (error) {
                 console.error(error);
             }
@@ -130,15 +140,9 @@ const CreateAssessment = () => {
                 <QuestionPickerModal
                     isOpen={showQuestionPicker}
                     onClose={() => setShowQuestionPicker(false)}
-                    pickedQuestions={formState.content.questions}
+                    pickedQuestions={pickedQuestions}
                     onPickedChange={questions => {
-                        setFormState(prev => ({
-                            ...prev,
-                            content: {
-                                ...prev.content,
-                                questions: questions,
-                            },
-                        }));
+                        setPickedQuestions(questions);
                         setShowQuestionPicker(false);
                     }}
                 />
@@ -214,14 +218,12 @@ const CreateAssessment = () => {
                         Question
                     </h3>
                     <ul className={"flex flex-col gap-2 mb-4 px-4 xl:px-6"}>
-                        {formState.content.questions.map((item, index) => (
+                        {pickedQuestions.map((item, index) => (
                             <li key={item.id}>
                                 <QuestionPickerCard
                                     data={item}
                                     questionNo={index}
-                                    pickedQuestions={
-                                        formState.content.questions
-                                    }
+                                    pickedQuestions={pickedQuestions}
                                 />
                             </li>
                         ))}
@@ -255,7 +257,7 @@ const CreateAssessment = () => {
                                         value: item,
                                     }))}
                                     value={
-                                        formState.content.autoEvaluate
+                                        formState.content.config.autoEvaluate
                                             .accuracy ?? ""
                                     }
                                     onChange={value =>
@@ -263,9 +265,12 @@ const CreateAssessment = () => {
                                             ...formState,
                                             content: {
                                                 ...formState.content,
-                                                autoEvaluate: {
-                                                    enabled: true,
-                                                    accuracy: value,
+                                                config: {
+                                                    ...formState.content.config,
+                                                    autoEvaluate: {
+                                                        enabled: true,
+                                                        accuracy: value,
+                                                    },
                                                 },
                                             },
                                         })
@@ -434,14 +439,19 @@ const CreateAssessment = () => {
                                     type="checkbox"
                                     value=""
                                     className="sr-only peer"
-                                    checked={formState.content.shuffleQuestion}
+                                    checked={
+                                        formState.content.config.shuffleQuestion
+                                    }
                                     onChange={e =>
                                         setFormState({
                                             ...formState,
                                             content: {
                                                 ...formState.content,
-                                                shuffleQuestion:
-                                                    e.target.checked,
+                                                config: {
+                                                    ...formState.content.config,
+                                                    shuffleQuestion:
+                                                        e.target.checked,
+                                                },
                                             },
                                         })
                                     }
@@ -465,13 +475,19 @@ const CreateAssessment = () => {
                                     type="checkbox"
                                     value=""
                                     className="sr-only peer"
-                                    checked={formState.content.shuffleAnswer}
+                                    checked={
+                                        formState.content.config.shuffleAnswer
+                                    }
                                     onChange={e =>
                                         setFormState({
                                             ...formState,
                                             content: {
                                                 ...formState.content,
-                                                shuffleAnswer: e.target.checked,
+                                                config: {
+                                                    ...formState.content.config,
+                                                    shuffleAnswer:
+                                                        e.target.checked,
+                                                },
                                             },
                                         })
                                     }

@@ -1,0 +1,137 @@
+{
+    "candidate": [
+        {
+            "name": "firstname",
+            "value": "Nguyen"
+        },
+        {
+            "name": "lastname",
+            "value": "Kien"
+        },
+        {
+            "name": "email",
+            "value": "ngkien299@gmail.com"
+        },
+        {
+            "name": "headline",
+            "value": "This is my Head line"
+        },
+        {
+            "name": "phone",
+            "value": "+84818000299"
+        },
+        {
+            "name": "address",
+            "value": "Block B Flora Fuji duong D1, Phuoc Long B, q9"
+        },
+        {
+            "name": "avatar",
+            "value": {
+                "url": "https://workable-application-form.s3.amazonaws.com/tmp/ttl-1d/production/93a56bcd-86e0-9408-95fb-2d307b169319?AWSAccessKeyId=AKIA27KPZUMHP7SV6K43&Expires=1699850302&Signature=hsoWfluItcppxp4XAgB80SmmXuY%3D",
+                "name": "Logo new gold@500x.png"
+            }
+        },
+        {
+            "name": "education",
+            "value": [
+                {
+                    "school": "Second University",
+                    "field_of_study": "Business Administration",
+                    "degree": "Bacnchelor",
+                    "start_date": "2022-02-01T00:00:00.000Z",
+                    "end_date": "2023-09-30T00:00:00.000Z"
+                },
+                {
+                    "school": "First school",
+                    "field_of_study": "SOftware Engineering Banchelor",
+                    "degree": "Some degree",
+                    "start_date": "2021-11-01T00:00:00.000Z",
+                    "end_date": "2023-06-30T00:00:00.000Z"
+                }
+            ]
+        },
+        {
+            "name": "experience",
+            "value": [
+                {
+                    "title": "Softwrae 2",
+                    "company": "company2",
+                    "industry": "industry2",
+                    "summary": "Summary 2",
+                    "start_date": "2021-01-01T00:00:00.000Z",
+                    "end_date": "2023-05-31T00:00:00.000Z"
+                },
+                {
+                    "title": "Soft ware 1",
+                    "company": "Company 1",
+                    "industry": "Industry 1",
+                    "summary": "Some summary",
+                    "start_date": "2022-01-01T00:00:00.000Z",
+                    "current": true
+                }
+            ]
+        },
+        {
+            "name": "summary",
+            "value": "Some summary"
+        },
+        {
+            "name": "resume",
+            "value": {
+                "url": "https://workable-application-form.s3.amazonaws.com/tmp/ttl-1d/production/b4993eee-b151-94e0-8641-fbb684e55c20?AWSAccessKeyId=AKIA27KPZUMHP7SV6K43&Expires=1699850497&Signature=AekkKXtzX2qFcAzcOrHsNjiWilE%3D",
+                "name": "Kien Nguyen.pdf"
+            }
+        },
+        {
+            "name": "CA_24719",
+            "value": "true"
+        },
+        {
+            "name": "cover_letter",
+            "value": "Some cover letter "
+        },
+        {
+            "name": "QA_7236522",
+            "value": "Some paragraph"
+        },
+        {
+            "name": "QA_7236523",
+            "value": "Shome short answer"
+        },
+        {
+            "name": "QA_7236524",
+            "value": "false"
+        },
+        {
+            "name": "QA_7236525",
+            "value": "true"
+        },
+        {
+            "name": "QA_7236526",
+            "value": "3597293"
+        },
+        {
+            "name": "QA_7236527",
+            "value": ["3597297"]
+        },
+        {
+            "name": "QA_7236528",
+            "value": ["3597300", "3597301"]
+        },
+        {
+            "name": "QA_7236529",
+            "value": "2023-11-08T00:00:00.000Z"
+        },
+        {
+            "name": "QA_7236530",
+            "value": 1234
+        },
+        {
+            "name": "QA_7236531",
+            "value": {
+                "url": "https://workable-application-form.s3.amazonaws.com/tmp/ttl-1d/production/2f1c8beb-3569-9368-88d4-e3ae70c42a9a?AWSAccessKeyId=AKIA27KPZUMHP7SV6K43&Expires=1699850556&Signature=ZpoVPqYeZCuz0qebn%2BxoLATOVZk%3D",
+                "name": "GFA23SE80_Checklist_CapstoneProjectReview2.xlsx"
+            }
+        }
+    ]
+}

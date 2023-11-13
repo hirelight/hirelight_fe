@@ -18,6 +18,7 @@ import { IJobDto } from "@/services/job/job.interface";
 import { checkResErr } from "@/helpers/resErrHelpers";
 import getQueryClient from "@/utils/react-query/getQueryClient";
 import { IResponse } from "@/interfaces/service.interface";
+import { DatePicker } from "@/components";
 
 import JobCard from "./components/JobCard";
 import HiringStageBar from "./components/HiringStageBar";

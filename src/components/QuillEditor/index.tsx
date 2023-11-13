@@ -31,9 +31,10 @@ const publicSans = Public_Sans({
 });
 
 interface IQuillEditor {
+    id?: string;
     value?: string;
     placeholder?: string;
-    onChange?: (content: string) => void;
+    onChange?: (innerHtml: string, text: string) => void;
     theme?: "snow" | "bubble";
     className?: string;
     readOnly?: boolean;
@@ -43,9 +44,11 @@ interface IQuillEditor {
             visibile: boolean;
         };
     };
+    label?: string;
 }
 
 const QuillEditor = ({
+    id,
     theme = "snow",
     value = "",
     placeholder,
@@ -53,6 +56,7 @@ const QuillEditor = ({
     className = "",
     readOnly = false,
     required = false,
+    label,
     config = {
         toolbar: {
             visibile: true,
@@ -67,34 +71,35 @@ const QuillEditor = ({
     const editorRef = React.useRef<HTMLDivElement>(null);
     const quillInstance = React.useRef<Quill | null>(null);
     const toolbarRef = React.useRef<HTMLDivElement>(null);
-    const resizeRef = React.useRef<HTMLDivElement>(null);
 
     const [fullscreen, setFullscreen] = React.useState(false);
-
-    const [mousePos, setMousePos] = React.useState({
-        x: 0,
-        y: 0,
-    });
 
     const handleTextChange = React.useCallback(
         function (delta: any, oldDelta: any, source: any) {
             if (source == "api") {
-                console.log("An API call triggered this change.");
-                console.log(quillInstance.current!!.root.innerHTML);
-                if (onChange) {
-                    const editorContent =
-                        quillInstance.current!!.root.innerHTML;
-                    onChange(editorContent);
+                if (quillInstance.current) {
+                    if (onChange) {
+                        const editorContent =
+                            quillInstance.current.root.innerHTML;
+                        const textContent =
+                            quillInstance.current.root.textContent ?? "";
+                        onChange(editorContent, textContent);
+                    }
                 }
             } else if (source == "user") {
-                if (onChange) {
-                    const editorContent =
-                        quillInstance.current!!.root.innerHTML;
-                    onChange(editorContent);
+                if (quillInstance.current) {
+                    if (onChange) {
+                        const editorContent =
+                            quillInstance.current.root.innerHTML;
+                        const textContent =
+                            quillInstance.current.root.textContent ?? "";
+
+                        onChange(editorContent, textContent);
+                    }
                 }
             }
         },
-        [onChange]
+        [id, onChange]
     );
 
     const uploadImage = async (file: File): Promise<string | null> => {
@@ -195,49 +200,14 @@ const QuillEditor = ({
         };
     }, [customImageHandler, handleTextChange, placeholder, readOnly, value]);
 
-    // React.useEffect(() => {
-    //     if (quillInstance.current) {
-    //         const imgEls = editorRef.current?.querySelectorAll("img");
-    //         imgEls?.forEach((imgEl: HTMLImageElement) => {
-    //             const {
-    //                 x: editorX,
-    //                 y: editorY,
-    //                 width: edtWidht,
-    //                 height: edtHeight,
-    //             } = editorRef.current!!.getBoundingClientRect();
-    //             const {
-    //                 x: imgX,
-    //                 y: imgY,
-    //                 width: imgWidth,
-    //                 height: imgHeight,
-    //             } = imgEl.getBoundingClientRect();
-    //             const imgLeft = imgX - editorX - 15;
-    //             const imgRight = imgX + imgWidth - editorX - 15;
-    //             const imgTop = imgY - editorY - 12;
-    //             const imgBottom = imgY + imgHeight - editorY - 12;
-    //             console.log(imgLeft, imgRight, imgTop, imgBottom);
-    //             if (
-    //                 mousePos.x >= imgLeft &&
-    //                 mousePos.x <= imgRight &&
-    //                 mousePos.y >= imgTop &&
-    //                 mousePos.y <= imgBottom
-    //             ) {
-    //                 console.log("Mouse inside img");
-    //                 resizeRef.current?.setAttribute(
-    //                     "style",
-    //                     `left: ${imgLeft}px;top: ${
-    //                         imgTop + 12
-    //                     }px; width: ${imgWidth}px;height: ${imgHeight}px; visibility: visible; z-index: 50; background: rgba(0,0,0,.6)`
-    //                 );
-    //             } else {
-    //                 resizeRef.current?.removeAttribute("style");
-    //             }
-    //         });
-    //     }
-    // }, [mousePos]);
-
     return (
         <>
+            {label && (
+                <h4 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    {required && <span className="text-red-500 mr-1">*</span>}
+                    {label}
+                </h4>
+            )}
             <div
                 ref={wrapperRef}
                 className={`${styles.quill__wrapper} ${
@@ -285,6 +255,7 @@ const QuillEditor = ({
                         ].join(" ")}
                     ></div>
                 </div>
+                <input id={id} className="sr-only" readOnly />
             </div>
         </>
     );

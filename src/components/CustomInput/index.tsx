@@ -2,6 +2,8 @@
 
 import React, { DetailedHTMLProps, InputHTMLAttributes } from "react";
 
+import styles from "./styles.module.scss";
+
 interface ICustomInput
     extends DetailedHTMLProps<
         InputHTMLAttributes<HTMLInputElement>,
@@ -10,16 +12,21 @@ interface ICustomInput
     title: string;
     required?: boolean;
     placeholder?: string;
+    errorText?: string;
 }
 
 const CustomInput = (props: ICustomInput) => {
-    const { id, className, required, title, onChange, ...rest } = props;
+    const { id, className, required, title, onChange, errorText, ...rest } =
+        props;
     return (
         <div className="w-full">
             {title && (
                 <label
                     htmlFor={id}
-                    className="block mb-2 text-sm font-medium text-neutral-900 dark:text-white"
+                    className={
+                        styles.input__label +
+                        ` ${errorText ? styles.error : ""}`
+                    }
                 >
                     {required && <span className="text-red-500 mr-1">*</span>}
                     {title}
@@ -32,12 +39,18 @@ const CustomInput = (props: ICustomInput) => {
             )}
             <input
                 {...rest}
+                required={required}
                 id={id}
-                className={`bg-white border border-gray-300 text-neutral-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 ${
-                    className ? className : ""
-                }`}
+                className={`${styles.input__box} ${
+                    errorText ? styles.error : ""
+                } ${className ? className : ""}`}
                 onChange={onChange ? onChange : () => {}}
             />
+            {errorText && (
+                <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                    <span className="font-medium">{errorText} </span>
+                </p>
+            )}
         </div>
     );
 };

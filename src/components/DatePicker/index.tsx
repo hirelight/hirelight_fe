@@ -33,14 +33,30 @@ const isSameDate = (date1: Date, date2: Date) => {
     );
 };
 
-type DatePickerProps = {
+interface DatePickerProps {
+    id?: string;
+    name?: string;
     value?: Date;
     onChange: (date: Date) => void;
-};
-const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
+    minDate?: Date;
+    maxDate?: Date;
+    pos?: "top" | "bottom";
+}
+
+const DatePicker: React.FC<DatePickerProps> = ({
+    value,
+    onChange,
+    id,
+    name,
+    minDate,
+    maxDate,
+    pos = "bottom",
+}) => {
     const wrapperRef = useOutsideClick<HTMLDivElement>(() =>
         setShowDatepicker(false)
     );
+
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
     const [showDatepicker, setShowDatepicker] = useState(false);
     const [selectedDate, setSelectedDate] = useState<Date | undefined>();
@@ -89,7 +105,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
             );
     };
 
-    const handleDateChange = async (
+    const handleDateChange = (
         e: React.MouseEvent<HTMLSpanElement, MouseEvent>
     ) => {
         const targetTime = e.currentTarget.getAttribute("data-date") as string;
@@ -115,7 +131,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
     };
 
     const drawDaysInMonth = () => {
-        const dayList = [];
+        const dayList: React.JSX.Element[] = [];
         const numOfDaysPrevMonth = new Date(
             currentDate.getFullYear(),
             currentDate.getMonth(),
@@ -180,16 +196,18 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
         }
 
         for (let i = 1; i < 7 - lastDate.getDay(); i++) {
+            const nextDate = new Date(
+                lastDate.getFullYear(),
+                lastDate.getMonth() + 1,
+                i
+            ).getTime();
+
             let __outer = (
                 <span
                     key={"nextMonth" + i.toString()}
                     className={`${styles.datepicker__cell} ${styles.after}`}
                     onClick={handleDateChange}
-                    data-date={new Date(
-                        lastDate.getFullYear(),
-                        lastDate.getMonth() + 1,
-                        i
-                    ).getTime()}
+                    data-date={nextDate}
                 >
                     {i}
                 </span>
@@ -225,8 +243,10 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
                 <input
                     type="text"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    onFocusCapture={() => setShowDatepicker(true)}
+                    onFocusCapture={e => setShowDatepicker(true)}
                     placeholder="Select date"
+                    id={id}
+                    name={name}
                     value={
                         selectedDate
                             ? `${selectedDate.getDate()}/${
@@ -240,6 +260,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
             <AnimatePresence>
                 {showDatepicker && (
                     <motion.div
+                        ref={dropdownRef}
                         initial={{
                             opacity: 0,
                             visibility: "hidden",
@@ -256,7 +277,11 @@ const DatePicker: React.FC<DatePickerProps> = ({ value, onChange }) => {
                             scale: 0.9,
                             transitionTimingFunction: "ease-in",
                         }}
-                        className="absolute top-full left-0 z-50 pt-2 "
+                        className={`absolute left-0 z-50 ${
+                            pos === "bottom" || !pos
+                                ? "top-full pt-2"
+                                : "bottom-full pb-2"
+                        }`}
                     >
                         <div className="p-4 bg-white rounded-md shadow-lg">
                             <div className={styles.datepicker__header}>
