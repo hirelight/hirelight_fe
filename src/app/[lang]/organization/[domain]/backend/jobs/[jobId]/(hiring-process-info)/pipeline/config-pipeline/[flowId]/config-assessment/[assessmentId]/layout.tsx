@@ -1,6 +1,7 @@
 import React from "react";
 
 import TitleHeader from "./components/TitleHeader";
+import AssesmentDetailWrapper from "./components/AssesmentDetailWrapper";
 
 const PipelineAssessmentLayout = ({
     children,
@@ -10,7 +11,7 @@ const PipelineAssessmentLayout = ({
     return (
         <div>
             <TitleHeader />
-            <div>{children}</div>
+            <AssesmentDetailWrapper>{children}</AssesmentDetailWrapper>
         </div>
     );
 };

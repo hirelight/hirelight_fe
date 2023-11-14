@@ -84,7 +84,7 @@ const getAccessToken = async (loginId: string) => {
     return res.data;
 };
 
-const getOrgAccessToken = async (id: number) => {
+const getOrgAccessToken = async (id: string) => {
     try {
         const res = await interceptor.get<IResponse<AuthResponse>>(
             `/identity/employer/organizations/${id}`

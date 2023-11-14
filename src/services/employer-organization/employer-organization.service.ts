@@ -24,7 +24,7 @@ const getListAsync = async (): Promise<IResponse<IOrgEmployerDto[]>> => {
     }
 };
 
-const getByIdAsync = async (id: number) => {
+const getByIdAsync = async (id: string) => {
     try {
         const res = await interceptor.get<IResponse<IOrgEmployerDto>>(
             endpoints.ORGANIZATIONS_EMPLOYER + `/${id}`
@@ -37,7 +37,7 @@ const getByIdAsync = async (id: number) => {
     }
 };
 
-const deleteByIdAsync = async (id: number) => {
+const deleteByIdAsync = async (id: string) => {
     try {
         const res = await interceptor.delete<IResponse<any>>(
             endpoints.ORGANIZATIONS_EMPLOYER + `/${id}`
@@ -109,7 +109,7 @@ const getEmployerInvitationListAsync = async (): Promise<
 };
 
 const acceptEmployerInvitationListAsync = async (
-    orgId: number
+    orgId: string
 ): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.put<IResponse<any>>(

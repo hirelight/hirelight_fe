@@ -30,9 +30,7 @@ const AddTeamMebers = () => {
     } = useQuery({
         queryKey: [`jobpost-${jobId as string}-collaborators`],
         queryFn: () =>
-            collaboratorsServices.getCollaboratorList(
-                parseInt(jobId as string)
-            ),
+            collaboratorsServices.getCollaboratorList(jobId as string),
     });
 
     const handleAddMemeber = (newMember: any) => {

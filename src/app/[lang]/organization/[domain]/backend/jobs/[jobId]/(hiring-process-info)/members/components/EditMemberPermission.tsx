@@ -42,7 +42,7 @@ const EditMemberPermission: React.FC<EditMemberPermissionProps> = ({
         setIsLoading(true);
         try {
             const res = await collaboratorsServices.editCollaborator({
-                jobPostId: parseInt(jobId as string),
+                jobPostId: jobId as string,
                 employerId: member.employerDto.id,
                 permissions: currentPermissions,
             });

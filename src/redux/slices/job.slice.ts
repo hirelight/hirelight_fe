@@ -31,10 +31,10 @@ export interface IJobSliceInitialState {
 
 const initialState: IJobSliceInitialState = {
     data: {
-        id: 0,
-        creatorId: 0,
+        id: "",
+        creatorId: "",
         assessmentFlowId: null,
-        organizationId: 0,
+        organizationId: "",
         title: "",
         content: {
             description: "",

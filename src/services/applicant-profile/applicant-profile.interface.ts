@@ -1,15 +1,15 @@
 export interface IApplyJobDto {
-    jobPostId: number;
-    referrerId?: number;
+    jobPostId: string;
+    referrerid?: string;
     content: string;
     firstName: string;
     lastName: string;
 }
 
 export interface IJobPostProfileDto {
-    candidateId: number;
-    jobPostId: number;
-    referrerId?: number;
+    candidateId: string;
+    jobPostId: string;
+    referrerid?: string;
     content: string;
     firstName: string;
     lastName: string;

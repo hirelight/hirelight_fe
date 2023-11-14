@@ -19,7 +19,7 @@ const getListAsync = async (): Promise<IResponse<IRoleDto[]>> => {
     }
 };
 
-const getByIdAsync = async (id: number): Promise<IResponse<IRoleDto>> => {
+const getByIdAsync = async (id: string): Promise<IResponse<IRoleDto>> => {
     try {
         const res = await interceptor.get<IResponse<IRoleDto>>(
             endpoints.ROLES + `/${id}`

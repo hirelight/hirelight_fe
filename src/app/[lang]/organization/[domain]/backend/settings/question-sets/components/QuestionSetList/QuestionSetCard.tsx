@@ -23,7 +23,7 @@ const QuestionSetCard: React.FC<QuestionSetCardProps> = ({ data }) => {
 
     const [showDelete, setShowDelete] = useState(false);
 
-    const handleDeleteSet = async (id: number) => {
+    const handleDeleteSet = async (id: string) => {
         try {
             const res = await questionAnsSetServices.deleteByIdAsync(id);
             toast.success(res.message);

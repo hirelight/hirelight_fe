@@ -39,7 +39,7 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
         else toast.error("Only work email can create organization");
     };
 
-    const handleRedirect = async (orgId: number, subdomain: string) => {
+    const handleRedirect = async (orgId: string, subdomain: string) => {
         try {
             setPageLoading(true);
             const res = await authServices.getOrgAccessToken(orgId);

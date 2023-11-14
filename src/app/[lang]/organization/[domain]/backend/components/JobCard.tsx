@@ -65,7 +65,7 @@ const JobCard: React.FC<JobCardProps> = ({
     });
     const publishJobMutations = useMutation({
         mutationKey: [`publish-job-${id}`],
-        mutationFn: (id: number) => jobServices.publishJobAsync(id),
+        mutationFn: (id: string) => jobServices.publishJobAsync(id),
         onSuccess: res => {
             queryClient.invalidateQueries({ queryKey: ["jobs"] });
             toast.success(res.message, {
@@ -82,7 +82,7 @@ const JobCard: React.FC<JobCardProps> = ({
         },
     });
 
-    const handlePublishJob = async (id: number) => {
+    const handlePublishJob = async (id: string) => {
         setIsLoading(true);
         await publishJobMutations.mutateAsync(id);
         setIsLoading(false);

@@ -1,13 +1,13 @@
 export interface ICreateQuestionDto {
     content: string;
     difficulty: number;
-    tagIdList: number[];
+    tagIdList: string[];
 }
 
 export interface IQuestionAnswerDto {
-    id: number;
-    updaterId: number;
-    organizationId: number;
+    id: string;
+    updaterId: string;
+    organizationId: string;
     content: string;
     difficulty: number;
     tagList: IQuestionTagDto[];
@@ -17,7 +17,7 @@ export interface IQuestionAnswerDto {
 }
 
 export interface IEditQuestionAnswerDto extends ICreateQuestionDto {
-    id: number;
+    id: string;
 }
 
 export interface ICreateQuestionTagDto {
@@ -27,11 +27,11 @@ export interface ICreateQuestionTagDto {
 // *************Question Tag*****************
 
 export interface IQuestionTagDto {
-    id: number;
-    organizationId: number;
+    id: string;
+    organizationId: string;
     name: string;
     status: string;
-    updaterId: number;
+    updaterId: string;
     createdTime: Date;
     updatedTime: Date;
 }
@@ -41,5 +41,5 @@ export interface ICreateQuestionTagDto {
 }
 
 export interface IEditQuestionTagDto extends ICreateQuestionDto {
-    id: number;
+    id: string;
 }

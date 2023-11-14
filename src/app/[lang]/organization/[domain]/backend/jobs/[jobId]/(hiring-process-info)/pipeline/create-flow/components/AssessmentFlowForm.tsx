@@ -20,7 +20,7 @@ const initialData: ICreateAssessmentFlowDto = {
     name: "",
     startTime: new Date(),
     endTime: new Date(),
-    jobPostId: 0,
+    jobPostId: "",
     assessments: [
         {
             name: "Sourced",
@@ -47,7 +47,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
     const [showAddStage, setShowAddStage] = useState(false);
     const [formState, setFormState] = useState<ICreateAssessmentFlowDto>({
         ...data,
-        jobPostId: parseInt(jobId as string),
+        jobPostId: jobId as string,
     });
 
     const handleCreateFlow = async (e: FormEvent) => {

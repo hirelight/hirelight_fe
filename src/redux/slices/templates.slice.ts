@@ -16,7 +16,7 @@ import {
 interface ITemplatesSlice {
     emailTemplates: {
         isAdding: boolean;
-        editingId: number;
+        editingId: string;
         searchQuery: string;
         datas: IEmailTemplatesDto[];
         loading: boolean;
@@ -27,7 +27,7 @@ interface ITemplatesSlice {
 const initialState: ITemplatesSlice = {
     emailTemplates: {
         isAdding: false,
-        editingId: -1,
+        editingId: "",
         searchQuery: "",
         datas: [],
         loading: false,
@@ -42,7 +42,7 @@ const templatesSlice = createSlice({
         setIsAdding: (state, action: PayloadAction<boolean>) => {
             state.emailTemplates.isAdding = action.payload;
         },
-        setEditingId: (state, action: PayloadAction<number>) => {
+        setEditingId: (state, action: PayloadAction<string>) => {
             state.emailTemplates.editingId = action.payload;
         },
         setSearchQuery: (state, action: PayloadAction<string>) => {

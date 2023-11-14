@@ -19,10 +19,10 @@ export interface JobContentJson {
 }
 
 export interface IJobDto extends ICreateJobDto {
-    id: number;
-    creatorId: number;
-    assessmentFlowId: number | null;
-    organizationId: number;
+    id: string;
+    creatorId: string;
+    assessmentFlowId: string | null;
+    organizationId: string;
     employmentType: string;
     keywords: string;
     createdTime: Date;
@@ -50,7 +50,7 @@ export interface IJobDetailError {
 }
 
 export interface IEditJobDto {
-    id: number;
+    id: string;
     title: string;
     content: string;
     applicationForm: string;

@@ -66,7 +66,7 @@ const AddEmailTemplate: React.FC<IAddEmailTemplate> = ({
         subject: "",
         content: "",
         emailTemplateTypeId:
-            emailTemplateTypes.length > 0 ? emailTemplateTypes[0].id : 1,
+            emailTemplateTypes.length > 0 ? emailTemplateTypes[0].id : "",
     });
 
     const handleCreateNewTemplate = async (e: FormEvent) => {
@@ -137,7 +137,7 @@ const AddEmailTemplate: React.FC<IAddEmailTemplate> = ({
                     value={form.content}
                     onChange={content => setForm({ ...form, content: content })}
                     className="bg-white min-h-[220px]"
-                    onEmailTemplateTypeChange={(id: number) =>
+                    onEmailTemplateTypeChange={(id: string) =>
                         setForm({ ...form, emailTemplateTypeId: id })
                     }
                 />

@@ -50,7 +50,7 @@ const getDefaultAppFormTemplate = async (): Promise<
 };
 
 const getByIdAsync = async (
-    id: number
+    id: string
 ): Promise<IResponse<IAppFormTemplateDto>> => {
     try {
         const res = await interceptor.get<IResponse<IAppFormTemplateDto>>(
@@ -80,7 +80,7 @@ const createAsync = async (createDto: ICreateAppFormTemplateDto) => {
     }
 };
 
-const deleteByIdAsync = async (id: number): Promise<IResponse<any>> => {
+const deleteByIdAsync = async (id: string): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.delete<IResponse<any>>(
             baseEndpoint + `/${id}`

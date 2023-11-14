@@ -32,7 +32,7 @@ const TemplatesTitleSection = () => {
 
     const handleProceed = () => {
         dispatch(setIsAdding(true));
-        dispatch(setEditingId(-1));
+        dispatch(setEditingId(""));
 
         setShowWarning(false);
     };
@@ -60,7 +60,7 @@ const TemplatesTitleSection = () => {
                         type="button"
                         className="flex items-center gap-1 text-blue_primary_700 hover:text-blue_primary_800 hover:underline"
                         onClick={() => {
-                            if (editingId > 0) {
+                            if (editingId) {
                                 setShowWarning(true);
                             } else dispatch(setIsAdding(true));
                         }}

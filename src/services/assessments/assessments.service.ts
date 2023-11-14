@@ -9,7 +9,7 @@ import {
     IEditAsyncVideoInterviewDto,
 } from "./assessments.interface";
 
-const getById = async (id: number): Promise<IResponse<IAssessmentDto>> => {
+const getById = async (id: string): Promise<IResponse<IAssessmentDto>> => {
     try {
         const res = await interceptor.get(endpoints.ASSESSMENTS + `/${id}`);
 

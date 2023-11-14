@@ -22,12 +22,19 @@ const PipelineConfigAssessment: React.FC<PipelineConfigAssessmentProps> = ({
 }) => {
     const router = useRouter();
     const { flowId } = useParams();
+
+    console.log(selectedStage);
+
     return (
-        <div className="w-full px-6">
+        <div className="w-full px-4 xl:px-6">
             <div className="flex flex-col lg:flex-row gap-8">
                 <button
                     type="button"
-                    className={styles.assessment__wrapper}
+                    className={`${styles.assessment__wrapper} ${
+                        selectedStage?.assessmentQuestionAnswerSetId !== null
+                            ? styles.is_described
+                            : ""
+                    }`}
                     onClick={() => {
                         if (!selectedStage) return;
                         router.push(
@@ -48,7 +55,11 @@ const PipelineConfigAssessment: React.FC<PipelineConfigAssessmentProps> = ({
                 </button>
                 <button
                     type="button"
-                    className={styles.assessment__wrapper}
+                    className={`${styles.assessment__wrapper} ${
+                        selectedStage?.assessmentQuestionAnswerSetId !== null
+                            ? styles.is_described
+                            : ""
+                    }`}
                     onClick={() => {
                         if (!selectedStage) return;
                         router.push(
@@ -72,6 +83,10 @@ const PipelineConfigAssessment: React.FC<PipelineConfigAssessmentProps> = ({
                 <button
                     type="button"
                     className={`${styles.assessment__wrapper} ${
+                        selectedStage?.assessmentQuestionAnswerSetId !== null
+                            ? styles.is_described
+                            : ""
+                    } ${
                         selectedStage &&
                         [
                             "LIVE_VIDEO_INTERVIEW_ASSESSMENT",

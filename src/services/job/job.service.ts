@@ -66,7 +66,7 @@ const editAsync = async (editJobDto: IEditJobDto): Promise<IResponse<any>> => {
     }
 };
 
-const deleteByIdAsync = async (id: number): Promise<IResponse<any>> => {
+const deleteByIdAsync = async (id: string): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.delete<IResponse<any>>(
             `${endpoints.JOBPOSTS}/${id}`
@@ -79,7 +79,7 @@ const deleteByIdAsync = async (id: number): Promise<IResponse<any>> => {
     }
 };
 
-const requestPublishJob = async (id: number): Promise<IResponse<any>> => {
+const requestPublishJob = async (id: string): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.put<IResponse<any>>(
             `${endpoints.JOBPOSTS}/request-publish/${id}`
@@ -92,7 +92,7 @@ const requestPublishJob = async (id: number): Promise<IResponse<any>> => {
     }
 };
 
-const publishJobAsync = async (id: number): Promise<IResponse<any>> => {
+const publishJobAsync = async (id: string): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.put<IResponse<any>>(
             `${endpoints.JOBPOSTS}/publish/${id}`

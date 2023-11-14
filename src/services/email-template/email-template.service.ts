@@ -42,7 +42,7 @@ const getListAsync = async (): Promise<IResponse<IEmailTemplatesDto[]>> => {
 };
 
 const getByIdAsync = async (
-    id: number
+    id: string
 ): Promise<IResponse<IEmailTemplatesDto>> => {
     try {
         const res = await interceptor.get<IResponse<IEmailTemplatesDto>>(
@@ -72,7 +72,7 @@ const editAsync = async (
     }
 };
 
-const deleteByIdAsync = async (id: number): Promise<IResponse<any>> => {
+const deleteByIdAsync = async (id: string): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.delete<IResponse<any>>(
             `${endpoints.EMAIL_TEMPLATE}/${id}`
@@ -101,7 +101,7 @@ const getEmailTemplateTypesListAsync = async (): Promise<
 };
 
 const getEmailTemplateTypesByIdAsync = async (
-    id: number
+    id: string
 ): Promise<IResponse<IEmailTemplateTypeDto>> => {
     try {
         const res = await interceptor.get<IResponse<IEmailTemplateTypeDto>>(

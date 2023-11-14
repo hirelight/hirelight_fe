@@ -14,7 +14,7 @@ import {
 const baseEndpoint = "/job-posts";
 
 const getCollaboratorList = async (
-    jobPostId: number
+    jobPostId: string
 ): Promise<IResponse<ICollaboratorDto[]>> => {
     try {
         const res = await interceptor.get<IResponse<ICollaboratorDto[]>>(
@@ -30,8 +30,8 @@ const getCollaboratorList = async (
 };
 
 const getCollaboratorById = async (
-    jobPostId: number,
-    memberId: number
+    jobPostId: string,
+    memberId: string
 ): Promise<IResponse<ICollaboratorDto>> => {
     try {
         const res = await interceptor.get<IResponse<ICollaboratorDto>>(
@@ -64,8 +64,8 @@ const editCollaborator = async (
 };
 
 const deleteCollaborator = async (
-    jobPostId: number,
-    memberId: number
+    jobPostId: string,
+    memberId: string
 ): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.delete<IResponse<any>>(
@@ -81,7 +81,7 @@ const deleteCollaborator = async (
 };
 
 const acceptJobCollabInvitation = async (
-    jobPostId: number
+    jobPostId: string
 ): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.put<IResponse<any>>(
@@ -128,7 +128,7 @@ const sendInvitation = async (
     }
 };
 
-const getPermissionById = async (id: number): Promise<IResponse<any>> => {
+const getPermissionById = async (id: string): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.get(endpoints.PERMISSION + `/${id}`);
 

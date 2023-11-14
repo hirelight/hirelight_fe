@@ -14,25 +14,25 @@ export interface ICreateAssessmentFlowDto {
     name: string;
     startTime: Date;
     endTime: Date;
-    jobPostId: number;
+    jobPostId: string;
     assessments: IAssessmentFlow[];
 }
 
 export interface IEditAssessmentFlowDto {
-    id: number;
+    id: string;
     name: string;
     startTime: Date;
     endTime: Date;
     assessments: {
         name: string;
-        id: number;
+        id: string;
         assessmentType: AssessmentTypeKey;
     }[];
 }
 
 export interface IAssessmentFlowDto {
-    id: number;
-    creatorId: number;
+    id: string;
+    creatorId: string;
     name: string;
     startTime: Date;
     endTime: Date;

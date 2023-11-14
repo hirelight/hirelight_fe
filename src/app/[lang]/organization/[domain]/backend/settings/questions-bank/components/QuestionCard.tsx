@@ -43,7 +43,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
 
     const queryClient = useQueryClient();
     const deleteMutation = useMutation({
-        mutationFn: (id: number) => questionAnswerServices.deleteByIdAsync(id),
+        mutationFn: (id: string) => questionAnswerServices.deleteByIdAsync(id),
         onSuccess: res => {
             toast.success(res.message);
             queryClient.invalidateQueries({ queryKey: ["questions"] });
@@ -56,7 +56,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
 
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);
 
-    const handleDeleteQuestion = async (id: number) => {
+    const handleDeleteQuestion = async (id: string) => {
         deleteMutation.mutate(id);
     };
 

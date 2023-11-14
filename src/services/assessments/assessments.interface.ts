@@ -1,7 +1,7 @@
 import { AssessmentTypeKey } from "@/interfaces/assessment.interface";
 
 export interface IEditAsyncVideoInterviewDto {
-    id: number;
+    id: string;
     name: string;
     description: string;
     content: string;
@@ -12,7 +12,7 @@ export interface IEditAsyncVideoInterviewDto {
 }
 
 export interface IEditAssessmentDto {
-    id: number;
+    id: string;
     name: string;
     description: string;
     content: string;
@@ -23,14 +23,14 @@ export interface IEditAssessmentDto {
 }
 
 export interface IAssessmentDto {
-    id: number;
+    id: string;
     name: string;
-    assessmentFlowId: number;
-    assessmentTypeId: number;
+    assessmentFlowId: string;
+    assessmentTypeId: string;
     assessmentTypeName: AssessmentTypeKey;
-    assessmentQuestionAnswerSetId: number | null;
+    assessmentQuestionAnswerSetId: string | null;
     assessmentQuestionAnswerSetContent: string | null;
-    creatorId: number;
+    creatorId: string;
     description: string | null;
     content: string | null;
     query: string | null;

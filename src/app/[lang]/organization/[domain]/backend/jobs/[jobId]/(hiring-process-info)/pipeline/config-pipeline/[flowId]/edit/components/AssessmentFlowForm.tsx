@@ -34,7 +34,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
             });
 
             toast.success(res.message);
-            dispatch(fetchAssessmentFlowById(parseInt(flowId as string)));
+            dispatch(fetchAssessmentFlowById(flowId as string));
             router.push(
                 `/${lang}/backend/jobs/${jobId}/pipeline/config-pipeline/${flowId}`
             );

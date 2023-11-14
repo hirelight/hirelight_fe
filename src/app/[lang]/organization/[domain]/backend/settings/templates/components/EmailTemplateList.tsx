@@ -51,10 +51,10 @@ const EmailTemplateList: React.FC<IEmailTemplateList> = ({}) => {
                                 <UpdateEmailTemplate
                                     data={item}
                                     onSaveChanges={() => {
-                                        dispatch(setEditingId(-1));
+                                        dispatch(setEditingId(""));
                                     }}
                                     onCancel={() => {
-                                        dispatch(setEditingId(-1));
+                                        dispatch(setEditingId(""));
                                     }}
                                 />
                             </div>

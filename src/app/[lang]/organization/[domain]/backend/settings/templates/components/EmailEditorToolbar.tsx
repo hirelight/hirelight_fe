@@ -29,7 +29,7 @@ interface IEmailEditorToolbar {
     fullscreen: boolean;
     toggleFullscreen: () => void;
     handleVarChange: (value: string) => void;
-    onEmailTemplateTypeChange: (id: number) => void;
+    onEmailTemplateTypeChange: (id: string) => void;
     data?: IEmailTemplatesDto;
 }
 

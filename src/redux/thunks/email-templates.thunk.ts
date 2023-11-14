@@ -37,7 +37,7 @@ export const editEmailTemplate = createAsyncThunk(
 
 export const deleteEmailTemplateById = createAsyncThunk(
     DELTE_EMAIL_TEMPLATES_BY_ID,
-    async (id: number) => {
+    async (id: string) => {
         const data = await emailTemplateServices.deleteByIdAsync(id);
         return data.data;
     }

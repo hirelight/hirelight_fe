@@ -40,8 +40,8 @@ const KitRequirementList = ({ contents, onSave }: IKitRequirementList) => {
     });
     const [selected, setSelected] = React.useState<any>();
 
-    const handleDeleteRequirement = (id: number) => {
-        onSave(contents.filter((item, index) => index !== id));
+    const handleDeleteRequirement = (id: string) => {
+        onSave(contents.filter((item, index) => item.id !== id));
     };
 
     const handleMouseDown = (
@@ -273,10 +273,7 @@ const KitRequirementList = ({ contents, onSave }: IKitRequirementList) => {
                             <button
                                 type="button"
                                 className={`p-4 h-fit group`}
-                                onClick={handleDeleteRequirement.bind(
-                                    null,
-                                    index
-                                )}
+                                onClick={handleDeleteRequirement.bind(null, "")}
                             >
                                 <TrashIcon className="w-6 h-6 text-red-400 group-hover:text-red-600" />
                             </button>

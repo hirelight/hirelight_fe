@@ -10,6 +10,7 @@ import assessmentFlowTemplatesReducer from "./slices/assessment-flow-templates.s
 import questionReducer from "./slices/question.slice";
 import assessmentFlowReducer from "./slices/assessment-flow.slice";
 import applicantProfileReducer from "./slices/applicant-profile.slice";
+import assessmentReducer from "./slices/assessment.slice";
 
 export const store = configureStore({
     reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
         questionKits: questionKitsReducer,
         candidates: candidatesReducer,
         templates: templatesReducer,
+        assessment: assessmentReducer,
         assessmentFlow: assessmentFlowReducer,
         appFormTemplate: appFormTemplateReducer,
         applicantProfile: applicantProfileReducer,

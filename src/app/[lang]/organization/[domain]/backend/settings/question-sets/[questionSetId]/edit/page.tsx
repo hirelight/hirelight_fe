@@ -17,7 +17,7 @@ const EditQuestionSetPage = () => {
 
     useEffect(() => {
         console.log(questionSetId);
-        const fetchQuesSetById = async (id: number) => {
+        const fetchQuesSetById = async (id: string) => {
             setIsLoading(true);
             try {
                 const res = await questionAnsSetServices.getByIdAsync(id);
@@ -33,7 +33,7 @@ const EditQuestionSetPage = () => {
             }
         };
 
-        fetchQuesSetById(parseInt(questionSetId as string));
+        fetchQuesSetById(questionSetId as string);
     }, [questionSetId]);
 
     if (isLoading || !data)

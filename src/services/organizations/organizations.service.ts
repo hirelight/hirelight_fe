@@ -7,7 +7,7 @@ import interceptor from "../interceptor";
 import { ICreateOrgDto, IOrganizationDto } from "./organizations.interface";
 
 const getByIdAsync = async (
-    orgId: number
+    orgId: string
 ): Promise<IResponse<IOrganizationDto>> => {
     try {
         const res = await interceptor.get<IResponse<IOrganizationDto>>(
@@ -80,7 +80,7 @@ const getOwnedJoinedOrganizations = async (): Promise<
             getJoinedOrganizations(),
         ]);
 
-        const orgMap = new Map<number, IOrganizationDto>();
+        const orgMap = new Map<string, IOrganizationDto>();
 
         ownedOrgRes.data?.forEach(org => {
             if (!orgMap.has(org.id)) orgMap.set(org.id, org);

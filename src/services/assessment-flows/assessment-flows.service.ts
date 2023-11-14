@@ -41,7 +41,7 @@ const getListAsync = async (): Promise<IResponse<IAssessmentFlowDto[]>> => {
 };
 
 const getByIdAsync = async (
-    id: number
+    id: string
 ): Promise<IResponse<IAssessmentFlowDto>> => {
     try {
         const res = await interceptor.get<IResponse<any>>(
@@ -71,7 +71,7 @@ const editAsync = async (
     }
 };
 
-const deleteByIdAsync = async (id: number): Promise<IResponse<any>> => {
+const deleteByIdAsync = async (id: string): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.delete<IResponse<any>>(
             `${endpoints.ASSESSMENT_FLOWS}/${id}`

@@ -22,7 +22,7 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
 
 type QuestionItemProps = {
     data: {
-        id: number;
+        id: string;
         name: string;
         config: {
             thinkTime: string;
@@ -31,7 +31,7 @@ type QuestionItemProps = {
         };
     };
     onChange: (value: {
-        id: number;
+        id: string;
         name: string;
         config: {
             thinkTime: string;

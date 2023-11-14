@@ -1,14 +1,14 @@
 export interface ICreateEmailTemplatesDto {
-    emailTemplateTypeId: number;
+    emailTemplateTypeId: string;
     name: string;
     subject: string;
     content: string;
 }
 
 export interface IEmailTemplatesDto {
-    id: number;
-    organizationId: number;
-    updaterId: number;
+    id: string;
+    organizationId: string;
+    updaterId: string;
     emailTemplateType: IEmailTemplateTypeDto;
     name: string;
     subject: string;
@@ -20,15 +20,15 @@ export interface IEmailTemplatesDto {
 }
 
 export interface IEditEmailTemplatesDto {
-    id: number;
+    id: string;
     name: string;
     subject: string;
     content: string;
-    emailTemplateTypeId: number;
+    emailTemplateTypeId: string;
 }
 
 export interface IEmailTemplateTypeDto {
-    id: number;
+    id: string;
     name: string;
     parameters: string;
 }

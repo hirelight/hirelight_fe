@@ -17,7 +17,7 @@ const getListAsync = async (): Promise<IResponse<IQuesAnsSetDto[]>> => {
     }
 };
 
-const getByIdAsync = async (id: number): Promise<IResponse<IQuesAnsSetDto>> => {
+const getByIdAsync = async (id: string): Promise<IResponse<IQuesAnsSetDto>> => {
     try {
         const res = await interceptor.get(
             endpoints.QUESTION_ANSWER_SETS + `/${id}`
@@ -62,7 +62,7 @@ const editAsync = async (
     }
 };
 
-const deleteByIdAsync = async (id: number): Promise<IResponse<any>> => {
+const deleteByIdAsync = async (id: string): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.delete(
             endpoints.QUESTION_ANSWER_SETS + `/${id}`

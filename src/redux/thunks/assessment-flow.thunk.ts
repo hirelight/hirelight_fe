@@ -4,7 +4,7 @@ import assessmentFlowsServices from "@/services/assessment-flows/assessment-flow
 
 export const fetchAssessmentFlowById = createAsyncThunk(
     "assessment-flow/fetchById",
-    async (id: number) => {
+    async (id: string) => {
         const res = await assessmentFlowsServices.getByIdAsync(id);
 
         return res;

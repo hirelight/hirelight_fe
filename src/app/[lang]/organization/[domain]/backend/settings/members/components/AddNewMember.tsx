@@ -10,71 +10,71 @@ import { SpinLoading } from "@/icons";
 
 const roles = [
     {
-        id: 1701763156138693,
+        id: "1701763156138693",
         name: "ASSESSOR",
         permissions: [
             {
-                id: 797291848576587,
+                id: "797291848576587",
                 name: "CRUD_QUESTION",
             },
             {
-                id: 7967986238133776,
+                id: "7967986238133776",
                 name: "CRUD_TAG",
             },
         ],
     },
     {
-        id: 9589275051596120,
+        id: "9589275051596120",
         name: "RECRUITER",
         permissions: [
             {
-                id: 797291848576587,
+                id: "797291848576587",
                 name: "CRUD_QUESTION",
             },
             {
-                id: 181534528092540,
+                id: "181534528092540",
                 name: "CREATE_JOB_POST",
             },
             {
-                id: 5993076413323132,
+                id: "5993076413323132",
                 name: "CRUD_TEMPLATE_APPLICATION_FORM",
             },
             {
-                id: 6923532849280069,
+                id: "6923532849280069",
                 name: "CRUD_TEMPLATE_ASSESSMENT_FLOW",
             },
             {
-                id: 7967986238133776,
+                id: "7967986238133776",
                 name: "CRUD_TAG",
             },
         ],
     },
     {
-        id: 9948957641178824,
+        id: "9948957641178824",
         name: "ORGANIZATION_ADMIN",
         permissions: [
             {
-                id: 5993076413323132,
+                id: "5993076413323132",
                 name: "CRUD_TEMPLATE_APPLICATION_FORM",
             },
             {
-                id: 8274102886046760,
+                id: "8274102886046760",
                 name: "CRUD_TEMPLATE_EMAIL",
             },
             {
-                id: 6923532849280069,
+                id: "6923532849280069",
                 name: "CRUD_TEMPLATE_ASSESSMENT_FLOW",
             },
             {
-                id: 181534528092540,
+                id: "181534528092540",
                 name: "CREATE_JOB_POST",
             },
             {
-                id: 7967986238133776,
+                id: "7967986238133776",
                 name: "CRUD_TAG",
             },
             {
-                id: 797291848576587,
+                id: "797291848576587",
                 name: "CRUD_QUESTION",
             },
         ],

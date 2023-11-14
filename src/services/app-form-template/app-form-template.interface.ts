@@ -1,7 +1,7 @@
 export interface IAppFormTemplateDto {
-    id: number;
-    organizationId: number;
-    updaterId: number;
+    id: string;
+    organizationId: string;
+    updaterId: string;
     name: string;
     content: string;
     createdTime: Date;
@@ -9,7 +9,7 @@ export interface IAppFormTemplateDto {
 }
 
 export interface IEditAppFormTemplateDto {
-    id: number;
+    id: string;
     name: string;
     content: string;
 }

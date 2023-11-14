@@ -4,7 +4,7 @@ export interface ICreateOrgDto {
 }
 
 export interface IOrganizationDto {
-    id: number;
+    id: string;
     name: string;
     subdomain: string;
     logoUrl: string | null;
@@ -15,5 +15,5 @@ export interface IOrganizationDto {
     nationality: string | null;
     address: string | null;
     location: string | null;
-    ownerId: number;
+    ownerId: string;
 }

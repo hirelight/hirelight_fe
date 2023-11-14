@@ -15,16 +15,16 @@ interface IAppFormTemplateState {
 
 const initialState: IAppFormTemplateState = {
     data: {
-        id: 0,
+        id: "",
         name: "",
         content: {
             app_form: [],
             profile: [],
         },
-        organizationId: 0,
+        organizationId: "",
         createdTime: new Date(),
         updatedTime: new Date(),
-        updaterId: 0,
+        updaterId: "",
     },
 };
 

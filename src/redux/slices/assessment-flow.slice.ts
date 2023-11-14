@@ -6,7 +6,7 @@ import { IAssessmentFlowDto } from "@/services";
 import { fetchAssessmentFlowById } from "../thunks/assessment-flow.thunk";
 
 export interface IAssessmentFlowState {
-    data: Omit<IAssessmentFlowDto, "id"> & { id?: number };
+    data: Omit<IAssessmentFlowDto, "id"> & { id?: string };
     loading: boolean;
 }
 
@@ -16,7 +16,7 @@ const initialState: IAssessmentFlowState = {
         assessments: [],
         startTime: new Date(),
         endTime: new Date(),
-        creatorId: 0,
+        creatorId: "",
         createdTime: new Date(),
         updatedTime: new Date(),
     },

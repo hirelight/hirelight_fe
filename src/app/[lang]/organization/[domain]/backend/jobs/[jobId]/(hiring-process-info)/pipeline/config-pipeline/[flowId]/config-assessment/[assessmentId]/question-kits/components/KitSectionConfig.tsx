@@ -11,7 +11,7 @@ import NewKitSection from "./NewKitSection";
 const KitSectionConfig = () => {
     const [kits, setKits] = React.useState<
         {
-            id?: number;
+            id?: string;
             title: string;
             contents: {
                 name: string;
@@ -43,7 +43,7 @@ const KitSectionConfig = () => {
                 className="flex items-center gap-1 text-base font-medium text-blue_primary_800 hover:underline mt-6"
                 onClick={() => {
                     const newKit = {
-                        id: kits.length + 1,
+                        id: "",
                         title: "",
                         contents: [
                             {

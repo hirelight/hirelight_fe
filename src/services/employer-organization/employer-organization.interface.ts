@@ -2,26 +2,26 @@ import { IRoleDto } from "../role/role.interface";
 
 export interface INewEmployerDto {
     employerEmail: string;
-    roleId: number;
+    roleId: string;
 }
 
 export interface IOrgEmployerDto {
-    id: number;
+    id: string;
     employerDto: {
-        id: number;
+        id: string;
         email: string;
         username: string;
         firstName: string;
         lastName: string;
         status: string;
     };
-    organizationId: number;
+    organizationId: string;
     role: {
-        id: number;
+        id: string;
         name: string;
         permissions: [
             {
-                id: number;
+                id: string;
                 name: string;
             },
         ];
@@ -33,20 +33,20 @@ export interface IOrgEmployerDto {
 
 export interface IEditEmployerDto {
     employerEmail: string;
-    roleId: number;
+    roleId: string;
 }
 
 export interface IEmployerInvitationDto {
-    id: number;
-    senderId: number;
-    organizationId: number;
+    id: string;
+    senderId: string;
+    organizationId: string;
     organizationName: string;
     organizationSubdomain: string;
-    jobPostId: number;
+    jobPostId: string;
     jobPostName: string;
-    assessmentId: number;
+    assessmentId: string;
     assessmentName: string;
-    invitationTypeId: number;
+    invitationTypeId: string;
     invitationTypeName: string;
     inviteeEmail: string;
     authority: string;

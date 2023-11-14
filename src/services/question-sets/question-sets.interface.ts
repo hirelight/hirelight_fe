@@ -4,9 +4,9 @@ export interface ICreateQuesAnsSetDto {
 }
 
 export interface IQuesAnsSetDto {
-    id: number;
-    updaterId: number;
-    organizationId: number;
+    id: string;
+    updaterId: string;
+    organizationId: string;
     name: string;
     content: string;
     createdTime: Date;
@@ -15,5 +15,5 @@ export interface IQuesAnsSetDto {
 }
 
 export interface IEditQuesAnsSetDto extends ICreateQuesAnsSetDto {
-    id: number;
+    id: string;
 }

@@ -46,7 +46,7 @@ interface IEmailEditor {
     className?: string;
     readOnly?: boolean;
     emailTemplateType?: IEmailTemplateTypeDto;
-    onEmailTemplateTypeChange: (id: number) => void;
+    onEmailTemplateTypeChange: (id: string) => void;
     config?: {
         toolbar?: {
             visibile: boolean;

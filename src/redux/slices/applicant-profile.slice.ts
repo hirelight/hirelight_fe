@@ -13,10 +13,10 @@ interface IApplicantProfileState {
 
 const initialState: IApplicantProfileState = {
     data: {
-        candidateId: 0,
+        candidateId: "",
         firstName: "",
         lastName: "",
-        jobPostId: 0,
+        jobPostId: "",
         content: [],
         status: "",
     },

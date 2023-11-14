@@ -38,7 +38,7 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ),
 });
 type EditQuestionFormProps = {
-    questionId: number;
+    questionId: string;
 };
 
 const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
@@ -68,9 +68,9 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
             content: QuestionAnswerContentJson;
         }
     >({
-        id: 0,
-        updaterId: 0,
-        organizationId: 0,
+        id: "",
+        updaterId: "",
+        organizationId: "",
         content: {
             name: "",
             type: "one-answer",

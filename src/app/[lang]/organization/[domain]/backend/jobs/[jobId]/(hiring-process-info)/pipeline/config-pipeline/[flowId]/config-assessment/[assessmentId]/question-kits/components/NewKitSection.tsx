@@ -8,7 +8,7 @@ import KitRequirementList from "./KitRequirementList";
 
 interface INewKitSection {
     data: {
-        id?: number;
+        id?: string;
         title: string;
         contents: {
             name: string;

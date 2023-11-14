@@ -13,6 +13,7 @@ import {
 } from "@/components";
 import { IAssessmentDto, IEditAsyncVideoInterviewDto } from "@/services";
 import assessmentsServices from "@/services/assessments/assessments.service";
+import { useAppSelector } from "@/redux/reduxHooks";
 
 import QuestionSection from "./QuestionSection";
 
@@ -26,10 +27,10 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
 });
 
 export type AsyncQuestionType = {
-    id?: number;
+    id?: string;
     topic: string;
     questions: {
-        id: number;
+        id: string;
         name: string;
         config: {
             thinkTime: string;
@@ -48,20 +49,24 @@ type AsyncVideoForm = Omit<IEditAsyncVideoInterviewDto, "content"> & {
 
 const AsyncVideoForm = () => {
     const { assessmentId } = useParams();
+    const assessment = useAppSelector(state => state.assessment.data);
 
     const [showCreate, setShowCreate] = React.useState(false);
     const [formState, setFormState] = React.useState<AsyncVideoForm>({
-        id: parseInt(assessmentId as string),
-        name: "",
-        description: "",
-        content: {
-            welcomeNote: "",
-            sections: [],
-        },
-        query: "",
-        duration: 0,
-        index: 0,
-        assessmentQuestionAnswerSetContent: "",
+        id: assessment.id,
+        name: assessment.name,
+        description: assessment.description ?? "",
+        content: assessment.content
+            ? JSON.parse(assessment.content)
+            : {
+                  welcomeNote: "",
+                  sections: [],
+              },
+        query: assessment.query ?? "",
+        duration: assessment.duration ?? 0,
+        index: assessment.index,
+        assessmentQuestionAnswerSetContent:
+            assessment.assessmentQuestionAnswerSetContent ?? "",
     });
 
     const handleCreateOneWay = async (e: FormEvent) => {
@@ -83,7 +88,7 @@ const AsyncVideoForm = () => {
     };
 
     useEffect(() => {
-        const getById = async (id: number) => {
+        const getById = async (id: string) => {
             try {
                 const res = await assessmentsServices.getById(id);
                 if (res.data !== null)
@@ -105,7 +110,7 @@ const AsyncVideoForm = () => {
             }
         };
 
-        getById(parseInt(assessmentId as string));
+        getById(assessmentId as string);
     }, [assessmentId]);
 
     return (
@@ -370,7 +375,7 @@ const AsyncVideoForm = () => {
 
             <div className="flex items-center justify-end gap-4 p-4 xl:px-6">
                 <ButtonOutline>Save & continue</ButtonOutline>
-                <Button>Save all changes</Button>
+                <Button type="submit">Save all changes</Button>
             </div>
         </form>
     );

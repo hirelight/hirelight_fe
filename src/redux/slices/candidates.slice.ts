@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface ICandidatesSlice {
     candidates: any[];
-    selectedCandidates: number[];
+    selectedCandidates: string[];
 }
 
 const initialState: ICandidatesSlice = {
@@ -32,7 +32,7 @@ const candidatesSlice = createSlice({
         setSelectAllCandidates: state => {
             if (state.selectedCandidates.length === 0)
                 state.selectedCandidates = state.candidates.map(
-                    (item, index) => index
+                    (item, index) => item
                 );
             else state.selectedCandidates = [];
         },

@@ -1,5 +1,5 @@
 export interface IKit {
-    id?: number;
+    id?: string;
     title: string;
     contents: IKitContent[];
 }

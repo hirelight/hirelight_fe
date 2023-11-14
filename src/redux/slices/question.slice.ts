@@ -15,9 +15,9 @@ type QuestionSliceType = {
 
 const initialState: QuestionSliceType = {
     data: {
-        id: 0,
-        updaterId: 0,
-        organizationId: 0,
+        id: "",
+        updaterId: "",
+        organizationId: "",
         content: {
             name: "",
             type: "one-answer",

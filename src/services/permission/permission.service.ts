@@ -16,7 +16,7 @@ const getJobPostPermission = async (): Promise<IResponse<IPermissionDto[]>> => {
     }
 };
 
-const getPermissionById = async (id: number): Promise<IResponse<any>> => {
+const getPermissionById = async (id: string): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.get(endpoints.PERMISSION + `/${id}`);
 

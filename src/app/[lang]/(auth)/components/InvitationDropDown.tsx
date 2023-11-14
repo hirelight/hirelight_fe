@@ -31,7 +31,7 @@ const InvitationDropDown = () => {
     );
     const queryClient = useQueryClient();
     const acceptInvitationMutation = useMutation({
-        mutationFn: (orgId: number) =>
+        mutationFn: (orgId: string) =>
             employerOrgServices.acceptEmployerInvitationListAsync(orgId),
         onSuccess: res => {
             toast.success(res.message);
@@ -45,13 +45,13 @@ const InvitationDropDown = () => {
         },
     });
 
-    const handleAcceptInvitation = async (orgId: number, subdomain: string) => {
+    const handleAcceptInvitation = async (orgId: string, subdomain: string) => {
         acceptInvitationMutation.mutate(orgId);
         await delayFunc(500);
         handleRedirectOnAccept(orgId, subdomain);
     };
 
-    const handleRedirectOnAccept = async (orgId: number, subdomain: string) => {
+    const handleRedirectOnAccept = async (orgId: string, subdomain: string) => {
         try {
             const res = await authServices.getOrgAccessToken(orgId);
             if (

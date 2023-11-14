@@ -34,7 +34,7 @@ const InvitationDropDown = () => {
         queryFn: collaboratorsServices.getCollabInvitations,
     });
     const acceptInvitationMutation = useMutation({
-        mutationFn: (jobPostId: number) =>
+        mutationFn: (jobPostId: string) =>
             collaboratorsServices.acceptJobCollabInvitation(jobPostId),
         onSuccess: res => {
             toast.success(res.message);
@@ -48,7 +48,7 @@ const InvitationDropDown = () => {
         },
     });
 
-    const handleAcceptInvitation = async (jobPostId: number) => {
+    const handleAcceptInvitation = async (jobPostId: string) => {
         try {
             acceptInvitationMutation.mutate(jobPostId);
         } catch (error) {

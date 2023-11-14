@@ -1,5 +1,5 @@
 export interface IPermissionDto {
-    id: number;
+    id: string;
     name: string;
-    assessmentId?: number;
+    assessmentId?: string;
 }

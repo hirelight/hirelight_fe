@@ -28,7 +28,7 @@ const CandidateDetailWrapper = ({
             </div>
         );
 
-    if (data.candidateId === 0) {
+    if (data.candidateId === "") {
         console.log("wrapper");
         return <div>No candidate selected</div>;
     }

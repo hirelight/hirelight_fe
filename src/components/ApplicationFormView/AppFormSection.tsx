@@ -13,7 +13,7 @@ import { IAppFormField, IAppFormSection, ICustomField } from "@/interfaces";
 import interceptor from "@/services/interceptor";
 
 type AppFormSectionProps = {
-    jobPostId: number;
+    jobPostId: string;
     datas: IAppFormSection[];
     onApply?: () => void;
 };

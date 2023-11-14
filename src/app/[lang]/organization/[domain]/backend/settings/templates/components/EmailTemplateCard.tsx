@@ -33,7 +33,7 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
 
     const queryClient = useQueryClient();
     const deleteMutation = useMutation({
-        mutationFn: (id: number) => emailTemplateService.deleteByIdAsync(id),
+        mutationFn: (id: string) => emailTemplateService.deleteByIdAsync(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["email-templates"] });
             toast.success(`Delete template success`);
@@ -129,7 +129,7 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
                                         tabIndex={-1}
                                         className="text-sm text-blue_primary_700 font-semibold hover:text-blue_primary_800 hover:underline"
                                         onClick={() => {
-                                            if (editingId >= 0 || isAdding) {
+                                            if (editingId === "" || isAdding) {
                                                 setShowWarning(true);
                                             } else {
                                                 dispatch(setEditingId(data.id));

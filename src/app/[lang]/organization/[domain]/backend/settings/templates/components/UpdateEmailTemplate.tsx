@@ -118,7 +118,7 @@ const UpdateEmailTemplate: React.FC<IUpdateEmailTemplate> = ({
                     value={form.content}
                     onChange={content => setForm({ ...form, content: content })}
                     className="bg-white min-h-[220px]"
-                    onEmailTemplateTypeChange={(id: number) =>
+                    onEmailTemplateTypeChange={(id: string) =>
                         setForm({ ...form, emailTemplateTypeId: id })
                     }
                 />

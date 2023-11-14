@@ -6,12 +6,12 @@ export enum Roles {
 }
 
 export interface IRoleDto {
-    id: number;
+    id: string;
     name: string;
     permissions: IRolePermissionDto[];
 }
 
 export interface IRolePermissionDto {
-    id: number;
+    id: string;
     name: string;
 }

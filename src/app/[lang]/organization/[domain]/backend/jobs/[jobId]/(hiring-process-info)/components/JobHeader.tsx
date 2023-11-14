@@ -27,7 +27,7 @@ const JobHeader = ({}: IJobHeader) => {
     const queryClient = useQueryClient();
     const requestPublishMutation = useMutation({
         mutationKey: [`publish-job-${job.id}`],
-        mutationFn: (id: number) => jobServices.requestPublishJob(id),
+        mutationFn: (id: string) => jobServices.requestPublishJob(id),
         onSuccess: res => {
             queryClient.invalidateQueries({ queryKey: ["jobs"] });
             toast.success(res.message, {
@@ -95,7 +95,7 @@ const JobHeader = ({}: IJobHeader) => {
         } catch (error) {}
     };
 
-    const handleRequestPublish = async (id: number) => {
+    const handleRequestPublish = async (id: string) => {
         setIsLoading(true);
         await requestPublishMutation.mutateAsync(id);
 

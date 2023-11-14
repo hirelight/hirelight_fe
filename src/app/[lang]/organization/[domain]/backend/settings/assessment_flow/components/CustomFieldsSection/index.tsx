@@ -36,13 +36,13 @@ import AddProfleSectionForm from "./components/AddProfileSectionForm";
 type CustomFieldsSectionState = {
     appFormTemplate: Omit<IAppFormTemplateDto, "content" | "organizationId"> & {
         content: IAppFormTemplate;
-        organizationId: number | null;
+        organizationId: string | null;
     };
     setAppFormTemplate: React.Dispatch<
         React.SetStateAction<
             Omit<IAppFormTemplateDto, "content" | "organizationId"> & {
                 content: IAppFormTemplate;
-                organizationId: number | null;
+                organizationId: string | null;
             }
         >
     >;
@@ -65,10 +65,10 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
     const [appFormTemplate, setAppFormTemplate] = useState<
         Omit<IAppFormTemplateDto, "content" | "organizationId"> & {
             content: IAppFormTemplate;
-            organizationId: number | null;
+            organizationId: string | null;
         }
     >({
-        id: 0,
+        id: "",
         name: "",
         content: {
             app_form: [],
@@ -77,7 +77,7 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
         organizationId: null,
         createdTime: new Date(),
         updatedTime: new Date(),
-        updaterId: 0,
+        updaterId: "",
     });
     const unOrderField = useMemo(() => {
         return appFormTemplate.content.app_form

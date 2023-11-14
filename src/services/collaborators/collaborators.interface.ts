@@ -1,35 +1,35 @@
 export interface ISendCollabInvitationDto {
-    jobPostId: number;
-    employerId: number;
+    jobPostId: string;
+    employerId: string;
     permissions: {
-        permissionId: number;
-        assessmentId?: number;
+        permissionId: string;
+        assessmentId?: string;
         permissionName: string;
     }[];
 }
 
 export interface ICollabPermission {
-    permissionId: number;
-    assessmentId?: number;
+    permissionId: string;
+    assessmentId?: string;
     permissionName: string;
 }
 export interface IEditCollaboratorDto {
-    jobPostId: number;
-    employerId: number;
+    jobPostId: string;
+    employerId: string;
     permissions: ICollabPermission[];
 }
 
 export interface ICollaboratorDto {
-    id: number;
+    id: string;
     employerDto: {
-        id: number;
+        id: string;
         email: string;
         username: string | null;
         firstName: string;
         lastName: string | null;
         status: string;
     };
-    jobPostId: number;
+    jobPostId: string;
     status: string;
     permissions: ICollabPermission[];
 }

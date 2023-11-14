@@ -22,7 +22,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ employer, index }) => {
     const queryClient = useQueryClient();
     const deleteMutation = useMutation({
         mutationKey: ["delete-employer"],
-        mutationFn: (id: number) => employerOrgServices.deleteByIdAsync(id),
+        mutationFn: (id: string) => employerOrgServices.deleteByIdAsync(id),
         onSuccess: res => {
             toast.success(res.message);
             queryClient.invalidateQueries({

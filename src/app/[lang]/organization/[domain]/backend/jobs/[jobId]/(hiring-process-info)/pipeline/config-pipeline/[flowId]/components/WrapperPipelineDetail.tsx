@@ -15,7 +15,7 @@ const WrapperPipelineDetail = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         if (flowId && !data.id)
-            dispatch(fetchAssessmentFlowById(parseInt(flowId as string)));
+            dispatch(fetchAssessmentFlowById(flowId as string));
     }, [flowId, dispatch, data.id]);
 
     if (loading || !data.id)

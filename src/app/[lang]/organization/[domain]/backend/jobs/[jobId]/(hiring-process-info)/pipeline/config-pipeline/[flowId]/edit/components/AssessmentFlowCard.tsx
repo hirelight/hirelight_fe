@@ -25,7 +25,7 @@ const defaultStage: AssessmentTypeKey[] = [
 ];
 
 type AssessmentFlowCardProps = {
-    data: IAssessmentFlow & { id: number };
+    data: IAssessmentFlow & { id: string };
     updateStage: (updateStage: any) => void;
     deleteStage: () => void;
 };

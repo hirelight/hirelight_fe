@@ -43,7 +43,7 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
         setIsLoading(true);
         try {
             const res = await collaboratorsServices.sendInvitation({
-                jobPostId: parseInt(jobId as string),
+                jobPostId: jobId as string,
                 employerId: selectEmployer.employerDto.id,
                 permissions: currentPermissions.map(item => ({
                     permissionId: item.id,

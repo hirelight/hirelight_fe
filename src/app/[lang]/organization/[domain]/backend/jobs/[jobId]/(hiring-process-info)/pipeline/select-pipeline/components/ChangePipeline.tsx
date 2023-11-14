@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
@@ -11,6 +11,7 @@ import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setAssessmentFlow } from "@/redux/slices/assessment-flow.slice";
+import { isInvalidForm } from "@/helpers";
 
 interface IChangePipeline {
     datas: (Omit<IAssessmentFlTempDto, "content"> & {
@@ -20,23 +21,61 @@ interface IChangePipeline {
 
 const ChangePipeline = ({ datas }: IChangePipeline) => {
     const { jobId } = useParams();
-    const flowId = useSearchParams().get("flowId");
     const router = useRouter();
 
     const dispatch = useAppDispatch();
     const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
+    const [formErr, setFormErr] = useState({
+        nameErr: "",
+        flowTimelineErr: "",
+        flowErr: "",
+    });
+    const [selectedTemplate, setSelectedTemplate] = useState(
+        datas.length > 0
+            ? datas[0].assessments.map(item => ({
+                  name: item.name,
+                  assessmentTypeName: item.assessmentType,
+              }))
+            : undefined
+    );
+
+    const inValidInput = (): boolean => {
+        const errors = formErr;
+        const { name, startTime, endTime } = assessmentFlow;
+
+        if (name === "") errors.nameErr = "Flow name must not be blank!";
+
+        if (startTime.getTime() >= endTime.getTime())
+            errors.flowTimelineErr =
+                "Start time must be earlier than end time!";
+
+        if (endTime.getTime() <= new Date().getTime())
+            errors.flowTimelineErr = "End time must be in the future!";
+
+        if (!selectedTemplate) errors.flowErr = "Select at least one template!";
+
+        const isInvalid = isInvalidForm(errors);
+        if (isInvalid) setFormErr({ ...errors });
+
+        return isInvalid;
+    };
 
     const handleCreateFlow = async () => {
+        if (inValidInput())
+            return toast.error(
+                <div>
+                    <p>Invalid input</p>
+                    <p>Check issue in red!</p>
+                </div>
+            );
         try {
             const res = await assessmentFlowsServices.createAsync({
                 ...assessmentFlow,
-                assessments: assessmentFlow.assessments
-                    .slice(1, -1)
-                    .map(item => ({
-                        name: item.name,
-                        assessmentType: item.assessmentTypeName,
-                    })),
-                jobPostId: parseInt(jobId as string),
+                assessments: selectedTemplate!!.slice(1, -1).map(item => ({
+                    name: item.name,
+                    assessmentType: item.assessmentTypeName,
+                })),
+                jobPostId: jobId as string,
             });
 
             toast.success(res.message);
@@ -47,25 +86,27 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
         }
     };
 
-    const handleUpdateFlow = async () => {
-        if (!assessmentFlow.id) return toast.error("Id requried");
-        try {
-            const res = await assessmentFlowsServices.editAsync({
-                ...assessmentFlow,
-                id: assessmentFlow.id,
-                assessments: assessmentFlow.assessments.map(item => ({
-                    name: item.name,
-                    id: item.id,
-                    assessmentType: item.assessmentTypeName,
-                })),
-            });
+    // const handleUpdateFlow = async () => {
+    //     if (!assessmentFlow.id) return toast.error("Id requried");
+    //     if(!selectedTemplate) return;
 
-            toast.success(res.message);
-            router.push(`config-pipeline/${assessmentFlow.id}`);
-        } catch (error) {
-            toast.error("Create flow error");
-        }
-    };
+    //     try {
+    //         const res = await assessmentFlowsServices.editAsync({
+    //             ...assessmentFlow,
+    //             id: assessmentFlow.id,
+    //             assessments: assessmentFlow.assessments.map(item => ({
+    //                 name: item.name,
+    //                 id: item.id,
+    //                 assessmentType: item.assessmentTypeName,
+    //             })),
+    //         });
+
+    //         toast.success(res.message);
+    //         router.push(`config-pipeline/${assessmentFlow.id}`);
+    //     } catch (error) {
+    //         toast.error("Create flow error");
+    //     }
+    // };
 
     return (
         <div>
@@ -73,15 +114,20 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                 <CustomInput
                     title="Name"
                     value={assessmentFlow.name}
-                    onChange={e =>
+                    onChange={e => {
                         dispatch(
                             setAssessmentFlow({
                                 ...assessmentFlow,
                                 name: e.target.value,
                             })
-                        )
-                    }
+                        );
+                        setFormErr({
+                            ...formErr,
+                            nameErr: "",
+                        });
+                    }}
                     required
+                    errorText={formErr.nameErr}
                 />
                 <div></div>
             </div>
@@ -92,14 +138,18 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                     </h3>
                     <DatePicker
                         value={new Date(assessmentFlow.startTime)}
-                        onChange={date =>
+                        onChange={date => {
                             dispatch(
                                 setAssessmentFlow({
                                     ...assessmentFlow,
                                     startTime: date,
                                 })
-                            )
-                        }
+                            );
+                            setFormErr({
+                                ...formErr,
+                                flowTimelineErr: "",
+                            });
+                        }}
                     />
                 </div>
                 <div>
@@ -108,16 +158,27 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                     </h3>
                     <DatePicker
                         value={new Date(assessmentFlow.endTime)}
-                        onChange={date =>
+                        onChange={date => {
                             dispatch(
                                 setAssessmentFlow({
                                     ...assessmentFlow,
                                     endTime: date,
                                 })
-                            )
-                        }
+                            );
+                            setFormErr({
+                                ...formErr,
+                                flowTimelineErr: "",
+                            });
+                        }}
                     />
                 </div>
+                {formErr.flowTimelineErr && (
+                    <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                        <span className="font-medium">
+                            {formErr.flowTimelineErr}
+                        </span>
+                    </p>
+                )}
             </div>
 
             {assessmentFlow.id && (
@@ -151,7 +212,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
             <React.Fragment>
                 {datas?.map((flow, index) => {
                     return (
-                        <ul key={flow.id} className="mb-6">
+                        <ul key={flow.id}>
                             <li>
                                 <div className="flex items-center mb-4">
                                     <input
@@ -160,21 +221,30 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                                         value=""
                                         name="recruiting-pipeline"
                                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                        defaultChecked={index === 0}
+                                        checked={index === 0}
                                         onChange={e => {
                                             if (e.currentTarget.checked) {
-                                                dispatch(
-                                                    setAssessmentFlow({
-                                                        ...assessmentFlow,
-                                                        assessments:
-                                                            flow.assessments.map(
-                                                                item => ({
-                                                                    name: item.name,
-                                                                    assessmentTypeName:
-                                                                        item.assessmentType,
-                                                                })
-                                                            ),
-                                                    })
+                                                // dispatch(
+                                                //     setAssessmentFlow({
+                                                //         ...assessmentFlow,
+                                                //         assessments:
+                                                //             flow.assessments.map(
+                                                //                 item => ({
+                                                //                     name: item.name,
+                                                //                     assessmentTypeName:
+                                                //                         item.assessmentType,
+                                                //                 })
+                                                //             ),
+                                                //     })
+                                                // );
+                                                setSelectedTemplate(
+                                                    flow.assessments.map(
+                                                        item => ({
+                                                            name: item.name,
+                                                            assessmentTypeName:
+                                                                item.assessmentType,
+                                                        })
+                                                    )
                                                 );
                                             }
                                         }}
@@ -208,12 +278,14 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                     );
                 })}
 
-                <div className="w-fit">
-                    <Button
-                        onClick={flowId ? handleUpdateFlow : handleCreateFlow}
-                    >
-                        Save changes
-                    </Button>
+                {formErr.flowErr && (
+                    <p className="mt-2 text-sm text-red-600 dark:text-red-500 mt-2">
+                        <span className="font-medium">{formErr.flowErr}</span>
+                    </p>
+                )}
+
+                <div className="w-fit mt-6">
+                    <Button onClick={handleCreateFlow}>Save changes</Button>
                 </div>
             </React.Fragment>
         </div>

@@ -23,11 +23,8 @@ const CollaboratorCard: React.FC<CollaboratorCardProps> = ({ member }) => {
 
     const deleteMemberMutation = useMutation({
         mutationKey: ["deleteMemberById"],
-        mutationFn: (memberId: number) =>
-            collaboratorsServices.deleteCollaborator(
-                parseInt(jobId as string),
-                memberId
-            ),
+        mutationFn: (memberId: string) =>
+            collaboratorsServices.deleteCollaborator(jobId as string, memberId),
         onSuccess: res => {
             toast.success(res.message);
             setIsLoading(false);
@@ -38,7 +35,7 @@ const CollaboratorCard: React.FC<CollaboratorCardProps> = ({ member }) => {
         },
     });
 
-    const handleDeleteMember = (memberId: number) => {
+    const handleDeleteMember = (memberId: string) => {
         setIsLoading(true);
         deleteMemberMutation.mutate(memberId);
         setIsLoading(false);

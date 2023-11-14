@@ -60,7 +60,7 @@ const getListAsync = async (): Promise<IResponse<IQuestionAnswerDto[]>> => {
 };
 
 const getByIdAsync = async (
-    id: number
+    id: string
 ): Promise<IResponse<IQuestionAnswerDto>> => {
     try {
         const res = await interceptor.get(
@@ -90,7 +90,7 @@ const editAsync = async (
     }
 };
 
-const deleteByIdAsync = async (id: number): Promise<IResponse<any>> => {
+const deleteByIdAsync = async (id: string): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.delete(
             endpoints.QUESTION_ANSWERS + `/${id}`
@@ -116,7 +116,7 @@ const getTagListAsync = async (): Promise<IResponse<IQuestionTagDto[]>> => {
 };
 
 const getTagByIdAsync = async (
-    id: number
+    id: string
 ): Promise<IResponse<IQuestionTagDto>> => {
     try {
         const res = await interceptor.get(endpoints.TAGS + `/${id}`);
@@ -160,7 +160,7 @@ const editTagAsync = async (
     }
 };
 
-const deleteTagByIdAsync = async (id: number): Promise<IResponse<any>> => {
+const deleteTagByIdAsync = async (id: string): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.delete(endpoints.TAGS + `/${id}`);
 

@@ -4,13 +4,13 @@ export interface ICreateAssessmentFlTempDto {
 }
 
 export interface IEditAssessmentFlTempDto extends ICreateAssessmentFlTempDto {
-    id: number;
-    organizationId: number;
+    id: string;
+    organizationId: string;
 }
 
 export interface IAssessmentFlTempDto {
-    id?: number;
-    organizationId?: number;
+    id?: string;
+    organizationId?: string;
     name: string;
     content: string;
 }

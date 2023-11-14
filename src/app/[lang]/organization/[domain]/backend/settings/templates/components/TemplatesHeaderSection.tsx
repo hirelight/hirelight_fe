@@ -32,7 +32,7 @@ const TemplatesHeaderSection = () => {
 
     return (
         <>
-            {!isAdding && editingId < 0 && (
+            {!isAdding && editingId === "" && (
                 <div className="p-4 border-b border-gray-300">
                     <div className="relative rounded-md shadow-sm max-w-[50%]">
                         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2">

@@ -5,25 +5,17 @@ import {
 } from "@heroicons/react/24/solid";
 import React, { FormEvent } from "react";
 import { AnimatePresence, Reorder } from "framer-motion";
+import { v4 as uuid } from "uuid";
 
 import { Button, CustomInput } from "@/components";
 
 import QuestionItem from "./QuestionItem";
 
-function generateNewId(existingIds: number[]): number {
-    let newId: number;
-    do {
-        newId = Math.floor(Math.random() * 200);
-    } while (existingIds.includes(newId));
-
-    return newId;
-}
-
 type QuestionSection = {
-    id?: number;
+    id?: string;
     topic: string;
     questions: {
-        id: number;
+        id: string;
         name: string;
         config: {
             thinkTime: string;
@@ -54,7 +46,7 @@ const AddNewQuestionSection = ({
         e.preventDefault();
 
         const newQuestion = {
-            id: generateNewId(questionSection.questions.map(item => item.id)),
+            id: uuid(),
             name: "",
             config: {
                 thinkTime: "Unlimited time to think",

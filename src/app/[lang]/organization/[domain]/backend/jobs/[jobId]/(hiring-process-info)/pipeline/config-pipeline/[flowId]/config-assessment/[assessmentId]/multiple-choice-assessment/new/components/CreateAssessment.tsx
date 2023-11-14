@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 import {
     Button,
@@ -19,6 +20,7 @@ import { Logo } from "@/icons";
 import { IEditAssessmentDto, IQuestionAnswerDto } from "@/services";
 import QuestionPickerCard from "@/components/QuestionPicker/QuestionPickerCard";
 import assessmentsServices from "@/services/assessments/assessments.service";
+import { useAppSelector } from "@/redux/reduxHooks";
 
 import styles from "./CreateAssessment.module.scss";
 import QuestionPickerModal from "./QuestionPickerModal";
@@ -53,36 +55,48 @@ type ICreateMCAssessment = Omit<IEditAssessmentDto, "content" | "query"> & {
 const CreateAssessment = () => {
     const { assessmentId } = useParams();
 
+    const assessment = useAppSelector(state => state.assessment.data);
+    const queryClient = useQueryClient();
+
     const [showQuestionPicker, setShowQuestionPicker] = useState(false);
     const [pickedQuestions, setPickedQuestions] = useState<
         IQuestionAnswerDto[]
-    >([]);
+    >(
+        assessment.assessmentQuestionAnswerSetContent
+            ? JSON.parse(assessment.assessmentQuestionAnswerSetContent)
+            : []
+    );
     const [formState, setFormState] = useState<ICreateMCAssessment>({
-        id: parseInt(assessmentId as string),
-        name: "",
-        description: "",
-        content: {
-            welcomeNote: "",
-            config: {
-                shuffleQuestion: false,
-                shuffleAnswer: false,
-                autoEvaluate: {
-                    enabled: false,
-                    accuracy: "",
-                },
-            },
-        },
-        query: {
-            numOfQuestions: {
-                easy: 0,
-                medium: 0,
-                hard: 0,
-                advance: 0,
-            },
-        },
-        duration: 0,
-        index: 0,
-        assessmentQuestionAnswerSetContent: "",
+        id: assessmentId as string,
+        name: assessment.name,
+        description: assessment.description ?? "",
+        content: assessment.content
+            ? JSON.parse(assessment.content)
+            : {
+                  welcomeNote: "",
+                  config: {
+                      shuffleQuestion: false,
+                      shuffleAnswer: false,
+                      autoEvaluate: {
+                          enabled: false,
+                          accuracy: "",
+                      },
+                  },
+              },
+        query: assessment.query
+            ? JSON.parse(assessment.query)
+            : {
+                  numOfQuestions: {
+                      easy: 0,
+                      medium: 0,
+                      hard: 0,
+                      advance: 0,
+                  },
+              },
+        duration: assessment.duration ?? 0,
+        index: assessment.index,
+        assessmentQuestionAnswerSetContent:
+            assessment.assessmentQuestionAnswerSetContent ?? "",
     });
 
     const handleCreateMCAssessment = async (e: FormEvent) => {
@@ -96,43 +110,47 @@ const CreateAssessment = () => {
                 assessmentQuestionAnswerSetContent:
                     JSON.stringify(pickedQuestions),
             });
+            console.log(res);
+            queryClient.invalidateQueries({
+                queryKey: [`assessment-${assessmentId}`],
+            });
             toast.success(res.message);
         } catch (error) {
             console.error(error);
         }
     };
 
-    useEffect(() => {
-        const getById = async (id: number) => {
-            try {
-                const res = await assessmentsServices.getById(id);
-                setFormState(prev => ({
-                    ...prev,
-                    id: res.data.id,
-                    name: res.data.name,
-                    description: res.data.description ?? "",
-                    content: res.data.content
-                        ? JSON.parse(res.data.content)
-                        : prev.content,
-                    query: res.data.query
-                        ? JSON.parse(res.data.query)
-                        : prev.query,
-                    duration: res.data.duration ?? 0,
-                    index: res.data.index,
-                    assessmentQuestionAnswerSetContent:
-                        res.data.assessmentQuestionAnswerSetContent ?? "",
-                }));
-                if (res.data.assessmentQuestionAnswerSetContent)
-                    setPickedQuestions(
-                        JSON.parse(res.data.assessmentQuestionAnswerSetContent)
-                    );
-            } catch (error) {
-                console.error(error);
-            }
-        };
+    // useEffect(() => {
+    //     const getById = async (id: string) => {
+    //         try {
+    //             const res = await assessmentsServices.getById(id);
+    //             setFormState(prev => ({
+    //                 ...prev,
+    //                 id: res.data.id,
+    //                 name: res.data.name,
+    //                 description: res.data.description ?? "",
+    //                 content: res.data.content
+    //                     ? JSON.parse(res.data.content)
+    //                     : prev.content,
+    //                 query: res.data.query
+    //                     ? JSON.parse(res.data.query)
+    //                     : prev.query,
+    //                 duration: res.data.duration ?? 0,
+    //                 index: res.data.index,
+    //                 assessmentQuestionAnswerSetContent:
+    //                     res.data.assessmentQuestionAnswerSetContent ?? "",
+    //             }));
+    //             if (res.data.assessmentQuestionAnswerSetContent)
+    //                 setPickedQuestions(
+    //                     JSON.parse(res.data.assessmentQuestionAnswerSetContent)
+    //                 );
+    //         } catch (error) {
+    //             console.error(error);
+    //         }
+    //     };
 
-        getById(parseInt(assessmentId as string));
-    }, [assessmentId]);
+    //     getById(assessmentId as string);
+    // }, [assessmentId]);
 
     return (
         <>
