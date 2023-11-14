@@ -12,7 +12,7 @@
     min-height: 120px;
     min-width: 480px;
     height: fit-content;
-    @apply relative opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 text-left shadow-xl transition-all sm:my-8 sm:max-w-4xl;
+    @apply relative opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95 text-left shadow-xl transition-all my-auto sm:my-8 sm:max-w-4xl;
     &.entering {
         @apply opacity-100 translate-y-0 sm:scale-100 ease-out duration-300;
     }

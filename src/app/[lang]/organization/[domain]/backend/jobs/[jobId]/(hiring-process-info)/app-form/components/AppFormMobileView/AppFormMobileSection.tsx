@@ -23,6 +23,7 @@ const AppFormMobileSection: React.FC<AppFormMobileSectionProps> = ({}) => {
                 return (
                     <div key={field.label} className=" mb-6">
                         <CustomTextArea
+                            id={field.id}
                             key={field.label}
                             title={field.label}
                             type={field.type}
@@ -34,6 +35,7 @@ const AppFormMobileSection: React.FC<AppFormMobileSectionProps> = ({}) => {
                 return (
                     <div key={field.label} className=" mb-6">
                         <CustomTextArea
+                            id={field.id}
                             key={field.label}
                             title={field.label}
                             type={field.type}
@@ -45,6 +47,7 @@ const AppFormMobileSection: React.FC<AppFormMobileSectionProps> = ({}) => {
                 return (
                     <div key={field.label} className=" mb-6">
                         <CustomFileInput
+                            id={field.id}
                             key={field.label}
                             title={field.label}
                             type={field.type}
@@ -80,6 +83,7 @@ const AppFormMobileSection: React.FC<AppFormMobileSectionProps> = ({}) => {
                 return (
                     <div key={field.label} className=" mb-6">
                         <CustomInput
+                            id={field.id}
                             key={field.label}
                             title={field.label}
                             type={field.type}

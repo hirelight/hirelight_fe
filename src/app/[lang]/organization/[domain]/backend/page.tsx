@@ -6,22 +6,14 @@ import banner from "/public/images/interviewee_auth_bg.png";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
 import jwtDecode from "jwt-decode";
-import { redirect } from "next/navigation";
-import {
-    HydrationBoundary,
-    QueryClient,
-    dehydrate,
-} from "@tanstack/react-query";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 
 import endpoints from "@/utils/constants/service-endpoint";
 import { IJobDto } from "@/services/job/job.interface";
 import { checkResErr } from "@/helpers/resErrHelpers";
 import getQueryClient from "@/utils/react-query/getQueryClient";
 import { IResponse } from "@/interfaces/service.interface";
-import { DatePicker } from "@/components";
 
-import JobCard from "./components/JobCard";
-import HiringStageBar from "./components/HiringStageBar";
 import JobList from "./components/JobList";
 
 export const metadata: Metadata = {

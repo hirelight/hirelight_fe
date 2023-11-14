@@ -52,6 +52,8 @@ const SignupForm = () => {
         });
     };
 
+    const validateInput = () => {};
+
     const handleSubmitSignup = async (e: FormEvent) => {
         e.preventDefault();
         if (formState.password !== formState.confirmPassword) {
@@ -59,8 +61,9 @@ const SignupForm = () => {
                 ...formError,
                 confirmPassword: "Confirm password not matched!",
             });
+            return;
         }
-
+        setLoading(true);
         try {
             const res = await authServices.registerCandidate(formState);
 
@@ -91,6 +94,7 @@ const SignupForm = () => {
                         onChange={e => handleChangeForm(e, "firstName")}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="John"
+                        autoComplete="first-name"
                         required
                     />
                     {formError.firstName && (
@@ -115,6 +119,7 @@ const SignupForm = () => {
                         onChange={e => handleChangeForm(e, "lastName")}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Doe"
+                        autoComplete="last-name"
                         required
                     />
                     {formError.lastName && (
@@ -140,6 +145,7 @@ const SignupForm = () => {
                     onChange={e => handleChangeForm(e, "email")}
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="john.doe@company.com"
+                    autoComplete="email"
                     required
                 />
                 {formError.email && (
@@ -165,6 +171,10 @@ const SignupForm = () => {
                         onChange={e => handleChangeForm(e, "password")}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="•••••••••"
+                        minLength={8}
+                        maxLength={25}
+                        title="Password must between 8 and 25"
+                        autoComplete="new-password"
                         required
                     />
                     <button
@@ -198,6 +208,8 @@ const SignupForm = () => {
                         onChange={e => handleChangeForm(e, "confirmPassword")}
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="•••••••••"
+                        minLength={8}
+                        maxLength={25}
                         required
                     />
                     <button
@@ -215,7 +227,7 @@ const SignupForm = () => {
                     </p>
                 )}
             </div>
-            <div className="flex items-start mb-4">
+            {/* <div className="flex items-start mb-4">
                 <div className="flex items-center h-5">
                     <input
                         id="remember"
@@ -238,7 +250,7 @@ const SignupForm = () => {
                     </a>
                     .
                 </label>
-            </div>
+            </div> */}
             <button
                 type="submit"
                 className="flex w-full justify-center items-center  text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"

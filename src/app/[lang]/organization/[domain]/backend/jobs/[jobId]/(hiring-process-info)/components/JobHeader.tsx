@@ -123,14 +123,19 @@ const JobHeader = ({}: IJobHeader) => {
                             {jobLoading && <SpinLoading className="mr-2" />}Save
                             draft
                         </button>
-                        <button
-                            type="button"
-                            className="text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                            onClick={handleRequestPublish.bind(null, job.id)}
-                        >
-                            {isLoading && <SpinLoading className="mr-2" />}
-                            Request publish
-                        </button>
+                        {job.assessmentFlowId && (
+                            <button
+                                type="button"
+                                className="text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                                onClick={handleRequestPublish.bind(
+                                    null,
+                                    job.id
+                                )}
+                            >
+                                {isLoading && <SpinLoading className="mr-2" />}
+                                Request publish
+                            </button>
+                        )}
                     </div>
                 </div>
                 <div className={styles.stage__wrapper}>
@@ -214,7 +219,7 @@ const JobHeader = ({}: IJobHeader) => {
                                 }/pipeline/${
                                     job.assessmentFlowId
                                         ? `config-pipeline/${job.assessmentFlowId}`
-                                        : "select-pipeline"
+                                        : "create-flow"
                                 }`}
                                 tabIndex={-1}
                                 className={`h-full`}

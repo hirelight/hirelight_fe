@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent } from "react";
+import React, { FormEvent, useRef, useState } from "react";
 import { Reorder } from "framer-motion";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { XMarkIcon } from "@heroicons/react/24/solid";
@@ -21,6 +21,7 @@ import {
     setAppForm,
 } from "@/redux/slices/job.slice";
 import { DragIndicatorIcon } from "@/icons";
+import { debounce, isInvalidForm } from "@/helpers";
 
 interface IAddQuestionModal {
     data?: ICustomField;
@@ -52,24 +53,48 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                   rejecting: false,
               }
     );
+    const [questionErr, setQuestionErr] = useState({
+        labelErr: "",
+        choicesErr: "",
+        choiceLabelErr: "",
+    });
 
     const dispatch = useAppDispatch();
-    const allFields = useAppSelector(state => state.job.data.applicationForm)
-        .map(item => item.fields)
-        .flat(1)
-        .filter(item => item.id !== questionField.id);
+    const allFields = useRef(
+        useAppSelector(state => state.job.data.applicationForm)
+            .map(item => item.fields)
+            .flat(1)
+            .filter(item => item.id !== questionField.id)
+    );
+
+    const validateNewQuestion = () => {
+        const { label, type, choices_attributes } = questionField;
+        const errors = questionErr;
+
+        if (!label) errors.labelErr = "Question name must not be blank!";
+
+        if (
+            (type === "dropdown" || type === "multiple_choice") &&
+            choices_attributes.length < 2
+        )
+            errors.choicesErr = "Question must have at least 2 choices!";
+
+        if (allFields.current.find(item => item.label === questionField.label))
+            errors.labelErr = "Question name is already existed!";
+
+        if (choices_attributes.some(choice => !choice.name))
+            errors.choiceLabelErr = "Choice label must not be blank!";
+
+        const isInvalid = isInvalidForm(errors);
+        if (isInvalid) setQuestionErr({ ...errors });
+        return isInvalid;
+    };
 
     const handleAddQuestion = (e: FormEvent) => {
         e.preventDefault();
 
-        if (allFields.find(item => item.label === questionField.label))
-            return alert("Question title must not dupplicate");
+        if (validateNewQuestion()) return;
 
-        if (
-            questionField.type === "multiple_choice" &&
-            questionField.choices_attributes.length < 2
-        )
-            return alert("Multiple choice question have at lease 2 answers");
         if (data) {
             dispatch(
                 editCustomField({
@@ -91,15 +116,59 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
         closeModal();
     };
 
+    const handleAddChoice = () => {
+        setQuestionField(prev => ({
+            ...prev,
+            choices_attributes: prev.choices_attributes.concat([
+                {
+                    id: `CA_${uuid()}`,
+                    name: "",
+                    position: prev.choices_attributes.length,
+                    enabled: true,
+                },
+            ]),
+        }));
+        setQuestionErr({ ...questionErr, choicesErr: "" });
+    };
+
+    const handleEditChoice = (id: string, content: string) => {
+        setQuestionField(prev => ({
+            ...prev,
+            choices_attributes: prev.choices_attributes.map(choice => {
+                if (choice.id === id) {
+                    return {
+                        ...choice,
+                        name: content,
+                    };
+                }
+
+                return choice;
+            }),
+        }));
+        setQuestionErr({ ...questionErr, choiceLabelErr: "" });
+    };
+
+    const handleRemoveChoice = (id: string) => {
+        setQuestionField(prev => ({
+            ...prev,
+            choices_attributes: prev.choices_attributes.filter(
+                choice => choice.id !== id
+            ),
+        }));
+    };
+
     return (
         <div
-            className="fixed top-0 left-0 right-0 bottom-0 h-full flex items-center justify-center backdrop-brightness-75 backdrop-blur-sm z-50"
+            className="fixed top-0 left-0 right-0 bottom-0 h-full flex items-center justify-center backdrop-brightness-75 backdrop-blur-sm z-50 px-4"
             onClick={() => closeModal()}
         >
             <form
                 className="max-w-[640px] bg-white rounded-md p-8"
                 onClick={e => e.stopPropagation()}
                 onSubmit={handleAddQuestion}
+                onKeyDown={e => {
+                    if (e.key === "Enter") e.preventDefault();
+                }}
             >
                 <h2 className="text-lg font-medium uppercase mb-4">
                     Add new question
@@ -128,15 +197,17 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
 
                     <CustomTextArea
                         title="Question"
-                        required
                         placeholder="Tell me something about you"
                         value={questionField.label}
-                        onChange={(e: any) =>
+                        onChange={(e: any) => {
+                            console.log("Set input");
                             setQuestionField({
                                 ...questionField,
                                 label: e.target.value,
-                            })
-                        }
+                            });
+                            setQuestionErr({ ...questionErr, labelErr: "" });
+                        }}
+                        errorText={questionErr.labelErr}
                     />
 
                     {(questionField.type === "dropdown" ||
@@ -169,45 +240,33 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                                             <CustomInput
                                                 title=""
                                                 value={item.name}
-                                                onChange={e => {
-                                                    setQuestionField({
-                                                        ...questionField,
-                                                        choices_attributes:
-                                                            questionField.choices_attributes.map(
-                                                                _ => {
-                                                                    if (
-                                                                        _.id ===
-                                                                        item.id
-                                                                    ) {
-                                                                        return {
-                                                                            ..._,
-                                                                            name: e
-                                                                                .target
-                                                                                .value,
-                                                                        };
-                                                                    }
-
-                                                                    return _;
-                                                                }
-                                                            ),
-                                                    });
-                                                }}
                                                 className="flex-1 mr-2"
+                                                onChange={e =>
+                                                    handleEditChoice(
+                                                        item.id,
+                                                        e.target.value
+                                                    )
+                                                }
+                                                onKeyDown={e => {
+                                                    if (
+                                                        e.key === "Enter" &&
+                                                        item.name &&
+                                                        index ===
+                                                            questionField
+                                                                .choices_attributes
+                                                                .length -
+                                                                1
+                                                    )
+                                                        handleAddChoice();
+                                                }}
                                             />
                                             <button
                                                 type="button"
                                                 className="block w-5 h-5 bg-red-500 rounded-full overflow-hidden p-[2px] text-white "
-                                                onClick={() =>
-                                                    setQuestionField({
-                                                        ...questionField,
-                                                        choices_attributes:
-                                                            questionField.choices_attributes.filter(
-                                                                (_, iIndex) =>
-                                                                    iIndex !==
-                                                                    index
-                                                            ),
-                                                    })
-                                                }
+                                                onClick={handleRemoveChoice.bind(
+                                                    null,
+                                                    item.id
+                                                )}
                                             >
                                                 <XMarkIcon />
                                             </button>
@@ -218,26 +277,7 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                                                 <button
                                                     type="button"
                                                     className="w-5 h-5"
-                                                    onClick={() =>
-                                                        setQuestionField({
-                                                            ...questionField,
-                                                            choices_attributes:
-                                                                questionField.choices_attributes.concat(
-                                                                    [
-                                                                        {
-                                                                            id: `CA_${uuid()}`,
-                                                                            name: "",
-                                                                            position:
-                                                                                questionField
-                                                                                    .choices_attributes
-                                                                                    .length,
-                                                                            enabled:
-                                                                                true,
-                                                                        },
-                                                                    ]
-                                                                ),
-                                                        })
-                                                    }
+                                                    onClick={handleAddChoice}
                                                 >
                                                     <PlusCircleIcon />
                                                 </button>
@@ -246,6 +286,20 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                                     )
                                 )}
                             </Reorder.Group>
+                            {questionErr.choiceLabelErr && (
+                                <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                                    <span className="font-medium">
+                                        {questionErr.choiceLabelErr}
+                                    </span>
+                                </p>
+                            )}
+                            {questionErr.choicesErr && (
+                                <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                                    <span className="font-medium">
+                                        {questionErr.choicesErr}
+                                    </span>
+                                </p>
+                            )}
                         </div>
                     )}
 

@@ -1,6 +1,10 @@
 "use client";
 
 import React from "react";
+import {
+    ComputerDesktopIcon,
+    DocumentTextIcon,
+} from "@heroicons/react/24/outline";
 
 import { AppFormView, ButtonOutline } from "@/components";
 import { useAppSelector } from "@/redux/reduxHooks";
@@ -26,11 +30,29 @@ const AppForm: React.FC<AppFormProps> = ({}) => {
                     className="ml-auto"
                     onClick={() => setPreviewDesktop(!previewDesktop)}
                 >
-                    {previewDesktop ? "View mobile mode" : "View destop mode"}
+                    {previewDesktop ? (
+                        <div>
+                            <span className="hidden md:inline">
+                                View mobile mode
+                            </span>
+                            <span className="inline md:hidden">
+                                <DocumentTextIcon className="w-6 h-6" />
+                            </span>
+                        </div>
+                    ) : (
+                        <div>
+                            <span className="hidden md:inline">
+                                View destop mode
+                            </span>
+                            <span className="inline md:hidden">
+                                <ComputerDesktopIcon className="w-6 h-6" />
+                            </span>
+                        </div>
+                    )}
                 </ButtonOutline>
             </div>
             {previewDesktop ? (
-                <AppFormView data={job} />
+                <AppFormView data={job} viewOnly={true} />
             ) : (
                 <form className="drop-shadow-lg">
                     <div className="flex">

@@ -53,7 +53,7 @@ type ICreateMCAssessment = Omit<IEditAssessmentDto, "content" | "query"> & {
 };
 
 const CreateAssessment = () => {
-    const { assessmentId } = useParams();
+    const { assessmentId, flowId } = useParams();
 
     const assessment = useAppSelector(state => state.assessment.data);
     const queryClient = useQueryClient();
@@ -112,7 +112,7 @@ const CreateAssessment = () => {
             });
             console.log(res);
             queryClient.invalidateQueries({
-                queryKey: [`assessment-${assessmentId}`],
+                queryKey: [`assessmentFlow-${flowId}`],
             });
             toast.success(res.message);
         } catch (error) {
@@ -276,7 +276,7 @@ const CreateAssessment = () => {
                                     }))}
                                     value={
                                         formState.content.config.autoEvaluate
-                                            .accuracy ?? ""
+                                            .accuracy!!
                                     }
                                     onChange={value =>
                                         setFormState({

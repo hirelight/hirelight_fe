@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 const HiringPipelineMembers = () => {
     return (
         <div className="w-full bg-white shadow-lg rounded-md">
-            <div className="p-6">
+            <div className="p-4 xl:p-6">
                 <HeadingNoSSR />
                 <AddTeamMebers />
             </div>

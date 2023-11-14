@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 import {
     Button,
@@ -48,8 +49,10 @@ type AsyncVideoForm = Omit<IEditAsyncVideoInterviewDto, "content"> & {
 };
 
 const AsyncVideoForm = () => {
-    const { assessmentId } = useParams();
+    const { flowId } = useParams();
     const assessment = useAppSelector(state => state.assessment.data);
+
+    const queryClient = useQueryClient();
 
     const [showCreate, setShowCreate] = React.useState(false);
     const [formState, setFormState] = React.useState<AsyncVideoForm>({
@@ -79,6 +82,9 @@ const AsyncVideoForm = () => {
                 duration: 1000,
             });
 
+            queryClient.invalidateQueries({
+                queryKey: [`assessmentFlow-${flowId}`],
+            });
             toast.success(res.message);
             console.log(res);
         } catch (error) {
@@ -87,31 +93,31 @@ const AsyncVideoForm = () => {
         }
     };
 
-    useEffect(() => {
-        const getById = async (id: string) => {
-            try {
-                const res = await assessmentsServices.getById(id);
-                if (res.data !== null)
-                    setFormState(prev => ({
-                        id: res.data.id,
-                        name: res.data.name,
-                        description: res.data.description ?? "",
-                        content: res.data.content
-                            ? JSON.parse(res.data.content)
-                            : prev.content,
-                        query: res.data.query ?? "",
-                        duration: res.data.duration ?? 0,
-                        index: res.data.index,
-                        assessmentQuestionAnswerSetContent:
-                            res.data.assessmentQuestionAnswerSetContent ?? "",
-                    }));
-            } catch (error) {
-                toast.error("Failure");
-            }
-        };
+    // useEffect(() => {
+    //     const getById = async (id: string) => {
+    //         try {
+    //             const res = await assessmentsServices.getById(id);
+    //             if (res.data !== null)
+    //                 setFormState(prev => ({
+    //                     id: res.data.id,
+    //                     name: res.data.name,
+    //                     description: res.data.description ?? "",
+    //                     content: res.data.content
+    //                         ? JSON.parse(res.data.content)
+    //                         : prev.content,
+    //                     query: res.data.query ?? "",
+    //                     duration: res.data.duration ?? 0,
+    //                     index: res.data.index,
+    //                     assessmentQuestionAnswerSetContent:
+    //                         res.data.assessmentQuestionAnswerSetContent ?? "",
+    //                 }));
+    //         } catch (error) {
+    //             toast.error("Failure");
+    //         }
+    //     };
 
-        getById(assessmentId as string);
-    }, [assessmentId]);
+    //     getById(assessmentId as string);
+    // }, [assessmentId]);
 
     return (
         <form onSubmit={handleCreateOneWay} className="flex flex-col gap-8">
@@ -195,10 +201,10 @@ const AsyncVideoForm = () => {
                     />
                 </div>
 
-                {formState.content.sections.length > 0 && (
+                {formState.content.sections?.length > 0 && (
                     <div className="px-4 xl:px-6 mb-6">
                         <ul className="flex flex-col gap-6">
-                            {formState.content.sections.map(section => (
+                            {formState.content.sections?.map(section => (
                                 <li key={section.id}>
                                     <QuestionSection
                                         data={section}

@@ -62,7 +62,7 @@ const CollaboratorCard: React.FC<CollaboratorCardProps> = ({ member }) => {
                 key={member.id}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
             >
-                <td className="px-6 py-4">
+                <td className="px-6 py-4 hidden md:table-cell">
                     <div className="flex items-center gap-2">
                         <span className="inline-block h-8 w-8 rounded-full bg-white border border-slate-500 overflow-auto">
                             <Image
@@ -79,9 +79,7 @@ const CollaboratorCard: React.FC<CollaboratorCardProps> = ({ member }) => {
                             `${member.employerDto.lastName ?? ""}`}
                     </div>
                 </td>
-                <td className="px-6 py-4 hidden lg:table-cell">
-                    {member.employerDto.email}
-                </td>
+                <td className="px-6 py-4">{member.employerDto.email}</td>
                 <td className="px-6 py-4 hidden lg:table-cell">
                     {member.employerDto.status}
                 </td>

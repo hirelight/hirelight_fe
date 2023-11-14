@@ -2,7 +2,7 @@ import React from "react";
 
 import LoadingIndicator from "@/components/LoadingIndicator";
 
-const loading = () => {
+const Loading = () => {
     return (
         <div className="w-full flex justify-center items-center pt-16">
             <LoadingIndicator />
@@ -10,4 +10,4 @@ const loading = () => {
     );
 };
 
-export default loading;
+export default Loading;

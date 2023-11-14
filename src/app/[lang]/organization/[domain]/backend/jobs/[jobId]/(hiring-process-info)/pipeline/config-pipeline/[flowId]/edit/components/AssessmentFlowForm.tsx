@@ -4,12 +4,14 @@ import React, { FormEvent, useState } from "react";
 import { Reorder } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { Button, CustomInput, DatePicker } from "@/components";
 import { IEditAssessmentFlowDto } from "@/services/assessment-flows/assessment-flows.interface";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
 import { useAppDispatch } from "@/redux/reduxHooks";
 import { fetchAssessmentFlowById } from "@/redux/thunks/assessment-flow.thunk";
+import { isInvalidForm } from "@/helpers";
 
 import AssessmentFlowCard from "./AssessmentFlowCard";
 
@@ -18,15 +20,55 @@ type AssessmentFlowFormProps = {
 };
 
 const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
-    const { jobId, lang, flowId } = useParams();
+    const { flowId } = useParams();
     const router = useRouter();
 
-    const dispatch = useAppDispatch();
+    const queryClient = useQueryClient();
 
-    const [formState, setFormState] = useState<IEditAssessmentFlowDto>(data);
+    const [formState, setFormState] = useState<IEditAssessmentFlowDto>({
+        ...data,
+        startTime: new Date(data.startTime),
+        endTime: new Date(data.endTime),
+    });
+    const [formErr, setFormErr] = useState({
+        nameErr: "",
+        flowTimelineErr: "",
+        flowErr: "",
+    });
+
+    const inValidInput = (): boolean => {
+        const errors = formErr;
+        const { name, startTime, endTime } = formState;
+
+        if (name === "") errors.nameErr = "Flow name must not be blank!";
+
+        if (startTime.getTime() >= endTime.getTime())
+            errors.flowTimelineErr =
+                "Start time must be earlier than end time!";
+
+        if (endTime.getTime() <= new Date().getTime())
+            errors.flowTimelineErr = "End time must be in the future!";
+
+        if (formState.assessments.length < 3)
+            errors.flowErr =
+                "Except from Sourced and Hired. Assessment flow need at least one assessment";
+
+        const isInvalid = isInvalidForm(errors);
+        if (isInvalid) setFormErr({ ...errors });
+
+        return isInvalid;
+    };
 
     const handleUpdateFlow = async (e: FormEvent) => {
         e.preventDefault();
+        if (inValidInput())
+            return toast.error(
+                <div>
+                    <p>Invalid input</p>
+                    <p>Check issue in red!</p>
+                </div>
+            );
+
         try {
             const res = await assessmentFlowsServices.editAsync({
                 ...formState,
@@ -34,10 +76,10 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
             });
 
             toast.success(res.message);
-            dispatch(fetchAssessmentFlowById(flowId as string));
-            router.push(
-                `/${lang}/backend/jobs/${jobId}/pipeline/config-pipeline/${flowId}`
-            );
+            queryClient.invalidateQueries({
+                queryKey: [`assessmentFlow-${flowId}`],
+            });
+            router.push(``);
         } catch (error) {
             toast.error("Create flow error");
         }
@@ -75,6 +117,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                             }))
                         }
                         required
+                        errorText={formErr.nameErr}
                     />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -83,7 +126,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                             Start time
                         </h3>
                         <DatePicker
-                            value={new Date(formState.startTime)}
+                            value={formState.startTime}
                             onChange={date =>
                                 setFormState(prev => ({
                                     ...prev,
@@ -97,7 +140,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                             End time
                         </h3>
                         <DatePicker
-                            value={new Date(formState.endTime)}
+                            value={formState.endTime}
                             onChange={date =>
                                 setFormState(prev => ({
                                     ...prev,
@@ -106,6 +149,13 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                             }
                         />
                     </div>
+                    {formErr.flowTimelineErr && (
+                        <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                            <span className="font-medium">
+                                {formErr.flowTimelineErr}
+                            </span>
+                        </p>
+                    )}
                 </div>
 
                 <section className="text-sm">
@@ -141,6 +191,14 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                         ))}
                     </Reorder.Group>
 
+                    {formErr.flowErr && (
+                        <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                            <span className="font-medium">
+                                {formErr.flowErr}
+                            </span>
+                        </p>
+                    )}
+
                     {/* {showAddStage ? (
                         <FlowStageForm
                             onSave={handleAddNewStage}
@@ -160,7 +218,9 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
             </div>
             <div className="p-4 flex items-center justify-end gap-4 text-sm">
                 {/* <Button className="mr-auto">Apply template</Button> */}
-                <Button onClick={handleUpdateFlow}>Save changes</Button>
+                <Button type="button" onClick={handleUpdateFlow}>
+                    Save changes
+                </Button>
                 <button
                     type="button"
                     className="font-semibold text-neutral-500 hover:underline hover:text-neutral-700"

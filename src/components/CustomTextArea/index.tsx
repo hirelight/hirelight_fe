@@ -9,34 +9,41 @@ interface ICustomTextArea
     required?: boolean;
     placeholder?: string;
     rows?: number;
+    errorText?: string;
 }
 
 const CustomTextArea = (props: ICustomTextArea) => {
+    const { required, title, id, name, rows, className, errorText, ...rest } =
+        props;
     return (
         <div className="w-full">
             <label
-                htmlFor={props.id}
+                htmlFor={id}
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
-                {props.required && <span className="text-red-500 mr-1">*</span>}
-                {props.title}
-                {!props.required && (
+                {required && <span className="text-red-500 mr-1">*</span>}
+                {title}
+                {!required && (
                     <span className="text-neutral-500 text-sm ml-1">
                         (Optional)
                     </span>
                 )}
             </label>
             <textarea
-                {...props}
-                id={props.id}
-                name={props.name}
-                rows={props.rows || 3}
+                {...rest}
+                id={id}
+                name={name}
+                rows={rows || 3}
                 className={[
                     "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500",
-                    props.className,
+                    className,
                 ].join(" ")}
-                onChange={props.onChange ? props.onChange : () => {}}
             />
+            {errorText && (
+                <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                    <span className="font-medium">{errorText} </span>
+                </p>
+            )}
         </div>
     );
 };

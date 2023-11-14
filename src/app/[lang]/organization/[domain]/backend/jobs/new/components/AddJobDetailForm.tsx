@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { experienceLevels, workModalities } from "@/utils/shared/initialDatas";
 import currencies from "@/utils/shared/currencies.json";
 import {
+    Button,
     CustomInput,
     DatePicker,
     LocationAutocomplete,
@@ -500,7 +501,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                 Annual salary
                             </h2>
                             <div className={`${styles.form__section__wrapper}`}>
-                                <div className="grid grid-cols-4 gap-x-8">
+                                <div className="grid col-auto gap-y-4 gap-x-4 md:grid-cols-4 md:gap-x-8">
                                     <div>
                                         <CustomInput
                                             title="From"
@@ -547,7 +548,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                             }}
                                         />
                                     </div>
-                                    <div className="col-span-2">
+                                    <div className="sm:col-span-2">
                                         <Selection
                                             title="Currency"
                                             items={Object.values(
@@ -592,7 +593,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                 Job post available time range
                             </h2>
                             <div className={`${styles.form__section__wrapper}`}>
-                                <div className="grid grid-cols-2 gap-x-8">
+                                <div className="grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-x-8">
                                     <div>
                                         <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                             Start time
@@ -646,20 +647,13 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
 
                         {/* ****************Bottom Button********************* */}
                         <div className="p-5 border-t border-t-slate-300">
-                            <button
+                            <Button
                                 type="button"
-                                className="inline-flex items-center justify-center gap-1 text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 mr-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                                 onClick={handleSubmitJobDetail}
                             >
                                 {loading && <SpinLoading />}
                                 Save & continue
-                            </button>
-                            <button
-                                type="button"
-                                className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                            >
-                                Save draft
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </div>

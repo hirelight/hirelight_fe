@@ -14,12 +14,17 @@ type AppFormViewProps = {
         applicationForm: IAppFormSection[];
     };
     onApply?: () => void;
+    viewOnly?: boolean;
 };
 
-const AppFormView: React.FC<AppFormViewProps> = ({ data, onApply }) => {
+const AppFormView: React.FC<AppFormViewProps> = ({
+    data,
+    onApply,
+    viewOnly = false,
+}) => {
     return (
         <div className={styles.view__wrapper}>
-            <div className="bg-white flex flex-col gap-6 items-center py-16">
+            <div className={`bg-white flex flex-col gap-6 items-center py-16`}>
                 <h1 className="text-4xl font-medium text-blue_primary_800">
                     Company name
                 </h1>
@@ -34,8 +39,12 @@ const AppFormView: React.FC<AppFormViewProps> = ({ data, onApply }) => {
                         </span>
                     </div>
                 </div>
-                <div className="min-h-[800px] bg-slate-100 w-full">
-                    <div className="max-w-3xl py-10 mx-auto">
+                <div
+                    className={`min-h-[800px] bg-slate-100 w-full ${
+                        viewOnly ? "pointer-events-none" : ""
+                    }`}
+                >
+                    <div className="max-w-3xl p-2 px-4 md:p-4 md:py-10 mx-auto sm">
                         <AppFormSection
                             jobPostId={data.id}
                             datas={data.applicationForm.map(sec => ({

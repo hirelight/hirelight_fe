@@ -1,14 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams, usePathname, useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 import { experienceLevels, workModalities } from "@/utils/shared/initialDatas";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setJob, setJobError } from "@/redux/slices/job.slice";
 import {
+    Button,
     CustomInput,
     DatePicker,
     LocationAutocomplete,
@@ -17,8 +18,6 @@ import {
 import { SpinLoading } from "@/icons";
 import { updateJob } from "@/redux/thunks/job.thunk";
 import currencies from "@/utils/shared/currencies.json";
-
-import FormInput from "../../../components/FormInput";
 
 import styles from "./EditJobDetailForm.module.scss";
 
@@ -31,6 +30,7 @@ type EditJobDetailFormProps = {};
 
 const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
     const [loading, setLoading] = React.useState(false);
+    const router = useRouter();
 
     const dispatch = useAppDispatch();
     const job = useAppSelector(state => state.job.data);
@@ -124,6 +124,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
             return;
         }
 
+        setLoading(true);
         try {
             console.log(job.applicationForm);
             dispatch(
@@ -134,6 +135,8 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                     applicationForm: JSON.stringify(job.applicationForm),
                 })
             );
+
+            router.push("app-form");
         } catch (error) {
             console.error(error);
             toast.error("Edit job failure");
@@ -460,9 +463,9 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                             Annual salary
                         </h2>
                         <div className={`${styles.form__section__wrapper}`}>
-                            <div className="grid grid-cols-4 gap-x-8">
+                            <div className="grid col-auto gap-y-4 gap-x-4 md:grid-cols-4 md:gap-x-8">
                                 <div>
-                                    <FormInput
+                                    <CustomInput
                                         title="From"
                                         id="min-salary"
                                         type="number"
@@ -486,7 +489,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                     />
                                 </div>
                                 <div>
-                                    <FormInput
+                                    <CustomInput
                                         title="To"
                                         id="max-salary"
                                         type="number"
@@ -512,7 +515,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                         errorText={jobErr.content.maxSalaryErr}
                                     />
                                 </div>
-                                <div className="col-span-2">
+                                <div className="sm:col-span-2">
                                     <Selection
                                         title="Currency"
                                         items={Object.values(currencies).map(
@@ -559,7 +562,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                             Job post available time range
                         </h2>
                         <div className={`${styles.form__section__wrapper}`}>
-                            <div className="grid grid-cols-2 gap-x-8">
+                            <div className="grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-x-8">
                                 <div>
                                     <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                         Start time
@@ -617,19 +620,10 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
 
                     {/* ****************Bottom Button********************* */}
                     <div className="p-5 border-t border-t-slate-300">
-                        <button
-                            type="submit"
-                            className="inline-flex items-center justify-center gap-1 text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 mr-3 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                        >
+                        <Button type="submit">
                             {loading && <SpinLoading />}
                             Save & continue
-                        </button>
-                        <button
-                            type="submit"
-                            className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                        >
-                            Save draft
-                        </button>
+                        </Button>
                     </div>
                 </div>
             </form>

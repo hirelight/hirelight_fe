@@ -15,12 +15,9 @@ const PipelineConfig: React.FC<PipelineConfigProps> = ({}) => {
     const [selectedStage, setSelectedStage] = React.useState<
         IAssessmentDto | undefined
     >(
-        assessmentFlow.assessments.find(
-            assessment =>
-                !["SOURCED_ASSESSMENT", "HIRED_ASSESSMENT"].includes(
-                    assessment.assessmentTypeName
-                )
-        )
+        assessmentFlow.assessments.length > 2
+            ? assessmentFlow.assessments[1]
+            : undefined
     );
 
     return (

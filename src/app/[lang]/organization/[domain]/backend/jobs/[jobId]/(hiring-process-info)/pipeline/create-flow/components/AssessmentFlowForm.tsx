@@ -12,6 +12,7 @@ import assessmentFlowsServices from "@/services/assessment-flows/assessment-flow
 import { useAppDispatch } from "@/redux/reduxHooks";
 import { setAssessmentFlow } from "@/redux/slices/assessment-flow.slice";
 import { fetchAssessmentFlowById } from "@/redux/thunks/assessment-flow.thunk";
+import { isInvalidForm } from "@/helpers";
 
 import AssessmentFlowCard from "./AssessmentFlowCard";
 import FlowStageForm from "./FlowStageForm";
@@ -49,9 +50,45 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
         ...data,
         jobPostId: jobId as string,
     });
+    const [formErr, setFormErr] = useState({
+        nameErr: "",
+        flowTimelineErr: "",
+        flowErr: "",
+    });
+
+    const inValidInput = (): boolean => {
+        const errors = formErr;
+        const { name, startTime, endTime } = formState;
+
+        if (name === "") errors.nameErr = "Flow name must not be blank!";
+
+        if (startTime.getTime() >= endTime.getTime())
+            errors.flowTimelineErr =
+                "Start time must be earlier than end time!";
+
+        if (endTime.getTime() <= new Date().getTime())
+            errors.flowTimelineErr = "End time must be in the future!";
+
+        if (formState.assessments.length < 3)
+            errors.flowErr =
+                "Except from Sourced and Hired. Assessment flow need at least one assessment";
+
+        const isInvalid = isInvalidForm(errors);
+        if (isInvalid) setFormErr({ ...errors });
+
+        return isInvalid;
+    };
 
     const handleCreateFlow = async (e: FormEvent) => {
         e.preventDefault();
+        if (inValidInput())
+            return toast.error(
+                <div>
+                    <p>Invalid input</p>
+                    <p>Check issue in red!</p>
+                </div>
+            );
+
         try {
             const res = await assessmentFlowsServices.createAsync({
                 ...formState,
@@ -116,13 +153,15 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                     <CustomInput
                         title="Name"
                         value={formState.name}
-                        onChange={e =>
+                        onChange={e => {
                             setFormState(prev => ({
                                 ...prev,
                                 name: e.target.value,
-                            }))
-                        }
+                            }));
+                            setFormErr({ ...formErr, nameErr: "" });
+                        }}
                         required
+                        errorText={formErr.nameErr}
                     />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -131,12 +170,13 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                             Start time
                         </h3>
                         <DatePicker
-                            onChange={date =>
+                            onChange={date => {
                                 setFormState(prev => ({
                                     ...prev,
                                     startTime: date,
-                                }))
-                            }
+                                }));
+                                setFormErr({ ...formErr, flowTimelineErr: "" });
+                            }}
                         />
                     </div>
                     <div>
@@ -144,14 +184,22 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                             End time
                         </h3>
                         <DatePicker
-                            onChange={date =>
+                            onChange={date => {
                                 setFormState(prev => ({
                                     ...prev,
                                     endTime: date,
-                                }))
-                            }
+                                }));
+                                setFormErr({ ...formErr, flowTimelineErr: "" });
+                            }}
                         />
                     </div>
+                    {formErr.flowTimelineErr && (
+                        <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                            <span className="font-medium">
+                                {formErr.flowTimelineErr}
+                            </span>
+                        </p>
+                    )}
                 </div>
 
                 <section className="text-sm">
@@ -190,6 +238,14 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                         ))}
                     </Reorder.Group>
 
+                    {formErr.flowErr && (
+                        <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                            <span className="font-medium">
+                                {formErr.flowErr}
+                            </span>
+                        </p>
+                    )}
+
                     {showAddStage ? (
                         <FlowStageForm
                             onSave={handleAddNewStage}
@@ -199,7 +255,10 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                         <button
                             type="button"
                             className="w-full p-4 flex items-center justify-center gap-1 border border-dashed border-blue_primary_600 text-sm text-blue-600 font-semibold rounded-md hover:border-blue_primary_700 hover:text-blue_primary_700 hover:underline"
-                            onClick={() => setShowAddStage(true)}
+                            onClick={() => {
+                                setShowAddStage(true);
+                                setFormErr({ ...formErr, flowErr: "" });
+                            }}
                         >
                             <PlusCircleIcon className="w-6 h-6" />
                             <span>Add new assessment</span>

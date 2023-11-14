@@ -11,12 +11,14 @@ export const debounce = <T extends (...args: any[]) => void>(
 ) => {
     let timeoutId: NodeJS.Timeout;
 
-    return (...args: Parameters<T>) => {
-        clearTimeout(timeoutId);
-
-        timeoutId = setTimeout(() => {
+    return function executedFunction(...args: Parameters<T>) {
+        const later = () => {
+            clearTimeout(timeoutId);
             func(...args);
-        }, delay);
+        };
+
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(later, delay);
     };
 };
 

@@ -191,7 +191,7 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
 
     return (
         <form onSubmit={handleSubmit}>
-            <h4 className="text-sm text-neutral-700 py-8">
+            <h4 className="text-sm text-neutral-700 py-4 md:py-8">
                 <span className="text-red-500 mr-1">*</span>
                 Required fields
             </h4>
@@ -210,7 +210,7 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                 );
             })}
 
-            <div className="flex gap-6 mb-6">
+            <div className="flex justify-end gap-6 mb-6">
                 <button
                     id="apply-form-reset"
                     type="reset"
@@ -221,7 +221,7 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
 
                 <button
                     type="submit"
-                    className="w-full text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue_primary_600 dark:hover:bg-blue_primary_700 focus:outline-none dark:focus:ring-blue_prbg-blue_primary_800"
+                    className="text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue_primary_600 dark:hover:bg-blue_primary_700 focus:outline-none dark:focus:ring-blue_prbg-blue_primary_800"
                 >
                     Submit application
                 </button>

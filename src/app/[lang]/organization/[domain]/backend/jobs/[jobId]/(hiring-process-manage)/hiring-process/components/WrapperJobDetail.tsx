@@ -10,10 +10,14 @@ import { getJobById, mergeAppFormFields } from "@/redux/thunks/job.thunk";
 import jobServices from "@/services/job/job.service";
 import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
 import { setJob } from "@/redux/slices/job.slice";
+import { fetchAssessmentFlowById } from "@/redux/thunks/assessment-flow.thunk";
 
 const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
     const { jobId } = useParams();
     const dispatch = useAppDispatch();
+    const { data: flow, loading: flowLoading } = useAppSelector(
+        state => state.assessmentFlow
+    );
     const {
         data: queryRes,
         error,
@@ -32,6 +36,7 @@ const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
             const appFormTemplateParsed = JSON.parse(
                 appFormTemplateRes.data.content
             );
+            console.log(jobAppFormParsed);
 
             const mergeAppForm = mergeAppFormFields(
                 jobAppFormParsed,
@@ -45,7 +50,7 @@ const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
     });
 
     useEffect(() => {
-        if (isSuccess)
+        if (isSuccess) {
             dispatch(
                 setJob({
                     ...queryRes,
@@ -53,15 +58,16 @@ const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
                     applicationForm: JSON.parse(queryRes.applicationForm),
                 })
             );
+            dispatch(fetchAssessmentFlowById(queryRes.assessmentFlowId!!));
+        }
     }, [isSuccess, queryRes, dispatch]);
 
-    if (isLoading) {
+    if (isLoading || flowLoading || !queryRes || !flow.id)
         return (
             <div className="p-12 flex items-center justify-center">
                 <LoadingIndicator />
             </div>
         );
-    }
 
     return <>{children}</>;
 };

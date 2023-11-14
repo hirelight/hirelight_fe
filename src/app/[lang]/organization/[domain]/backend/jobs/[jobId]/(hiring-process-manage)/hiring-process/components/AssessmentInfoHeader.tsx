@@ -19,10 +19,11 @@ import moment from "moment";
 import { Selection } from "@/components";
 import { SpinLoading } from "@/icons";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
-import { getJobById } from "@/redux/thunks/job.thunk";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
 import { IAssessmentFlowDto } from "@/services";
 import { AssessmentTypes } from "@/interfaces/assessment.interface";
+import currencies from "@/utils/shared/currencies.json";
+import { CurrencyKey } from "@/interfaces/job-post.interface";
 
 import styles from "./AssessmentInfoHeader.module.scss";
 
@@ -37,27 +38,9 @@ const Tooltip = dynamic(
 );
 
 const AssessmentInfoHeader = () => {
-    const dispatch = useAppDispatch();
-    const { jobId, assessmentId } = useParams();
-    const [flow, setFlow] = useState<IAssessmentFlowDto>();
-
+    const { assessmentId } = useParams();
     const job = useAppSelector(state => state.job.data);
-
-    useEffect(() => {
-        const getData = async (id: string) => {
-            const jobRes: any = await dispatch(getJobById(id as string));
-            try {
-                const res = await assessmentFlowsServices.getByIdAsync(
-                    jobRes.payload.assessmentFlowId
-                );
-                setFlow(res.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        if (jobId) getData(jobId as string);
-    }, [jobId, dispatch]);
+    const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
 
     return (
         <div className="bg-white shadow-md mt-8 mb-6">
@@ -77,7 +60,7 @@ const AssessmentInfoHeader = () => {
                         <ul className="flex gap-6">
                             <li>
                                 <Tooltip content="Edit job">
-                                    <Link href={`/backend/jobs/${jobId}/edit`}>
+                                    <Link href={`/backend/jobs/${job.id}/edit`}>
                                         <PencilIcon className="w-5 h-5" />
                                     </Link>
                                 </Tooltip>
@@ -132,30 +115,35 @@ const AssessmentInfoHeader = () => {
                             <span>
                                 {job.minSalary === 0 && job.maxSalary === 0
                                     ? "Negotiate"
-                                    : `${job.minSalary}${job.currency}-${job.maxSalary}${job.currency}`}
+                                    : `${job.minSalary}${
+                                          currencies[
+                                              job.currency as CurrencyKey
+                                          ].symbol
+                                      } - ${job.maxSalary}${
+                                          currencies[
+                                              job.currency as CurrencyKey
+                                          ].symbol
+                                      }`}
                             </span>
                         </div>
                         <div className="flex items-center gap-1">
                             <ArrowPathIcon className="w-4 h-4" />
-                            <span>
-                                {moment(job.updatedTime).fromNow()}(Updated
-                                time)
-                            </span>
+                            <span>{moment(job.updatedTime).fromNow()}</span>
                         </div>
                     </div>
                 </div>
 
-                {assessmentId && (
+                {assessmentFlow.id && (
                     <div className="w-full">
                         <div role="tablist" className="flex">
-                            {flow?.assessments?.map((item, index) => (
+                            {assessmentFlow?.assessments?.map(item => (
                                 <div
                                     role="tab"
                                     key={item.id}
                                     className="flex-1 text-center"
                                 >
                                     <Link
-                                        href={`/backend/jobs/${jobId}/hiring-process/${item.id.toString()}`}
+                                        href={`/backend/jobs/${job.id}/hiring-process/${item.id}`}
                                         className={styles.assessment__btn}
                                     >
                                         <span

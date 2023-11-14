@@ -1,3 +1,5 @@
+import currencies from "@/utils/shared/currencies.json";
+
 export enum JobPostStatus {
     DRAFT = "DRAFT",
     PENDING_APPROVAL = "PENDING_APPROVAL",
@@ -5,3 +7,5 @@ export enum JobPostStatus {
     INACTIVE = "INACTIVE",
     TERMINATED = "TERMINATED",
 }
+
+export type CurrencyKey = keyof typeof currencies;

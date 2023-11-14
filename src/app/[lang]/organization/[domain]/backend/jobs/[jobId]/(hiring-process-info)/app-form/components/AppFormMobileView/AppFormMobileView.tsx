@@ -6,7 +6,10 @@ import {
     EyeSlashIcon,
     TrashIcon,
 } from "@heroicons/react/24/solid";
-import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
+import {
+    ClipboardDocumentListIcon,
+    DocumentTextIcon,
+} from "@heroicons/react/24/outline";
 
 import { useAppSelector } from "@/redux/reduxHooks";
 import { debounce } from "@/helpers/shareHelpers";
@@ -25,26 +28,32 @@ const AppFormMobileView: React.FC<AppFormMobileViewProps> = ({}) => {
     const [translateY, setTranslateY] = React.useState(0);
 
     React.useEffect(() => {
-        document.addEventListener("scroll", e => {
-            if (containerRef.current) {
-                const rect = containerRef.current.getBoundingClientRect();
-                if (rect.top < 0) {
-                    let dy = rect.top * -1;
-                    if (
-                        dy + rect.height >
-                        wrapperRef.current!!.getBoundingClientRect().height
-                    ) {
-                        dy =
-                            dy -
-                            (dy +
-                                rect.height -
-                                wrapperRef.current!!.getBoundingClientRect()
-                                    .height);
+        document.addEventListener(
+            "scroll",
+            debounce(() => {
+                if (containerRef.current) {
+                    const rect = containerRef.current.getBoundingClientRect();
+                    const validDy =
+                        wrapperRef.current!!.getBoundingClientRect()!!.height -
+                        rect.height;
+                    if (rect.top < 0) {
+                        setTranslateY(prev =>
+                            Math.min(prev - rect.top, validDy)
+                        );
+                    } else if (rect.top > 0) {
+                        let dy = Math.min(
+                            rect.top,
+                            Math.abs(
+                                wrapperRef.current!!.getBoundingClientRect()!!
+                                    .top
+                            )
+                        );
+
+                        setTranslateY(prev => Math.max(0, prev - dy));
                     }
-                    debounce(() => setTranslateY(dy), 500)();
                 }
-            }
-        });
+            }, 300)
+        );
 
         return () => {
             document.removeEventListener("scroll", () => {});
@@ -66,7 +75,7 @@ const AppFormMobileView: React.FC<AppFormMobileViewProps> = ({}) => {
                 className={`${
                     styles.wrapper
                 } absolute top-0 right-0 bottom-0 bg-white w-0 p-0 overflow-hidden lg:w-auto lg:bg-transparent lg:block lg:relative transition-all ${
-                    show ? "w-full px-3 py-2" : ""
+                    show ? "w-full p-4" : ""
                 }`}
             >
                 <button
@@ -74,7 +83,7 @@ const AppFormMobileView: React.FC<AppFormMobileViewProps> = ({}) => {
                     className="lg:hidden absolute top-4 right-4"
                     onClick={() => setShow(false)}
                 >
-                    <ClipboardDocumentListIcon className="w-6 h-auto text-neutral-700" />
+                    <DocumentTextIcon className="w-6 h-auto text-neutral-700" />
                 </button>
                 <div
                     ref={containerRef}

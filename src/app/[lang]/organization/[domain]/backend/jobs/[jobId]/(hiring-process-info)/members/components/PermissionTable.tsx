@@ -100,7 +100,7 @@ const PermissionTable: React.FC<PermissionTableProps> = ({
                 <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                     User permissions
                 </span>
-                <div className="flex gap-6 mb-2">
+                <div className="flex flex-col gap-4 md:flex-row md:gap-6 mb-2">
                     {templatePermissions.map((template, index) => (
                         <div key={template.label} className="flex items-center">
                             <input
@@ -122,14 +122,14 @@ const PermissionTable: React.FC<PermissionTableProps> = ({
                         </div>
                     ))}
                 </div>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-500 hidden md:block">
                     This is the most versatile option. Based on job or
                     department these users can: create jobs and hiring teams,
                     assign roles in a team, move and comment on candidates.
                 </p>
             </div>
 
-            <div className="border border-blue-500 rounded-sm p-2 flex items-start gap-2">
+            <div className="border border-blue-500 rounded-sm p-2 items-start gap-2 my-2 hidden md:flex">
                 <span>
                     <LightBulbIcon className="text-blue-700 w-6 h-6" />
                 </span>

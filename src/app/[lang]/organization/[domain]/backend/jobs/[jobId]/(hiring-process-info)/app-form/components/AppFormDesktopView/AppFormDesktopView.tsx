@@ -28,7 +28,7 @@ const AppFormDesktopView: React.FC<AppFormDesktopViewProps> = ({}) => {
                     </div>
                 </div>
                 <div className="min-h-[800px] bg-slate-100 w-full pointer-events-none">
-                    <div className="max-w-3xl py-10 mx-auto">
+                    <div className="max-w-3xl py-10 mx-auto pointer-events-none">
                         <AppFormDesktopSection />
                     </div>
                 </div>
