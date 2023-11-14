@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import React from "react";
 import Link from "next/link";
-import { LanguageIcon } from "@heroicons/react/24/solid";
+import { GlobeAltIcon } from "@heroicons/react/24/outline";
 
 import { useOutsideClick } from "@/hooks/useClickOutside";
 
@@ -33,7 +33,7 @@ const LocaleSwitcher = () => {
                 onClick={() => setShowDropdown(!showDropdown)}
                 className="relative p-1 rounded-md border border-neutral-400"
             >
-                <LanguageIcon className="w-6 h-6 text-neutral-700" />
+                <GlobeAltIcon className="w-6 h-6 text-neutral-700" />
             </button>
             <ul
                 className={`${styles.locale__dropdown__wrapper} ${
