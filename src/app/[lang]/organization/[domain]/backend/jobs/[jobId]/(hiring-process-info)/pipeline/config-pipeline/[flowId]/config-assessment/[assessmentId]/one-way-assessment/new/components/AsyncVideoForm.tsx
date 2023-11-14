@@ -11,6 +11,7 @@ import {
     CustomInput,
     Portal,
     Selection,
+    Timer,
 } from "@/components";
 import { IAssessmentDto, IEditAsyncVideoInterviewDto } from "@/services";
 import assessmentsServices from "@/services/assessments/assessments.service";
@@ -140,13 +141,16 @@ const AsyncVideoForm = () => {
                         required
                     />
 
-                    <div className="w-1/3">
-                        <Selection
+                    <div>
+                        <Timer
                             title="Duration"
-                            items={["In 7 days", "In 1 month", "In 3 days"].map(
-                                item => ({ label: item, value: item })
-                            )}
-                            onChange={() => {}}
+                            data={formState.duration}
+                            onChange={second =>
+                                setFormState(prev => ({
+                                    ...prev,
+                                    duration: second,
+                                }))
+                            }
                             required
                         />
                     </div>

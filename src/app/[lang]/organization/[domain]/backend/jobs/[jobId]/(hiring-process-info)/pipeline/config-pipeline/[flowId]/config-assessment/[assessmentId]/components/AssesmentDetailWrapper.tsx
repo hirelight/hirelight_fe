@@ -18,7 +18,7 @@ const AssesmentDetailWrapper = ({
     const { loading, data } = useAppSelector(state => state.assessment);
 
     useEffect(() => {
-        dispatch(fetchAssessmentById(assessmentId as string));
+        if (assessmentId) dispatch(fetchAssessmentById(assessmentId as string));
     }, [dispatch, assessmentId]);
 
     if (loading || !data.id)

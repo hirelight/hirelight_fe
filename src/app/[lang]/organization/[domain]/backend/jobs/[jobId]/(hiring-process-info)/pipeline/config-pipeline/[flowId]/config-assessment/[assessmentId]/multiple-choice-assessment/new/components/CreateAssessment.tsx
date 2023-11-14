@@ -189,7 +189,7 @@ const CreateAssessment = () => {
                             required
                         />
 
-                        <div className="w-1/3">
+                        <div>
                             <Timer
                                 title="Duration"
                                 data={formState.duration}

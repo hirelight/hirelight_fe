@@ -11,7 +11,7 @@
 }
 
 .timer__wrapper {
-    @apply text-sm outline-none bg-white border border-gray-300 text-neutral-700 rounded-lg focus:ring-blue_primary_600 focus:border-blue_primary_600 w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue_primary_600 dark:focus:border-blue_primary_600 flex items-center;
+    @apply text-sm outline-none bg-white border border-gray-300 text-neutral-700 rounded-lg focus:ring-blue_primary_600 focus:border-blue_primary_600 w-fit p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue_primary_600 dark:focus:border-blue_primary_600 flex items-center;
 
     &.error {
         @apply border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 dark:bg-gray-700 focus:border-red-500 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500;

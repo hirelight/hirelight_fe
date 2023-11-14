@@ -79,7 +79,7 @@ const Timer: React.FC<TimerProps> = ({
                     )}
                 </h4>
             )}
-            <div className={styles.timer__wrapper}>
+            <label className={styles.timer__wrapper}>
                 <input
                     type="text"
                     value={hours}
@@ -146,7 +146,7 @@ const Timer: React.FC<TimerProps> = ({
                     inputMode="numeric"
                     className="text-sm placeholder:text-sm w-6 pr-1 ml-1 outline-none border-none ring-0 focus:ring-0 p-0"
                 />
-            </div>
+            </label>
             {errorText && (
                 <p className="mt-2 text-sm text-red-600 dark:text-red-500">
                     <span className="font-medium">{errorText} </span>
