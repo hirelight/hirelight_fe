@@ -2,13 +2,10 @@
 
 import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { fetchAssessmentById } from "@/redux/thunks/assessment.thunk";
 import LoadingIndicator from "@/components/LoadingIndicator";
-import assessmentsServices from "@/services/assessments/assessments.service";
-import { setAssessment } from "@/redux/slices/assessment.slice";
 
 const AssesmentDetailWrapper = ({
     children,
@@ -24,7 +21,7 @@ const AssesmentDetailWrapper = ({
         dispatch(fetchAssessmentById(assessmentId as string));
     }, [dispatch, assessmentId]);
 
-    if (loading || data.id === "")
+    if (loading || !data.id)
         return (
             <div className="p-12 flex items-center justify-center">
                 <LoadingIndicator />

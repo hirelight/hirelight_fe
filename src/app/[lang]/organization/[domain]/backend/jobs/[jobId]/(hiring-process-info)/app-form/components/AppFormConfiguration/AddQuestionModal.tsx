@@ -2,9 +2,9 @@
 
 import React, { FormEvent, useRef, useState } from "react";
 import { Reorder } from "framer-motion";
-import { PlusCircleIcon } from "@heroicons/react/24/outline";
-import { XMarkIcon } from "@heroicons/react/24/solid";
+import { XMarkIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
 import { v4 as uuid } from "uuid";
+import { TrashIcon } from "@heroicons/react/24/outline";
 
 import {
     Button,
@@ -73,17 +73,15 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
 
         if (!label) errors.labelErr = "Question name must not be blank!";
 
-        if (
-            (type === "dropdown" || type === "multiple_choice") &&
-            choices_attributes.length < 2
-        )
-            errors.choicesErr = "Question must have at least 2 choices!";
+        if (type === "dropdown" || type === "multiple_choice") {
+            if (choices_attributes.length < 2)
+                errors.choicesErr = "Question must have at least 2 choices!";
+            if (choices_attributes.some(choice => !choice.name))
+                errors.choiceLabelErr = "Choice label must not be blank!";
+        }
 
         if (allFields.current.find(item => item.label === questionField.label))
             errors.labelErr = "Question name is already existed!";
-
-        if (choices_attributes.some(choice => !choice.name))
-            errors.choiceLabelErr = "Choice label must not be blank!";
 
         const isInvalid = isInvalidForm(errors);
         if (isInvalid) setQuestionErr({ ...errors });
@@ -170,7 +168,7 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                     if (e.key === "Enter") e.preventDefault();
                 }}
             >
-                <h2 className="text-lg font-medium uppercase mb-4">
+                <h2 className="text-xl font-semibold uppercase mb-2">
                     Add new question
                 </h2>
                 <p className="text-neutral-500 text-sm mb-6">
@@ -205,7 +203,11 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                                 ...questionField,
                                 label: e.target.value,
                             });
-                            setQuestionErr({ ...questionErr, labelErr: "" });
+                            setQuestionErr({
+                                labelErr: "",
+                                choicesErr: "",
+                                choiceLabelErr: "",
+                            });
                         }}
                         errorText={questionErr.labelErr}
                     />
@@ -236,7 +238,7 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                                             value={item}
                                             className="flex items-center gap-2 relative"
                                         >
-                                            <DragIndicatorIcon />
+                                            <DragIndicatorIcon className="text-blue_primary_600" />
                                             <CustomInput
                                                 title=""
                                                 value={item.name}
@@ -262,13 +264,14 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                                             />
                                             <button
                                                 type="button"
-                                                className="block w-5 h-5 bg-red-500 rounded-full overflow-hidden p-[2px] text-white "
+                                                className="block w-6 aspect-square text-red-500 hover:text-red-700"
                                                 onClick={handleRemoveChoice.bind(
                                                     null,
                                                     item.id
                                                 )}
+                                                tabIndex={-1}
                                             >
-                                                <XMarkIcon />
+                                                <TrashIcon />
                                             </button>
                                             {index ===
                                                 questionField.choices_attributes
@@ -276,8 +279,9 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                                                     1 && (
                                                 <button
                                                     type="button"
-                                                    className="w-5 h-5"
+                                                    className="w-6 h-6 text-green-500 hover:text-green-700"
                                                     onClick={handleAddChoice}
+                                                    tabIndex={-1}
                                                 >
                                                     <PlusCircleIcon />
                                                 </button>

@@ -179,6 +179,7 @@ const SelectionInput = ({ field }: { field: ICustomField }) => {
             }))}
             placeholder="Selection an option..."
             onChange={() => {}}
+            required={field.required}
         />
     );
 };

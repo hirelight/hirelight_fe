@@ -27,12 +27,15 @@ export const delayFunc = (ms: number) => {
 };
 
 export function humanReadable(seconds: number) {
-    let h = seconds / 3600;
-    let m = (seconds / 60) % 60;
+    let h = parseInt((seconds / 3600).toString());
+    let m = parseInt((seconds / 60).toString()) % 60;
     let s = seconds % 60;
-    return `${h > 9 ? h : `0${h}`}:${m > 9 ? m : `0${m}`}:${
-        s > 9 ? s : `0${s}`
-    }`;
+    const data = {
+        hours: h > 9 ? h : `0${h}`,
+        minutes: m > 9 ? m : `0${m}`,
+        seconds: s > 9 ? s : `0${s}`,
+    };
+    return data;
 }
 
 export const resizeImage = async (file: File) => {

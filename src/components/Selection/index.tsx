@@ -176,21 +176,6 @@ const Selection = <T extends object | any>(props: ISelection<T>) => {
                         />
                     </div>
                     <ul className="max-h-52 overflow-y-auto overflow-x-hidden">
-                        <li>
-                            <button
-                                type="button"
-                                className={`w-full text-left text-neutral-700 p-2.5 cursor-pointer hover:bg-slate-200 `}
-                                onClick={() => {
-                                    setSelected([]);
-                                    setShow(false);
-                                    dropdownRef.current!!.removeAttribute(
-                                        "style"
-                                    );
-                                }}
-                            >
-                                <span>Select...</span>
-                            </button>
-                        </li>
                         {items
                             .filter(item =>
                                 item.label

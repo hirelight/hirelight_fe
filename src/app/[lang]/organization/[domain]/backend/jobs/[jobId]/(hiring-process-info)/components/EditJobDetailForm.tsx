@@ -620,8 +620,8 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
 
                     {/* ****************Bottom Button********************* */}
                     <div className="p-5 border-t border-t-slate-300">
-                        <Button type="submit">
-                            {loading && <SpinLoading />}
+                        <Button type="submit" className="flex items-center">
+                            {loading && <SpinLoading className="mr-2" />}
                             Save & continue
                         </Button>
                     </div>

@@ -15,6 +15,7 @@ import {
     Modal,
     Portal,
     Selection,
+    Timer,
 } from "@/components";
 import { Logo } from "@/icons";
 import { IEditAssessmentDto, IQuestionAnswerDto } from "@/services";
@@ -38,7 +39,7 @@ type ICreateMCAssessment = Omit<IEditAssessmentDto, "content" | "query"> & {
             shuffleAnswer: boolean;
             autoEvaluate: {
                 enabled: boolean;
-                accuracy: string | null;
+                accuracy: number | null;
             };
         };
     };
@@ -120,7 +121,6 @@ const CreateAssessment = () => {
         }
     };
 
-    // useEffect(() => {
     //     const getById = async (id: string) => {
     //         try {
     //             const res = await assessmentsServices.getById(id);
@@ -190,17 +190,15 @@ const CreateAssessment = () => {
                         />
 
                         <div className="w-1/3">
-                            <Selection
+                            <Timer
                                 title="Duration"
-                                items={[
-                                    "15 minutes",
-                                    "30 minutes",
-                                    "1 hour",
-                                    "2 hour",
-                                    "In 3 days",
-                                ].map(item => ({ label: item, value: item }))}
-                                placeholder="The duration for assessment"
-                                onChange={() => {}}
+                                data={formState.duration}
+                                onChange={second =>
+                                    setFormState(prev => ({
+                                        ...prev,
+                                        duration: second,
+                                    }))
+                                }
                                 required
                             />
                         </div>
@@ -270,13 +268,16 @@ const CreateAssessment = () => {
                             <div className="max-w-[400px] w-1/2">
                                 <Selection
                                     title=""
-                                    items={["80%", "50%", "25%"].map(item => ({
-                                        label: item,
+                                    items={[80, 50, 25].map(item => ({
+                                        label: `${item}%`,
                                         value: item,
                                     }))}
                                     value={
                                         formState.content.config.autoEvaluate
-                                            .accuracy!!
+                                            .accuracy
+                                            ? formState.content.config
+                                                  .autoEvaluate.accuracy + "%"
+                                            : undefined
                                     }
                                     onChange={value =>
                                         setFormState({
@@ -291,25 +292,6 @@ const CreateAssessment = () => {
                                                     },
                                                 },
                                             },
-                                        })
-                                    }
-                                />
-                            </div>
-                        </div>
-                        <div className="flex justify-between items-start">
-                            <strong>Duration</strong>
-                            <div className="max-w-[400px] w-1/2">
-                                <Selection
-                                    title=""
-                                    items={[120, 60, 30].map(item => ({
-                                        label: `${item} minutes`,
-                                        value: item,
-                                    }))}
-                                    value={formState.duration.toString()}
-                                    onChange={value =>
-                                        setFormState({
-                                            ...formState,
-                                            duration: value,
                                         })
                                     }
                                 />

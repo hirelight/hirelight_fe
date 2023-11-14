@@ -18,6 +18,7 @@ import DatePicker from "./DatePicker";
 import QuestionPicker from "./QuestionPicker";
 import AppFormView from "./ApplicationFormView";
 import QuillEditorProvider from "./QuillEditor/QuillEditorProvider";
+import Timer from "./Timer";
 
 export {
     Modal,
@@ -40,4 +41,5 @@ export {
     QuestionPicker,
     AppFormView,
     QuillEditorProvider,
+    Timer,
 };

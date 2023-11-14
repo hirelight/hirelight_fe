@@ -650,8 +650,9 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                             <Button
                                 type="button"
                                 onClick={handleSubmitJobDetail}
+                                className="flex items-center"
                             >
-                                {loading && <SpinLoading />}
+                                {loading && <SpinLoading className="mr-2" />}
                                 Save & continue
                             </Button>
                         </div>

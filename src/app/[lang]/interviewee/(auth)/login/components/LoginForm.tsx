@@ -145,7 +145,7 @@ const LoginForm = () => {
             </div>
 
             <div>
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="!w-full">
                     {loading && <SpinLoading className="mr-3" />}
                     Sign in
                 </Button>
