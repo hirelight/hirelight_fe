@@ -32,7 +32,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({}) => {
                     <span>
                         <Image
                             alt="Hirelight Logo"
-                            src={"/images/logo.png"}
+                            src={"//images/logo.svg"}
                             width={40}
                             height={40}
                         />
@@ -51,7 +51,9 @@ const HeaderBar: React.FC<HeaderBarProps> = ({}) => {
                         </button>
                     </div>
                     <InvitationDropDownNoSSR />
-                    <LocaleSwitcher />
+                    <div className="text-neutral-700">
+                        <LocaleSwitcher />
+                    </div>
                 </div>
             </div>
         </div>

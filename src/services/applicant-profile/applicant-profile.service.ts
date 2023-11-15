@@ -24,6 +24,22 @@ const applyJob = async (applyDto: IApplyJobDto): Promise<IResponse<number>> => {
     }
 };
 
+const getProfileById = async (
+    profileId: string
+): Promise<IResponse<IJobPostProfileDto[]>> => {
+    try {
+        const res = await interceptor.get(
+            endpoints.APPLICANT_PROFILES + `/${profileId}`
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const getJobPostProfiles = async (
     jobpostId: string
 ): Promise<IResponse<IJobPostProfileDto[]>> => {
@@ -40,7 +56,7 @@ const getJobPostProfiles = async (
     }
 };
 
-const getJobPostProfileById = async (
+const getMyApplicantProfiles = async (
     candidateId: string
 ): Promise<IResponse<IJobPostProfileDto[]>> => {
     try {
@@ -59,7 +75,8 @@ const getJobPostProfileById = async (
 const applicantProfileServices = {
     applyJob,
     getJobPostProfiles,
-    getJobPostProfileById,
+    getMyApplicantProfiles,
+    getProfileById,
 };
 
 export default applicantProfileServices;

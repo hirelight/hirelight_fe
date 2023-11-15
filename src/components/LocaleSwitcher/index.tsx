@@ -27,13 +27,16 @@ const LocaleSwitcher = () => {
     };
 
     return (
-        <div className="relative text-left" ref={localeWrapperRef}>
+        <div
+            className="relative text-left border-inherit text-inherit"
+            ref={localeWrapperRef}
+        >
             <button
                 type="button"
                 onClick={() => setShowDropdown(!showDropdown)}
-                className="relative p-1 rounded-md border border-neutral-400"
+                className="relative p-1 rounded-md border border-inherit text-inherit"
             >
-                <GlobeAltIcon className="w-6 h-6 text-neutral-700" />
+                <GlobeAltIcon className="w-6 h-6 text-inherit" />
             </button>
             <ul
                 className={`${styles.locale__dropdown__wrapper} ${

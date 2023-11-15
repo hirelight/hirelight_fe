@@ -93,6 +93,31 @@ const CustomFileInput = (props: ICustomFileInput) => {
     const handleUploadFile = () => {
         const inputFile = document.createElement("input");
         inputFile.type = "file";
+        inputFile.accept =
+            props.id === "resume"
+                ? [
+                      "application/pdf",
+                      "application/msword",
+                      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                      "application/vnd.oasis.opendocument.text",
+                      "application/rtf",
+                      ".pdf",
+                      ".doc",
+                      ".docx",
+                      ".odt",
+                      ".rtf",
+                  ].join(",")
+                : props.id === "avatar"
+                ? [
+                      "image/jpeg",
+                      "image/gif",
+                      "image/png",
+                      ".jpg",
+                      ".jpeg",
+                      ".gif",
+                      ".png",
+                  ].join(",")
+                : "";
         document.body.appendChild(inputFile);
         inputFile.addEventListener("change", e => {
             handleFileChange(Array.from((e.target as any)!!.files));

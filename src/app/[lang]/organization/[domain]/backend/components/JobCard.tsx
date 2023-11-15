@@ -14,6 +14,7 @@ import assessmentFlowsServices from "@/services/assessment-flows/assessment-flow
 import jobServices from "@/services/job/job.service";
 import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 import { useOutsideClick } from "@/hooks/useClickOutside";
+import { JobPostStatus } from "@/interfaces/job-post.interface";
 
 const TooltipNoSSR = dynamic(
     () => import("flowbite-react").then(mod => mod.Tooltip),
@@ -32,7 +33,7 @@ interface JobCardProps {
 }
 
 const JobCard: React.FC<JobCardProps> = ({
-    data: { title, area, status, id, assessmentFlowId },
+    data: { title, area, status, id, assessmentFlowId, assessmentFlow },
 }) => {
     const router = useRouter();
     const queryClient = useQueryClient();
@@ -42,14 +43,6 @@ const JobCard: React.FC<JobCardProps> = ({
         setShowActions(false)
     );
 
-    const { data: flowRes } = useQuery({
-        queryKey: ["getOneAssessmentFlow", assessmentFlowId],
-        queryFn: () => {
-            return assessmentFlowId
-                ? assessmentFlowsServices.getByIdAsync(assessmentFlowId)
-                : null;
-        },
-    });
     const publishJobMutations = useMutation({
         mutationKey: [`publish-job-${id}`],
         mutationFn: (id: string) => jobServices.publishJobAsync(id),
@@ -90,7 +83,7 @@ const JobCard: React.FC<JobCardProps> = ({
                     </span>
                 </div>
                 <div className="flex gap-4 items-center">
-                    {status !== "ACTIVE" && (
+                    {status === JobPostStatus.PENDING_APPROVAL && (
                         <button
                             type="button"
                             className="focus:outline-none text-white bg-green-500 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-1 dark:bg-green-600 dark:hover:bg-green-800 dark:focus:ring-green-700 hidden md:block"
@@ -123,6 +116,9 @@ const JobCard: React.FC<JobCardProps> = ({
                                         <Link
                                             href={`backend/jobs/${id}/hiring-process`}
                                             className="w-full px-4 py-2 block hover:bg-orange-100"
+                                            onClick={() =>
+                                                setShowActions(false)
+                                            }
                                         >
                                             View job
                                         </Link>
@@ -132,6 +128,7 @@ const JobCard: React.FC<JobCardProps> = ({
                                     <Link
                                         href={`backend/jobs/${id}/edit`}
                                         className="w-full px-4 py-2 block hover:bg-orange-100"
+                                        onClick={() => setShowActions(false)}
                                     >
                                         Edit job
                                     </Link>
@@ -140,6 +137,7 @@ const JobCard: React.FC<JobCardProps> = ({
                                     <Link
                                         href={"#"}
                                         className="w-full px-4 py-2 block hover:bg-orange-100"
+                                        onClick={() => setShowActions(false)}
                                     >
                                         Leave job
                                     </Link>
@@ -162,11 +160,11 @@ const JobCard: React.FC<JobCardProps> = ({
                 </div>
             </div>
             <ul className="hidden w-full md:flex items-center justify-between mt-2 mb-6 overflow-hidden">
-                {flowRes &&
-                    flowRes.data.assessments?.map((assessment, index) => (
+                {assessmentFlow &&
+                    assessmentFlow.assessments?.map((assessment, index) => (
                         <li
                             key={assessment.id}
-                            className="min-w-[160px] flex-shrink-0 flex flex-col items-center border-r border-gray-300 last:border-none p-4"
+                            className="min-w-[160px] flex-shrink-0 flex flex-col items-center p-4"
                         >
                             <h4 className="w-8 h-8 mb-2 text-neutral-700">
                                 {getIconBaseOnAssessmentType(

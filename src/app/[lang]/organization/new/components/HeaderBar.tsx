@@ -8,7 +8,7 @@ const HeaderBar = () => {
                 <span>
                     <Image
                         alt="Hirelight Logo"
-                        src={"/images/logo.png"}
+                        src={"//images/logo.svg"}
                         width={40}
                         height={40}
                     />

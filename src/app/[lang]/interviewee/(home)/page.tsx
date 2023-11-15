@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 const JobsCenter = () => {
     return (
         <main className="w-full bg-slate-100">
-            <div className="w-full py-8 sm:py-10 md:py-16 lg:py-20 relative shadow-md">
+            <div className="w-full pt-4 pb-6 relative shadow-md">
                 <div className="absolute inset-0 opacity-20 overflow-hidden">
                     <Image
                         alt="Background"
@@ -25,8 +25,8 @@ const JobsCenter = () => {
                     />
                 </div>
                 <div className="max-w-screen-xl mx-auto px-4 md:px-10 relative">
-                    <section className="mb-10">
-                        <h1 className="text-2xl sm:text-4xl md:text-5xl font-semibold mb-6">
+                    <section className="mb-6">
+                        <h1 className="text-2xl sm:text-4xl font-semibold mb-3">
                             Find properly jobs for you
                         </h1>
                         <span className="text-gray-500">
@@ -65,7 +65,7 @@ const JobsCenter = () => {
                             className="absolute top-0 right-0 p-2.5 px-3 md:px-4 text-sm font-medium h-full text-white bg-blue-700 rounded-tr-full rounded-br-full border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 z-20 flex gap-2 items-center"
                         >
                             <SearchIcon className="w-4 h-4" />
-                            <span className="text-base hidden md:inline-block">
+                            <span className="text-sm hidden md:inline-block">
                                 Search
                             </span>
                         </button>

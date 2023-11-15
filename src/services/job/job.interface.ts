@@ -1,3 +1,5 @@
+import { IAssessmentFlowDto, IOrganizationDto } from "..";
+
 export interface ICreateJobDto {
     title: string;
     content: string;
@@ -22,7 +24,22 @@ export interface IJobDto extends ICreateJobDto {
     id: string;
     creatorId: string;
     assessmentFlowId: string | null;
+    assessmentFlow?: IAssessmentFlowDto;
     organizationId: string;
+    employmentType: string;
+    keywords: string;
+    createdTime: Date;
+    updatedTime: Date;
+    status: string;
+}
+
+export interface ICandidateJobDto extends ICreateJobDto {
+    id: string;
+    creatorId: string;
+    assessmentFlowId: string | null;
+    assessmentFlow: IAssessmentFlowDto;
+    organizationId: string;
+    organization: IOrganizationDto;
     employmentType: string;
     keywords: string;
     createdTime: Date;

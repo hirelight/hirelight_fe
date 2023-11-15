@@ -11,6 +11,8 @@ import { setJob } from "@/redux/slices/job.slice";
 import jobServices from "@/services/job/job.service";
 import { updateJob } from "@/redux/thunks/job.thunk";
 import { SpinLoading } from "@/icons";
+import { useUserInfo } from "@/hooks/useUserInfo";
+import { IUserInfo } from "@/interfaces/user.interface";
 
 import styles from "./JobHeader.module.scss";
 
@@ -20,6 +22,7 @@ const JobHeader = ({}: IJobHeader) => {
     const pathname = usePathname();
     const { lang } = useParams();
     const job = useAppSelector(state => state.job.data);
+    const userData = useAppSelector(state => state.auth.authUser);
     const jobLoading = useAppSelector(state => state.job.loading);
     const dispatch = useAppDispatch();
 
@@ -123,19 +126,22 @@ const JobHeader = ({}: IJobHeader) => {
                             {jobLoading && <SpinLoading className="mr-2" />}Save
                             draft
                         </button>
-                        {job.assessmentFlowId && (
-                            <button
-                                type="button"
-                                className="text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                                onClick={handleRequestPublish.bind(
-                                    null,
-                                    job.id
-                                )}
-                            >
-                                {isLoading && <SpinLoading className="mr-2" />}
-                                Request publish
-                            </button>
-                        )}
+                        {job.assessmentFlowId &&
+                            userData!!.userId === job.creatorId.toString() && (
+                                <button
+                                    type="button"
+                                    className="text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                                    onClick={handleRequestPublish.bind(
+                                        null,
+                                        job.id
+                                    )}
+                                >
+                                    {isLoading && (
+                                        <SpinLoading className="mr-2" />
+                                    )}
+                                    Request publish
+                                </button>
+                            )}
                     </div>
                 </div>
                 <div className={styles.stage__wrapper}>

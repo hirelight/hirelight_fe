@@ -3,18 +3,23 @@ import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import jwtDecode from "jwt-decode";
 
+import { IUserInfo } from "@/interfaces/user.interface";
+
 import { fetchAccessToken, loginEmailPwd } from "../thunks/auth.thunk";
 
-const initialState = {
+type AuthSliceState = {
+    token: string;
+    authUser?: IUserInfo;
+    loading: boolean;
+    authError: any | null;
+};
+
+const initialState: AuthSliceState = {
     token: Cookies.get("hirelight_access_token") ?? "",
     authUser: Cookies.get("hirelight_access_token")
         ? jwtDecode(Cookies.get("hirelight_access_token")!!)
-        : {},
-    authStatus: "idle",
+        : undefined,
     authError: null,
-    editProfileStatus: "idle",
-    bookmarkStatus: "idle",
-    bookmarkError: null,
     loading: false,
 };
 const authSlice = createSlice({
@@ -26,7 +31,7 @@ const authSlice = createSlice({
         },
         logout: state => {
             state.token = "";
-            state.authUser = {};
+            state.authUser = undefined;
             Cookies.remove("hirelight_access_token");
         },
     },

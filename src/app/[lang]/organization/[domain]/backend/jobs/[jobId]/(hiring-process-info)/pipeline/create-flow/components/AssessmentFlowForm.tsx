@@ -5,6 +5,7 @@ import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { Reorder } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { Button, CustomInput, DatePicker } from "@/components";
 import { ICreateAssessmentFlowDto } from "@/services/assessment-flows/assessment-flows.interface";
@@ -44,6 +45,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
     const { jobId, lang } = useParams();
     const router = useRouter();
 
+    const queryClient = useQueryClient();
     const dispatch = useAppDispatch();
     const [showAddStage, setShowAddStage] = useState(false);
     const [formState, setFormState] = useState<ICreateAssessmentFlowDto>({
@@ -100,7 +102,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
             });
 
             toast.success(res.message);
-            dispatch(fetchAssessmentFlowById(res.data.id));
+            queryClient.invalidateQueries({ queryKey: [`job-${jobId}`] });
             router.push(`config-pipeline/${res.data.id}`);
         } catch (error) {
             toast.error("Create flow error");

@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 
 import { MenuIcon } from "@/icons";
 
-import logo from "/public/images/logo.png";
+import logo from "/public/images/logo.svg";
 
 import Sidebar from "../Sidebar";
 

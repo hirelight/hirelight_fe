@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { Button, CustomInput, DatePicker } from "@/components";
 import { IAssessmentFlTempDto } from "@/services/assessment-flow-templates/assessment-flow-templates.interface";
@@ -23,6 +24,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
     const { jobId } = useParams();
     const router = useRouter();
 
+    const queryClient = useQueryClient();
     const dispatch = useAppDispatch();
     const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
     const [formErr, setFormErr] = useState({
@@ -79,7 +81,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
             });
 
             toast.success(res.message);
-            dispatch(setAssessmentFlow(res.data));
+            queryClient.invalidateQueries({ queryKey: [`job-${jobId}`] });
             router.push(`config-pipeline/${res.data.id}`);
         } catch (error) {
             toast.error("Create flow error");

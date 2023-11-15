@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useState } from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 
 import { humanReadable } from "@/helpers";
 
@@ -41,15 +43,6 @@ const Timer: React.FC<TimerProps> = ({
                 else return value;
             } else return content;
         }
-    };
-
-    const handleChange = () => {
-        const totalSeconds =
-            parseInt(hours, 10) * 3600 +
-            parseInt(minutes, 10) * 60 +
-            parseInt(seconds, 10);
-
-        if (onChange) onChange(totalSeconds);
     };
 
     useEffect(() => {

@@ -10,7 +10,7 @@ import styles from "./Sidebar.module.scss";
 
 const Sidebar = () => {
     const pathname = usePathname();
-    const cite = pathname.split("/")[2];
+    const cite = pathname.split("/")[3];
 
     return (
         <aside className="w-60 h-fit bg-white rounded-lg border border-slate-200 shadow-md overflow-hidden">

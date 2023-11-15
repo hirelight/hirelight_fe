@@ -94,9 +94,11 @@ const JobList = () => {
                     </AnimatePresence>
                 </div>
 
-                <div className="flex justify-center items-center mt-6">
-                    <Pagination numOfPages={5} />
-                </div>
+                {jobsRes && jobsRes?.data.length > 10 && (
+                    <div className="flex justify-center items-center mt-6">
+                        <Pagination numOfPages={5} />
+                    </div>
+                )}
             </div>
         </>
     );

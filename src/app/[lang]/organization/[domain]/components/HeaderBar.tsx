@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React, { useState } from "react";
 
-import logo from "/public/images/logo.png";
+import logo from "/public/images/logo.svg";
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -35,18 +35,10 @@ const HeaderBar = () => {
 
     const handleLogout = async () => {
         setShowAvatarDropdown(false);
-        // Cookies.remove("hirelight_access_token");
-        // Cookies.remove("hirelight_access_token", {
-        //     domain: `${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-        //     path: "/login",
-        // });
-        // toast.success("Logout success!");
-        // await delayFunc(1000);
-        dispatch(logout());
-
         router.push(
             `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login?authEnd=true`
         );
+        dispatch(logout());
     };
 
     return (
@@ -117,7 +109,7 @@ const HeaderBar = () => {
                 <div className="flex gap-8 items-center">
                     <Bell className="text-blue_primary_800 w-8 h-8" />
                     <InvitationDropDown />
-                    <div className="flex gap-4">
+                    <div className="flex gap-4 text-neutral-700 border-gray-400">
                         <LocaleSwitcher />
                     </div>
                     <div
@@ -140,17 +132,6 @@ const HeaderBar = () => {
                                 height={40}
                             />
                         </button>
-
-                        {/* <!--
-    Dropdown menu, show/hide based on menu state.
-
-    Entering: "transition ease-out duration-100"
-      From: "transform opacity-0 scale-95"
-      To: "transform opacity-100 scale-100"
-    Leaving: "transition ease-in duration-75"
-      From: "transform opacity-100 scale-100"
-      To: "transform opacity-0 scale-95"
-  --> */}
                         <div
                             className={`${styles.avatar__dropdown__wrapper} ${
                                 showAvatarDropdown

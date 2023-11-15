@@ -79,7 +79,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
             queryClient.invalidateQueries({
                 queryKey: [`assessmentFlow-${flowId}`],
             });
-            router.push(``);
+            router.back();
         } catch (error) {
             toast.error("Create flow error");
         }

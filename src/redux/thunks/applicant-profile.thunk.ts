@@ -4,9 +4,8 @@ import applicantProfileServices from "@/services/applicant-profile/applicant-pro
 
 export const getProfileById = createAsyncThunk(
     "applicant-profile/getById",
-    async (candidateId: string) => {
-        const res =
-            await applicantProfileServices.getJobPostProfileById(candidateId);
+    async (profileId: string) => {
+        const res = await applicantProfileServices.getProfileById(profileId);
 
         return { ...res, data: res.data[1] };
     }

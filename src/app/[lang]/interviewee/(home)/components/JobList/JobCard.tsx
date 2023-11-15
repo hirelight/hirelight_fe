@@ -4,7 +4,7 @@ import moment from "moment";
 
 import { Calendar, Clock, DollarCurrency, MapPin } from "@/icons";
 
-import logo from "/public/images/logo.png";
+import logo from "/public/images/logo.svg";
 
 import { IJobDto, JobContentJson } from "@/services";
 import { IAppFormSection } from "@/interfaces";

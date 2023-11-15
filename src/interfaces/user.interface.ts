@@ -1,6 +1,13 @@
+import { Roles } from "@/services";
+
 export interface IUserInfo {
     sid: string;
-    email: string;
-    role: string;
+    emailAddress: string;
+    userId: string;
+    role: Roles;
+    firstName: string;
+    lastName: string;
+    organizationId?: string;
+    organizationSubdomain?: string;
     exp: number;
 }
