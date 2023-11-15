@@ -142,13 +142,13 @@ const Selection = <T extends object | any>(props: ISelection<T>) => {
                     } ${labelClassName}`}
                     onClick={expandSelection}
                 >
-                    <p>
+                    <p className="whitespace-nowrap text-ellipsis overflow-hidden">
                         {selected.length === 0
                             ? placeholder
                             : selected.map((item, index) => (
                                   <span
                                       key={index}
-                                      className="after:content-[','] after:mr-1 last:after:hidden"
+                                      className="after:content-[','] after:mr-1 last:after:hidden whitespace-nowrap text-ellipsis overflow-hidden"
                                   >
                                       {item}
                                   </span>

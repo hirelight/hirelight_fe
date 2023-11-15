@@ -1,0 +1,35 @@
+.button_flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.audio_controls,
+.video_controls {
+    margin-bottom: 20px;
+}
+.audio_player,
+.video_player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.audio_player,
+.video_player,
+.recorded_player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.live_player {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    background-color: black;
+    @apply rounded;
+}
+.recorded_player video {
+    width: 300px;
+    height: 400px;
+    object-fit: cover;
+}

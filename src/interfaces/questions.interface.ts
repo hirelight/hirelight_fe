@@ -12,7 +12,13 @@ export interface QuestionAnswerContentJson {
     answers: {
         name: string;
         correct: boolean;
+        isChosen?: boolean;
     }[];
+    config?: {
+        thinkTime: number;
+        numOfTakes: number;
+        duration: number;
+    };
     description?: string;
 }
 

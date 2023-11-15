@@ -121,37 +121,6 @@ const CreateAssessment = () => {
         }
     };
 
-    //     const getById = async (id: string) => {
-    //         try {
-    //             const res = await assessmentsServices.getById(id);
-    //             setFormState(prev => ({
-    //                 ...prev,
-    //                 id: res.data.id,
-    //                 name: res.data.name,
-    //                 description: res.data.description ?? "",
-    //                 content: res.data.content
-    //                     ? JSON.parse(res.data.content)
-    //                     : prev.content,
-    //                 query: res.data.query
-    //                     ? JSON.parse(res.data.query)
-    //                     : prev.query,
-    //                 duration: res.data.duration ?? 0,
-    //                 index: res.data.index,
-    //                 assessmentQuestionAnswerSetContent:
-    //                     res.data.assessmentQuestionAnswerSetContent ?? "",
-    //             }));
-    //             if (res.data.assessmentQuestionAnswerSetContent)
-    //                 setPickedQuestions(
-    //                     JSON.parse(res.data.assessmentQuestionAnswerSetContent)
-    //                 );
-    //         } catch (error) {
-    //             console.error(error);
-    //         }
-    //     };
-
-    //     getById(assessmentId as string);
-    // }, [assessmentId]);
-
     return (
         <>
             <Portal>

@@ -19,7 +19,7 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
 
 interface IQuestionSection {
     data: AsyncQuestionType;
-    onUpdate: (updatedSection: any) => void;
+    onUpdate: (updatedSection: AsyncQuestionType) => void;
 }
 
 const QuestionSection = ({ data, onUpdate }: IQuestionSection) => {
@@ -39,7 +39,7 @@ const QuestionSection = ({ data, onUpdate }: IQuestionSection) => {
     return (
         <div className="border border-slate-200 rounded-md">
             <div className="flex justify-between items-center py-6 px-4 border-b border-slate-200">
-                <h4 className="text-lg text-neutral-700 flex items-center gap-1">
+                {/* <h4 className="text-lg text-neutral-700 flex items-center gap-1">
                     {data.topic}{" "}
                     <div className="inline-flex items-center gap-1 text-neutral-500">
                         <span className="">
@@ -49,7 +49,7 @@ const QuestionSection = ({ data, onUpdate }: IQuestionSection) => {
                             {data.questions.length} questions
                         </span>
                     </div>
-                </h4>
+                </h4> */}
                 <div className="inline-flex items-center gap-4 text-neutral-500">
                     <button type="button">
                         <ArrowUpIcon className="w-6 h-6" />
@@ -69,37 +69,30 @@ const QuestionSection = ({ data, onUpdate }: IQuestionSection) => {
                     </button>
                 </div>
             </div>
-            <ul>
-                {data.questions.map((question, index) => (
-                    <li
-                        key={question.id}
-                        className="border-b last:border-b-0 border-slate-200 text-neutral-700 flex items-stretch"
-                    >
-                        <div className="w-16 aspect-square border-r border-slate-200 flex items-center justify-center">
-                            <span>{index + 1}</span>
-                        </div>
-                        <div className="flex-1 flex items-center justify-between gap-8 p-4">
-                            <div
-                                className="inline-block w-3/5"
-                                dangerouslySetInnerHTML={{
-                                    __html: question.name,
-                                }}
-                            ></div>
-                            <div className="flex-1 flex-shrink-0 flex items-center justify-end gap-2 w-fit ml-auto text-sm uppercase font-semibold whitespace-nowrap">
-                                <span className="py-1 px-2.5 rounded-full bg-green-200 text-green-700">
-                                    {question.config.thinkTime}
-                                </span>
-                                <span className="py-1 px-2.5 rounded-full bg-blue-200 text-blue-700">
-                                    {question.config.duration} mins to answer
-                                </span>
-                                <span className="py-1 px-2.5 rounded-full bg-gray-200 text-gray-700">
-                                    {question.config.numOfTakes} takes
-                                </span>
-                            </div>
-                        </div>
-                    </li>
-                ))}
-            </ul>
+            <div
+                key={data.id}
+                className="border-b last:border-b-0 border-slate-200 text-neutral-700 flex items-stretch"
+            >
+                <div className="flex-1 flex items-center justify-between gap-8 p-4">
+                    <div
+                        className="inline-block w-3/5"
+                        dangerouslySetInnerHTML={{
+                            __html: data.content.name,
+                        }}
+                    ></div>
+                    <div className="flex-1 flex-shrink-0 flex items-center justify-end gap-2 w-fit ml-auto text-sm uppercase font-semibold whitespace-nowrap">
+                        <span className="py-1 px-2.5 rounded-full bg-green-200 text-green-700">
+                            {data.content.config.thinkTime}
+                        </span>
+                        <span className="py-1 px-2.5 rounded-full bg-blue-200 text-blue-700">
+                            {data.content.config.duration} mins to answer
+                        </span>
+                        <span className="py-1 px-2.5 rounded-full bg-gray-200 text-gray-700">
+                            {data.content.config.numOfTakes} takes
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

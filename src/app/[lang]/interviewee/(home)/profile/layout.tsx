@@ -4,6 +4,7 @@ import React from "react";
 import background from "/public/images/interviewee_auth_bg.png";
 
 import Sidebar from "./components/Sidebar";
+import MenuFloat from "./components/MenuFloat";
 
 const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
     return (
@@ -16,6 +17,7 @@ const ProfileLayout = ({ children }: { children: React.ReactNode }) => {
                 />
             </div>
             <main className="relative max-w-screen-xl mx-auto flex gap-8 py-20">
+                <MenuFloat />
                 <Sidebar />
                 <div className="flex-1">{children}</div>
             </main>

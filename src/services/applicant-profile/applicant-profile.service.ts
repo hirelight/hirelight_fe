@@ -11,10 +11,10 @@ import {
 
 const applyJob = async (applyDto: IApplyJobDto): Promise<IResponse<number>> => {
     try {
-        const res = await interceptor.post(
-            endpoints.APPLICANT_PROFILES,
-            applyDto
-        );
+        const res = await interceptor.post(endpoints.APPLICANT_PROFILES, {
+            ...applyDto,
+            jobPostId: parseInt(applyDto.jobPostId),
+        });
 
         checkResErr(res.data);
 

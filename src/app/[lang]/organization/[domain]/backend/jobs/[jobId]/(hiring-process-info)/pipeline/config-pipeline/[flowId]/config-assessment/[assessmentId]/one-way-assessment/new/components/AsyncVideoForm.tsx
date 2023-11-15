@@ -13,9 +13,14 @@ import {
     Selection,
     Timer,
 } from "@/components";
-import { IAssessmentDto, IEditAsyncVideoInterviewDto } from "@/services";
+import {
+    IAssessmentDto,
+    IEditAsyncVideoInterviewDto,
+    IQuestionAnswerDto,
+} from "@/services";
 import assessmentsServices from "@/services/assessments/assessments.service";
 import { useAppSelector } from "@/redux/reduxHooks";
+import { QuestionAnswerContentJson } from "@/interfaces/questions.interface";
 
 import QuestionSection from "./QuestionSection";
 
@@ -28,24 +33,19 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     loading: () => <div className="min-h-[300px] border border-gray-300"></div>,
 });
 
-export type AsyncQuestionType = {
-    id?: string;
-    topic: string;
-    questions: {
-        id: string;
-        name: string;
+export type AsyncQuestionType = Omit<IQuestionAnswerDto, "content"> & {
+    content: QuestionAnswerContentJson & {
         config: {
-            thinkTime: string;
-            numOfTakes: string;
-            duration: string;
+            thinkTime: number;
+            numOfTakes: number;
+            duration: number;
         };
-    }[];
+    };
 };
 
 type AsyncVideoForm = Omit<IEditAsyncVideoInterviewDto, "content"> & {
     content: {
         welcomeNote: string;
-        sections: AsyncQuestionType[];
     };
 };
 
@@ -56,6 +56,7 @@ const AsyncVideoForm = () => {
     const queryClient = useQueryClient();
 
     const [showCreate, setShowCreate] = React.useState(false);
+    const [questions, setQuestions] = React.useState<AsyncQuestionType[]>([]);
     const [formState, setFormState] = React.useState<AsyncVideoForm>({
         id: assessment.id,
         name: assessment.name,
@@ -64,7 +65,6 @@ const AsyncVideoForm = () => {
             ? JSON.parse(assessment.content)
             : {
                   welcomeNote: "",
-                  sections: [],
               },
         query: assessment.query ?? "",
         duration: assessment.duration ?? 0,
@@ -80,7 +80,7 @@ const AsyncVideoForm = () => {
             const res = await assessmentsServices.editAsync({
                 ...formState,
                 content: JSON.stringify(formState.content),
-                duration: 1000,
+                assessmentQuestionAnswerSetContent: JSON.stringify(questions),
             });
 
             queryClient.invalidateQueries({
@@ -93,32 +93,6 @@ const AsyncVideoForm = () => {
             toast.error("Something went wrong");
         }
     };
-
-    // useEffect(() => {
-    //     const getById = async (id: string) => {
-    //         try {
-    //             const res = await assessmentsServices.getById(id);
-    //             if (res.data !== null)
-    //                 setFormState(prev => ({
-    //                     id: res.data.id,
-    //                     name: res.data.name,
-    //                     description: res.data.description ?? "",
-    //                     content: res.data.content
-    //                         ? JSON.parse(res.data.content)
-    //                         : prev.content,
-    //                     query: res.data.query ?? "",
-    //                     duration: res.data.duration ?? 0,
-    //                     index: res.data.index,
-    //                     assessmentQuestionAnswerSetContent:
-    //                         res.data.assessmentQuestionAnswerSetContent ?? "",
-    //                 }));
-    //         } catch (error) {
-    //             toast.error("Failure");
-    //         }
-    //     };
-
-    //     getById(assessmentId as string);
-    // }, [assessmentId]);
 
     return (
         <form onSubmit={handleCreateOneWay} className="flex flex-col gap-8">
@@ -205,32 +179,22 @@ const AsyncVideoForm = () => {
                     />
                 </div>
 
-                {formState.content.sections?.length > 0 && (
+                {questions.length > 0 && (
                     <div className="px-4 xl:px-6 mb-6">
                         <ul className="flex flex-col gap-6">
-                            {formState.content.sections?.map(section => (
-                                <li key={section.id}>
+                            {questions?.map(question => (
+                                <li key={question.id}>
                                     <QuestionSection
-                                        data={section}
-                                        onUpdate={updatedSection => {
-                                            setFormState(prev => ({
-                                                ...prev,
-                                                content: {
-                                                    ...prev.content,
-                                                    sections:
-                                                        prev.content.sections.map(
-                                                            item => {
-                                                                if (
-                                                                    item.id ===
-                                                                    updatedSection.id
-                                                                ) {
-                                                                    return updatedSection;
-                                                                }
-                                                                return item;
-                                                            }
-                                                        ),
-                                                },
-                                            }));
+                                        data={question}
+                                        onUpdate={updatedQuestion => {
+                                            setQuestions(prev =>
+                                                prev.map(ques =>
+                                                    ques.id ===
+                                                    updatedQuestion.id
+                                                        ? updatedQuestion
+                                                        : ques
+                                                )
+                                            );
                                         }}
                                     />
                                 </li>
@@ -243,21 +207,9 @@ const AsyncVideoForm = () => {
                     {showCreate ? (
                         <AddNewQuestionSection
                             onFinish={() => setShowCreate(false)}
-                            onSaveTopic={(section: any) => {
-                                setFormState(prev => ({
-                                    ...prev,
-                                    content: {
-                                        ...prev.content,
-                                        sections: prev.content.sections.concat([
-                                            {
-                                                ...section,
-                                                id: prev.content.sections
-                                                    .length,
-                                            },
-                                        ]),
-                                    },
-                                }));
-                            }}
+                            onSaveTopic={(newQuestion: AsyncQuestionType) =>
+                                setQuestions(prev => prev.concat([newQuestion]))
+                            }
                         />
                     ) : (
                         <button
