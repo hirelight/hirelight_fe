@@ -13,7 +13,7 @@ const ProfileHeader = () => {
     );
 
     const personalDetail = useRef<IAppFormSection>(
-        applicantProfile.content.find(
+        applicantProfile.content.form_structure.find(
             item => item.id === AppFormDefaultSection.PERSONAL_INFORMATION
         )!!
     );

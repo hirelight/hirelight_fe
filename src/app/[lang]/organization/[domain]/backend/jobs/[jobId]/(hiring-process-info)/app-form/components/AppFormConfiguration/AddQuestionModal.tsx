@@ -1,8 +1,8 @@
 "use client";
 
-import React, { FormEvent, useRef, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { Reorder } from "framer-motion";
-import { XMarkIcon, PlusCircleIcon } from "@heroicons/react/24/solid";
+import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { v4 as uuid } from "uuid";
 import { TrashIcon } from "@heroicons/react/24/outline";
 
@@ -14,14 +14,10 @@ import {
     Selection,
 } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
-import { AppFormInputTypes, IAppFormField, ICustomField } from "@/interfaces";
-import {
-    addAppFormField,
-    editCustomField,
-    setAppForm,
-} from "@/redux/slices/job.slice";
+import { AppFormInputTypes, ICustomField } from "@/interfaces";
+import { addCustomField, editCustomField } from "@/redux/slices/job.slice";
 import { DragIndicatorIcon } from "@/icons";
-import { debounce, isInvalidForm } from "@/helpers";
+import { isInvalidForm } from "@/helpers";
 
 interface IAddQuestionModal {
     data?: ICustomField;
@@ -60,12 +56,7 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
     });
 
     const dispatch = useAppDispatch();
-    const allFields = useRef(
-        useAppSelector(state => state.job.data.applicationForm)
-            .map(item => item.fields)
-            .flat(1)
-            .filter(item => item.id !== questionField.id)
-    );
+    const appForm = useAppSelector(state => state.job.data.applicationForm);
 
     const validateNewQuestion = () => {
         const { label, type, choices_attributes } = questionField;
@@ -79,8 +70,12 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
             if (choices_attributes.some(choice => !choice.name))
                 errors.choiceLabelErr = "Choice label must not be blank!";
         }
-
-        if (allFields.current.find(item => item.label === questionField.label))
+        const allFields = appForm.form_structure
+            .map(sec => sec.fields)
+            .flat(1)
+            .concat(appForm.questions)
+            .filter(field => field.id !== questionField.id);
+        if (allFields.find(item => item.label === questionField.label))
             errors.labelErr = "Question name is already existed!";
 
         const isInvalid = isInvalidForm(errors);
@@ -94,23 +89,8 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
         if (validateNewQuestion()) return;
 
         if (data) {
-            dispatch(
-                editCustomField({
-                    sectionName: "Details",
-                    field: {
-                        ...questionField,
-                    } as IAppFormField,
-                })
-            );
-        } else
-            dispatch(
-                addAppFormField({
-                    sectionName: "Details",
-                    field: {
-                        ...questionField,
-                    } as IAppFormField,
-                })
-            );
+            dispatch(editCustomField(questionField));
+        } else dispatch(addCustomField(questionField));
         closeModal();
     };
 

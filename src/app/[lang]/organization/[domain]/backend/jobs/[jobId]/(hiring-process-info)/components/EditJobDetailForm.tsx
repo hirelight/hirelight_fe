@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
+import React from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
-import { experienceLevels, workModalities } from "@/utils/shared/initialDatas";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setJob, setJobError } from "@/redux/slices/job.slice";
 import {
@@ -13,18 +11,14 @@ import {
     CustomInput,
     DatePicker,
     LocationAutocomplete,
-    Selection,
 } from "@/components";
 import { SpinLoading } from "@/icons";
 import { updateJob } from "@/redux/thunks/job.thunk";
-import currencies from "@/utils/shared/currencies.json";
 
 import styles from "./EditJobDetailForm.module.scss";
-
-const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
-    ssr: false,
-    loading: () => <p>Loading ...</p>,
-});
+import DescriptionSection from "./DescriptionSection";
+import AnnualSalarySection from "./AnnualSalarySection";
+import EmploymentDetailsSection from "./EmploymentDetailsSection";
 
 type EditJobDetailFormProps = {};
 
@@ -33,32 +27,17 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
     const router = useRouter();
 
     const dispatch = useAppDispatch();
-    const job = useAppSelector(state => state.job.data);
-    const jobErr = useAppSelector(state => state.job.error);
-
-    const [contentLength, setContentLength] = useState({
-        description: 0,
-        requirements: 0,
-        benefits: 0,
-    });
-    const [formErr, setFormErr] = useState({
-        titleErr: "",
-        areaArr: "",
-        contentErr: {
-            descriptionErr: "",
-            requirementsErr: "",
-            benefitsErr: "",
-            contentErr: "",
-        },
-        salaryErr: "",
-        jobPublishTimeErr: "",
-    });
+    const {
+        data: job,
+        contentLength,
+        error: jobErr,
+    } = useAppSelector(state => state.job);
 
     const isInvalidFormInput = (): boolean => {
         let statusErr = false;
         const { title, area, maxSalary, minSalary, startTime, endTime } = job;
 
-        let errors = formErr;
+        let errors = jobErr;
 
         if (title.length === 0) errors.titleErr = "Job title required";
 
@@ -101,7 +80,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
         checkError(errors);
 
         if (statusErr) {
-            setFormErr({ ...errors });
+            dispatch(setJobError({ ...errors }));
             toast.error(
                 <div>
                     <p>Invalid input</p>
@@ -175,13 +154,15 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                                 title: e.target.value,
                                             })
                                         );
-                                        setFormErr({
-                                            ...formErr,
-                                            titleErr: "",
-                                        });
+                                        dispatch(
+                                            setJobError({
+                                                ...jobErr,
+                                                titleErr: "",
+                                            })
+                                        );
                                     }}
                                     required={true}
-                                    errorText={formErr.titleErr}
+                                    errorText={jobErr.titleErr}
                                 />
                             </div>
                         </div>
@@ -219,13 +200,13 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                                 area: value,
                                             })
                                         );
-                                        setFormErr({
-                                            ...formErr,
+                                        setJobError({
+                                            ...jobErr,
                                             areaArr: "",
                                         });
                                     }}
                                     required={true}
-                                    errorText={formErr.areaArr}
+                                    errorText={jobErr.areaArr}
                                 />
                             </div>
                         </div>
@@ -242,319 +223,13 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                     </section>
 
                     {/* ***********************Description Section*********************************** */}
-                    <section className="relative">
-                        <h2 className={`${styles.form__section__title}`}>
-                            Description
-                        </h2>
-                        <div className={`${styles.form__section__wrapper}`}>
-                            <div className="mb-4 md:mb-6">
-                                <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    <span className="text-red-500 mr-1">*</span>
-                                    About this role
-                                </h3>
-                                <div className="border border-slate-600 rounded-lg min-h-[600px] p-3 md:p-6 relative overflow-hidden">
-                                    <div className="mb-6 flex flex-col min-h-[220px]">
-                                        <QuillEditorNoSSR
-                                            label="Description"
-                                            theme="bubble"
-                                            value={job.content.description}
-                                            placeholder="Enter the job description here; include key areas of
-                    responsibility and what the candidate might do on a typical
-                    day."
-                                            onChange={(value: string, text) => {
-                                                setContentLength(prev => ({
-                                                    ...prev,
-                                                    description: text.length,
-                                                }));
-                                                dispatch(
-                                                    setJob({
-                                                        ...job,
-                                                        content: {
-                                                            ...job.content,
-                                                            description: value,
-                                                        },
-                                                    })
-                                                );
-                                                setFormErr({
-                                                    ...formErr,
-                                                    contentErr: {
-                                                        ...formErr.contentErr,
-                                                        descriptionErr: "",
-                                                        contentErr: "",
-                                                    },
-                                                });
-                                            }}
-                                            className="flex-1"
-                                        />
-                                        {formErr.contentErr.descriptionErr !==
-                                            "" && (
-                                            <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                                                <span className="font-medium">
-                                                    {
-                                                        formErr.contentErr
-                                                            .descriptionErr
-                                                    }
-                                                </span>
-                                            </p>
-                                        )}
-                                    </div>
-                                    <div className="mb-6 flex flex-col min-h-[220px]">
-                                        <QuillEditorNoSSR
-                                            label="Requirements"
-                                            theme="bubble"
-                                            value={job.content.requirements}
-                                            placeholder="Enter the job description here; include key areas of
-                    responsibility and what the candidate might do on a typical
-                    day."
-                                            onChange={(value: string, text) => {
-                                                setContentLength(prev => ({
-                                                    ...prev,
-                                                    requirements: text.length,
-                                                }));
-                                                dispatch(
-                                                    setJob({
-                                                        ...job,
-                                                        content: {
-                                                            ...job.content,
-                                                            requirements: value,
-                                                        },
-                                                    })
-                                                );
-                                                setFormErr({
-                                                    ...formErr,
-                                                    contentErr: {
-                                                        ...formErr.contentErr,
-                                                        requirementsErr: "",
-                                                        contentErr: "",
-                                                    },
-                                                });
-                                            }}
-                                            className="flex-1"
-                                        />
-                                        {formErr.contentErr.requirementsErr && (
-                                            <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                                                <span className="font-medium">
-                                                    {
-                                                        formErr.contentErr
-                                                            .requirementsErr
-                                                    }{" "}
-                                                </span>
-                                            </p>
-                                        )}
-                                    </div>
-                                    <div className="mb-6 flex flex-col min-h-[220px]">
-                                        <QuillEditorNoSSR
-                                            label="Benefits"
-                                            theme="bubble"
-                                            value={job.content.benefits}
-                                            placeholder="Enter the job description here; include key areas of
-                    responsibility and what the candidate might do on a typical
-                    day."
-                                            onChange={(value: string, text) => {
-                                                setContentLength(prev => ({
-                                                    ...prev,
-                                                    benefits: text.length,
-                                                }));
-                                                dispatch(
-                                                    setJob({
-                                                        ...job,
-                                                        content: {
-                                                            ...job.content,
-                                                            benefits: value,
-                                                        },
-                                                    })
-                                                );
-                                                setFormErr({
-                                                    ...formErr,
-                                                    contentErr: {
-                                                        ...formErr.contentErr,
-                                                        contentErr: "",
-                                                    },
-                                                });
-                                            }}
-                                            className="flex-1"
-                                        />
-                                    </div>
-
-                                    <div
-                                        className={`absolute bottom-0 right-0 left-0 p-1 text-xs ${
-                                            formErr.contentErr.contentErr
-                                                ? "bg-red-400 text-red-700 font-medium"
-                                                : "text-gray-500 bg-gray-200"
-                                        }`}
-                                    >
-                                        <span>
-                                            Minimum 700 characters.{" "}
-                                            {Object.values(
-                                                contentLength
-                                            ).reduce(
-                                                (prev, cur) => prev + cur
-                                            )}{" "}
-                                            characters used.
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="hidden md:block absolute -right-8 top-1/2 translate-x-full -translate-y-1/2 w-screen">
-                            <div className={styles.instruction__text}>
-                                <span className="text-sm text-neutral-500">
-                                    Định dạng thành các phần và danh sách để cải
-                                    thiện khả năng đọc Tránh nhắm mục tiêu nhân
-                                    khẩu học cụ thể, ví dụ: giới tính, quốc tịch
-                                    và độ tuổi Không cần thêm liên kết để đăng
-                                    ký (một liên kết được thêm tự động)
-                                </span>
-                            </div>
-                        </div>
-                    </section>
+                    <DescriptionSection />
 
                     {/* ***********************Employment Details*********************************** */}
-                    <section className="relative">
-                        <h2 className={`${styles.form__section__title}`}>
-                            Employment details
-                        </h2>
-                        <div className={`${styles.form__section__wrapper}`}>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-                                <Selection
-                                    title="Employment type"
-                                    items={workModalities.map(item => ({
-                                        label: item.name,
-                                        value: item.name,
-                                    }))}
-                                    value={job.workModality}
-                                    onChange={(value: string) => {
-                                        dispatch(
-                                            setJob({
-                                                ...job,
-                                                workModality: value,
-                                            })
-                                        );
-                                    }}
-                                />
-                                <Selection
-                                    title="Experience"
-                                    items={experienceLevels.map(item => ({
-                                        label: item.name,
-                                        value: item.name,
-                                    }))}
-                                    value={job.experience}
-                                    onChange={(value: string) => {
-                                        dispatch(
-                                            setJob({
-                                                ...job,
-                                                experience: value,
-                                            })
-                                        );
-                                    }}
-                                />
-                                <CustomInput
-                                    title="Keywords"
-                                    type="text"
-                                    onChange={() => {}}
-                                />
-                            </div>
-                        </div>
-                    </section>
+                    <EmploymentDetailsSection />
 
                     {/* ***********************Annual salary*********************************** */}
-                    <section className="relative">
-                        <h2 className={`${styles.form__section__title}`}>
-                            Annual salary
-                        </h2>
-                        <div className={`${styles.form__section__wrapper}`}>
-                            <div className="grid col-auto gap-y-4 gap-x-4 md:grid-cols-4 md:gap-x-8">
-                                <div>
-                                    <CustomInput
-                                        title="From"
-                                        id="min-salary"
-                                        type="number"
-                                        min={0}
-                                        step={1000}
-                                        value={job.minSalary}
-                                        onChange={e => {
-                                            dispatch(
-                                                setJob({
-                                                    ...job,
-                                                    minSalary: parseInt(
-                                                        e.target.value
-                                                    ),
-                                                })
-                                            );
-                                            setFormErr({
-                                                ...formErr,
-                                                salaryErr: "",
-                                            });
-                                        }}
-                                    />
-                                </div>
-                                <div>
-                                    <CustomInput
-                                        title="To"
-                                        id="max-salary"
-                                        type="number"
-                                        step={1000}
-                                        min={0}
-                                        value={job.maxSalary}
-                                        onChange={e => {
-                                            {
-                                                dispatch(
-                                                    setJob({
-                                                        ...job,
-                                                        maxSalary: parseInt(
-                                                            e.target.value
-                                                        ),
-                                                    })
-                                                );
-                                                setFormErr({
-                                                    ...formErr,
-                                                    salaryErr: "",
-                                                });
-                                            }
-                                        }}
-                                        errorText={jobErr.content.maxSalaryErr}
-                                    />
-                                </div>
-                                <div className="sm:col-span-2">
-                                    <Selection
-                                        title="Currency"
-                                        items={Object.values(currencies).map(
-                                            item => ({
-                                                label: `${item.name} (${item.code})`,
-                                                value: item,
-                                            })
-                                        )}
-                                        value={
-                                            job.currency
-                                                ? currencies[
-                                                      job.currency as keyof typeof currencies
-                                                  ].name
-                                                : ""
-                                        }
-                                        onChange={value => {
-                                            dispatch(
-                                                setJob({
-                                                    ...job,
-                                                    currency: value.code,
-                                                })
-                                            );
-                                            setFormErr({
-                                                ...formErr,
-                                                salaryErr: "",
-                                            });
-                                        }}
-                                    />
-                                </div>
-                            </div>
-                            {formErr.salaryErr && (
-                                <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                                    <span className="font-medium">
-                                        {formErr.salaryErr}{" "}
-                                    </span>
-                                </p>
-                            )}
-                        </div>
-                    </section>
+                    <AnnualSalarySection />
 
                     {/* ***********************Job Post Publishcation duration*********************************** */}
                     <section className="relative">
@@ -577,10 +252,12 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                                     startTime: date,
                                                 })
                                             );
-                                            setFormErr({
-                                                ...formErr,
-                                                jobPublishTimeErr: "",
-                                            });
+                                            dispatch(
+                                                setJobError({
+                                                    ...jobErr,
+                                                    jobPublishTimeErr: "",
+                                                })
+                                            );
                                         }}
                                     />
                                 </div>
@@ -598,18 +275,20 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                                     endTime: date,
                                                 })
                                             );
-                                            setFormErr({
-                                                ...formErr,
-                                                jobPublishTimeErr: "",
-                                            });
+                                            dispatch(
+                                                setJobError({
+                                                    ...jobErr,
+                                                    jobPublishTimeErr: "",
+                                                })
+                                            );
                                         }}
                                     />
                                 </div>
                             </div>
-                            {formErr.jobPublishTimeErr && (
+                            {jobErr.jobPublishTimeErr && (
                                 <p className="mt-2 text-sm text-red-600 dark:text-red-500">
                                     <span className="font-medium">
-                                        {formErr.jobPublishTimeErr}{" "}
+                                        {jobErr.jobPublishTimeErr}{" "}
                                     </span>
                                 </p>
                             )}

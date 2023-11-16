@@ -1,19 +1,16 @@
-import React, { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 
-import { IJobDto, JobContentJson } from "@/services";
-import { IAppFormSection } from "@/interfaces";
+import { ApplicationFormJSON, IJobDto, JobContentJson } from "@/services";
 import { AppFormView } from "@/components";
-
-import AppFormDesktopView from "../AppFormDesktopView/AppFormDesktopView";
 
 import styles from "./ApplyFormModal.module.scss";
 
 type ApplyFormModalProps = {
     job: Omit<IJobDto, "content" | "applicationForm"> & {
         content: JobContentJson;
-        applicationForm: IAppFormSection[];
+        applicationForm: ApplicationFormJSON;
     };
     close: () => void;
 };

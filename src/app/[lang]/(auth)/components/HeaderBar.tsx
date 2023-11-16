@@ -1,15 +1,21 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import Image from "next/image";
-import { BellAlertIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
+import {
+    ArrowLeftOnRectangleIcon,
+    BellAlertIcon,
+    EnvelopeIcon,
+} from "@heroicons/react/24/outline";
 import { cookies } from "next/headers";
 import dynamic from "next/dynamic";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { LocaleSwitcher, ThemeSwitcher } from "@/components";
 import { useAppDispatch } from "@/redux/reduxHooks";
 import { logout } from "@/redux/slices/auth.slice";
+
+import logo from "/public/images/logo.svg";
 
 const InvitationDropDownNoSSR = dynamic(() => import("./InvitationDropDown"), {
     ssr: false,
@@ -18,12 +24,19 @@ const InvitationDropDownNoSSR = dynamic(() => import("./InvitationDropDown"), {
 type HeaderBarProps = {};
 
 const HeaderBar: React.FC<HeaderBarProps> = ({}) => {
+    const router = useRouter();
+
     const dispatch = useAppDispatch();
     const authEnd = useSearchParams().get("authEnd");
 
+    const handleLogout = useCallback(() => {
+        dispatch(logout());
+        router.push("login");
+    }, [router, dispatch]);
+
     useEffect(() => {
-        if (authEnd && authEnd === "true") dispatch(logout());
-    }, [authEnd, dispatch]);
+        if (authEnd && authEnd === "true") handleLogout();
+    }, [authEnd, handleLogout]);
 
     return (
         <div className="text-center w-full  h-fit bg-white dark:bg-blue-950 drop-shadow-md relative z-10">
@@ -32,7 +45,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({}) => {
                     <span>
                         <Image
                             alt="Hirelight Logo"
-                            src={"//images/logo.svg"}
+                            src={logo}
                             width={40}
                             height={40}
                         />
@@ -42,18 +55,25 @@ const HeaderBar: React.FC<HeaderBarProps> = ({}) => {
                     </h1>
                 </div>
                 <div className="flex items-center gap-6">
-                    <div>
+                    {/* <div>
                         <button
                             type="button"
                             className="relative p-1 rounded-md border border-neutral-400"
                         >
                             <BellAlertIcon className="w-6 h-6" />
                         </button>
-                    </div>
+                    </div> */}
                     <InvitationDropDownNoSSR />
-                    <div className="text-neutral-700">
+                    <div className="text-neutral-700 border-neutral-400">
                         <LocaleSwitcher />
                     </div>
+                    <button
+                        type="button"
+                        onClick={handleLogout}
+                        className=" block p-1 rounded-md border border-neutral-400"
+                    >
+                        <ArrowLeftOnRectangleIcon className="w-6 h-6" />
+                    </button>
                 </div>
             </div>
         </div>

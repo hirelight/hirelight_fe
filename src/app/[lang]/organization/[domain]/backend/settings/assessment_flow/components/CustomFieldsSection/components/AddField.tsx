@@ -2,9 +2,11 @@
 
 import React, { FormEvent, HTMLInputTypeAttribute, useState } from "react";
 import { m } from "framer-motion";
+import { v4 as uuid } from "uuid";
 
 import { Button, CustomInput, Selection } from "@/components";
 import { IAddNewField } from "@/interfaces/app-form-template.interface";
+import { AppFormInputTypes } from "@/interfaces";
 
 const appFormPos = new Map<string, string>([
     ["personal_information", "Personal information"],
@@ -22,7 +24,7 @@ const AddField: React.FC<AddFieldProps> = ({ onAdd, onCancel }) => {
         appFormSectionId: "",
         profileSectionId: "",
         newField: {
-            id: "",
+            id: uuid(),
             custom: true,
             label: "",
             type: "",
@@ -58,9 +60,6 @@ const AddField: React.FC<AddFieldProps> = ({ onAdd, onCancel }) => {
                                     newField: {
                                         ...formState.newField,
                                         label: e.target.value,
-                                        id: e.target.value
-                                            .toLowerCase()
-                                            .replace(" ", "_"),
                                     },
                                 })
                             }
@@ -69,26 +68,32 @@ const AddField: React.FC<AddFieldProps> = ({ onAdd, onCancel }) => {
                         <Selection
                             title="Field type"
                             required
-                            items={["Paragraph", "asd"].map(item => ({
-                                label: item,
-                                value: "text" as HTMLInputTypeAttribute,
+                            items={AppFormInputTypes.map(item => ({
+                                label: item.label,
+                                value: item.type,
                             }))}
-                            value={formState.newField.type}
+                            value={
+                                AppFormInputTypes.find(
+                                    item =>
+                                        item.type === formState.newField.type
+                                )?.label ?? AppFormInputTypes[0].label
+                            }
                             placeholder="Please select an option"
-                            onChange={(content: string) =>
+                            onChange={value =>
                                 setFormState({
                                     ...formState,
                                     newField: {
                                         ...formState.newField,
-                                        type: content,
+                                        type: value,
                                     },
                                 })
                             }
                         />
                     </div>
+
                     <div className="grid grid-cols-2 gap-2 mb-4">
                         <Selection
-                            title="Field type"
+                            title="Field position"
                             required
                             items={Array.from(appFormPos.entries()).map(
                                 ([key, value]) => ({ label: value, value: key })

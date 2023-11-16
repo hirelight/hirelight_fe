@@ -8,7 +8,9 @@ import {
 import React from "react";
 import dynamic from "next/dynamic";
 
-import AddNewQuestionSection from "../../components/AddNewQuestionSection";
+import AddNewQuestionSection, {
+    thinkTime,
+} from "../../components/AddNewQuestionSection";
 
 import { AsyncQuestionType } from "./AsyncVideoForm";
 
@@ -36,6 +38,8 @@ const QuestionSection = ({ data, onUpdate }: IQuestionSection) => {
             />
         );
     }
+
+    console.log(data.content);
     return (
         <div className="border border-slate-200 rounded-md">
             <div className="flex justify-between items-center py-6 px-4 border-b border-slate-200">
@@ -82,7 +86,7 @@ const QuestionSection = ({ data, onUpdate }: IQuestionSection) => {
                     ></div>
                     <div className="flex-1 flex-shrink-0 flex items-center justify-end gap-2 w-fit ml-auto text-sm uppercase font-semibold whitespace-nowrap">
                         <span className="py-1 px-2.5 rounded-full bg-green-200 text-green-700">
-                            {data.content.config.thinkTime}
+                            {thinkTime.get(data.content.config.thinkTime)}
                         </span>
                         <span className="py-1 px-2.5 rounded-full bg-blue-200 text-blue-700">
                             {data.content.config.duration} mins to answer

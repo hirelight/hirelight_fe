@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
 import {
+    ApplicationFormJSON,
     ICreateJobDto,
     IJobDetailError,
     IJobDto,
@@ -9,6 +10,7 @@ import {
 } from "@/services/job/job.interface";
 import {
     IAddAppFormField,
+    IAppFormField,
     IAppFormSection,
     ICustomField,
     IDelteCustomField,
@@ -20,12 +22,25 @@ import { createNewJobPost, getJobById, updateJob } from "../thunks/job.thunk";
 export interface IJobSliceInitialState {
     data: Omit<IJobDto, "content" | "applicationForm"> & {
         content: JobContentJson;
-        applicationForm: IAppFormSection[];
+        applicationForm: ApplicationFormJSON;
+    };
+    contentLength: {
+        description: number;
+        requirements: number;
+        benefits: number;
     };
     loading: boolean;
     error: {
-        status: boolean;
-        content: IJobDetailError;
+        titleErr: string;
+        areaArr: string;
+        contentErr: {
+            descriptionErr: string;
+            requirementsErr: string;
+            benefitsErr: string;
+            contentErr: string;
+        };
+        salaryErr: string;
+        jobPublishTimeErr: string;
     };
 }
 
@@ -41,7 +56,10 @@ const initialState: IJobSliceInitialState = {
             requirements: "",
             benefits: "",
         },
-        applicationForm: [],
+        applicationForm: {
+            form_structure: [],
+            questions: [],
+        },
         minSalary: 0,
         maxSalary: 0,
         currency: "",
@@ -56,17 +74,22 @@ const initialState: IJobSliceInitialState = {
         updatedTime: new Date(),
         status: "",
     },
+    contentLength: {
+        description: 0,
+        requirements: 0,
+        benefits: 0,
+    },
     error: {
-        status: false,
-        content: {
-            titleErr: "",
-            locationErr: "",
-            contentErr: {
-                descriptionErr: "",
-                requirementsErr: "",
-                benefitsErr: "",
-            },
+        titleErr: "",
+        areaArr: "",
+        contentErr: {
+            descriptionErr: "",
+            requirementsErr: "",
+            benefitsErr: "",
+            contentErr: "",
         },
+        salaryErr: "",
+        jobPublishTimeErr: "",
     },
     loading: false,
 };
@@ -84,84 +107,90 @@ const jobSlice = createSlice({
         },
         resetJobError: (state, action) => {
             state.error = {
-                status: false,
-                content: {
-                    titleErr: "",
-                    locationErr: "",
-                    contentErr: {
-                        descriptionErr: "",
-                        requirementsErr: "",
-                        benefitsErr: "",
-                    },
+                titleErr: "",
+                areaArr: "",
+                contentErr: {
+                    descriptionErr: "",
+                    requirementsErr: "",
+                    benefitsErr: "",
+                    contentErr: "",
                 },
+                salaryErr: "",
+                jobPublishTimeErr: "",
             };
+        },
+        setContentLength: (state, action) => {
+            state.contentLength = action.payload;
         },
 
         setAppForm: (state, action) => {
             state.data.applicationForm = action.payload;
         },
 
-        addAppFormField: (state, action: PayloadAction<IAddAppFormField>) => {
-            state.data.applicationForm = state.data.applicationForm.map(
-                section => {
-                    if (section.name === action.payload.sectionName) {
+        // *************App form field*************************
+        editAppFormField: (state, action: PayloadAction<IEditAppFormField>) => {
+            // state.data.applicationForm.form_structure =
+            //     state.data.applicationForm.form_structure.map(section => {
+            //         if (section.id === action.payload.sectionId) {
+            //             return {
+            //                 ...section,
+            //                 fields: section.fields.map(item => {
+            //                     if (
+            //                         item.custom &&
+            //                         (item as ICustomField).id ===
+            //                             action.payload.field.id
+            //                     )
+            //                         return action.payload.field as any;
+
+            //                     return item;
+            //                 }),
+            //             };
+            //         }
+
+            //         return section;
+            //     });
+
+            state.data.applicationForm.form_structure =
+                state.data.applicationForm.form_structure.map(section => {
+                    if (section.id === action.payload.sectionId) {
                         return {
                             ...section,
-                            fields: section.fields.concat([
-                                action.payload.field,
-                            ]),
-                        };
-                    }
+                            fields: section.fields.map(field => {
+                                if (field.id === action.payload.field.id) {
+                                    return action.payload.field as any;
+                                }
 
-                    return section;
-                }
-            );
-        },
-
-        editCustomField: (state, action: PayloadAction<IEditAppFormField>) => {
-            state.data.applicationForm = state.data.applicationForm.map(
-                section => {
-                    if (section.name === action.payload.sectionName) {
-                        return {
-                            ...section,
-                            fields: section.fields.map(item => {
-                                if (
-                                    item.custom &&
-                                    (item as ICustomField).id ===
-                                        action.payload.field.id
-                                )
-                                    return action.payload.field;
-
-                                return item;
+                                return field;
                             }),
                         };
                     }
 
                     return section;
-                }
-            );
+                });
         },
 
-        deleteCustomField: (
-            state,
-            action: PayloadAction<IDelteCustomField>
-        ) => {
-            state.data.applicationForm = state.data.applicationForm.map(
-                section => {
-                    if (section.name === action.payload.sectionName) {
-                        return {
-                            ...section,
-                            fields: section.fields.filter(
-                                item => item.id !== action.payload.fieldId
-                            ),
-                        };
-                    }
-
-                    return section;
-                }
-            );
+        deleteCustomField: (state, action: PayloadAction<string>) => {
+            state.data.applicationForm.questions =
+                state.data.applicationForm.questions.filter(
+                    field => field.id !== action.payload
+                );
         },
 
+        // *************App custom field*************************
+        addCustomField: (state, action: PayloadAction<IAppFormField>) => {
+            state.data.applicationForm.questions =
+                state.data.applicationForm.questions.concat([
+                    action.payload as any,
+                ]);
+        },
+        editCustomField: (state, action: PayloadAction<IAppFormField>) => {
+            state.data.applicationForm.questions =
+                state.data.applicationForm.questions.map(field => {
+                    if (field.id === action.payload.id)
+                        return action.payload as any;
+                    return field;
+                });
+        },
         resetJobSliceState: state => {
             state = initialState as any;
         },
@@ -220,8 +249,11 @@ export const {
     setJobError,
     resetJobSliceState,
     setAppForm,
-    addAppFormField,
-    editCustomField,
+    editAppFormField,
     deleteCustomField,
+    editCustomField,
+    setContentLength,
+    addCustomField,
+    deleteJob,
 } = jobSlice.actions;
 export default jobSlice.reducer;

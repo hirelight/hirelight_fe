@@ -95,20 +95,22 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                                     className={`${styles.answer__wrapper}`}
                                 >
                                     <input
-                                        id={`answerno-${index}-${parsedContent.name}`}
                                         type={
                                             parsedContent.type === "one-answer"
                                                 ? "radio"
                                                 : "checkbox"
                                         }
-                                        checked={answer.correct}
+                                        defaultChecked={answer.correct}
+                                        name={
+                                            parsedContent.type === "one-answer"
+                                                ? id
+                                                : answer.name
+                                        }
                                         value={answer.name}
-                                        name="question1-answer"
                                         className={`${styles.answer__input}`}
                                         readOnly
                                     />
                                     <label
-                                        htmlFor={`answerno-${index}-${parsedContent.name}`}
                                         className={`${styles.answer__label}`}
                                         dangerouslySetInnerHTML={{
                                             __html: answer.name,

@@ -13,7 +13,7 @@ interface AppFormSectionProps {
 }
 
 const AppFormSection: React.FC<AppFormSectionProps> = ({
-    data: { name, fields },
+    data: { name, fields, id },
 }) => {
     return (
         <section>
@@ -26,14 +26,7 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                         key={field.label}
                         className="border-b last-of-type:border-none border-gray-300"
                     >
-                        {field.custom ? (
-                            <CustomFieldOnType field={field as ICustomField} />
-                        ) : (
-                            <AppFormSectionField
-                                sectionName={name}
-                                data={field}
-                            />
-                        )}
+                        <AppFormSectionField sectionId={id} data={field} />
                     </li>
                 ))}
             </ul>

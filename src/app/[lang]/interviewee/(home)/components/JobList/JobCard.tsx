@@ -64,7 +64,7 @@ const JobCard: React.FC<JobCardProps> = ({ data }) => {
                     </div>
                 </div>
                 <p
-                    className="ql-editor !text-neutral-600 !text-sm !hidden sm:!block !p-0"
+                    className="ql-editor !text-neutral-600 !text-sm !hidden md:!block !p-0 overflow-hidden text-ellipsis max-h-20 "
                     dangerouslySetInnerHTML={{
                         __html: data.content.description,
                     }}

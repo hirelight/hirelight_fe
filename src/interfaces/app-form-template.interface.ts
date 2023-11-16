@@ -9,7 +9,7 @@ export interface IAppFormTemplateProfileSection {
 }
 
 export interface IAppFormTemplateSection {
-    id?: string;
+    id: string;
     custom: boolean;
     name: string;
     fields: (IAppFormField & { custom: boolean })[];

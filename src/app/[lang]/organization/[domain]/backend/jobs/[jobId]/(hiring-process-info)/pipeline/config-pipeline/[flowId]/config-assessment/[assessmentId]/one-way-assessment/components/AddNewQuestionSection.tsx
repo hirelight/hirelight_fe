@@ -22,7 +22,7 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ),
 });
 
-const thinkTime = new Map<number, string>([
+export const thinkTime = new Map<number, string>([
     [-1, "Unlimited time to think"],
     [180, "3 minutes"],
     [600, "10 minutes"],
@@ -89,7 +89,7 @@ const AddNewQuestionSection = ({
                 onSaveTopic({
                     ...res.data,
                     content: {
-                        ...res.data.content,
+                        ...JSON.parse(res.data.content),
                         config: question.content.config,
                     },
                 });
@@ -100,7 +100,13 @@ const AddNewQuestionSection = ({
                     difficulty: question.difficulty,
                     tagIdList: [],
                 });
-                onSaveTopic(question);
+                onSaveTopic({
+                    ...res.data,
+                    content: {
+                        ...JSON.parse(res.data.content),
+                        config: question.content.config,
+                    },
+                });
             }
         } catch (error) {
             console.error(error);

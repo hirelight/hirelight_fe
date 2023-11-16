@@ -11,16 +11,17 @@ import {
 } from "@/components";
 import { IAppFormField, IAppFormSection, ICustomField } from "@/interfaces";
 import interceptor from "@/services/interceptor";
+import { ApplicationFormJSON } from "@/services";
 
 type AppFormSectionProps = {
     jobPostId: string;
-    datas: IAppFormSection[];
+    data: ApplicationFormJSON;
     onApply?: () => void;
 };
 
 const AppFormSection: React.FC<AppFormSectionProps> = ({
     jobPostId,
-    datas,
+    data,
     onApply,
 }) => {
     const inputFieldOnType = (field: IAppFormField) => {
@@ -105,9 +106,10 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
 
         const elements: any = e.currentTarget;
         const fieldMap = new Map<string, IAppFormField>();
-        datas
+        data.form_structure
             .map(item => item.fields)
             .flat(1)
+            .concat(data.questions)
             .forEach(field => {
                 if (!fieldMap.has(field.id)) fieldMap.set(field.id, field);
             });
@@ -167,15 +169,19 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                 firstName: name.split(" ")[0],
                 lastName: name.split(" ").slice(1).join(" "),
                 jobPostId: jobPostId,
-                content: JSON.stringify(
-                    datas.map(sec => ({
+                content: JSON.stringify({
+                    form_structure: data.form_structure.map(sec => ({
                         ...sec,
                         fields: sec.fields.map(f => ({
                             ...f,
                             value: fieldMap.get(f.id)?.value,
                         })),
-                    }))
-                ),
+                    })),
+                    questions: data.questions.map(f => ({
+                        ...f,
+                        value: fieldMap.get(f.id)?.value,
+                    })),
+                } as ApplicationFormJSON),
             };
             // console.log(dto);
             // console.log(JSON.parse(dto.content));
@@ -184,18 +190,21 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
         } catch (error) {
             console.error(error);
         }
-        if ((e.currentTarget as HTMLFormElement).reset)
-            (e.currentTarget as HTMLFormElement).reset();
+
+        const formEl = document.getElementById(
+            "apply-job-form"
+        ) as HTMLFormElement;
+        if (formEl) formEl.reset();
         if (onApply) onApply();
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form id="apply-job-form" onSubmit={handleSubmit}>
             <h4 className="text-sm text-neutral-700 py-4 md:py-8">
                 <span className="text-red-500 mr-1">*</span>
                 Required fields
             </h4>
-            {datas.map(section => {
+            {data.form_structure.map(section => {
                 return (
                     <section key={section.name}>
                         <div className="flex items-center justify-between border-b border-gray-300 pb-2 mb-8">
@@ -209,6 +218,7 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                     </section>
                 );
             })}
+            {data.questions.map(field => inputFieldOnType(field))}
 
             <div className="flex justify-end gap-6 mb-6">
                 <button
@@ -242,7 +252,12 @@ const DateInput = ({ field }: { field: ICustomField }) => {
                 {field.required && <span className="text-red-500 mr-1">*</span>}
                 {field.label}
             </label>
-            <DatePicker id={field.id} name={field.id} onChange={() => {}} />
+            <DatePicker
+                id={field.id}
+                name={field.id}
+                required={field.required}
+                onChange={() => {}}
+            />
         </>
     );
 };
@@ -252,6 +267,7 @@ const SelectionInput = ({ field }: { field: ICustomField }) => {
         <Selection
             title={field.label}
             id={field.id}
+            name={field.id}
             items={field.choices_attributes.map(item => ({
                 label: item.name,
                 value: item.name,
@@ -285,7 +301,10 @@ const MultipleChoiceInpuit = ({ field }: { field: ICustomField }) => {
                             id={choice.id}
                             type={field.single_answer ? "radio" : "checkbox"}
                             value={choice.name}
-                            name={field.id}
+                            name={field.single_answer ? field.id : choice.id}
+                            required={
+                                field.single_answer ? field.required : undefined
+                            }
                             tabIndex={-1}
                             className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                         />
@@ -326,6 +345,7 @@ const YesNoInput = ({ field }: { field: ICustomField }) => {
                         tabIndex={-1}
                         name={field.id}
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                        required={field.required}
                     />
                     <label
                         htmlFor={`${field.id}-yes`}
@@ -342,6 +362,7 @@ const YesNoInput = ({ field }: { field: ICustomField }) => {
                         tabIndex={-1}
                         name={field.id}
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                        required={field.required}
                     />
                     <label
                         htmlFor={`${field.id}-no`}

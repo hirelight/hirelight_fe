@@ -5,14 +5,14 @@ import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Cookies from "js-cookie";
+import jwtDecode from "jwt-decode";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setJob } from "@/redux/slices/job.slice";
 import jobServices from "@/services/job/job.service";
 import { updateJob } from "@/redux/thunks/job.thunk";
 import { SpinLoading } from "@/icons";
-import { useUserInfo } from "@/hooks/useUserInfo";
-import { IUserInfo } from "@/interfaces/user.interface";
 
 import styles from "./JobHeader.module.scss";
 
@@ -22,7 +22,8 @@ const JobHeader = ({}: IJobHeader) => {
     const pathname = usePathname();
     const { lang } = useParams();
     const job = useAppSelector(state => state.job.data);
-    const userData = useAppSelector(state => state.auth.authUser);
+    const token = Cookies.get("hirelight_access_token");
+    const decoded: any = token ? jwtDecode(token) : null;
     const jobLoading = useAppSelector(state => state.job.loading);
     const dispatch = useAppDispatch();
 
@@ -37,13 +38,16 @@ const JobHeader = ({}: IJobHeader) => {
                 position: "bottom-right",
                 autoClose: 1000,
             });
+            setIsLoading(false);
         },
         onError: error => {
             console.error(error);
-            toast.error("Publish failure", {
+            toast.error(error.message ? error.message : "Publish failure", {
                 position: "bottom-right",
                 autoClose: 1000,
             });
+
+            setIsLoading(false);
         },
     });
 
@@ -98,11 +102,9 @@ const JobHeader = ({}: IJobHeader) => {
         } catch (error) {}
     };
 
-    const handleRequestPublish = async (id: string) => {
+    const handleRequestPublish = (id: string) => {
         setIsLoading(true);
-        await requestPublishMutation.mutateAsync(id);
-
-        setIsLoading(false);
+        requestPublishMutation.mutate(id);
     };
 
     return (
@@ -122,12 +124,14 @@ const JobHeader = ({}: IJobHeader) => {
                             type="button"
                             className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
                             onClick={handleSaveAndContinue}
+                            disabled={jobLoading}
                         >
                             {jobLoading && <SpinLoading className="mr-2" />}Save
                             draft
                         </button>
                         {job.assessmentFlowId &&
-                            userData!!.userId === job.creatorId.toString() && (
+                            decoded &&
+                            decoded.userId === job.creatorId.toString() && (
                                 <button
                                     type="button"
                                     className="text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
@@ -135,6 +139,7 @@ const JobHeader = ({}: IJobHeader) => {
                                         null,
                                         job.id
                                     )}
+                                    disabled={isLoading}
                                 >
                                     {isLoading && (
                                         <SpinLoading className="mr-2" />

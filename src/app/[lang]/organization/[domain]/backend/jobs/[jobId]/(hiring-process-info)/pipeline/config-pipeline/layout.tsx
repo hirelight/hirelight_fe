@@ -1,6 +1,6 @@
 import React from "react";
 
-import WrapperPipeline from "./components/WrapperPipeline";
+import WrapperPipeline from "../components/WrapperPipeline";
 
 const PipelineLayout = ({ children }: { children: React.ReactNode }) => {
     return (

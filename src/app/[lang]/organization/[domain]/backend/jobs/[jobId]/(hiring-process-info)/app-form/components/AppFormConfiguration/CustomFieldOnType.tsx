@@ -68,14 +68,7 @@ const CustomFieldOnType: React.FC<CustomFieldOnTypeProps> = ({ field }) => {
                 <button
                     type="button"
                     className="w-5 h-5 text-red-500 mr-2"
-                    onClick={() =>
-                        dispatch(
-                            deleteCustomField({
-                                sectionName: "Details",
-                                fieldId: field.id,
-                            })
-                        )
-                    }
+                    onClick={() => dispatch(deleteCustomField(field.id))}
                 >
                     <TrashIcon />
                 </button>

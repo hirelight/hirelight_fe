@@ -48,8 +48,11 @@ const NewOrganizationForm = () => {
             if (data.statusCode === 200) {
                 const { subdomain, id } = data.data;
                 const resOrgToken = await authServices.getOrgAccessToken(id);
-                if (resOrgToken.statusCode !== 200)
-                    return toast.error("Get org token failure");
+
+                toast.success("Create org successfully!", {
+                    position: "bottom-left",
+                    autoClose: 1000,
+                });
 
                 if (
                     process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes(
@@ -75,8 +78,11 @@ const NewOrganizationForm = () => {
                     );
                 }
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error);
+            toast.error(error.message ? error.message : "Create org failure!", {
+                position: "bottom-left",
+            });
         }
         setLoading(false);
     };
@@ -144,7 +150,6 @@ const NewOrganizationForm = () => {
                             id="organization-name"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Hirelight Corperation"
-                            value={newOrgForm.name}
                             onChange={e => {
                                 setNewOrgForm({
                                     ...newOrgForm,
@@ -196,6 +201,7 @@ const NewOrganizationForm = () => {
                     <button
                         type="submit"
                         className="flex items-center gap-1 justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-full px-5 py-2.5 mt-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        disabled={loading}
                     >
                         {loading && <SpinLoading />}
                         Start a 15-day trial

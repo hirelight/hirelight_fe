@@ -58,7 +58,7 @@ const ProfileSection = () => {
                 //     profileLayout,
                 //     formDetails.map(section => section.fields).flat(1)
                 // );
-                formDetails
+                formDetails.form_structure
                     .map(section => section.fields)
                     .flat(1)
                     .forEach(fields => {
@@ -82,9 +82,7 @@ const ProfileSection = () => {
                     );
 
                 console.log(profileLayout);
-                setAnswers(
-                    Array.from(fieldMap.values()).filter(item => item.custom)
-                );
+                setAnswers(formDetails.questions);
                 setSections(profileLayout);
             } catch (error) {
                 console.error(error);

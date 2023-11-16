@@ -61,8 +61,8 @@ export interface IAddAppFormField {
 }
 
 export interface IEditAppFormField {
-    sectionName: string;
-    field: any;
+    sectionId: string;
+    field: IAppFormField;
 }
 
 export interface IDelteCustomField {

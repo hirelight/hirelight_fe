@@ -1,7 +1,6 @@
 import { toast } from "react-toastify";
 import { FieldErrors, FieldValues } from "react-hook-form";
 
-import { AssessmentTypeKey } from "@/interfaces/assessment.interface";
 import { IResponse } from "@/interfaces/service.interface";
 import interceptor from "@/services/interceptor";
 

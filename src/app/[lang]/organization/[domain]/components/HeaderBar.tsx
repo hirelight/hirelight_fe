@@ -35,10 +35,10 @@ const HeaderBar = () => {
 
     const handleLogout = async () => {
         setShowAvatarDropdown(false);
+        dispatch(logout());
         router.push(
             `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login?authEnd=true`
         );
-        dispatch(logout());
     };
 
     return (

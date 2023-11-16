@@ -11,6 +11,7 @@ import jobServices from "@/services/job/job.service";
 import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
 import { setJob } from "@/redux/slices/job.slice";
 import { fetchAssessmentFlowById } from "@/redux/thunks/assessment-flow.thunk";
+import { ApplicationFormJSON } from "@/services";
 
 const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
     const { jobId } = useParams();
@@ -32,19 +33,22 @@ const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
             ]);
             const jobAppFormParsed = JSON.parse(
                 jobAppFormRes.data.applicationForm
-            );
+            ) as ApplicationFormJSON;
             const appFormTemplateParsed = JSON.parse(
                 appFormTemplateRes.data.content
             );
             console.log(jobAppFormParsed);
 
             const mergeAppForm = mergeAppFormFields(
-                jobAppFormParsed,
+                jobAppFormParsed.form_structure,
                 appFormTemplateParsed.app_form
             );
             return {
                 ...jobAppFormRes.data,
-                applicationForm: JSON.stringify(mergeAppForm),
+                applicationForm: JSON.stringify({
+                    form_structure: mergeAppForm,
+                    questions: jobAppFormParsed.questions,
+                } as ApplicationFormJSON),
             };
         },
     });

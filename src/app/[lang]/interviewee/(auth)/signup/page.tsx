@@ -38,7 +38,7 @@ const IntervieweeSignup = () => {
                             Already have a Hirelight account?{" "}
                             <Link
                                 href="/login"
-                                className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+                                className="font-semibold leading-6 text-blue_primary_700 hover:text-blue_primary_800"
                             >
                                 Sign in
                             </Link>

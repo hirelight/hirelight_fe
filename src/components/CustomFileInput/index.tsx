@@ -185,23 +185,22 @@ const CustomFileInput = (props: ICustomFileInput) => {
                             </span>
                         </React.Fragment>
                     )}
+                    <input
+                        required={props.required}
+                        ref={inputRef}
+                        type="text"
+                        className="sr-only"
+                        id={props.id}
+                        name={props.name}
+                    />
+                    <input
+                        type="text"
+                        className="sr-only"
+                        id={props.id + "_fileName"}
+                        name={props.name}
+                    />
                 </div>
             </div>
-            <input
-                ref={inputRef}
-                type="text"
-                className="sr-only"
-                id={props.id}
-                name={props.name}
-                onChange={() => {}}
-            />
-            <input
-                type="text"
-                className="sr-only"
-                id={props.id + "_fileName"}
-                name={props.name}
-                onChange={() => {}}
-            />
         </div>
     );
 };

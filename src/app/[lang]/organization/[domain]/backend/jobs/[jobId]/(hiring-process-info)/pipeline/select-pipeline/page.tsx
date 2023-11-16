@@ -1,12 +1,16 @@
 import React from "react";
 import { cookies } from "next/headers";
 import Link from "next/link";
+import { Square3Stack3DIcon } from "@heroicons/react/24/outline";
 
 import { IAssessmentFlTempDto } from "@/services/assessment-flow-templates/assessment-flow-templates.interface";
 import { IAssessmentFlow } from "@/services/assessment-flows/assessment-flows.interface";
 import assessmentFlowTemplatesServices from "@/services/assessment-flow-templates/assessment-flow-templates.service";
 import endpoints from "@/utils/constants/service-endpoint";
 import { checkResErr } from "@/helpers";
+import { ButtonOutline } from "@/components";
+
+import WrapperPipeline from "../components/WrapperPipeline";
 
 import ChangePipeline from "./components/ChangePipeline";
 
@@ -38,7 +42,7 @@ const fetchTemplates = async (
     return jsonRes.data;
 };
 
-const SelectPipeline = async () => {
+const SelectPipeline = async ({ params }: any) => {
     const accessToken = cookies().get("hirelight_access_token")!!.value;
     const datas = await fetchTemplates(accessToken);
 
@@ -57,13 +61,32 @@ const SelectPipeline = async () => {
             </div>
             <div className="w-full bg-white shadow-lg rounded-md">
                 <div className="p-6">
-                    {datas.length > 0 && (
+                    {datas.length > 0 ? (
                         <ChangePipeline
                             datas={datas.map(item => ({
                                 ...item,
                                 assessments: JSON.parse(item.content),
                             }))}
                         />
+                    ) : (
+                        <div className="w-full flex flex-col items-center py-6">
+                            <Square3Stack3DIcon className="text-gray-600 w-14 h-14 mb-6" />
+                            <h2 className="text-2xl text-neutral-700 font-semibold mb-2">
+                                No templates available in your organization
+                            </h2>
+                            <p className="text-sm text-center text-neutral-700 mb-6">
+                                There are no assessment flow template in your
+                                organization. <br /> You can create a new one to
+                                use in furthur job recruitment process.
+                            </p>
+                            <Link
+                                href={`/${params.lang}/backend/settings/assessment_flow`}
+                            >
+                                <ButtonOutline>
+                                    Create new template
+                                </ButtonOutline>
+                            </Link>
+                        </div>
                     )}
                 </div>
             </div>

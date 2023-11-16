@@ -1,31 +1,75 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { createContext, useState } from "react";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
 
-import { experienceLevels, workModalities } from "@/utils/shared/initialDatas";
-import currencies from "@/utils/shared/currencies.json";
 import {
     Button,
     CustomInput,
     DatePicker,
     LocationAutocomplete,
-    Selection,
 } from "@/components";
 import { SpinLoading } from "@/icons";
 import jobServices from "@/services/job/job.service";
 import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
 import { ICreateJobDto, JobContentJson } from "@/services";
+import { debounce } from "@/helpers";
 
 import styles from "./AddJobDetailForm.module.scss";
 import NewJobHeader from "./NewJobHeader";
+import DescriptionSection from "./DescriptionSection";
+import AnnualSalarySection from "./AnnualSalarySection";
+import EmployementDetailsSection from "./EmployementDetailsSection";
 
-const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
-    ssr: false,
-    loading: () => <p>Loading ...</p>,
-});
+type IFormErr = {
+    titleErr: string;
+    areaArr: string;
+    contentErr: {
+        descriptionErr: string;
+        requirementsErr: string;
+        benefitsErr: string;
+        contentErr: string;
+    };
+    salaryErr: string;
+    jobPublishTimeErr: string;
+};
+
+type FormState = Omit<ICreateJobDto, "content"> & {
+    content: JobContentJson;
+};
+
+type AddJobDetailFormState = {
+    formState: FormState;
+    setFormState: React.Dispatch<React.SetStateAction<FormState>>;
+    formErr: IFormErr;
+    setFormErr: React.Dispatch<React.SetStateAction<IFormErr>>;
+    contentLength: {
+        description: number;
+        requirements: number;
+        benefits: number;
+    };
+    setContentLength: React.Dispatch<
+        React.SetStateAction<{
+            description: number;
+            requirements: number;
+            benefits: number;
+        }>
+    >;
+};
+
+const AddJobDetailFormContext = createContext<AddJobDetailFormState | null>(
+    null
+);
+
+export const useAddJobDetailForm = (): AddJobDetailFormState => {
+    const context = React.useContext(AddJobDetailFormContext);
+
+    if (!context)
+        throw new Error("Please use ThemeProvider in your parent component!");
+
+    return context;
+};
 
 type AddJobDetailFormProps = {};
 
@@ -39,11 +83,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
         requirements: 0,
         benefits: 0,
     });
-    const [formState, setFormState] = useState<
-        Omit<ICreateJobDto, "content"> & {
-            content: JobContentJson;
-        }
-    >({
+    const [formState, setFormState] = useState<FormState>({
         title: "",
         content: {
             description: "",
@@ -61,7 +101,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
         workModality: "",
     });
 
-    const [formErr, setFormErr] = useState({
+    const [formErr, setFormErr] = useState<IFormErr>({
         titleErr: "",
         areaArr: "",
         contentErr: {
@@ -160,26 +200,39 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                 appFormTemplateRes.data.content
             ).app_form;
 
-            console.log(appFormTemplateRes);
-
             const res = await jobServices.createAsync({
                 ...formState,
                 content: JSON.stringify(formState.content),
-                applicationForm: JSON.stringify(parsedAppForm),
+                applicationForm: JSON.stringify({
+                    form_structure: parsedAppForm,
+                    questions: [],
+                }),
             });
-            toast.success(res.message);
+            toast.success(res.message, {
+                position: "bottom-right",
+                autoClose: 1000,
+            });
             router.push(`${res.data}/edit`);
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            toast.error("Create job failure");
+            toast.error(error.message ? error.message : "Create job failure");
         }
 
         setLoading(false);
     };
 
     return (
-        <>
-            <NewJobHeader form={formState} />
+        <AddJobDetailFormContext.Provider
+            value={{
+                formErr,
+                setFormErr,
+                formState,
+                setFormState,
+                contentLength,
+                setContentLength,
+            }}
+        >
+            <NewJobHeader />
             <div className="flex-1 flex">
                 <div className="flex-1 max-w-screen-xl mx-auto pb-20">
                     <div className={styles.form__container}>
@@ -197,7 +250,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                         type="text"
                                         placeholder="Example: Fullstack Developer"
                                         autoComplete="organization-title"
-                                        value={formState.title}
+                                        // value={formState.title}
                                         onChange={e => {
                                             setFormState({
                                                 ...formState,
@@ -270,322 +323,13 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                         </section>
 
                         {/* ***********************Description Section*********************************** */}
-                        <section className="relative">
-                            <h2 className={`${styles.form__section__title}`}>
-                                Description
-                            </h2>
-                            <div className={`${styles.form__section__wrapper}`}>
-                                <div className="mb-4 md:mb-6">
-                                    <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                        <span className="text-red-500 mr-1">
-                                            *
-                                        </span>
-                                        About this role
-                                    </h3>
-                                    <div className="border border-slate-600 rounded-lg min-h-[600px] p-3 md:p-6 relative overflow-hidden">
-                                        <div className="mb-6 flex flex-col min-h-[220px]">
-                                            <QuillEditorNoSSR
-                                                label="Description"
-                                                theme="bubble"
-                                                required={true}
-                                                value={
-                                                    formState.content
-                                                        .description
-                                                }
-                                                placeholder="Enter the job description here; include key areas of
-                    responsibility and what the candidate might do on a typical
-                    day."
-                                                onChange={(
-                                                    value: string,
-                                                    text
-                                                ) => {
-                                                    setContentLength(prev => ({
-                                                        ...prev,
-                                                        description:
-                                                            text.length,
-                                                    }));
-                                                    setFormState({
-                                                        ...formState,
-                                                        content: {
-                                                            ...formState.content,
-                                                            description: value,
-                                                        },
-                                                    });
-                                                    setFormErr({
-                                                        ...formErr,
-                                                        contentErr: {
-                                                            ...formErr.contentErr,
-                                                            descriptionErr: "",
-                                                            contentErr: "",
-                                                        },
-                                                    });
-                                                }}
-                                                className="flex-1"
-                                            />
-                                            {formErr.contentErr
-                                                .descriptionErr !== "" && (
-                                                <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                                                    <span className="font-medium">
-                                                        {
-                                                            formErr.contentErr
-                                                                .descriptionErr
-                                                        }
-                                                    </span>
-                                                </p>
-                                            )}
-                                        </div>
-
-                                        <div className="mb-6 flex flex-col min-h-[220px]">
-                                            <QuillEditorNoSSR
-                                                label="Requirements"
-                                                theme="bubble"
-                                                value={
-                                                    formState.content
-                                                        .requirements
-                                                }
-                                                placeholder="Enter the job description here; include key areas of
-                    responsibility and what the candidate might do on a typical
-                    day."
-                                                onChange={(value, text) => {
-                                                    setContentLength(prev => ({
-                                                        ...prev,
-                                                        requirements:
-                                                            text.length,
-                                                    }));
-                                                    setFormState({
-                                                        ...formState,
-                                                        content: {
-                                                            ...formState.content,
-                                                            requirements: value,
-                                                        },
-                                                    });
-                                                    setFormErr({
-                                                        ...formErr,
-                                                        contentErr: {
-                                                            ...formErr.contentErr,
-                                                            requirementsErr: "",
-                                                            contentErr: "",
-                                                        },
-                                                    });
-                                                }}
-                                                className="flex-1"
-                                                required={true}
-                                            />
-                                            {formErr.contentErr
-                                                .requirementsErr && (
-                                                <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                                                    <span className="font-medium">
-                                                        {
-                                                            formErr.contentErr
-                                                                .requirementsErr
-                                                        }{" "}
-                                                    </span>
-                                                </p>
-                                            )}
-                                        </div>
-                                        <div className="mb-6 flex flex-col min-h-[220px]">
-                                            <QuillEditorNoSSR
-                                                label="Benefits"
-                                                theme="bubble"
-                                                value={
-                                                    formState.content.benefits
-                                                }
-                                                placeholder="Enter the job description here; include key areas of
-                    responsibility and what the candidate might do on a typical
-                    day."
-                                                onChange={(value, text) => {
-                                                    setContentLength(prev => ({
-                                                        ...prev,
-                                                        benefits: text.length,
-                                                    }));
-                                                    setFormState({
-                                                        ...formState,
-                                                        content: {
-                                                            ...formState.content,
-                                                            benefits: value,
-                                                        },
-                                                    });
-                                                    setFormErr({
-                                                        ...formErr,
-                                                        contentErr: {
-                                                            ...formErr.contentErr,
-                                                            contentErr: "",
-                                                        },
-                                                    });
-                                                }}
-                                                className="flex-1"
-                                            />
-                                        </div>
-
-                                        <div
-                                            className={`absolute bottom-0 right-0 left-0 p-1 text-xs ${
-                                                formErr.contentErr.contentErr
-                                                    ? "bg-red-400 text-red-700 font-medium"
-                                                    : "text-gray-500 bg-gray-200"
-                                            }`}
-                                        >
-                                            <span>
-                                                Minimum 700 characters.{" "}
-                                                {Object.values(
-                                                    contentLength
-                                                ).reduce(
-                                                    (prev, cur) => prev + cur
-                                                )}{" "}
-                                                characters used.
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="hidden md:block absolute -right-8 top-1/2 translate-x-full -translate-y-1/2 w-screen">
-                                <div className={styles.instruction__text}>
-                                    <span className="text-sm text-neutral-500">
-                                        Định dạng thành các phần và danh sách để
-                                        cải thiện khả năng đọc Tránh nhắm mục
-                                        tiêu nhân khẩu học cụ thể, ví dụ: giới
-                                        tính, quốc tịch và độ tuổi Không cần
-                                        thêm liên kết để đăng ký (một liên kết
-                                        được thêm tự động)
-                                    </span>
-                                </div>
-                            </div>
-                        </section>
+                        <DescriptionSection />
 
                         {/* ***********************Employment Details*********************************** */}
-                        <section className="relative">
-                            <h2 className={`${styles.form__section__title}`}>
-                                Employment details
-                            </h2>
-                            <div className={`${styles.form__section__wrapper}`}>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-                                    <Selection
-                                        title="Employment type"
-                                        items={workModalities.map(item => ({
-                                            label: item.name,
-                                            value: item.name,
-                                        }))}
-                                        value={formState.workModality}
-                                        onChange={(value: string) => {
-                                            setFormState({
-                                                ...formState,
-                                                workModality: value,
-                                            });
-                                        }}
-                                    />
-                                    <Selection
-                                        title="Experience"
-                                        items={experienceLevels.map(item => ({
-                                            label: item.name,
-                                            value: item.name,
-                                        }))}
-                                        value={formState.experience}
-                                        onChange={(value: string) => {
-                                            setFormState({
-                                                ...formState,
-                                                experience: value,
-                                            });
-                                        }}
-                                    />
-                                    <CustomInput
-                                        title="Keywords"
-                                        type="text"
-                                        onChange={() => {}}
-                                    />
-                                </div>
-                            </div>
-                        </section>
+                        <EmployementDetailsSection />
 
                         {/* ***********************Annual salary*********************************** */}
-                        <section className="relative">
-                            <h2 className={`${styles.form__section__title}`}>
-                                Annual salary
-                            </h2>
-                            <div className={`${styles.form__section__wrapper}`}>
-                                <div className="grid col-auto gap-y-4 gap-x-4 md:grid-cols-4 md:gap-x-8">
-                                    <div>
-                                        <CustomInput
-                                            title="From"
-                                            id="min-salary"
-                                            type="number"
-                                            min={0}
-                                            step={1000}
-                                            value={formState.minSalary}
-                                            onChange={e => {
-                                                setFormState({
-                                                    ...formState,
-                                                    minSalary: parseInt(
-                                                        e.target.value
-                                                    ),
-                                                });
-                                                setFormErr({
-                                                    ...formErr,
-                                                    salaryErr: "",
-                                                });
-                                            }}
-                                        />
-                                    </div>
-                                    <div>
-                                        <CustomInput
-                                            title="To"
-                                            id="max-salary"
-                                            type="number"
-                                            step={1000}
-                                            min={0}
-                                            value={formState.maxSalary}
-                                            onChange={e => {
-                                                {
-                                                    setFormState({
-                                                        ...formState,
-                                                        maxSalary: parseInt(
-                                                            e.target.value
-                                                        ),
-                                                    });
-                                                    setFormErr({
-                                                        ...formErr,
-                                                        salaryErr: "",
-                                                    });
-                                                }
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="sm:col-span-2">
-                                        <Selection
-                                            title="Currency"
-                                            items={Object.values(
-                                                currencies
-                                            ).map(item => ({
-                                                label: `${item.name} (${item.code})`,
-                                                value: item,
-                                            }))}
-                                            value={
-                                                formState.currency
-                                                    ? currencies[
-                                                          formState.currency as keyof typeof currencies
-                                                      ].name
-                                                    : ""
-                                            }
-                                            onChange={value => {
-                                                setFormState({
-                                                    ...formState,
-                                                    currency: value.code,
-                                                });
-                                                setFormErr({
-                                                    ...formErr,
-                                                    salaryErr: "",
-                                                });
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                                {formErr.salaryErr && (
-                                    <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                                        <span className="font-medium">
-                                            {formErr.salaryErr}{" "}
-                                        </span>
-                                    </p>
-                                )}
-                            </div>
-                        </section>
+                        <AnnualSalarySection />
 
                         {/* ***********************Job Post Publishcation duration*********************************** */}
                         <section className="relative">
@@ -651,6 +395,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                 type="button"
                                 onClick={handleSubmitJobDetail}
                                 className="flex items-center"
+                                disabled={loading}
                             >
                                 {loading && <SpinLoading className="mr-2" />}
                                 Save & continue
@@ -659,7 +404,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                     </div>
                 </div>
             </div>
-        </>
+        </AddJobDetailFormContext.Provider>
     );
 };
 

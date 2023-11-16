@@ -8,7 +8,7 @@ import moment from "moment";
 import Image from "next/image";
 
 import { Button, ButtonOutline, Portal } from "@/components";
-import { IJobDto, JobContentJson } from "@/services";
+import { ApplicationFormJSON, IJobDto, JobContentJson } from "@/services";
 import { IAppFormSection } from "@/interfaces";
 import logo from "@/app/icon.svg";
 
@@ -17,7 +17,7 @@ import ApplyFormModal from "../ApplyFormModal/ApplyFormModal";
 type JobDescriptionBesideProps = {
     data: Omit<IJobDto, "content" | "applicationForm"> & {
         content: JobContentJson;
-        applicationForm: IAppFormSection[];
+        applicationForm: ApplicationFormJSON;
     };
     close: () => void;
 };
@@ -30,7 +30,7 @@ const JobDescriptionBeside: React.FC<JobDescriptionBesideProps> = ({
 
     return (
         <>
-            <div className="p-4 xl:px-6 transition-none relative">
+            <div className="p-4 xl:px-6 transition-none bg-white relative">
                 <button
                     type="button"
                     className="absolute top-4 right-4 text-gray-500"

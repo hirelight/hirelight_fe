@@ -94,12 +94,12 @@ const AppFormMobileSection: React.FC<AppFormMobileSectionProps> = ({}) => {
         }
     };
 
-    if (appForms.length === 0)
-        return (
-            <div className="px-4 pt-12 flex justify-center">
-                <LoadingIndicator />
-            </div>
-        );
+    // if (appForms.length === 0)
+    //     return (
+    //         <div className="px-4 pt-12 flex justify-center">
+    //             <LoadingIndicator />
+    //         </div>
+    //     );
 
     return (
         <div className="px-4">
@@ -107,7 +107,7 @@ const AppFormMobileSection: React.FC<AppFormMobileSectionProps> = ({}) => {
                 <span className="text-red-500 mr-1">*</span>
                 Required fields
             </h4>
-            {appForms.map(section => {
+            {appForms.form_structure.map(section => {
                 return (
                     <section key={section.name}>
                         <div className="flex items-center justify-between border-b border-gray-300 pb-2 mb-4">
@@ -138,6 +138,10 @@ const AppFormMobileSection: React.FC<AppFormMobileSectionProps> = ({}) => {
 
                                 return inputFieldOnType(field);
                             })}
+                        {section.id === "details" &&
+                            appForms.questions.map(field =>
+                                inputFieldOnType(field)
+                            )}
                     </section>
                 );
             })}

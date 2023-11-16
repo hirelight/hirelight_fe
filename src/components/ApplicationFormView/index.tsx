@@ -3,7 +3,7 @@
 import React from "react";
 
 import { IAppFormSection } from "@/interfaces";
-import { IJobDto, JobContentJson } from "@/services";
+import { ApplicationFormJSON, IJobDto, JobContentJson } from "@/services";
 
 import AppFormSection from "./AppFormSection";
 import styles from "./styles.module.scss";
@@ -11,7 +11,7 @@ import styles from "./styles.module.scss";
 type AppFormViewProps = {
     data: Omit<IJobDto, "content" | "applicationForm"> & {
         content: JobContentJson;
-        applicationForm: IAppFormSection[];
+        applicationForm: ApplicationFormJSON;
     };
     onApply?: () => void;
     viewOnly?: boolean;
@@ -47,12 +47,7 @@ const AppFormView: React.FC<AppFormViewProps> = ({
                     <div className="max-w-3xl p-2 px-4 md:p-4 md:py-10 mx-auto sm">
                         <AppFormSection
                             jobPostId={data.id}
-                            datas={data.applicationForm.map(sec => ({
-                                ...sec,
-                                fields: sec.fields.filter(
-                                    f => f.required !== undefined
-                                ),
-                            }))}
+                            data={data.applicationForm}
                             onApply={onApply}
                         />
                     </div>

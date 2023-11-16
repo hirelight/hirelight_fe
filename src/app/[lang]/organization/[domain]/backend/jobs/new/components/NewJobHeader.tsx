@@ -8,15 +8,13 @@ import { ICreateJobDto, JobContentJson } from "@/services";
 import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
 
 import styles from "./NewJobHeader.module.scss";
+import { useAddJobDetailForm } from "./AddJobDetailForm";
 
-interface NewJobHeaderProps {
-    form: Omit<ICreateJobDto, "content"> & {
-        content: JobContentJson;
-    };
-}
+interface NewJobHeaderProps {}
 
-const NewJobHeader = ({ form }: NewJobHeaderProps) => {
+const NewJobHeader = ({}: NewJobHeaderProps) => {
     const router = useRouter();
+    const { formState } = useAddJobDetailForm();
 
     const handleSaveAndContinue = async (e: any) => {
         e.preventDefault();
@@ -30,9 +28,12 @@ const NewJobHeader = ({ form }: NewJobHeaderProps) => {
             ).app_form;
 
             const res = await jobServices.createAsync({
-                ...form,
-                content: JSON.stringify(form),
-                applicationForm: JSON.stringify(parsedAppForm),
+                ...formState,
+                content: JSON.stringify(formState),
+                applicationForm: JSON.stringify({
+                    form_structure: parsedAppForm,
+                    questions: [],
+                }),
             });
             router.push(`${res.data}/edit`);
         } catch (error) {}
@@ -48,7 +49,7 @@ const NewJobHeader = ({ form }: NewJobHeaderProps) => {
             <div className="max-w-screen-xl mx-auto py-5 px-4 xl:px-6 flex-shrink-0">
                 <div className="w-full flex items-center justify-between mb-4">
                     <h4 className="text-2xl text-neutral-700 font-medium">
-                        {form.title ? form.title : "New Job"}
+                        {formState.title ? formState.title : "New Job"}
                     </h4>
                     <div className="hidden md:block">
                         <button

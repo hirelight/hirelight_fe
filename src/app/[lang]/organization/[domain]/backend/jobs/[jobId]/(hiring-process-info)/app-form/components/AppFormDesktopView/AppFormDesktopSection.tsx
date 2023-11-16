@@ -56,7 +56,7 @@ const AppFormDesktopSection: React.FC<AppFormDesktopSectionProps> = ({}) => {
                 <span className="text-red-500 mr-1">*</span>
                 Required fields
             </h4>
-            {appFormSections.map(section => {
+            {appFormSections.form_structure.map(section => {
                 return (
                     <section key={section.name}>
                         <div className="flex items-center justify-between border-b border-gray-300 pb-2 mb-8">

@@ -183,7 +183,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                 )}
             </div>
 
-            {assessmentFlow.id && (
+            {/* {assessmentFlow.id && (
                 <>
                     <h3 className="ml-2 text-xl font-semibold text-neutral-900 dark:text-gray-300 mb-4">
                         {assessmentFlow.name}
@@ -209,7 +209,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                         Select another flow
                     </h4>
                 </>
-            )}
+            )} */}
 
             <React.Fragment>
                 {datas?.map((flow, index) => {

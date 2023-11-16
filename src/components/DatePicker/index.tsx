@@ -41,6 +41,7 @@ interface DatePickerProps {
     minDate?: Date;
     maxDate?: Date;
     pos?: "top" | "bottom";
+    required?: boolean;
 }
 
 const DatePicker: React.FC<DatePickerProps> = ({
@@ -51,6 +52,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
     minDate,
     maxDate,
     pos = "bottom",
+    required,
 }) => {
     const wrapperRef = useOutsideClick<HTMLDivElement>(() =>
         setShowDatepicker(false)
@@ -242,19 +244,22 @@ const DatePicker: React.FC<DatePickerProps> = ({
                 </div>
                 <input
                     type="text"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    onFocusCapture={e => setShowDatepicker(true)}
-                    placeholder="Select date"
                     id={id}
                     name={name}
+                    required={required}
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    onFocusCapture={() => setShowDatepicker(true)}
+                    placeholder="dd/mm/yyyy"
                     value={
                         selectedDate
                             ? `${selectedDate.getDate()}/${
                                   selectedDate.getMonth() + 1
                               }/${selectedDate.getFullYear()}`
-                            : "dd/mm/yyyy"
+                            : undefined
                     }
-                    readOnly
+                    onChange={e => {
+                        e.preventDefault();
+                    }}
                 />
             </div>
             <AnimatePresence>

@@ -12,15 +12,12 @@ import { delayFunc } from "@/helpers";
 import { IEmployerInvitationDto } from "@/services";
 import employerOrgServices from "@/services/employer-organization/employer-organization.service";
 import authServices from "@/services/auth/auth.service";
-import organizationsServices from "@/services/organizations/organizations.service";
-import { useAppSelector } from "@/redux/reduxHooks";
-import collaboratorsServices from "@/services/collaborators/collaborators.service";
 
 import styles from "./InvitationDropDown.module.scss";
 
 const InvitationDropDown = () => {
     const router = useRouter();
-    const token = useAppSelector(state => state.auth.token);
+    const token = Cookies.get("hirelight_access_token");
 
     const [invitations, setInvitations] = useState<IEmployerInvitationDto[]>(
         []

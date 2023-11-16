@@ -1,6 +1,8 @@
 import React from "react";
 import Image from "next/image";
 
+import logo from "/public/images/logo.svg";
+
 const HeaderBar = () => {
     return (
         <div className="text-center w-full h-fit flex items-center justify-center py-4 bg-white drop-shadow-md">
@@ -8,7 +10,7 @@ const HeaderBar = () => {
                 <span>
                     <Image
                         alt="Hirelight Logo"
-                        src={"//images/logo.svg"}
+                        src={logo}
                         width={40}
                         height={40}
                     />

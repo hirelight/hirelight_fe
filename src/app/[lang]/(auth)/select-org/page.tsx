@@ -2,17 +2,9 @@ import { Metadata } from "next";
 import React from "react";
 import { cookies } from "next/headers";
 import Image from "next/image";
-import {
-    HydrationBoundary,
-    QueryClient,
-    dehydrate,
-} from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 
-import endpoints from "@/utils/constants/service-endpoint";
-import { checkResErr } from "@/helpers";
-import { IOrganizationDto } from "@/services/organizations/organizations.interface";
-import logo from "@/app/icon.svg";
+import logo from "/public/images/logo.svg";
 
 import JoinedOrgList from "./components/JoinedOrgList";
 
@@ -30,6 +22,8 @@ const SelectOrgPage = async ({ params }: any) => {
                 <Image
                     src={logo}
                     alt="Hirelight Logo"
+                    width={96}
+                    height={96}
                     className="w-full h-auto object-cover"
                 />
             </div>

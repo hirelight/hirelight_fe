@@ -14,11 +14,11 @@ type AuthSliceState = {
     authError: any | null;
 };
 
+const token = Cookies.get("hirelight_access_token");
+
 const initialState: AuthSliceState = {
-    token: Cookies.get("hirelight_access_token") ?? "",
-    authUser: Cookies.get("hirelight_access_token")
-        ? jwtDecode(Cookies.get("hirelight_access_token")!!)
-        : undefined,
+    token: token ?? "",
+    authUser: token ? jwtDecode(token) : undefined,
     authError: null,
     loading: false,
 };

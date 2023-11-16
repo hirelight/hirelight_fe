@@ -1,4 +1,11 @@
+import { IAppFormField, IAppFormSection, ICustomField } from "@/interfaces";
+
 import { IAssessmentFlowDto, IOrganizationDto } from "..";
+
+export interface ApplicationFormJSON {
+    form_structure: IAppFormSection[];
+    questions: ICustomField[];
+}
 
 export interface ICreateJobDto {
     title: string;

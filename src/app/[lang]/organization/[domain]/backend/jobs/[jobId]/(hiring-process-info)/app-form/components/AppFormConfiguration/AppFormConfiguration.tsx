@@ -9,6 +9,7 @@ import { IAppFormSection } from "@/interfaces";
 
 import AppFormSection from "./AppFormSection";
 import AddQuestionModal from "./AddQuestionModal";
+import CustomFieldOnType from "./CustomFieldOnType";
 
 type AppFormConfigurationProps = {
     // appFormSections: IAppFormSection[];
@@ -26,9 +27,19 @@ const AppFormConfiguration: React.FC<AppFormConfigurationProps> = ({}) => {
             </Portal>
             <div className="flex-1 flex-shrink-0 bg-white drop-shadow-lg pb-4 rounded-tr-md rounded-tl-md overflow-hidden">
                 <div>
-                    {appFormSections?.map(section => (
+                    {appFormSections.form_structure?.map(section => (
                         <AppFormSection key={section.name} data={section} />
                     ))}
+                    <ul className="px-4 xl:px-6 text-neutral-700 font-medium text-sm">
+                        {appFormSections.questions.map(field => (
+                            <li
+                                key={field.label}
+                                className="border-b last-of-type:border-none border-gray-300"
+                            >
+                                <CustomFieldOnType field={field} />
+                            </li>
+                        ))}
+                    </ul>
 
                     <div className="px-4" onClick={() => setShow(true)}>
                         <button

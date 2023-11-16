@@ -50,7 +50,7 @@ const Selection = <T extends object | any>(props: ISelection<T>) => {
         placeholder = "Select...",
         items,
         value,
-        required = false,
+        required,
         onChange,
         className,
         labelClassName,
@@ -105,6 +105,7 @@ const Selection = <T extends object | any>(props: ISelection<T>) => {
         onChange(value);
         setShow(false);
         dropdownRef.current!!.removeAttribute("style");
+
         if (props.id) {
             const selectEl = document.getElementById(
                 props.id
@@ -212,7 +213,12 @@ const Selection = <T extends object | any>(props: ISelection<T>) => {
                             })}
                     </ul>
                 </div>
-                <select name={props.name} id={props.id} className="sr-only">
+                <select
+                    id={props.id}
+                    name={props.name}
+                    className="sr-only"
+                    required={props.required}
+                >
                     {items.map((item, index) => (
                         <option tabIndex={-1} key={index} value={item.label}>
                             {item.label}

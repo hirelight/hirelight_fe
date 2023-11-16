@@ -31,6 +31,7 @@ export const getJobById = createAsyncThunk(
         const appFormTemplateParsed = JSON.parse(
             appFormTemplateRes.data.content
         );
+        console.log(appFormTemplateParsed);
         const mergeAppForm = mergeAppFormFields(
             jobAppFormParsed,
             appFormTemplateParsed.app_form
@@ -58,11 +59,11 @@ export const mergeAppFormFields = (
     const myMap = new Map<string, IAppFormSection>();
 
     sourceArr.forEach(section => {
-        myMap.set(section.name.toLowerCase().replace(" ", "_"), section);
+        myMap.set(section.id, section);
     });
 
     mergeArr.forEach(section => {
-        const key = section.name.toLowerCase().replace(" ", "_");
+        const key = section.id;
         const isExist = myMap.get(key);
         if (isExist) {
             const fieldMap = new Map();

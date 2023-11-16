@@ -2,12 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 
 import { IAppFormSection } from "@/interfaces";
-import { IJobPostProfileDto } from "@/services";
+import { ApplicationFormJSON, IJobPostProfileDto } from "@/services";
 
 import { getProfileById } from "../thunks/applicant-profile.thunk";
 
 interface IApplicantProfileState {
-    data: Omit<IJobPostProfileDto, "content"> & { content: IAppFormSection[] };
+    data: Omit<IJobPostProfileDto, "content"> & {
+        content: ApplicationFormJSON;
+    };
     loading: boolean;
 }
 
@@ -18,7 +20,10 @@ const initialState: IApplicantProfileState = {
         firstName: "",
         lastName: "",
         jobPostId: "",
-        content: [],
+        content: {
+            form_structure: [],
+            questions: [],
+        },
         status: "",
     },
     loading: false,

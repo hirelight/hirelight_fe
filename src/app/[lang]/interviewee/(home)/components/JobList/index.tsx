@@ -23,12 +23,12 @@ const JobList = () => {
     return (
         <>
             {/* <JobsCenterCategory /> */}
-            <div className="flex-1 px-8 py-6 bg-white rounded-lg shadow-lg border border-slate-200">
-                <div className="flex justify-between">
+            <div className="flex-1 md:px-8 md:py-6 bg-white rounded-lg shadow-lg border border-slate-200">
+                <div className="flex justify-between relative">
                     <div className="w-full">
                         <div className="w-full flex justify-between">
                             <h3 className="text-neutral-700 font-semibold text-xl mb-6">
-                                20 jobs associated
+                                {jobsRes?.data.length} jobs associated
                             </h3>
                         </div>
 
@@ -75,7 +75,7 @@ const JobList = () => {
                                         duration: 0.4,
                                     },
                                 }}
-                                className="max-w-[45%] w-full max-h-screen h-fit sticky top-0 overflow-hidden overflow-y-auto"
+                                className="absolute md:sticky md:max-w-[45%] w-full max-h-screen h-fit top-0 md:right-0 overflow-hidden overflow-y-auto"
                             >
                                 <JobDescriptionBeside
                                     data={{

@@ -182,7 +182,7 @@ const JobCard: React.FC<JobCardProps> = ({
                     <span className="text-neutral-500 text-sm">
                         {status === "ACTIVE" ? (
                             <span>
-                                <CheckIcon className="w-5 h-5 text-green-500" />{" "}
+                                <CheckIcon className="w-5 h-5 text-green-500 inline mr-2" />{" "}
                                 Already posted on Hirelight system
                             </span>
                         ) : (
