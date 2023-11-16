@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 
-import styles from "../styles.module.scss";
+import styles from "./AsyncVideoAssessment.module.scss";
 
 const mimeType = "audio/webm";
 

@@ -1,8 +1,6 @@
 import { Metadata } from "next";
 import React from "react";
 import Link from "next/link";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 import { GoogleIcon, LinkedInIcon } from "@/icons";
 
@@ -18,9 +16,6 @@ export const metadata: Metadata = {
 };
 
 const IntervieweeLogin = async () => {
-    const token = cookies().get("hirelight_access_token");
-
-    if (token) redirect("/");
     return (
         <main className={styles.wrapper}>
             <div className="relative flex-1 flex justify-center items-center">

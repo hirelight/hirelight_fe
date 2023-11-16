@@ -1,10 +1,15 @@
 import { useState, useRef, useEffect } from "react";
+import { toast } from "react-toastify";
 
 import { Button, ButtonOutline, Selection } from "@/components";
+import fileServices from "@/services/file-service/file.service";
+import { SpinLoading } from "@/icons";
 
-import styles from "../styles.module.scss";
+import styles from "./AsyncVideoAssessment.module.scss";
+import { useAsyncVideoAssessment } from "./AsyncVideoAssessment";
 
 const mimeType = 'video/webm; codecs="opus,vp8"';
+// const mimeType = 'video/mp4; codecs="avc1.424028, mp4a.40.2"';
 
 type VideoRecorderProps = {
     stream: MediaStream;
@@ -24,7 +29,8 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
         "inactive" | "recording"
     >("inactive");
     const [videoChunks, setVideoChunks] = useState<Blob[]>([]);
-    const [recordedVideo, setRecordedVideo] = useState<string | null>(null);
+    const { recordedVideo, setRecordedVideo } = useAsyncVideoAssessment();
+    const [isLoading, setIsLoading] = useState(false);
 
     // const toggleCamera = async () => {
     //     if ("MediaRecorder" in window && liveVideoFeed.current) {
@@ -79,6 +85,7 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
             console.log(event.data);
             if (typeof event.data === "undefined") return;
             if (event.data.size === 0) return;
+
             localVideoChunks.push(event.data);
         };
 
@@ -93,12 +100,35 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
         if (!mediaRecorder.current) return;
 
         mediaRecorder.current.stop();
-        mediaRecorder.current.onstop = () => {
+        mediaRecorder.current.onstop = async () => {
+            setIsLoading(true);
             const videoBlob = new Blob(videoChunks, { type: mimeType });
-            const videoUrl = URL.createObjectURL(videoBlob);
-            setRecordedVideo(videoUrl);
+            const myFile = new File([videoBlob], "demo.mp4", {
+                type: mimeType,
+            });
+            const url = await handleUploadVideo(myFile);
+            console.log(url);
+            setRecordedVideo([url]);
             setVideoChunks([]);
+            setIsLoading(false);
         };
+    };
+
+    const handleUploadVideo = async (file: File) => {
+        try {
+            const formData = new FormData();
+            formData.append("formFile", file);
+
+            const res = await fileServices.uploadFile(formData);
+
+            console.log(res);
+            toast.success((await res).message);
+
+            return res.data;
+        } catch (error: any) {
+            console.log(error);
+            toast.error(error.message ? error.message : "Upload failure");
+        }
     };
 
     useEffect(() => {
@@ -110,52 +140,55 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
 
     return (
         <main className="max-w-[300px]">
-            <div className={`h-60 w-[300px] bg-gray-900 rounded-md mb-4`}>
+            <div
+                className={`h-60 w-[300px] bg-gray-900 rounded-md mb-4 relative`}
+            >
                 <video
                     ref={liveVideoFeed}
                     autoPlay
                     playsInline
                     className={`w-full h-full object-cover -scale-x-100 scale-y-100 rounded-md`}
                 ></video>
+                {isLoading && (
+                    <div className="absolute inset-0 backdrop-brightness-50 flex items-center justify-center z-10">
+                        <SpinLoading className="w-10 h-10 text-blue_primary_600" />
+                    </div>
+                )}
             </div>
-            <h3 className="text-sm text-gray-500 font-semibold mb-2">Camera</h3>
-            <Selection
-                title=""
-                items={devices
-                    .filter(item => item.kind === "videoinput")
-                    .map(item => ({
-                        label: item.label,
-                        value: item,
-                    }))}
-                onChange={() => {}}
-            />
+            <section>
+                <h3 className="text-sm text-gray-500 font-semibold mb-2">
+                    Camera
+                </h3>
+                <Selection
+                    title=""
+                    items={devices
+                        .filter(item => item.kind === "videoinput")
+                        .map(item => ({
+                            label: item.label,
+                            value: item,
+                        }))}
+                    onChange={() => {}}
+                />
+            </section>
 
             <div className="h-[1px] w-full bg-gray-300 my-4"></div>
 
-            <h3 className="text-sm text-gray-500 font-semibold mb-2">
-                Microphone
-            </h3>
-            <Selection
-                title=""
-                items={devices
-                    .filter(item => item.kind === "audioinput")
-                    .map(item => ({
-                        label: item.label,
-                        value: item,
-                    }))}
-                onChange={() => {}}
-            />
-            {/* {recordedVideo && (
-                <div
-                    className={`h-60 w-[300px] object-cover bg-gray-900 rounded-md`}
-                >
-                    <video
-                        src={recordedVideo}
-                        controls
-                        className={styles.live_player}
-                    ></video>
-                </div>
-            )} */}
+            <section className="mb-4">
+                <h3 className="text-sm text-gray-500 font-semibold mb-8">
+                    Microphone
+                </h3>
+                <Selection
+                    title=""
+                    items={devices
+                        .filter(item => item.kind === "audioinput")
+                        .map(item => ({
+                            label: item.label,
+                            value: item,
+                        }))}
+                    onChange={() => {}}
+                />
+            </section>
+
             <div className={styles.video_controls}>
                 {recordingStatus === "inactive" ? (
                     <Button onClick={startRecording} type="button">
@@ -167,9 +200,9 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
                     </ButtonOutline>
                 )}
             </div>
-            <button type="button" onClick={toggleCamera}>
+            {/* <button type="button" onClick={toggleCamera}>
                 Toggle camera
-            </button>
+            </button> */}
         </main>
     );
 };

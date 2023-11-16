@@ -4,16 +4,11 @@ import background from "/public/images/interviewee_auth_bg.png";
 
 import Image from "next/image";
 import Link from "next/link";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 import SignupForm from "./components/SignupForm";
 import styles from "./signup.module.scss";
 
 const IntervieweeSignup = () => {
-    const token = cookies().get("hirelight_access_token");
-
-    if (token) redirect("/");
     return (
         <main className="flex-1 flex relative">
             <div className="w-full lg:w-[45%] xl:flex-1 absolute inset-0 lg:relative opacity-20 lg:opacity-80">
