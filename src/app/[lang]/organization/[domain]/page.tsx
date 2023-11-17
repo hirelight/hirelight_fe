@@ -21,9 +21,8 @@ const DomainPage = ({
     React.useEffect(() => {
         if (!Cookies.get("hirelight_access_token")) {
             if (
-                process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes(
-                    "localhost" || process.env.NODE_ENV === "development"
-                )
+                process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ||
+                process.env.NODE_ENV === "development"
             ) {
                 if (accessToken) {
                     Cookies.set(

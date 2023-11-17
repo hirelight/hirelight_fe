@@ -8,20 +8,15 @@ import {
     ClockIcon,
     CurrencyDollarIcon,
     PencilIcon,
-    TrashIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import dynamic from "next/dynamic";
 import moment from "moment";
 
 import { Selection } from "@/components";
-import { SpinLoading } from "@/icons";
-import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
-import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
-import { IAssessmentFlowDto } from "@/services";
-import { AssessmentTypes } from "@/interfaces/assessment.interface";
+import { useAppSelector } from "@/redux/reduxHooks";
 import currencies from "@/utils/shared/currencies.json";
 import { CurrencyKey } from "@/interfaces/job-post.interface";
 
@@ -136,38 +131,51 @@ const AssessmentInfoHeader = () => {
                 {assessmentFlow.id && (
                     <div className="w-full">
                         <div role="tablist" className="flex">
-                            {assessmentFlow?.assessments?.map(item => (
-                                <div
-                                    role="tab"
-                                    key={item.id}
-                                    className="flex-1 text-center"
+                            <div role="tab" className="flex-1 text-center">
+                                <Link
+                                    href={`/backend/jobs/${job.id}/hiring-process/all`}
+                                    className={`${styles.assessment__btn}`}
                                 >
-                                    <Link
-                                        href={`/backend/jobs/${job.id}/hiring-process/${item.id}`}
-                                        className={styles.assessment__btn}
+                                    <span
+                                        className={`${
+                                            styles.assessment__btn__text
+                                        } ${
+                                            "all" === (assessmentId as string)
+                                                ? styles.active
+                                                : ""
+                                        }`}
                                     >
-                                        <span
-                                            className={`${
-                                                styles.assessment__btn__text
-                                            } ${
-                                                item.id.toString() ===
-                                                (assessmentId as string)
-                                                    ? styles.active
-                                                    : ""
-                                            }`}
+                                        All
+                                    </span>
+                                </Link>
+                            </div>
+                            {assessmentFlow?.assessments?.map(assessment => {
+                                return (
+                                    <div
+                                        role="tab"
+                                        key={assessment.id}
+                                        className="flex-1 text-center"
+                                    >
+                                        <Link
+                                            href={`/backend/jobs/${job.id}/hiring-process/${assessment.id}`}
+                                            className={`${styles.assessment__btn}`}
                                         >
-                                            {
-                                                AssessmentTypes[
-                                                    item.assessmentTypeName
-                                                ]
-                                            }{" "}
-                                            {/* <span className="ml-1 text-neutral-400">
-                                                {index === 0 ? "-" : index}
-                                            </span> */}
-                                        </span>
-                                    </Link>
-                                </div>
-                            ))}
+                                            <span
+                                                className={`${
+                                                    styles.assessment__btn__text
+                                                } ${
+                                                    assessment.id.toString() ===
+                                                    (assessmentId as string)
+                                                        ? styles.active
+                                                        : ""
+                                                }`}
+                                            >
+                                                {assessment.name}
+                                            </span>
+                                        </Link>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 )}

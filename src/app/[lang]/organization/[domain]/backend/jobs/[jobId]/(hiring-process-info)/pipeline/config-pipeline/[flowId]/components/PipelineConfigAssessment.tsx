@@ -23,8 +23,6 @@ const PipelineConfigAssessment: React.FC<PipelineConfigAssessmentProps> = ({
     const router = useRouter();
     const { flowId } = useParams();
 
-    console.log(selectedStage);
-
     return (
         <div className="w-full px-4 xl:px-6">
             <div className="flex flex-col lg:flex-row gap-8">

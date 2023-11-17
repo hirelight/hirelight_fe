@@ -6,9 +6,7 @@ const WaitingResponseSection = () => {
     return (
         <ul className="space-y-4">
             {new Array(8).fill("").map((item, index) => (
-                <li key={index}>
-                    <ApplicationCard />
-                </li>
+                <li key={index}>{/* <ApplicationCard /> */}</li>
             ))}
         </ul>
     );

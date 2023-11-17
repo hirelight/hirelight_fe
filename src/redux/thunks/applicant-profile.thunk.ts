@@ -7,6 +7,6 @@ export const getProfileById = createAsyncThunk(
     async (profileId: string) => {
         const res = await applicantProfileServices.getProfileById(profileId);
 
-        return { ...res, data: res.data[1] };
+        return res;
     }
 );

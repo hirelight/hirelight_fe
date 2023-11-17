@@ -3,6 +3,7 @@
 import React, { createContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 import {
     Button,
@@ -75,6 +76,7 @@ type AddJobDetailFormProps = {};
 
 const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
     const router = useRouter();
+    const queryClient = useQueryClient();
 
     const [loading, setLoading] = React.useState(false);
 
@@ -212,6 +214,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                 position: "bottom-right",
                 autoClose: 1000,
             });
+            queryClient.invalidateQueries({ queryKey: ["jobs"] });
             router.push(`${res.data}/edit`);
         } catch (error: any) {
             console.error(error);

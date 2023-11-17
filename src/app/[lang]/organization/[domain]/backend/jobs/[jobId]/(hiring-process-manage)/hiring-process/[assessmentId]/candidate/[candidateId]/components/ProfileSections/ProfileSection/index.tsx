@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import moment from "moment";
 
 import { PdfViewer } from "@/components";
@@ -12,6 +12,7 @@ import {
 import { useAppSelector } from "@/redux/reduxHooks";
 import { IAppFormField, IAppFormSection, ICustomField } from "@/interfaces";
 import PDFViewer from "@/components/PdfViewer";
+import { ApplicationFormJSON } from "@/services";
 
 import { profileDatas, profileLayout, candidateSection } from "./data";
 import styles from "./styles.module.scss";
@@ -21,29 +22,41 @@ const ProfileSection = () => {
     const [sections, setSections] = useState<IAppFormTemplateProfileSection[]>(
         []
     );
-    const [answers, setAnswers] = useState<ICustomField[]>([]);
-    const formDetails = useAppSelector(
-        state => state.applicantProfile.data.content
+    const applicantAssessmentDetail = useAppSelector(
+        state => state.applicantAssessmentDetail.data
+    );
+    const formDetails = useRef<ApplicationFormJSON>(
+        JSON.parse(applicantAssessmentDetail!!.applicantProfile.content!!)
     );
 
     const getDetailByField = (field: IAppFormTemplateField) => {
+        const value = field.value
+            ? field.type === "date"
+                ? moment(field.value)
+                : field.value
+            : "No data";
+
         if (field.id === "resume")
-            return <PDFViewer src={field.value!!.value as string} />;
+            return (
+                <PDFViewer
+                    src={field.value!!.value as string}
+                    fileName={field.value!!.name}
+                />
+            );
         else
             return (
                 <div className="flex flex-col lg:flex-row">
                     <div className="lg:basis-40 mr-6 text-neutral-500 flex gap-2">
-                        <span>{field.label}</span>
+                        <span>{field.label}:</span>
                     </div>
                     <div className="w-full flex flex-col gap-2 items-start text-neutral-600">
-                        <span>
-                            {field.custom}:{" "}
-                            {field.value ? field.value : "No data"}
-                        </span>
+                        <span>{value}</span>
                     </div>
                 </div>
             );
     };
+
+    console.log("Profile section render");
 
     React.useEffect(() => {
         const fetchLayout = async () => {
@@ -53,12 +66,7 @@ const ProfileSection = () => {
                     .profile as IAppFormTemplateProfileSection[];
                 const fieldMap = new Map<string, any>();
 
-                // console.log(
-                //     "Data",
-                //     profileLayout,
-                //     formDetails.map(section => section.fields).flat(1)
-                // );
-                formDetails.form_structure
+                formDetails.current.form_structure
                     .map(section => section.fields)
                     .flat(1)
                     .forEach(fields => {
@@ -72,7 +80,7 @@ const ProfileSection = () => {
                         fields: section.fields
                             .map(item => {
                                 const isHaving = fieldMap.get(item.id);
-                                if (isHaving) fieldMap.delete(isHaving.id);
+                                // if (isHaving) fieldMap.delete(isHaving.id);
                                 return isHaving ? isHaving : item;
                             })
                             .filter(item => item.value !== undefined),
@@ -81,8 +89,6 @@ const ProfileSection = () => {
                         section => !section.fields.every(item => !item.value)
                     );
 
-                console.log(profileLayout);
-                setAnswers(formDetails.questions);
                 setSections(profileLayout);
             } catch (error) {
                 console.error(error);
@@ -90,7 +96,7 @@ const ProfileSection = () => {
         };
 
         fetchLayout();
-    }, [formDetails]);
+    }, [formDetails.current.form_structure]);
 
     return (
         <div className="">
@@ -143,7 +149,7 @@ const ProfileSection = () => {
                 <strong className="block text-sm text-neutral-600 uppercase mb-6">
                     Answers
                 </strong>
-                {answers?.map((answer, index) => {
+                {formDetails.current.questions?.map((answer, index) => {
                     return (
                         <div
                             key={index}

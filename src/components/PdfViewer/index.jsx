@@ -17,6 +17,8 @@ import {
 import { toast } from "react-toastify";
 import ReactToPrint, { PrintContextConsumer } from "react-to-print";
 
+import fileServices from "@/services/file-service/file.service";
+
 import Selection from "../Selection";
 
 import CanvasWrapper from "./CanvasWrapper";
@@ -25,7 +27,7 @@ PDFJS.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 const defaultUrl =
     "https://raw.githubusercontent.com/mozilla/pdf.js/ba2edeae/web/compressed.tracemonkey-pldi-09.pdf";
 
-export default function PDFViewer({ src = defaultUrl }) {
+export default function PDFViewer({ src = defaultUrl, fileName }) {
     const [pdf, setPDF] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [scale, setScale] = useState(1);
@@ -125,15 +127,19 @@ export default function PDFViewer({ src = defaultUrl }) {
         fetchPdf(pdfData, 1, scale);
     };
 
-    const handleDownloadFile = () => {
-        // document.title = "My new title";
-        const fileName = "Custom filename";
+    const handleDownloadFile = async () => {
+        const res = await fileServices.getFile(src.split("/").pop());
+
+        const fileUrl = URL.createObjectURL(res);
+
         const aTag = document.createElement("a");
-        aTag.href = src;
-        aTag.setAttribute("download", fileName);
+        aTag.style.display = "none";
+        aTag.href = fileUrl;
+        aTag.download = fileName;
         document.body.appendChild(aTag);
 
         aTag.click();
+        window.URL.revokeObjectURL(fileUrl);
         aTag.remove();
     };
 
@@ -147,7 +153,7 @@ export default function PDFViewer({ src = defaultUrl }) {
                 className="bg-slate-200 p-2 w-full min-h-[400px]"
                 ref={containerRef}
             >
-                <input type="file" onChange={handleUploadCv} />
+                {/* <input type="file" onChange={handleUploadCv} /> */}
                 <div className="menu-bar bg-slate-100 flex items-center justify-between p-3 text-neutral-700">
                     <div className="flex gap-4 items-center">
                         <button type="button" onClick={prevPage}>

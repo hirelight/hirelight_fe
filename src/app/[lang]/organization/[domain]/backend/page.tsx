@@ -27,6 +27,7 @@ const getJobList = async (): Promise<IResponse<IJobDto[]>> => {
         `${process.env.NEXT_PUBLIC_SERVER_API}${endpoints.JOBPOSTS}/search?OrganizationId=${decoded.organizationId}`,
         {
             method: "GET",
+            cache: "no-store",
             headers: {
                 mode: "cors",
                 credentials: "same-origin",
@@ -61,6 +62,7 @@ const Backend = async () => {
                     alt="banner background"
                     src={banner}
                     className="h-auto w-full object-cover"
+                    priority
                 />
             </div>
             <div className="max-w-screen-xl mx-auto px-4">

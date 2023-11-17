@@ -39,3 +39,6 @@ export * from "./question-sets/question-sets.service";
 
 export * from "./applicant-profile/applicant-profile.interface";
 export * from "./applicant-profile/applicant-profile.service";
+
+export * from "./applicant-assessment-detail/applicant-assessment-detail.service";
+export * from "./applicant-assessment-detail/applicant-assessment-detail.interface";

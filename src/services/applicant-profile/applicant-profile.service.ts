@@ -5,6 +5,7 @@ import { checkResErr } from "@/helpers";
 import interceptor from "../interceptor";
 
 import {
+    IApplicantProfileDto,
     IApplyJobDto,
     IJobPostProfileDto,
 } from "./applicant-profile.interface";
@@ -26,7 +27,7 @@ const applyJob = async (applyDto: IApplyJobDto): Promise<IResponse<number>> => {
 
 const getProfileById = async (
     profileId: string
-): Promise<IResponse<IJobPostProfileDto[]>> => {
+): Promise<IResponse<IJobPostProfileDto>> => {
     try {
         const res = await interceptor.get(
             endpoints.APPLICANT_PROFILES + `/${profileId}`
@@ -58,7 +59,7 @@ const getJobPostProfiles = async (
 
 const getMyApplicantProfiles = async (
     candidateId: string
-): Promise<IResponse<IJobPostProfileDto[]>> => {
+): Promise<IResponse<IApplicantProfileDto[]>> => {
     try {
         const res = await interceptor.get(
             endpoints.APPLICANT_PROFILES + `/search/candidate/${candidateId}`

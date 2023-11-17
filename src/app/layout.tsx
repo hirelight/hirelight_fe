@@ -76,11 +76,6 @@ export default function RootLayout({
                     </InternationalizationProvider>
                 </ReactQueryProvider>
                 <Analytics />
-                <Script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></Script>
-                <link
-                    rel="stylesheet"
-                    href="https://cdn.plyr.io/3.7.8/plyr.css"
-                />
                 <Script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></Script>
             </body>
         </html>

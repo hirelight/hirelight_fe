@@ -8,14 +8,11 @@ import { useRouter } from "next/navigation";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 import { Button } from "@/components";
-import { delayFunc } from "@/helpers/shareHelpers";
 import { SpinLoading } from "@/icons";
 import { LoginCandidateDto } from "@/services/auth/auth.interface";
 import authServices from "@/services/auth/auth.service";
 
 const LoginForm = () => {
-    // document.cookie =
-    //     "hirelight_access_token=asdasdasdasd; domain:jobs.locahost:3000; path=/";
     const router = useRouter();
     const [formState, setFormState] = useState<LoginCandidateDto>({
         email: "",

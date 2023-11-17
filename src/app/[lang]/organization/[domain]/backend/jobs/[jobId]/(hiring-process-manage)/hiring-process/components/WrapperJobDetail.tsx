@@ -37,7 +37,6 @@ const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
             const appFormTemplateParsed = JSON.parse(
                 appFormTemplateRes.data.content
             );
-            console.log(jobAppFormParsed);
 
             const mergeAppForm = mergeAppFormFields(
                 jobAppFormParsed.form_structure,

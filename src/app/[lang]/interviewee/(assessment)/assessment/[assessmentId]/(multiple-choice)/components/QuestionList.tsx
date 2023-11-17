@@ -7,19 +7,23 @@ import Link from "next/link";
 
 import questionAnswerServices from "@/services/questions/questions.service";
 import { Pagination } from "@/components";
+import {
+    ICandidateMCContentJson,
+    ICandidateMCDto,
+} from "@/interfaces/questions.interface";
 
 import QuestionCard from "./QuestionCard";
+import { useMultipleChoiceAssessment } from "./MultipleChoiceAssessment";
 
 const QuestionList = () => {
-    const { data: res, error } = useQuery({
-        queryKey: ["questions"],
-        queryFn: questionAnswerServices.getListAsync,
-    });
-    if (error) toast.error("Fetch question failure");
+    const { assesmentData } = useMultipleChoiceAssessment();
+    const questions = JSON.parse(
+        assesmentData!!.assessment.assessmentQuestionAnswerSetContent!!
+    ) as ICandidateMCDto[];
     return (
         <div className="flex gap-6 relative">
             <ul className="space-y-4 mb-6">
-                {res?.data?.map((item, index) => (
+                {questions?.map((item, index) => (
                     <li key={item.id}>
                         <QuestionCard data={item} index={index} />
                     </li>
@@ -30,7 +34,7 @@ const QuestionList = () => {
                     <h3>59:30</h3>
                 </div>
                 <div className="bg-white p-4 rounded-md shadow-md grid grid-cols-5 gap-2">
-                    {res?.data?.map((item, index) => (
+                    {questions.map((item, index) => (
                         <Link
                             key={item.id}
                             href={`#${item.id}`}

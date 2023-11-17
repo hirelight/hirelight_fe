@@ -11,6 +11,14 @@ import {
 import { CalendarDaysIcon } from "@heroicons/react/24/outline";
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
+import { toast } from "react-toastify";
+
+import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
+import { useAppSelector } from "@/redux/reduxHooks";
+
+import MoveCandidateDialog from "./MoveCandidateDialog";
+import styles from "./CandidateActionTabs.module.scss";
+import ActionDrawer from "./ActionDrawer";
 
 const Tooltip = dynamic(
     () => import("flowbite-react").then(mod => mod.Tooltip),
@@ -21,13 +29,6 @@ const Tooltip = dynamic(
         ),
     }
 );
-
-import { Portal } from "@/components";
-import { SpinLoading } from "@/icons";
-
-import MoveCandidateDialog from "./MoveCandidateDialog";
-import styles from "./CandidateActionTabs.module.scss";
-import ActionDrawer from "./ActionDrawer";
 
 const assessments = [
     "All",
@@ -40,9 +41,23 @@ const assessments = [
     "Hired",
 ];
 const CandidateActionTabs = () => {
-    const { assessmentId } = useParams();
+    const { assessmentId, jobId } = useParams();
 
     const [showDrawer, setShowDrawer] = React.useState(false);
+    const applicantAssessmentDetail = useAppSelector(
+        state => state.applicantAssessmentDetail.data!!
+    );
+
+    const handleSendAssessment = async () => {
+        try {
+            const res = await applicantAssessmentDetailServices.sendAssessment(
+                applicantAssessmentDetail.id
+            );
+            toast.success(res.message);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <>
@@ -76,10 +91,11 @@ const CandidateActionTabs = () => {
                         </button>
                     </Tooltip>
                     <div className="w-[1px] h-8 bg-gray-300"></div>
-                    <Tooltip content="Send email">
+                    <Tooltip content="Send assessment">
                         <button
                             type="button"
                             className={styles.candidate__action__btn}
+                            onClick={handleSendAssessment}
                         >
                             <ChatBubbleOvalLeftIcon className="w-5 h-5" />
                         </button>

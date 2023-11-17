@@ -17,7 +17,7 @@ import {
     Selection,
     Timer,
 } from "@/components";
-import { Logo } from "@/icons";
+import { Logo, SpinLoading } from "@/icons";
 import { IEditAssessmentDto, IQuestionAnswerDto } from "@/services";
 import QuestionPickerCard from "@/components/QuestionPicker/QuestionPickerCard";
 import assessmentsServices from "@/services/assessments/assessments.service";
@@ -59,6 +59,7 @@ const CreateAssessment = () => {
     const assessment = useAppSelector(state => state.assessment.data);
     const queryClient = useQueryClient();
 
+    const [isLoading, setIsLoading] = useState(false);
     const [showQuestionPicker, setShowQuestionPicker] = useState(false);
     const [pickedQuestions, setPickedQuestions] = useState<
         IQuestionAnswerDto[]
@@ -103,6 +104,7 @@ const CreateAssessment = () => {
     const handleCreateMCAssessment = async (e: FormEvent) => {
         e.preventDefault();
 
+        setIsLoading(true);
         try {
             const res = await assessmentsServices.editAsync({
                 ...formState,
@@ -116,8 +118,10 @@ const CreateAssessment = () => {
                 queryKey: [`assessmentFlow-${flowId}`],
             });
             toast.success(res.message);
+            setIsLoading(false);
         } catch (error) {
             console.error(error);
+            setIsLoading(false);
         }
     };
 
@@ -468,7 +472,10 @@ const CreateAssessment = () => {
                 </section>
                 <div className="flex items-center justify-end gap-4 p-4 xl:px-6">
                     <ButtonOutline type="button">Save & continue</ButtonOutline>
-                    <Button type="submit">Save all changes</Button>
+                    <Button type="submit" disabled={isLoading}>
+                        {isLoading && <SpinLoading className="mr-2" />} Save all
+                        changes
+                    </Button>
                 </div>
             </form>
         </>

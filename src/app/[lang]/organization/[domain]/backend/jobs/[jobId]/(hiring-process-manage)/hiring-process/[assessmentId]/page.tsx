@@ -7,4 +7,8 @@ export const metadata: Metadata = {
     title: "Hirelight - FPT",
 };
 
-export default HiringProcessCandidate;
+const CandidateListPage = () => {
+    return <div>No candidate selected</div>;
+};
+
+export default CandidateListPage;

@@ -9,7 +9,7 @@ import logo from "/public/images/logo.svg";
 import { IApplicantProfileDto, IJobPostProfileDto } from "@/services";
 
 interface ApplicationCardProps {
-    data?: IJobPostProfileDto;
+    data: IApplicantProfileDto;
 }
 
 const ApplicationCard: React.FC<ApplicationCardProps> = ({ data }) => {
@@ -30,20 +30,20 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ data }) => {
                     Company name
                 </h4>
                 <h3 className="text-neutral-700 text-lg sm:text-2xl font-semibold mt-1 mb-2">
-                    Job title
+                    {data.jobPost.title}
                 </h3>
 
                 <div className="flex flex-col md:flex-row flex-wrap gap-3 md:gap-6 text-neutral-500 mb-4">
                     <div className="flex items-center">
                         <MapPin className="w-4 h-4 inline-block mr-1" />
                         <span className="text-xs sm:text-sm whitespace-nowrap">
-                            Area
+                            {data.jobPost.area}
                         </span>
                     </div>
                     <div className="flex items-center">
                         <Clock className="w-4 h-4 inline-block mr-1" />
                         <span className="text-xs sm:text-sm whitespace-nowrap">
-                            work modarity
+                            {data.jobPost.workModality}
                         </span>
                     </div>
                     <div className="flex items-center">
@@ -60,7 +60,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ data }) => {
                     </div>
                 </div>
                 <Link
-                    href={"applications/123/notifications"}
+                    href={`applications/${data.jobPost.id}/notifications`}
                     className="text-blue-700 hover:text-white border border-blue_primary_800 hover:bg-blue_primary_800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-6 py-2 text-center mr-2 mb-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
                 >
                     View progress

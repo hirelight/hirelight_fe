@@ -1,14 +1,14 @@
 .assessment__btn {
     &:hover .assessment__btn__text {
-        @apply bg-gray-300;
+        @apply bg-gray-200 bg-opacity-75;
     }
-    &:hover .assessment__btn__text.active {
-        color: white;
-        @apply bg-blue_primary_700;
-        span {
-            color: white;
-        }
-    }
+    // &:hover .assessment__btn__text.active {
+    //     color: white;
+    //     @apply bg-blue_primary_700;
+    //     span {
+    //         color: white;
+    //     }
+    // }
 }
 
 .assessment__btn__text {
@@ -21,6 +21,10 @@
         @apply bg-blue_primary_700;
         span {
             color: white;
+        }
+
+        &:hover {
+            @apply bg-blue_primary_800;
         }
     }
 }

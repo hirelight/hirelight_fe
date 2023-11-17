@@ -2,18 +2,46 @@
 
 import React from "react";
 import { useParams } from "next/navigation";
+import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { ChevronDown } from "@/icons";
 import { useOutsideClick } from "@/hooks/useClickOutside";
+import { useAppSelector } from "@/redux/reduxHooks";
+import { AssessmentTypes } from "@/interfaces/assessment.interface";
+import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
 
 import styles from "./styles.module.scss";
 
 const MoveCandidateDialog = () => {
-    const { assessmentId, candidateId } = useParams();
+    const { assessmentId, candidateId, jobId } = useParams();
     const dialogRef = useOutsideClick<HTMLDivElement>(() =>
         setShowDialog(false)
     );
+    const queryClient = useQueryClient();
+    const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
+
     const [showDialog, setShowDialog] = React.useState(false);
+
+    const handleMoveCandidate = async (stageId: string, profileId: string) => {
+        try {
+            const res =
+                await applicantAssessmentDetailServices.moveCandidateToAssessment(
+                    profileId,
+                    stageId
+                );
+
+            toast.success(res.message);
+            queryClient.invalidateQueries({
+                queryKey: [`job-${jobId}-profiles`],
+            });
+        } catch (error: any) {
+            toast.error(
+                error.message ? error.message : "Some thing went wrong"
+            );
+        }
+        setShowDialog(false);
+    };
 
     return (
         <div className="relative" ref={dialogRef}>
@@ -46,42 +74,31 @@ const MoveCandidateDialog = () => {
                 }`}
             >
                 <ul className="max-h-56 overflow-y-auto">
-                    {[
-                        "All",
-                        "Sourced",
-                        "Applied",
-                        "Phone screen",
-                        "Assessment",
-                        "Interview",
-                        "Offer",
-                        "Hired",
-                    ].map(item => (
-                        <li key={item}>
+                    {assessmentFlow.assessments.map(assessment => (
+                        <li key={assessment.id}>
                             <button
                                 type="button"
                                 className={`group w-full text-left text-sm ${
-                                    assessmentId ===
-                                    item.toLowerCase().replace(" ", "-")
+                                    assessmentId === assessment.id
                                         ? "cursor-not-allowed"
                                         : ""
                                 }`}
-                                disabled={
-                                    assessmentId ===
-                                    item.toLowerCase().replace(" ", "-")
-                                }
-                                onClick={() => setShowDialog(false)}
+                                disabled={assessmentId === assessment.id}
+                                onClick={handleMoveCandidate.bind(
+                                    null,
+                                    assessment.id,
+                                    candidateId as string
+                                )}
                             >
                                 <span
                                     className={`block py-2 pl-6 pr-2 group-hover:bg-blue_primary_100 whitespace-nowrap ${
-                                        assessmentId ===
-                                        item.toLowerCase().replace(" ", "-")
+                                        assessmentId === assessment.id
                                             ? "opacity-40 group-hover:bg-none"
                                             : ""
                                     }`}
                                 >
-                                    {item}{" "}
-                                    {assessmentId ===
-                                        item.toLowerCase().replace(" ", "-") &&
+                                    {assessment.name}{" "}
+                                    {assessmentId === assessment.id &&
                                         "(current stage)"}
                                 </span>
                             </button>

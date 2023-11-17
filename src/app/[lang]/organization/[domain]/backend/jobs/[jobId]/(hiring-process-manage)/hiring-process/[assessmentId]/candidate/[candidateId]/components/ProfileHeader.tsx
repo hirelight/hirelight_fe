@@ -6,14 +6,19 @@ import React, { useRef } from "react";
 
 import { useAppSelector } from "@/redux/reduxHooks";
 import { AppFormDefaultSection, IAppFormSection } from "@/interfaces";
+import { ApplicationFormJSON } from "@/services";
 
 const ProfileHeader = () => {
     const applicantProfile = useAppSelector(
-        state => state.applicantProfile.data
+        state => state.applicantAssessmentDetail.data
     );
 
     const personalDetail = useRef<IAppFormSection>(
-        applicantProfile.content.form_structure.find(
+        (
+            JSON.parse(
+                applicantProfile!!.applicantProfile.content
+            ) as ApplicationFormJSON
+        ).form_structure.find(
             item => item.id === AppFormDefaultSection.PERSONAL_INFORMATION
         )!!
     );
@@ -22,20 +27,24 @@ const ProfileHeader = () => {
             <div className="h-24 bg-slate-100"></div>
             <div className="p-4 xl:px-6 flex gap-4">
                 <div>
-                    <div className="w-20 aspect-square rounded-full overflow-hidden">
-                        <Image
+                    <div className="w-20 aspect-square flex items-center justify-center rounded-full bg-white border border-gray-300 overflow-hidden">
+                        {/* <Image
                             alt="Candidate avatar"
-                            src={process.env.NEXT_PUBLIC_AVATAR_URL as string}
-                            width={0}
-                            height={0}
-                            className="w-full h-auto object-cover"
-                        />
+                            src={
+                                personalDetail.current.fields.find(
+                                    item => item.id === "avatar"
+                                )?.value.value ?? ""
+                            }
+                            width={1000}
+                            height={1000}
+                            className="h-auto w-full object-contain my-auto"
+                        /> */}
                     </div>
                 </div>
                 <div className="flex">
                     <div className="flex-1 flex-col text-sm text-neutral-500">
                         <h3 className="text-2xl font-semibold text-neutral-700">
-                            {`${applicantProfile.firstName} ${applicantProfile.lastName}`}
+                            {`${applicantProfile?.applicantProfile.firstName} ${applicantProfile?.applicantProfile.lastName}`}
                         </h3>
                         <div>
                             <span>

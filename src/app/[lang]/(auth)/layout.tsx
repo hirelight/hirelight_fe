@@ -1,9 +1,14 @@
 import { Metadata } from "next";
 import React, { ReactNode } from "react";
 import { cookies } from "next/headers";
+import dynamic from "next/dynamic";
 
-import HeaderBar from "./components/HeaderBar";
 import styles from "./layout.module.scss";
+import AuthenWrapper from "./components/AuthenWrapper";
+
+const HeaderBarNoSSR = dynamic(() => import("./components/HeaderBar"), {
+    ssr: false,
+});
 
 export const metadata: Metadata = {
     title: "Login",
@@ -12,8 +17,10 @@ export const metadata: Metadata = {
 const AuthLayout = ({ children }: { children: ReactNode }) => {
     return (
         <div className="flex flex-col min-h-screen w-full bg-slate-100">
-            <HeaderBar />
-            <div className={styles.wrapper}>{children}</div>
+            <AuthenWrapper>
+                <HeaderBarNoSSR />
+                <div className={styles.wrapper}>{children}</div>
+            </AuthenWrapper>
         </div>
     );
 };

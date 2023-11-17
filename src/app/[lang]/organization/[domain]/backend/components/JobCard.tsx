@@ -47,11 +47,13 @@ const JobCard: React.FC<JobCardProps> = ({
         mutationKey: [`publish-job-${id}`],
         mutationFn: (id: string) => jobServices.publishJobAsync(id),
         onSuccess: res => {
-            queryClient.invalidateQueries({ queryKey: ["jobs"] });
             toast.success(res.message, {
                 position: "bottom-right",
                 autoClose: 1000,
             });
+
+            queryClient.invalidateQueries({ queryKey: ["jobs"] });
+            setIsLoading(false);
         },
         onError: error => {
             console.error(error);
@@ -59,13 +61,13 @@ const JobCard: React.FC<JobCardProps> = ({
                 position: "bottom-right",
                 autoClose: 1000,
             });
+            setIsLoading(false);
         },
     });
 
     const handlePublishJob = async (id: string) => {
         setIsLoading(true);
         await publishJobMutations.mutateAsync(id);
-        setIsLoading(false);
     };
 
     return (

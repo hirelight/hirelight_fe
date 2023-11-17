@@ -2,6 +2,7 @@
 
 import React from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 import jobServices from "@/services/job/job.service";
 import { ICreateJobDto, JobContentJson } from "@/services";
@@ -15,6 +16,7 @@ interface NewJobHeaderProps {}
 const NewJobHeader = ({}: NewJobHeaderProps) => {
     const router = useRouter();
     const { formState } = useAddJobDetailForm();
+    const queryClient = useQueryClient();
 
     const handleSaveAndContinue = async (e: any) => {
         e.preventDefault();
@@ -35,6 +37,7 @@ const NewJobHeader = ({}: NewJobHeaderProps) => {
                     questions: [],
                 }),
             });
+            queryClient.invalidateQueries({ queryKey: ["jobs"] });
             router.push(`${res.data}/edit`);
         } catch (error) {}
     };

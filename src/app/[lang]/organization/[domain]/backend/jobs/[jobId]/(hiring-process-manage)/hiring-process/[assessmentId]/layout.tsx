@@ -1,6 +1,5 @@
 import React from "react";
 
-import Sidebar from "./components/Sidebar";
 import ContentWrapper from "./components/ContentWrapper";
 
 const HiringProcessAssessmentInfoLayout = ({

@@ -5,7 +5,9 @@ import React, { useEffect } from "react";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { getProfileById } from "@/redux/thunks/applicant-profile.thunk";
-import LoadingIndicator from "@/components/LoadingIndicator";
+import { getAppDetailByProfileId } from "@/redux/thunks/applicant-assessment-detail.slice.thunk";
+
+import CanididateProfileLoadingSkeleton from "./CanididateProfileLoadingSkeleton";
 
 const CandidateDetailWrapper = ({
     children,
@@ -15,23 +17,16 @@ const CandidateDetailWrapper = ({
     const { candidateId } = useParams();
 
     const dispatch = useAppDispatch();
-    const { loading, data } = useAppSelector(state => state.applicantProfile);
+    const { loading, data } = useAppSelector(
+        state => state.applicantAssessmentDetail
+    );
 
     useEffect(() => {
-        if (candidateId) dispatch(getProfileById(candidateId as string));
+        if (candidateId)
+            dispatch(getAppDetailByProfileId(candidateId as string));
     }, [candidateId, dispatch]);
 
-    if (loading)
-        return (
-            <div className="p-12 flex items-center justify-center">
-                <LoadingIndicator />
-            </div>
-        );
-
-    if (data.candidateId === "") {
-        console.log("wrapper");
-        return <div>No candidate selected</div>;
-    }
+    if (loading || !data) return <CanididateProfileLoadingSkeleton />;
 
     return <>{children}</>;
 };

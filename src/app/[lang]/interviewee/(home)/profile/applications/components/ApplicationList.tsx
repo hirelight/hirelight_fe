@@ -12,15 +12,15 @@ import ApplicationCard from "./ApplicationCard";
 const ApplicantList = () => {
     const userData = useUserInfo<IUserInfo>();
     const { data: queryRes } = useQuery({
-        queryKey: ["applicants"],
+        queryKey: ["my-applications"],
         queryFn: () =>
             applicantProfileServices.getMyApplicantProfiles(userData!!.userId),
     });
 
     return (
-        <ul>
+        <ul className="space-y-6">
             {queryRes?.data?.map(applicant => (
-                <li key={applicant.candidateId}>
+                <li key={applicant.id}>
                     <ApplicationCard data={applicant} />
                 </li>
             ))}

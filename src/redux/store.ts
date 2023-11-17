@@ -11,6 +11,8 @@ import questionReducer from "./slices/question.slice";
 import assessmentFlowReducer from "./slices/assessment-flow.slice";
 import applicantProfileReducer from "./slices/applicant-profile.slice";
 import assessmentReducer from "./slices/assessment.slice";
+import assessmentProfilesReducer from "./slices/assessment-profiles.slice";
+import applicantAssessmentDetailReducer from "./slices/applicant-assessment-detail.slice";
 
 export const store = configureStore({
     reducer: {
@@ -21,9 +23,11 @@ export const store = configureStore({
         candidates: candidatesReducer,
         templates: templatesReducer,
         assessment: assessmentReducer,
+        assessmentProfiles: assessmentProfilesReducer,
         assessmentFlow: assessmentFlowReducer,
         appFormTemplate: appFormTemplateReducer,
         applicantProfile: applicantProfileReducer,
+        applicantAssessmentDetail: applicantAssessmentDetailReducer,
         assessmentFlowTemplates: assessmentFlowTemplatesReducer,
     },
     middleware: getDefaultMiddleware =>

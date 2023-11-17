@@ -119,15 +119,9 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
         for (let i = 0; i < elements.length; i++) {
             const element = elements[i];
 
-            // console.log(
-            //     element.id,
-            //     element.value,
-            //     formData.get(element.id),
-            //     formData.getAll(element.id)
-            // );
+            // console.log(element.id, element, formData.getAll(element.id));
             if (fieldMap.has(element.id)) {
                 const type = fieldMap.get(element.id)!!.type;
-
                 switch (type) {
                     case "file":
                         fieldMap.get(element.id)!!.value = {
@@ -136,7 +130,7 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                         };
                         break;
                     case "boolean":
-                        fieldMap.get(element.id)!!.value = formData.get(
+                        fieldMap.get(element.id)!!.value = formData.getAll(
                             element.id
                         );
                         break;
@@ -162,6 +156,20 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
         // for (const [key, value] of Array.from(fieldMap.entries())) {
         //     console.log(`Key: ${key}, Value:`, value);
         // }
+
+        console.log({
+            form_structure: data.form_structure.map(sec => ({
+                ...sec,
+                fields: sec.fields.map(f => ({
+                    ...f,
+                    value: fieldMap.get(f.id)?.value,
+                })),
+            })),
+            questions: data.questions.map(f => ({
+                ...f,
+                value: fieldMap.get(f.id)?.value,
+            })),
+        });
 
         const name = fieldMap.get("name")!!.value!! as string;
         try {
@@ -301,7 +309,7 @@ const MultipleChoiceInpuit = ({ field }: { field: ICustomField }) => {
                             id={choice.id}
                             type={field.single_answer ? "radio" : "checkbox"}
                             value={choice.name}
-                            name={field.single_answer ? field.id : choice.id}
+                            name={field.id}
                             required={
                                 field.single_answer ? field.required : undefined
                             }

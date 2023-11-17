@@ -7,13 +7,11 @@ import logo from "/public/images/logo.svg";
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 
-import { delayFunc } from "@/helpers/shareHelpers";
 import { Bell } from "@/icons";
 import { useOutsideClick } from "@/hooks/useClickOutside";
-import { LocaleSwitcher, ThemeSwitcher } from "@/components";
+import { LocaleSwitcher } from "@/components";
 import { useAppDispatch } from "@/redux/reduxHooks";
 import { logout } from "@/redux/slices/auth.slice";
 
@@ -36,6 +34,7 @@ const HeaderBar = () => {
     const handleLogout = async () => {
         setShowAvatarDropdown(false);
         dispatch(logout());
+        Cookies.remove("hirelight_access_token");
         router.push(
             `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login?authEnd=true`
         );

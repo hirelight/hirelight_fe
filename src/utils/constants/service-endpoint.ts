@@ -26,6 +26,7 @@ const TAGS = "/tags";
 const QUESTION_ANSWERS = "/question-answers";
 
 const APPLICANT_PROFILES = "/applicant-profiles";
+const APPLICANT_ASSESSMENT_DETAILS = "/applicant-assessment-details";
 
 const endpoints = {
     TAGS,
@@ -45,6 +46,7 @@ const endpoints = {
     QUESTION_ANSWER_SETS,
     ROLES,
     APPLICANT_PROFILES,
+    APPLICANT_ASSESSMENT_DETAILS,
 };
 
 export default endpoints;

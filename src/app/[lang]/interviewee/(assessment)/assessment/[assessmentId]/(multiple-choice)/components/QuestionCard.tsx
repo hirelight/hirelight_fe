@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import {
     PencilIcon as PencilSolid,
@@ -13,6 +13,8 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import { IQuestionAnswerDto } from "@/services/questions/questions.interface";
 import {
+    ICandidateMCContentJson,
+    ICandidateMCDto,
     QuestionAnswerContentJson,
     QuestionDifficulty,
     QuestionTypes,
@@ -21,6 +23,7 @@ import questionAnswerServices from "@/services/questions/questions.service";
 import { DeleteModal, Portal } from "@/components";
 
 import styles from "./QuestionCard.module.scss";
+import { useMultipleChoiceAssessment } from "./MultipleChoiceAssessment";
 
 const answers = [
     "Hyper Text Markup Language",
@@ -30,47 +33,48 @@ const answers = [
 ];
 
 type QuestionCardProps = {
-    data: IQuestionAnswerDto;
+    data: ICandidateMCDto;
     index: number;
 };
 
 const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
     const { content, tagList, difficulty, id } = data;
-    const parsedContent = useMemo(
-        () => JSON.parse(content),
-        [content]
-    ) as QuestionAnswerContentJson;
+    const parsedContent = useRef<ICandidateMCContentJson>(JSON.parse(content));
+    const { answers, setAnswers } = useMultipleChoiceAssessment();
 
-    const queryClient = useQueryClient();
-    const deleteMutation = useMutation({
-        mutationFn: (id: string) => questionAnswerServices.deleteByIdAsync(id),
-        onSuccess: res => {
-            toast.success(res.message);
-            queryClient.invalidateQueries({ queryKey: ["questions"] });
-        },
-        onError: err => {
-            console.error(err);
-            toast.error("Delete question failure");
-        },
-    });
+    const handleChooseAnswer = (
+        e: React.ChangeEvent<HTMLInputElement>,
+        pos: number
+    ) => {
+        setAnswers(
+            answers.map(item => {
+                if (item.id === id) {
+                    return {
+                        ...data,
+                        content: JSON.stringify({
+                            ...parsedContent.current,
+                            answers: parsedContent.current.answers.map(
+                                (choice, choiceIndex) => {
+                                    if (choiceIndex === pos) {
+                                        return {
+                                            ...choice,
+                                            isChosen: e.currentTarget.checked,
+                                        };
+                                    }
 
-    const [showDeleteAlert, setShowDeleteAlert] = useState(false);
-
-    const handleDeleteQuestion = async (id: string) => {
-        deleteMutation.mutate(id);
+                                    return choice;
+                                }
+                            ),
+                        }),
+                    };
+                }
+                return item;
+            })
+        );
     };
 
     return (
         <>
-            <Portal>
-                <DeleteModal
-                    title="Delete question"
-                    description="Are you sure you want to delete this question? All of your data will be permanently removed. This action cannot be undone."
-                    show={showDeleteAlert}
-                    onClose={() => setShowDeleteAlert(false)}
-                    onConfirm={() => handleDeleteQuestion(id)}
-                />
-            </Portal>
             <div id={id} className="bg-white p-4 flex items-stretch">
                 <div className="flex-1">
                     <h3 className="text-neutral-700 font-semibold mb-4 flex flex-wrap gap-1">
@@ -79,51 +83,57 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                         </p>
                         <span
                             dangerouslySetInnerHTML={{
-                                __html: parsedContent.name,
+                                __html: parsedContent.current.name,
                             }}
                         ></span>
                     </h3>
-                    {parsedContent.type !== "essay" && (
+                    {parsedContent.current.type !== "essay" && (
                         <div className={`grid grid-cols-1 gap-4`}>
-                            {parsedContent.answers?.map((answer, index) => (
-                                <div
-                                    key={index}
-                                    className={`${styles.answer__wrapper}`}
-                                >
-                                    <input
-                                        type={
-                                            parsedContent.type === "one-answer"
-                                                ? "radio"
-                                                : "checkbox"
-                                        }
-                                        id={`answer-${index}-${id}`}
-                                        name={
-                                            parsedContent.type === "one-answer"
-                                                ? id
-                                                : answer.name
-                                        }
-                                        value={answer.name}
-                                        className={`${styles.answer__input}`}
-                                        readOnly
-                                    />
-                                    <label
-                                        htmlFor={`answer-${index}-${id}`}
-                                        className={`${styles.answer__label}`}
-                                        dangerouslySetInnerHTML={{
-                                            __html: answer.name,
-                                        }}
+                            {parsedContent.current.answers?.map(
+                                (answer, index) => (
+                                    <div
+                                        key={index}
+                                        className={`${styles.answer__wrapper}`}
                                     >
-                                        {/* {answer.name} */}
-                                    </label>
-                                </div>
-                            ))}
+                                        <input
+                                            type={
+                                                parsedContent.current.type ===
+                                                "one-answer"
+                                                    ? "radio"
+                                                    : "checkbox"
+                                            }
+                                            id={`answer-${index}-${id}`}
+                                            name={
+                                                parsedContent.current.type ===
+                                                "one-answer"
+                                                    ? id
+                                                    : answer.name
+                                            }
+                                            value={answer.name}
+                                            className={`${styles.answer__input}`}
+                                            onChange={e =>
+                                                handleChooseAnswer(e, index)
+                                            }
+                                        />
+                                        <label
+                                            htmlFor={`answer-${index}-${id}`}
+                                            className={`${styles.answer__label}`}
+                                            dangerouslySetInnerHTML={{
+                                                __html: answer.name,
+                                            }}
+                                        >
+                                            {/* {answer.name} */}
+                                        </label>
+                                    </div>
+                                )
+                            )}
                         </div>
                     )}
-                    {parsedContent.type === "essay" &&
-                        parsedContent.description && (
+                    {parsedContent.current.type === "essay" &&
+                        parsedContent.current.description && (
                             <p
                                 dangerouslySetInnerHTML={{
-                                    __html: parsedContent.description,
+                                    __html: parsedContent.current.description,
                                 }}
                                 className="md:col-span-1 text-sm text-gray-600"
                             ></p>

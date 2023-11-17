@@ -1,19 +1,33 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
+
+import { IJobPostAppAssDetailDto, IJobPostProfileDto } from "@/services";
+
+import {
+    getAllAppDetailList,
+    getAssessmentAppAssessDetails,
+} from "../thunks/applicant-assessment-detail.slice.thunk";
 
 interface ICandidatesSlice {
-    candidates: any[];
+    candidates: IJobPostAppAssDetailDto[];
     selectedCandidates: string[];
+    isLoading: boolean;
 }
 
 const initialState: ICandidatesSlice = {
-    candidates: new Array(3).fill(""),
+    candidates: [],
     selectedCandidates: [],
+    isLoading: false,
 };
 
 const candidatesSlice = createSlice({
     name: "candidates",
     initialState,
     reducers: {
+        setCandidates: (state, action) => {
+            state.candidates = action.payload;
+        },
+
         setSelectCandidate: (state, action) => {
             const isExisting = state.selectedCandidates.find(
                 item => item === action.payload
@@ -32,13 +46,49 @@ const candidatesSlice = createSlice({
         setSelectAllCandidates: state => {
             if (state.selectedCandidates.length === 0)
                 state.selectedCandidates = state.candidates.map(
-                    (item, index) => item
+                    (item, index) => item.applicantProfileId
                 );
             else state.selectedCandidates = [];
         },
     },
+
+    extraReducers(builder) {
+        builder
+            .addCase(getAllAppDetailList.pending, state => {
+                state.isLoading = true;
+            })
+            .addCase(getAllAppDetailList.fulfilled, (state, action) => {
+                state.candidates = action.payload.data;
+                toast.success(action.payload.message);
+                state.isLoading = true;
+            })
+            .addCase(getAllAppDetailList.rejected, (state, action) => {
+                toast.error(action.error.message);
+                state.isLoading = true;
+            });
+
+        builder
+            .addCase(getAssessmentAppAssessDetails.pending, state => {
+                state.isLoading = true;
+            })
+            .addCase(
+                getAssessmentAppAssessDetails.fulfilled,
+                (state, action) => {
+                    state.candidates = action.payload.data;
+                    toast.success(action.payload.message);
+                    state.isLoading = true;
+                }
+            )
+            .addCase(
+                getAssessmentAppAssessDetails.rejected,
+                (state, action) => {
+                    toast.error(action.error.message);
+                    state.isLoading = true;
+                }
+            );
+    },
 });
 
-export const { setSelectAllCandidates, setSelectCandidate } =
+export const { setSelectAllCandidates, setSelectCandidate, setCandidates } =
     candidatesSlice.actions;
 export default candidatesSlice.reducer;

@@ -16,8 +16,8 @@ const HiringProcess = () => {
     }, [assessmentFLow.assessments, router]);
 
     return (
-        <div className="p-20 flex items-center justify-center">
-            <LoadingIndicator className="w-20 h-20" />
+        <div className="p-12 flex items-center justify-center">
+            <LoadingIndicator />
         </div>
     );
 };

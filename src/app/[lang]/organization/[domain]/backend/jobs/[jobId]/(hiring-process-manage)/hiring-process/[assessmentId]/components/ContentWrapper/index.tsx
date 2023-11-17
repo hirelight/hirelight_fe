@@ -8,44 +8,12 @@ import Sidebar from "../Sidebar";
 import styles from "./styles.module.scss";
 
 const ContentWrapper = ({ children }: { children: React.ReactNode }) => {
-    const wrapperRef = React.useRef<HTMLDivElement>(null);
-    const sidebarRef = React.useRef<HTMLDivElement>(null);
-    const contentRef = React.useRef<HTMLDivElement>(null);
-
     const [showSidebar, setShowSidebar] = React.useState(true);
 
-    React.useEffect(() => {
-        document.addEventListener("scroll", () => {
-            if (wrapperRef.current && sidebarRef.current) {
-                const { y } = wrapperRef.current.getBoundingClientRect();
-
-                if (y <= 8 && !sidebarRef.current.hasAttribute("style")) {
-                    sidebarRef.current.setAttribute(
-                        "style",
-                        "position: fixed; top:0.5rem; height: calc(100vh - 8px)"
-                    );
-                } else if (y > 8 && sidebarRef.current.hasAttribute("style")) {
-                    sidebarRef.current.removeAttribute("style");
-                }
-            }
-        });
-
-        return () => {
-            document.removeEventListener("scroll", () => {});
-        };
-    }, []);
-
     return (
-        <div ref={wrapperRef} className="flex justify-between relative">
-            <div
-                ref={sidebarRef}
-                className={`${styles.sidebar__wrapper} ${
-                    !showSidebar ? styles.hide : ""
-                }`}
-            >
-                <div className={`${styles.sidebar__container}`}>
-                    <Sidebar />
-                </div>
+        <div className="relative flex">
+            <div className={`${styles.sidebar__container}`}>
+                <Sidebar />
                 <button
                     type="button"
                     className={`${styles.sidebar__toggle__btn} ${
@@ -57,7 +25,11 @@ const ContentWrapper = ({ children }: { children: React.ReactNode }) => {
                 </button>
             </div>
 
-            <div ref={contentRef} className={styles.content__wrapper}>
+            <div
+                className={`${styles.content__wrapper} ${
+                    showSidebar ? "" : "!pl-0"
+                }`}
+            >
                 {children}
             </div>
         </div>
