@@ -3,6 +3,7 @@
 import React, { createContext, useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { toast } from "react-toastify";
+import { flushSync } from "react-dom";
 
 import {
     ICandidateMCContentJson,
@@ -58,37 +59,6 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
     const [assesmentData, setAssessmentData] =
         useState<IMCAppliAssessmentDto | null>(null);
 
-    const handleTrackTest = async (duetime: number) => {
-        if (duetime === 0) return;
-        console.log("track", duetime);
-        try {
-            console.log(
-                answers.forEach(answer =>
-                    console.log(JSON.parse(answer.content))
-                )
-            );
-            timerId = setInterval(async () => {
-                const res =
-                    await applicantAssessmentDetailServices.trackMCAssessment({
-                        applicantAssessmentDetailId: data.id,
-                        answers: answers,
-                    });
-
-                toast.success(res.message);
-                console.log(res);
-            }, 5000);
-
-            // setTimeout(() => {
-            //     clearInterval(timerId);
-            // }, duetime);
-        } catch (error: any) {
-            console.error(error);
-            toast.error(
-                error.message ? error.message : "Some thing went wrong"
-            );
-        }
-    };
-
     const handleJoinTest = async () => {
         try {
             const res =
@@ -98,24 +68,14 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
             console.log(res);
             toast.success(res.message);
             setAssessmentData(res.data);
-            setAnswers(
-                (
+
+            flushSync(() =>
+                setAnswers(
                     JSON.parse(
-                        res.data.assessment.assessmentQuestionAnswerSetContent!!
+                        res.data.questionAnswerSet!!
                     ) as ICandidateMCDto[]
-                ).map(item => ({
-                    ...item,
-                    content: JSON.stringify(
-                        (
-                            JSON.parse(item.content) as ICandidateMCContentJson
-                        ).answers.map(answer => ({
-                            ...answer,
-                            isChosen: false,
-                        }))
-                    ),
-                }))
+                )
             );
-            handleTrackTest(res.data.assessment.duration!!);
         } catch (error: any) {
             console.error(error);
             toast.error(
@@ -142,7 +102,43 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
     };
 
     useEffect(() => {
+        const handleTrackTest = async (duetime: number) => {
+            try {
+                timerId = setInterval(async () => {
+                    if (answers.length === 0) return;
+
+                    console.log("Send track", answers);
+                    const res =
+                        await applicantAssessmentDetailServices.trackMCAssessment(
+                            {
+                                applicantAssessmentDetailId: data.id,
+                                answers: answers,
+                            }
+                        );
+
+                    toast.success(res.message);
+                }, 5000);
+                if (duetime)
+                    setTimeout(() => {
+                        if (timerId) clearInterval(timerId);
+                    }, duetime);
+            } catch (error: any) {
+                console.error(error);
+                toast.error(
+                    error.message ? error.message : "Some thing went wrong"
+                );
+            }
+        };
+        if (answers.length > 0 && assesmentData) {
+            if (timerId) clearInterval(timerId);
+            handleTrackTest(assesmentData.assessment.duration!!);
+        }
+    }, [answers, assesmentData, data.id]);
+
+    useEffect(() => {
+        // Clear tracking task on leaving page
         return () => {
+            console.log("Clear timeout");
             if (timerId) clearInterval(timerId!! as NodeJS.Timer);
         };
     }, []);

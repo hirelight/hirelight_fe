@@ -28,6 +28,8 @@ const QUESTION_ANSWERS = "/question-answers";
 const APPLICANT_PROFILES = "/applicant-profiles";
 const APPLICANT_ASSESSMENT_DETAILS = "/applicant-assessment-details";
 
+const ASSESSMENT_EVALUATION = "/assessment-evaluations";
+
 const endpoints = {
     TAGS,
     ORGANIZATIONS,
@@ -47,6 +49,7 @@ const endpoints = {
     ROLES,
     APPLICANT_PROFILES,
     APPLICANT_ASSESSMENT_DETAILS,
+    ASSESSMENT_EVALUATION,
 };
 
 export default endpoints;

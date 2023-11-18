@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 
 import questionAnswerServices from "@/services/questions/questions.service";
-import { SearchIcon } from "@/icons";
+import { MinusBigIcon, SearchIcon } from "@/icons";
 import {
     QuestionAnswerContentJson,
     QuestionDifficulty,
@@ -60,17 +60,45 @@ const QuestionPicker: React.FC<QuestionPickerProps> = ({
                 >
                     Search
                 </label>
-                <div className="relative rounded-md shadow-sm">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                        <SearchIcon className="w-4 h-4" />
+                <div className="flex items-center gap-6">
+                    <div className="flex-1 relative rounded-md shadow-sm">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
+                            <SearchIcon className="w-4 h-4" />
+                        </div>
+                        <input
+                            id="question-set-search"
+                            type="text"
+                            className="block w-full rounded-md border-0 py-2.5 pl-10 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue_primary_700 sm:sm:leading-6"
+                            value={search}
+                            onChange={e => setSearch(e.target.value)}
+                        />
                     </div>
-                    <input
-                        id="question-set-search"
-                        type="text"
-                        className="block w-full rounded-md border-0 py-2.5 pl-10 pr-20 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue_primary_700 sm:sm:leading-6"
-                        value={search}
-                        onChange={e => setSearch(e.target.value)}
-                    />
+                    <label className="w-5 h-5 text-sm font-medium text-neutral-900 dark:text-gray-300 pr-9 pl-4 relative">
+                        <input
+                            id="select-all-candidates"
+                            type="checkbox"
+                            value="all"
+                            checked={curPicks.length > 0}
+                            className="absolute w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600 cursor-pointer "
+                            onChange={e => {
+                                if (e.currentTarget.checked && questionsRes) {
+                                    setCurPicks(questionsRes.data);
+                                } else {
+                                    setCurPicks([]);
+                                }
+                            }}
+                        />
+
+                        {questionsRes &&
+                            curPicks.length > 0 &&
+                            curPicks.length < questionsRes.data.length && (
+                                <MinusBigIcon
+                                    strokeWidth={2.2}
+                                    className="absolute w-5 h-5 text-white bg-blue-600 border border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600 cursor-pointer"
+                                    onClick={() => setCurPicks([])}
+                                />
+                            )}
+                    </label>
                 </div>
             </div>
             <ul className={styles.set__list__wrapper}>

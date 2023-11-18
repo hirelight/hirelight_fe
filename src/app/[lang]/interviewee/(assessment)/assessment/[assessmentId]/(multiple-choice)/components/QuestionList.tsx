@@ -16,14 +16,14 @@ import QuestionCard from "./QuestionCard";
 import { useMultipleChoiceAssessment } from "./MultipleChoiceAssessment";
 
 const QuestionList = () => {
-    const { assesmentData } = useMultipleChoiceAssessment();
+    const { assesmentData, answers } = useMultipleChoiceAssessment();
     const questions = JSON.parse(
-        assesmentData!!.assessment.assessmentQuestionAnswerSetContent!!
+        assesmentData!!.questionAnswerSet
     ) as ICandidateMCDto[];
     return (
         <div className="flex gap-6 relative">
             <ul className="space-y-4 mb-6">
-                {questions?.map((item, index) => (
+                {answers?.map((item, index) => (
                     <li key={item.id}>
                         <QuestionCard data={item} index={index} />
                     </li>
@@ -34,7 +34,7 @@ const QuestionList = () => {
                     <h3>59:30</h3>
                 </div>
                 <div className="bg-white p-4 rounded-md shadow-md grid grid-cols-5 gap-2">
-                    {questions.map((item, index) => (
+                    {answers.map((item, index) => (
                         <Link
                             key={item.id}
                             href={`#${item.id}`}

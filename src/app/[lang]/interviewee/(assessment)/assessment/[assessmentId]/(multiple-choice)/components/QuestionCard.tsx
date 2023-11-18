@@ -49,6 +49,22 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
         setAnswers(
             answers.map(item => {
                 if (item.id === id) {
+                    console.log(
+                        item,
+                        parsedContent,
+                        parsedContent.current.answers.map(
+                            (choice, choiceIndex) => {
+                                if (choiceIndex === pos) {
+                                    return {
+                                        ...choice,
+                                        isChosen: e.currentTarget.checked,
+                                    };
+                                }
+
+                                return choice;
+                            }
+                        )
+                    );
                     return {
                         ...data,
                         content: JSON.stringify({
@@ -110,6 +126,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                                                     : answer.name
                                             }
                                             value={answer.name}
+                                            checked={answer.isChosen}
                                             className={`${styles.answer__input}`}
                                             onChange={e =>
                                                 handleChooseAnswer(e, index)

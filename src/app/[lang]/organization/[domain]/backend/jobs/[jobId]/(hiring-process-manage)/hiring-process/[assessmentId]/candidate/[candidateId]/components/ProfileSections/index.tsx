@@ -5,11 +5,12 @@ import React from "react";
 
 import styles from "./styles.module.scss";
 import ProfileSection from "./ProfileSection";
+import ReviewSection from "./ReviewSection";
 
 enum ProfileTab {
     PROFILE = "Profile",
     TIMELINE = "Timeline",
-    COMMUNICATION = "Communication",
+    REVIEW = "Review",
 }
 
 const ProfileSections = () => {
@@ -21,10 +22,7 @@ const ProfileSections = () => {
 
     return (
         <div className="rounded-md border border-gray-300 bg-white">
-            <div
-                role="tablist"
-                className="p-4 xl:px-6 flex items-center gap-8 bg-slate-200"
-            >
+            <div role="tablist" className="p-4 xl:px-6 flex items-center gap-8">
                 {(Object.keys(ProfileTab) as (keyof typeof ProfileTab)[]).map(
                     key => (
                         <button
@@ -49,6 +47,7 @@ const ProfileSections = () => {
             </div>
             <div className="p-4 xl:p-6">
                 {profileTab === ProfileTab.PROFILE && <ProfileSection />}
+                {profileTab === ProfileTab.REVIEW && <ReviewSection />}
             </div>
         </div>
     );
