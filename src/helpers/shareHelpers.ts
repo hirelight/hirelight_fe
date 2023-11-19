@@ -25,6 +25,17 @@ export const delayFunc = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms));
 };
 
+function pad(num: number) {
+    return ("0" + num).slice(-2);
+}
+export function hhmmss(seconds: number) {
+    let h = parseInt((seconds / 3600).toString());
+    let m = parseInt((seconds / 60).toString()) % 60;
+    let s = seconds % 60;
+    return `${pad(h)}:${pad(m)}:${pad(s)}`;
+    // return pad(hours)+":"+pad(minutes)+":"+pad(secs); for old browsers
+}
+
 export function humanReadable(seconds: number) {
     let h = parseInt((seconds / 3600).toString());
     let m = parseInt((seconds / 60).toString()) % 60;
@@ -109,3 +120,30 @@ export const findInputError = (
 export const isFormInvalid = (err: FieldErrors<FieldValues>) => {
     return Object.keys(err).length > 0;
 };
+
+export function extractTextFromHtml(htmlString: string): string {
+    const doc = new DOMParser().parseFromString(htmlString, "text/html");
+    const bodyText = doc.body ? doc.body.textContent || "" : "";
+    return bodyText.trim();
+}
+
+export const isDevMode = () =>
+    process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes("localhost") ||
+    process.env.NODE_ENV === "development";
+
+export function getRemainingTimeInSeconds(
+    startTime: Date,
+    duration: number
+): number {
+    const startDatetime: Date = new Date(startTime);
+    const endDatetime: Date = new Date(
+        startDatetime.getTime() + duration * 60000
+    ); // Convert duration to milliseconds
+    const currentDatetime: Date = new Date();
+
+    const remainingTimeInSeconds: number = Math.floor(
+        (endDatetime.getTime() - currentDatetime.getTime()) / 1000
+    );
+
+    return remainingTimeInSeconds;
+}

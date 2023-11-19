@@ -48,6 +48,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
     const queryClient = useQueryClient();
     const dispatch = useAppDispatch();
     const [showAddStage, setShowAddStage] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [formState, setFormState] = useState<ICreateAssessmentFlowDto>({
         ...data,
         jobPostId: jobId as string,
@@ -90,7 +91,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                     <p>Check issue in red!</p>
                 </div>
             );
-
+        setIsLoading(true);
         try {
             const res = await assessmentFlowsServices.createAsync({
                 ...formState,
@@ -104,8 +105,10 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
             toast.success(res.message);
             queryClient.invalidateQueries({ queryKey: [`job-${jobId}`] });
             router.push(`config-pipeline/${res.data.id}`);
+            setIsLoading(false);
         } catch (error) {
             toast.error("Create flow error");
+            setIsLoading(false);
         }
     };
 
@@ -269,12 +272,18 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                 </section>
             </div>
             <div className="p-4 flex items-center gap-4 text-sm">
-                <Button className="mr-auto">Apply template</Button>
-                <Button onClick={handleCreateFlow}>Save</Button>
+                <div className="mr-auto"></div>
+                <Button
+                    onClick={handleCreateFlow}
+                    disabled={isLoading}
+                    isLoading={isLoading}
+                >
+                    Save
+                </Button>
                 <button
                     type="button"
                     className="font-semibold text-neutral-500 hover:underline hover:text-neutral-700"
-                    onClick={() => {}}
+                    onClick={() => router.back()}
                 >
                     Cancel
                 </button>

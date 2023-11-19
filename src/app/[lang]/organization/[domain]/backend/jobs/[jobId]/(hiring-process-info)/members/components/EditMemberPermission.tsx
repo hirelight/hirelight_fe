@@ -5,6 +5,7 @@ import { LightBulbIcon } from "@heroicons/react/24/outline";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { Button, CustomInput, Modal, Selection } from "@/components";
 import permissionServices from "@/services/permission/permission.service";
@@ -36,6 +37,7 @@ const EditMemberPermission: React.FC<EditMemberPermissionProps> = ({
         ICollabPermission[]
     >(member.permissions);
     const [isLoading, setIsLoading] = useState(false);
+    const queryClient = useQueryClient();
 
     const handleUpdatePermission = async (e: FormEvent) => {
         e.preventDefault();
@@ -48,13 +50,19 @@ const EditMemberPermission: React.FC<EditMemberPermissionProps> = ({
             });
 
             toast.success(res.message);
-        } catch (error) {
-            toast.error("Send failure");
-            console.error(error);
+            queryClient.invalidateQueries({
+                queryKey: ["collaborators", jobId],
+            });
+        } catch (error: any) {
+            toast.error(error.message ? error.message : "Something went wrong");
         }
         setIsLoading(false);
         onClose();
     };
+
+    useEffect(() => {
+        setCurrentPermissions(member.permissions);
+    }, [member]);
 
     return (
         <Modal
@@ -112,8 +120,8 @@ const EditMemberPermission: React.FC<EditMemberPermissionProps> = ({
 
                 <div className="p-6 border-t border-gray-300 text-right">
                     <Button type="submit">
-                        {isLoading && <SpinLoading className="mr-3" />}Send
-                        invitation
+                        {isLoading && <SpinLoading className="mr-3" />}Save
+                        changes
                     </Button>
                 </div>
             </form>

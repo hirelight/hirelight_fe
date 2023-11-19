@@ -4,6 +4,9 @@ import React, { createContext, useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { toast } from "react-toastify";
 import { flushSync } from "react-dom";
+import { useParams, useRouter } from "next/navigation";
+import moment from "moment";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
 
 import {
     ICandidateMCContentJson,
@@ -15,6 +18,8 @@ import {
 } from "@/services";
 import { ButtonOutline } from "@/components";
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
+import { SpinLoading } from "@/icons";
+import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
 
 import styles from "./MultipleChoiceAssessment.module.scss";
 
@@ -55,11 +60,18 @@ let timerId: NodeJS.Timer;
 const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
     data,
 }) => {
+    const { lang } = useParams();
+    const router = useRouter();
+
     const [answers, setAnswers] = useState<ICandidateMCDto[]>([]);
     const [assesmentData, setAssessmentData] =
         useState<IMCAppliAssessmentDto | null>(null);
+    const [displayTest, setDisplayTest] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
 
     const handleJoinTest = async () => {
+        setIsLoading(true);
         try {
             const res =
                 await applicantAssessmentDetailServices.joinMCAssessment(
@@ -68,23 +80,22 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
             console.log(res);
             toast.success(res.message);
             setAssessmentData(res.data);
-
-            flushSync(() =>
-                setAnswers(
-                    JSON.parse(
-                        res.data.questionAnswerSet!!
-                    ) as ICandidateMCDto[]
-                )
+            setDisplayTest(true);
+            setAnswers(
+                JSON.parse(res.data.questionAnswerSet!!) as ICandidateMCDto[]
             );
+            setIsLoading(false);
         } catch (error: any) {
             console.error(error);
             toast.error(
                 error.message ? error.message : "Some thing went wrong"
             );
+            setIsLoading(false);
         }
     };
 
     const handleSubmitTest = async () => {
+        setIsLoading(true);
         try {
             const res =
                 await applicantAssessmentDetailServices.submitMCAssessment({
@@ -92,12 +103,16 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                     answers: answers,
                 });
             console.log(res);
+            if (timerId) clearInterval(timerId);
             toast.success(res.message);
+            router.push(`/${lang}/profile/applications`);
+            setIsLoading(false);
         } catch (error: any) {
             console.error(error);
             toast.error(
                 error.message ? error.message : "Some thing went wrong"
             );
+            setIsLoading(false);
         }
     };
 
@@ -118,12 +133,30 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
 
                     toast.success(res.message);
                 }, 5000);
-                if (duetime)
-                    setTimeout(() => {
-                        if (timerId) clearInterval(timerId);
-                    }, duetime);
+
+                if (
+                    moment(assesmentData!!.startTime).add(duetime).toDate() >
+                        new Date() &&
+                    timerId
+                ) {
+                    clearInterval(timerId);
+                }
+
+                // if (duetime)
+                //     setTimeout(() => {
+                //         if (timerId) clearInterval(timerId);
+                //     }, duetime);
             } catch (error: any) {
                 console.error(error);
+                if (
+                    error.statusCode &&
+                    error.statusCode === 400 &&
+                    error.message &&
+                    error.message ===
+                        "Assessment id not valid or assessment not available for tracking." &&
+                    timerId
+                )
+                    clearInterval(timerId);
                 toast.error(
                     error.message ? error.message : "Some thing went wrong"
                 );
@@ -165,26 +198,49 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                 }}
             >
                 <main className="max-w-screen-xl mx-auto p-4 xl:px-6">
-                    <div className="mb-8">
+                    <div className="mb-4 flex flex-col items-center">
                         <h3 className="text-2xl text-center font-semibold">
-                            Bài kiểm tra đánh giá {data.assessment.name}
+                            Assessment {data.assessment.name}
                         </h3>
-                        <p className="text-center text-base text-gray-500 font-medium">
+                        <p className="text-center text-base text-gray-500 font-medium mb-6">
                             {data.applicantProfile.jobPost.title}
                         </p>
                     </div>
 
-                    <ButtonOutline onClick={handleJoinTest}>
-                        Take test
-                    </ButtonOutline>
+                    {!displayTest && (
+                        <div className="flex justify-center items-center mt-4">
+                            {data.status ===
+                            ApplicantAssessmentDetailStatus.IN_PROGRESS ? (
+                                <ButtonOutline onClick={handleJoinTest}>
+                                    {isLoading && (
+                                        <SpinLoading className="mr-2" />
+                                    )}
+                                    Join test
+                                </ButtonOutline>
+                            ) : (
+                                <ButtonOutline onClick={handleJoinTest}>
+                                    {isLoading && (
+                                        <SpinLoading className="mr-2" />
+                                    )}
+                                    Take test
+                                </ButtonOutline>
+                            )}
+                        </div>
+                    )}
+
                     {assesmentData && (
                         <div>
                             <QuestionList />
                         </div>
                     )}
-                    <ButtonOutline onClick={handleSubmitTest}>
-                        Submit
-                    </ButtonOutline>
+                    {displayTest && data.status === "IN_PROGRESS" && (
+                        <div className="flex justify-center items-center">
+                            <ButtonOutline onClick={handleSubmitTest}>
+                                {isLoading && <SpinLoading className="mr-2" />}
+                                Submit
+                            </ButtonOutline>
+                        </div>
+                    )}
                 </main>
             </MultipleChoiceAssessmentContext.Provider>
         </div>

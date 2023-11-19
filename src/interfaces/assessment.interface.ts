@@ -8,4 +8,14 @@ export enum AssessmentTypes {
     HIRED_ASSESSMENT = "Hired",
 }
 
+export enum ApplicantAssessmentDetailStatus {
+    IDLE = "IDLE",
+    INVITED = "INVITED",
+    PENDING_EVALUATION = "PENDING_EVALUATION",
+    IN_PROGRESS = "IN_PROGRESS",
+    EVALUATED = "EVALUATED",
+    NON_ATTENDANCE = "NON_ATTENDANCE",
+    MOVED = "MOVED",
+}
+
 export type AssessmentTypeKey = keyof typeof AssessmentTypes;

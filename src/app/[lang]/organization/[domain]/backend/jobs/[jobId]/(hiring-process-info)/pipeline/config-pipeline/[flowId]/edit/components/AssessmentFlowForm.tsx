@@ -25,6 +25,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
 
     const queryClient = useQueryClient();
 
+    const [isLoading, setIsLoading] = useState(false);
     const [formState, setFormState] = useState<IEditAssessmentFlowDto>({
         ...data,
         startTime: new Date(data.startTime),
@@ -69,6 +70,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                 </div>
             );
 
+        setIsLoading(true);
         try {
             const res = await assessmentFlowsServices.editAsync({
                 ...formState,
@@ -77,11 +79,12 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
 
             toast.success(res.message);
             queryClient.invalidateQueries({
-                queryKey: [`assessmentFlow-${flowId}`],
+                queryKey: ["assessmentFlow", flowId],
             });
             router.back();
         } catch (error) {
             toast.error("Create flow error");
+            setIsLoading(false);
         }
     };
 
@@ -218,7 +221,12 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
             </div>
             <div className="p-4 flex items-center justify-end gap-4 text-sm">
                 {/* <Button className="mr-auto">Apply template</Button> */}
-                <Button type="button" onClick={handleUpdateFlow}>
+                <Button
+                    type="button"
+                    disabled={isLoading}
+                    isLoading={isLoading}
+                    onClick={handleUpdateFlow}
+                >
                     Save changes
                 </Button>
                 <button

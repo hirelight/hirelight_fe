@@ -4,6 +4,7 @@ import React, { FormEvent, useEffect, useState } from "react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Button, Modal, Selection } from "@/components";
 import { IOrgEmployerDto, IPermissionDto } from "@/services";
@@ -27,60 +28,61 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
 }) => {
     const { jobId } = useParams();
 
-    const [isLoading, setIsLoading] = useState(false);
     const [selectEmployer, setSelectEmployer] =
         React.useState<IOrgEmployerDto>();
-    const [employers, setEmployers] = useState<IOrgEmployerDto[]>([]);
     const [currentPermissions, setCurrentPermissions] = useState<
         IPermissionDto[]
     >([]);
     const { authUser }: any = useAppSelector(state => state.auth);
+    const { data: memberRes } = useQuery({
+        queryKey: ["members"],
+        queryFn: employerOrgServices.getListAsync,
+    });
+    const sendInvitationMutate = useMutation({
+        mutationFn: () =>
+            collaboratorsServices.sendInvitation({
+                jobPostId: jobId as string,
+                employerId: selectEmployer!!.employerDto.id,
+                permissions: currentPermissions.map(item => ({
+                    permissionId: item.id,
+                    permissionName: item.name,
+                })),
+            }),
+        onSuccess: res => {
+            toast.success(res.message);
+            setCurrentPermissions([]);
+            onClose();
+        },
+        onError: error => {
+            toast.error(error.message ? error.message : "Something went wrong");
+        },
+    });
 
     const handleSendInvitation = async (e: FormEvent) => {
         e.preventDefault();
         if (!selectEmployer) return toast.error("Select at least one employer");
 
-        setIsLoading(true);
-        try {
-            const res = await collaboratorsServices.sendInvitation({
-                jobPostId: jobId as string,
-                employerId: selectEmployer.employerDto.id,
-                permissions: currentPermissions.map(item => ({
-                    permissionId: item.id,
-                    permissionName: item.name,
-                })),
-            });
-
-            toast.success(res.message);
-        } catch (error) {
-            toast.error("Send failure");
-            console.error(error);
-        }
-
-        setCurrentPermissions([]);
-        setIsLoading(false);
-        onClose();
+        sendInvitationMutate.mutate();
     };
 
-    useEffect(() => {
-        const getEmployers = async () => {
-            try {
-                const res = await employerOrgServices.getListAsync();
-                const filteredEmployers = res.data.filter(
-                    member =>
-                        member.employerDto.id.toString() !== authUser.userId
-                );
-                setEmployers(filteredEmployers);
-                setSelectEmployer(filteredEmployers[0]);
-                console.log(res);
-            } catch (error) {
-                toast.error("Get employers failure");
-            }
-        };
+    // useEffect(() => {
+    //     const getEmployers = async () => {
+    //         try {
+    //             const res = await employerOrgServices.getListAsync();
+    //             const filteredEmployers = res.data.filter(
+    //                 member =>
+    //                     member.employerDto.id.toString() !== authUser.userId
+    //             );
+    //             setEmployers(filteredEmployers);
+    //             console.log(res);
+    //         } catch (error) {
+    //             toast.error("Get employers failure");
+    //         }
+    //     };
 
-        getEmployers();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    //     getEmployers();
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
 
     return (
         <Modal
@@ -118,11 +120,18 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
                         /> */}
                         <Selection
                             title="Email"
-                            value={selectEmployer?.employerDto.email}
-                            items={employers.map(item => ({
-                                label: item.employerDto.email,
-                                value: item,
-                            }))}
+                            placeholder="Select a member"
+                            value={
+                                selectEmployer
+                                    ? selectEmployer?.employerDto.email
+                                    : ""
+                            }
+                            items={
+                                memberRes?.data.map(item => ({
+                                    label: item.employerDto.email,
+                                    value: item,
+                                })) ?? []
+                            }
                             onChange={value => setSelectEmployer(value)}
                         />
                     </div>
@@ -137,8 +146,10 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
 
                 <div className="p-6 border-t border-gray-300 text-right">
                     <Button type="submit">
-                        {isLoading && <SpinLoading className="mr-2" />}Send
-                        invitation
+                        {sendInvitationMutate.isPending && (
+                            <SpinLoading className="mr-2" />
+                        )}
+                        Send invitation
                     </Button>
                 </div>
             </form>

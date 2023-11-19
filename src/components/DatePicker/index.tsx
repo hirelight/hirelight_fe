@@ -6,6 +6,7 @@ import {
     ArrowLongRightIcon,
 } from "@heroicons/react/24/solid";
 import { AnimatePresence, motion } from "framer-motion";
+import moment from "moment";
 
 import { useOutsideClick } from "@/hooks/useClickOutside";
 
@@ -124,8 +125,6 @@ const DatePicker: React.FC<DatePickerProps> = ({
                 }`
             )
         );
-        // this.props.onChange(this.state.today);
-        // this.setState(prev => (prev.isOpen = !prev.isOpen));
     };
 
     const handleChangeBoard = (date: Date) => {
@@ -250,15 +249,15 @@ const DatePicker: React.FC<DatePickerProps> = ({
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     onFocusCapture={() => setShowDatepicker(true)}
                     placeholder="dd/mm/yyyy"
-                    value={
-                        selectedDate
-                            ? `${selectedDate.getDate()}/${
-                                  selectedDate.getMonth() + 1
-                              }/${selectedDate.getFullYear()}`
-                            : undefined
-                    }
+                    value={moment(selectedDate).format("DD/MM/YY") ?? ""}
                     onChange={e => {
                         e.preventDefault();
+                        console.log(
+                            moment(e.currentTarget.value, "DD/MM/YY").toDate()
+                        );
+                        onChange(
+                            moment(e.currentTarget.value, "DD/MM/YY").toDate()
+                        );
                     }}
                 />
             </div>

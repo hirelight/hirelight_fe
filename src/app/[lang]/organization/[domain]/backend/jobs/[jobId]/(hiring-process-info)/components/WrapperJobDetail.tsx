@@ -49,7 +49,7 @@ const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
     });
 
     useEffect(() => {
-        if (isSuccess)
+        if (isSuccess) {
             dispatch(
                 setJob({
                     ...queryRes,
@@ -57,6 +57,7 @@ const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
                     applicationForm: JSON.parse(queryRes.applicationForm),
                 })
             );
+        }
     }, [isSuccess, queryRes, dispatch]);
 
     if (isLoading) {

@@ -1,5 +1,6 @@
 .table__wrapper {
     max-height: 390px;
+    min-height: 200px;
     position: relative;
     overflow-y: auto;
     &::-webkit-scrollbar {

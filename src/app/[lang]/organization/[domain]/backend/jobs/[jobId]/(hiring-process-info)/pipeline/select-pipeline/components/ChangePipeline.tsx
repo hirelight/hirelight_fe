@@ -27,6 +27,8 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
     const queryClient = useQueryClient();
     const dispatch = useAppDispatch();
     const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
+
+    const [isLoading, setIsLoading] = useState(false);
     const [formErr, setFormErr] = useState({
         nameErr: "",
         flowTimelineErr: "",
@@ -70,6 +72,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                     <p>Check issue in red!</p>
                 </div>
             );
+        setIsLoading(true);
         try {
             const res = await assessmentFlowsServices.createAsync({
                 ...assessmentFlow,
@@ -85,6 +88,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
             router.push(`config-pipeline/${res.data.id}`);
         } catch (error) {
             toast.error("Create flow error");
+            setIsLoading(false);
         }
     };
 
@@ -287,7 +291,13 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                 )}
 
                 <div className="w-fit mt-6">
-                    <Button onClick={handleCreateFlow}>Save changes</Button>
+                    <Button
+                        disabled={isLoading}
+                        isLoading={isLoading}
+                        onClick={handleCreateFlow}
+                    >
+                        Save changes
+                    </Button>
                 </div>
             </React.Fragment>
         </div>

@@ -191,20 +191,22 @@ const AsyncVideoAssessment = () => {
                                     </p>
                                 </div>
                                 <div className={styles.takes_wrapper}>
-                                    <div>
-                                        <video controls>
-                                            <source
-                                                src={recordedVideo[0]}
-                                                type="video/mp4"
-                                            />
-                                            Sorry, your browser doesn&apos;t
-                                            support embedded videos, but
-                                            don&apos;t worry, you can
-                                            <a href={recordedVideo[0]}></a>
-                                            and watch it with your favorite
-                                            video player!
-                                        </video>
-                                    </div>
+                                    {recordedVideo.length > 0 && (
+                                        <div>
+                                            <video controls>
+                                                <source
+                                                    src={recordedVideo[0]}
+                                                    type="video/mp4"
+                                                />
+                                                Sorry, your browser doesn&apos;t
+                                                support embedded videos, but
+                                                don&apos;t worry, you can
+                                                <a href={recordedVideo[0]}></a>
+                                                and watch it with your favorite
+                                                video player!
+                                            </video>
+                                        </div>
+                                    )}
                                     {new Array(3).fill("").map((_, index) => (
                                         <div
                                             key={index}

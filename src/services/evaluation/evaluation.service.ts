@@ -60,6 +60,22 @@ const getById = async (
     }
 };
 
+const getListByProfileId = async (
+    profileId: string
+): Promise<IResponse<IEvaluationDto[]>> => {
+    try {
+        const res = await interceptor.get<IResponse<IEvaluationDto[]>>(
+            endpoints.ASSESSMENT_EVALUATION + `/applicant-profiles/${profileId}`
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const getListByApplicantAssessmentDetailId = async (
     applicantAssessmentDetailId: string
 ): Promise<IResponse<IEvaluationDto[]>> => {
@@ -100,6 +116,7 @@ const evaluationServices = {
     getListByApplicantAssessmentDetailId,
     getListByCollaboratorId,
     editEvaluation,
+    getListByProfileId,
 };
 
 export default evaluationServices;

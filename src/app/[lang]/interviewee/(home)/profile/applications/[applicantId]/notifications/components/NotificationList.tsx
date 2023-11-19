@@ -21,7 +21,11 @@ const NotificationList = () => {
     return (
         <ul className="space-y-4">
             {myAssessments?.data
-                ?.filter(item => item.status === "INVITED")
+                ?.filter(
+                    item =>
+                        item.status === "INVITED" &&
+                        item.applicantProfile.jobPostId === applicantId
+                )
                 .map((item, index) => (
                     <li key={item.id}>
                         <NotificationCard data={item} />

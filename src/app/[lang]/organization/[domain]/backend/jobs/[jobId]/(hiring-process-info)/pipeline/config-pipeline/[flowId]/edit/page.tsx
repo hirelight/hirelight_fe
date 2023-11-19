@@ -16,6 +16,7 @@ const fetchAssessFlowById = async (id: string): Promise<IAssessmentFlowDto> => {
         `${process.env.NEXT_PUBLIC_SERVER_API}${endpoints.ASSESSMENT_FLOWS}/${id}`,
         {
             method: "GET",
+            cache: "no-store",
             headers: {
                 mode: "cors",
                 credentials: "same-origin",

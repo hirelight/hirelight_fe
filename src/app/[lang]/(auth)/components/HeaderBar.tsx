@@ -4,8 +4,9 @@ import React, { useCallback } from "react";
 import Image from "next/image";
 import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import Link from "next/link";
 
 import { LocaleSwitcher } from "@/components";
 import { useAppDispatch } from "@/redux/reduxHooks";
@@ -32,7 +33,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({}) => {
     return (
         <div className="text-center w-full  h-fit bg-white dark:bg-blue-950 drop-shadow-md relative z-10">
             <div className="max-w-screen-xl mx-auto flex items-center justify-between p-4 xl:px-6">
-                <div className="flex gap-2 items-center">
+                <Link href={`/`} className="flex gap-2 items-center">
                     <span>
                         <Image
                             alt="Hirelight Logo"
@@ -44,7 +45,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({}) => {
                     <h1 className="text-2xl tracking-wider font-semibold italic">
                         Hirelight
                     </h1>
-                </div>
+                </Link>
                 <div className="flex items-center gap-6">
                     {/* <div>
                         <button

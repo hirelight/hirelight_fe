@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
-import { usePathname, useRouter } from "next/navigation";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 import jobServices from "@/services/job/job.service";
-import { ICreateJobDto, JobContentJson } from "@/services";
 import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
+import { SpinLoading } from "@/icons";
 
 import styles from "./NewJobHeader.module.scss";
 import { useAddJobDetailForm } from "./AddJobDetailForm";
@@ -17,10 +18,12 @@ const NewJobHeader = ({}: NewJobHeaderProps) => {
     const router = useRouter();
     const { formState } = useAddJobDetailForm();
     const queryClient = useQueryClient();
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSaveAndContinue = async (e: any) => {
         e.preventDefault();
 
+        setIsLoading(true);
         try {
             const appFormTemplateRes =
                 await appFormTemplateServices.getDefaultAppFormTemplate();
@@ -39,7 +42,11 @@ const NewJobHeader = ({}: NewJobHeaderProps) => {
             });
             queryClient.invalidateQueries({ queryKey: ["jobs"] });
             router.push(`${res.data}/edit`);
-        } catch (error) {}
+            setIsLoading(false);
+        } catch (error: any) {
+            toast.error(error.message ? error.message : "Something went wrong");
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -57,16 +64,12 @@ const NewJobHeader = ({}: NewJobHeaderProps) => {
                     <div className="hidden md:block">
                         <button
                             type="button"
-                            className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
-                        >
-                            Save draft
-                        </button>
-                        <button
-                            type="button"
                             className="text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                            disabled={isLoading}
                             onClick={handleSaveAndContinue}
                         >
-                            Save & continue
+                            {isLoading && <SpinLoading className="mr-2" />} Save
+                            & continue
                         </button>
                     </div>
                 </div>

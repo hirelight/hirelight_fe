@@ -16,7 +16,7 @@ const WrapperPipelineDetail = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useAppDispatch();
     const { data } = useAppSelector(state => state.assessmentFlow);
     const { data: flowRes, isLoading } = useQuery({
-        queryKey: [`assessmentFlow-${flowId}`],
+        queryKey: [`assessmentFlow`, flowId],
         queryFn: () => assessmentFlowsServices.getByIdAsync(flowId as string),
     });
 

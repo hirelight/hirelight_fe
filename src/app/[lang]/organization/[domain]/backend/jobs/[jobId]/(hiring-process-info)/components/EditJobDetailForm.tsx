@@ -8,12 +8,14 @@ import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setJob, setJobError } from "@/redux/slices/job.slice";
 import {
     Button,
+    ButtonOutline,
     CustomInput,
     DatePicker,
     LocationAutocomplete,
 } from "@/components";
 import { SpinLoading } from "@/icons";
 import { updateJob } from "@/redux/thunks/job.thunk";
+import { extractTextFromHtml } from "@/helpers";
 
 import styles from "./EditJobDetailForm.module.scss";
 import DescriptionSection from "./DescriptionSection";
@@ -27,36 +29,56 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
     const router = useRouter();
 
     const dispatch = useAppDispatch();
-    const {
-        data: job,
-        contentLength,
-        error: jobErr,
-    } = useAppSelector(state => state.job);
+    const { data: job, error: jobErr } = useAppSelector(state => state.job);
 
     const isInvalidFormInput = (): boolean => {
         let statusErr = false;
-        const { title, area, maxSalary, minSalary, startTime, endTime } = job;
+        const {
+            title,
+            area,
+            maxSalary,
+            minSalary,
+            startTime,
+            endTime,
+            content: { benefits, description, requirements },
+        } = job;
+        const contentLength = {
+            description: extractTextFromHtml(description).length,
+            requirements: extractTextFromHtml(requirements).length,
+            benefits: extractTextFromHtml(benefits).length,
+        };
 
-        let errors = jobErr;
+        let errors = Object.assign({}, jobErr);
 
         if (title.length === 0) errors.titleErr = "Job title required";
 
         if (area.length === 0) errors.areaArr = "Area required";
 
-        if (contentLength.description === 0)
-            errors.contentErr.descriptionErr = "Description required";
+        if (minSalary > 0 && maxSalary > 0 && minSalary >= maxSalary)
+            errors.salaryErr = "Min salary must be lower than max salary";
 
-        if (contentLength.requirements === 0)
-            errors.contentErr.requirementsErr = "Requirements required";
+        if (contentLength.description === 0) {
+            errors.contentErr = {
+                ...errors.contentErr,
+                descriptionErr: "Description required",
+            };
+        }
+
+        if (contentLength.requirements === 0) {
+            errors.contentErr = {
+                ...errors.contentErr,
+                requirementsErr: "Description required",
+            };
+        }
 
         if (
             Object.values(contentLength).reduce((prev, cur) => prev + cur) < 700
-        )
-            errors.contentErr.contentErr =
-                "Description content must minimum 700 characters";
-
-        if (minSalary > 0 && maxSalary > 0 && minSalary >= maxSalary)
-            errors.salaryErr = "Min salary must be lower than max salary";
+        ) {
+            errors.contentErr = {
+                ...errors.contentErr,
+                contentErr: "Description required",
+            };
+        }
 
         if (new Date(startTime).getTime() > new Date(endTime).getTime())
             errors.jobPublishTimeErr =
@@ -80,7 +102,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
         checkError(errors);
 
         if (statusErr) {
-            dispatch(setJobError({ ...errors }));
+            dispatch(setJobError(errors));
             toast.error(
                 <div>
                     <p>Invalid input</p>
@@ -96,7 +118,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
         return statusErr;
     };
 
-    const handleSubmitJobDetail = async (e: any) => {
+    const handleSubmitJobDetail = async (e: any, isNavigating: boolean) => {
         e.preventDefault();
 
         if (isInvalidFormInput()) {
@@ -106,7 +128,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
         setLoading(true);
         try {
             console.log(job.applicationForm);
-            dispatch(
+            await dispatch(
                 updateJob({
                     ...job,
                     id: job.id,
@@ -114,19 +136,19 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                     applicationForm: JSON.stringify(job.applicationForm),
                 })
             );
-
-            router.push("app-form");
+            if (isNavigating) router.push("app-form");
         } catch (error) {
             console.error(error);
             toast.error("Edit job failure");
         }
+        setLoading(false);
     };
 
     return (
         <>
             <form
                 className="flex"
-                onSubmit={handleSubmitJobDetail}
+                onSubmit={e => handleSubmitJobDetail(e, false)}
                 onKeyDown={e => {
                     if (e.key === "Enter") e.preventDefault();
                 }}
@@ -298,9 +320,23 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                     <div className="w-full h-8"></div>
 
                     {/* ****************Bottom Button********************* */}
-                    <div className="p-5 border-t border-t-slate-300">
-                        <Button type="submit" className="flex items-center">
-                            {loading && <SpinLoading className="mr-2" />}
+                    <div className="flex gap-4 p-5 border-t border-t-slate-300">
+                        <ButtonOutline
+                            type="submit"
+                            className="flex items-center"
+                            disabled={loading}
+                            isLoading={loading}
+                        >
+                            Save draft
+                        </ButtonOutline>
+                        <Button
+                            onClick={e => {
+                                handleSubmitJobDetail(e, true);
+                            }}
+                            className="flex items-center"
+                            disabled={loading}
+                            isLoading={loading}
+                        >
                             Save & continue
                         </Button>
                     </div>

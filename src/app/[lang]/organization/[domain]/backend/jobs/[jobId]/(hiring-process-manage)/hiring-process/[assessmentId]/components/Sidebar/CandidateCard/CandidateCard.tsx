@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React from "react";
+import React, { useRef } from "react";
+import Image from "next/image";
+import { UserIcon } from "@heroicons/react/24/solid";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setSelectCandidate } from "@/redux/slices/candidates.slice";
-import { IJobPostAppAssDetailDto } from "@/services";
+import { ApplicationFormJSON, IJobPostAppAssDetailDto } from "@/services";
 
 type CandidateCardProps = {
     profile: IJobPostAppAssDetailDto;
@@ -17,6 +19,14 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
     const dispatch = useAppDispatch();
     const selectedCandidates = useAppSelector(
         state => state.candidates.selectedCandidates
+    );
+    const parsedContent = JSON.parse(
+        profile.applicantProfile.content
+    ) as ApplicationFormJSON;
+    const avatar = useRef<any | undefined>(
+        parsedContent.form_structure[0].fields.find(
+            item => item.id === "avatar"
+        )!!.value
     );
 
     return (
@@ -51,19 +61,19 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
                             }
                         />
                     </label>
-                    {/* <div className="w-12 h-12 rounded-full bg-white border border-gray-300 overflow-hidden">
-                        <Image
-                            alt="Candidate avatar"
-                            src={
-                                profile.content.form_structure[0].fields.find(
-                                    item => item.id === "avatar"
-                                )?.value.value ?? ""
-                            }
-                            width={500}
-                            height={500}
-                            className="h-full w-auto object-cover"
-                        />
-                    </div> */}
+                    <div className="w-12 h-12 rounded-full bg-white border border-gray-300 overflow-hidden">
+                        {/* {avatar.current ? (
+                            <Image
+                                alt="Candidate avatar"
+                                src={avatar.current.value ?? ""}
+                                width={500}
+                                height={500}
+                                className="h-full w-auto object-cover"
+                            />
+                        ) : ( */}
+                        <UserIcon />
+                        {/* )} */}
+                    </div>
                     <div className="flex-1 flex flex-col items-start text-sm text-neutral-700">
                         <div className="grid">
                             <h3 className="text-lg font-semibold">{`${profile.applicantProfile.firstName} ${profile.applicantProfile.lastName}`}</h3>

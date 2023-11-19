@@ -7,7 +7,6 @@ import Cookies from "js-cookie";
 
 const interceptor = axios.create({
     baseURL: process.env.NEXT_PUBLIC_SERVER_API,
-    timeout: 10000,
     // headers: {
     //     "Access-Control-Allow-Origin": "*",
     // },

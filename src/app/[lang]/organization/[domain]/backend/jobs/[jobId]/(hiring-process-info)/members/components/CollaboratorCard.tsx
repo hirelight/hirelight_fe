@@ -64,17 +64,6 @@ const CollaboratorCard: React.FC<CollaboratorCardProps> = ({ member }) => {
             >
                 <td className="px-6 py-4 hidden md:table-cell">
                     <div className="flex items-center gap-2">
-                        <span className="inline-block h-8 w-8 rounded-full bg-white border border-slate-500 overflow-auto">
-                            <Image
-                                src={
-                                    process.env.NEXT_PUBLIC_AVATAR_URL as string
-                                }
-                                alt="member avatar"
-                                width={32}
-                                height={32}
-                                unoptimized
-                            />
-                        </span>
                         {member.employerDto.firstName +
                             `${member.employerDto.lastName ?? ""}`}
                     </div>

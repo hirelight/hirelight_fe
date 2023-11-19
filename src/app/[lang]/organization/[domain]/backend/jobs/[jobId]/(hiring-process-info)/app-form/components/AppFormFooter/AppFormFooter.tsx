@@ -1,14 +1,13 @@
 "use client";
 
 import React from "react";
-import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 import { ButtonOutline, DeleteModal, Portal } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
-import { delayFunc } from "@/helpers/shareHelpers";
-import { SpinLoading } from "@/icons";
 import { updateJob } from "@/redux/thunks/job.thunk";
+import { JobPostStatus } from "@/interfaces/job-post.interface";
+import jobServices from "@/services/job/job.service";
 
 const AppFormFooter = () => {
     const dispatch = useAppDispatch();
@@ -19,6 +18,21 @@ const AppFormFooter = () => {
     const handleShowConfirmModal = () => {
         setShowModal(true);
         // dispatch(clearAppForm);
+    };
+
+    const handleDeleteJob = async () => {
+        if (job.status === JobPostStatus.ACTIVE) {
+            return toast.error(
+                `Job is publishing! Please unpublish job before detele`
+            );
+        }
+
+        try {
+            const res = await jobServices.deleteByIdAsync(job.id);
+            toast.success(res.message);
+        } catch (error: any) {
+            toast.error(error.message ? error.message : "Something went wrong");
+        }
     };
 
     const handleSaveDraft = async () => {
@@ -42,7 +56,7 @@ const AppFormFooter = () => {
                     description="Are you sure you want to delete this job? All of your data will be permanently removed. This action cannot be undone."
                     show={showModal}
                     onClose={() => setShowModal(false)}
-                    onConfirm={() => console.log("Delete job")}
+                    onConfirm={handleDeleteJob}
                 />
             </Portal>
 
@@ -50,8 +64,10 @@ const AppFormFooter = () => {
                 <ButtonOutline
                     className={loading ? `bg-blue_primary_800 text-white` : ""}
                     onClick={handleSaveDraft}
+                    disabled={loading}
+                    isLoading={loading}
                 >
-                    Save draft {loading && <SpinLoading className="ml-1" />}
+                    Save draft
                 </ButtonOutline>
                 <button
                     type="button"

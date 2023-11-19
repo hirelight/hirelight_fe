@@ -20,7 +20,7 @@ const WrapperPipeline = ({ children }: { children: React.ReactNode }) => {
         isLoading,
         isSuccess,
     } = useQuery({
-        queryKey: [`assessmentFlow-${assessmentFlowId}`],
+        queryKey: [`assessmentFlow`, assessmentFlowId],
         queryFn: async () =>
             assessmentFlowsServices.getByIdAsync(assessmentFlowId!!),
     });

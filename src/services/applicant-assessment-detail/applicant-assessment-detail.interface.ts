@@ -1,5 +1,8 @@
 import { ICandidateMCDto } from "@/interfaces/questions.interface";
-import { AssessmentTypeKey } from "@/interfaces/assessment.interface";
+import {
+    ApplicantAssessmentDetailStatus,
+    AssessmentTypeKey,
+} from "@/interfaces/assessment.interface";
 
 import {
     IApplicantProfileDto,
@@ -24,7 +27,7 @@ export interface IJobPostAppAssDetailDto {
     questionAnswerSet: string;
     createdTime: Date;
     updatedTime: Date;
-    status: string;
+    status: ApplicantAssessmentDetailStatus;
 }
 
 export interface IApplicantAssessmentDetailDto {
@@ -39,7 +42,7 @@ export interface IApplicantAssessmentDetailDto {
     questionAnswerSet: null;
     createdTime: Date;
     updatedTime: Date;
-    status: string;
+    status: ApplicantAssessmentDetailStatus;
 }
 
 export interface ICandidateAssessmentDetailDto {
@@ -56,13 +59,13 @@ export interface ICandidateAssessmentDetailDto {
     applicantProfile: IJobPostProfileDto & {
         jobPost: IJobDto;
     };
-    startTime: null;
-    endTime: null;
-    result: null;
-    questionAnswerSet: null;
+    startTime: Date;
+    endTime: Date;
+    result: number;
+    questionAnswerSet: string | null;
     createdTime: Date;
     updatedTime: Date;
-    status: string;
+    status: ApplicantAssessmentDetailStatus;
 }
 
 export interface IMCAppliAssessmentDto {
@@ -77,7 +80,7 @@ export interface IMCAppliAssessmentDto {
     questionAnswerSet: string;
     createdTime: Date;
     updatedTime: Date;
-    status: string;
+    status: ApplicantAssessmentDetailStatus;
 }
 
 export interface ISubmitMCAnswerDto {

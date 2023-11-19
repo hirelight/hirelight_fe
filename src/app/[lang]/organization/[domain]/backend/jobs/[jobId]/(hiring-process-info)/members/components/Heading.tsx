@@ -7,7 +7,7 @@ import { Tooltip } from "flowbite-react";
 const Heading = () => {
     return (
         <h1 className="text-lg font-medium text-neutral-800 flex items-center mb-8">
-            Team members
+            Team collaborators
             <span>
                 <Tooltip
                     style="light"

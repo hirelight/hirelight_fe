@@ -84,7 +84,7 @@ const AsyncVideoForm = () => {
             });
 
             queryClient.invalidateQueries({
-                queryKey: [`assessmentFlow-${flowId}`],
+                queryKey: ["assessmentFlow", flowId],
             });
             toast.success(res.message);
             console.log(res);

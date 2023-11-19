@@ -30,6 +30,11 @@ body {
         }
         margin-top: 8px;
     }
+
+    ol,
+    ul {
+        padding-left: 0.5rem;
+    }
 }
 
 .ql-editor.ql-blank::before {

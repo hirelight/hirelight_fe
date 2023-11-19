@@ -22,6 +22,7 @@ import { IEditAssessmentDto, IQuestionAnswerDto } from "@/services";
 import QuestionPickerCard from "@/components/QuestionPicker/QuestionPickerCard";
 import assessmentsServices from "@/services/assessments/assessments.service";
 import { useAppSelector } from "@/redux/reduxHooks";
+import { extractTextFromHtml, isInvalidForm } from "@/helpers";
 
 import styles from "./CreateAssessment.module.scss";
 import QuestionPickerModal from "./QuestionPickerModal";
@@ -45,10 +46,10 @@ type ICreateMCAssessment = Omit<IEditAssessmentDto, "content" | "query"> & {
     };
     query: {
         numOfQuestions: {
-            easy: number;
-            medium: number;
-            hard: number;
-            advance: number;
+            easy: number | null;
+            medium: number | null;
+            hard: number | null;
+            advance: number | null;
         };
     };
 };
@@ -68,6 +69,12 @@ const CreateAssessment = () => {
             ? JSON.parse(assessment.assessmentQuestionAnswerSetContent)
             : []
     );
+    const [formErr, setFormErr] = useState({
+        nameErr: "",
+        durationErr: "",
+        questionsErr: "",
+        descriptionErr: "",
+    });
     const [formState, setFormState] = useState<ICreateMCAssessment>({
         id: assessmentId as string,
         name: assessment.name,
@@ -101,9 +108,43 @@ const CreateAssessment = () => {
             assessment.assessmentQuestionAnswerSetContent ?? "",
     });
 
+    const validation = (): boolean => {
+        const { name, duration, description } = formState;
+
+        let error = formErr;
+
+        if (duration < 60)
+            error.durationErr = "Duration must at least 1 minute";
+
+        if (pickedQuestions.length < 5)
+            error.questionsErr = "Please select at least 5 question";
+
+        if (extractTextFromHtml(description).length < 100)
+            error.descriptionErr = "Description must at least 100 characters";
+
+        if (isInvalidForm(error)) {
+            console.log(error);
+            setFormErr({ ...error });
+            toast.error(
+                <div>
+                    <p>Invalid input</p>
+                    <p>Check issue in red!</p>
+                </div>,
+                {
+                    position: "top-center",
+                    autoClose: 1500,
+                }
+            );
+            return true;
+        }
+        return false;
+    };
+
     const handleCreateMCAssessment = async (e: FormEvent) => {
         e.preventDefault();
 
+        if (validation()) return;
+        console.log(formState.query);
         setIsLoading(true);
         try {
             const res = await assessmentsServices.editAsync({
@@ -115,7 +156,7 @@ const CreateAssessment = () => {
             });
             console.log(res);
             queryClient.invalidateQueries({
-                queryKey: [`assessmentFlow-${flowId}`],
+                queryKey: [`assessmentFlow`, flowId],
             });
             toast.success(res.message);
             setIsLoading(false);
@@ -123,6 +164,23 @@ const CreateAssessment = () => {
             console.error(error);
             setIsLoading(false);
         }
+    };
+
+    const handleNumQuestion = (key: string, value: string, max: number) => {
+        setFormState({
+            ...formState,
+            query: {
+                ...formState.query,
+                numOfQuestions: {
+                    ...formState.query.numOfQuestions,
+                    [key]: !value
+                        ? 0
+                        : parseInt(value) > max
+                        ? max
+                        : parseInt(value),
+                },
+            },
+        });
     };
 
     return (
@@ -135,6 +193,22 @@ const CreateAssessment = () => {
                     onPickedChange={questions => {
                         setPickedQuestions(questions);
                         setShowQuestionPicker(false);
+                        setFormErr({
+                            ...formErr,
+                            questionsErr: "",
+                        });
+                        setFormState({
+                            ...formState,
+                            query: {
+                                ...formState.query,
+                                numOfQuestions: {
+                                    easy: null,
+                                    medium: null,
+                                    hard: null,
+                                    advance: null,
+                                },
+                            },
+                        });
                     }}
                 />
             </Portal>
@@ -153,33 +227,43 @@ const CreateAssessment = () => {
                             type="text"
                             placeholder="Assessment title"
                             value={formState.name}
-                            onChange={e =>
+                            onChange={e => {
                                 setFormState({
                                     ...formState,
                                     name: e.target.value,
-                                })
-                            }
+                                });
+                                setFormErr({
+                                    ...formErr,
+                                    nameErr: "",
+                                });
+                            }}
                             required
+                            errorText={formErr.nameErr}
                         />
 
                         <div>
                             <Timer
                                 title="Duration"
                                 data={formState.duration}
-                                onChange={second =>
+                                onChange={second => {
                                     setFormState(prev => ({
                                         ...prev,
                                         duration: second,
-                                    }))
-                                }
+                                    }));
+                                    setFormErr({
+                                        ...formErr,
+                                        durationErr: "",
+                                    });
+                                }}
                                 required
+                                errorText={formErr.durationErr}
                             />
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-4 mb-6 px-4 xl:px-6">
                         <h3 className="text-neutral-700 font-medium">
-                            Welcome note
+                            Description
                         </h3>
                         <QuillEditorNoSSR
                             placeholder="Enter the job description here; include key areas of
@@ -187,24 +271,39 @@ const CreateAssessment = () => {
                     day."
                             className="min-h-[320px]"
                             theme="snow"
-                            value={formState.content.welcomeNote}
-                            onChange={(value: string) =>
+                            value={formState.description}
+                            onChange={(value: string) => {
                                 setFormState({
                                     ...formState,
-                                    content: {
-                                        ...formState.content,
-                                        welcomeNote: value,
-                                    },
-                                })
-                            }
+                                    description: value,
+                                });
+                                setFormErr({
+                                    ...formErr,
+                                    descriptionErr: "",
+                                });
+                            }}
                         />
+                        {formErr.descriptionErr !== "" && (
+                            <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                                <span className="font-medium">
+                                    {formErr.descriptionErr}
+                                </span>
+                            </p>
+                        )}
                     </div>
                 </section>
 
                 <section>
-                    <h3 className={styles.section__h3}>
+                    <h3 className={`${styles.section__h3} w-full`}>
                         <Logo className="w-6 h-6 text-blue_primary_300" />
                         Question
+                        {formErr.questionsErr !== "" && (
+                            <p className="ml-auto text-sm text-red-600 dark:text-red-500">
+                                <span className="font-medium">
+                                    {formErr.questionsErr}
+                                </span>
+                            </p>
+                        )}
                     </h3>
                     <ul className={"flex flex-col gap-2 mb-4 px-4 xl:px-6"}>
                         {pickedQuestions.map((item, index) => (
@@ -225,7 +324,7 @@ const CreateAssessment = () => {
                         >
                             <span className="relative py-4 px-5 flex items-center">
                                 <PlusCircleIcon className="w-5 h-5 mr-1" />
-                                Create new topic
+                                Choose questions
                             </span>
                         </button>
                     </div>
@@ -277,104 +376,117 @@ const CreateAssessment = () => {
                                     <span className={styles.selection__label}>
                                         Easy
                                     </span>
-                                    <Selection
+                                    <CustomInput
                                         title=""
-                                        items={[1, 5, 10, 15].map(item => ({
-                                            label: item.toString(),
-                                            value: item,
-                                        }))}
-                                        value={formState.query.numOfQuestions.easy.toString()}
-                                        onChange={value =>
-                                            setFormState({
-                                                ...formState,
-                                                query: {
-                                                    ...formState.query,
-                                                    numOfQuestions: {
-                                                        ...formState.query
-                                                            .numOfQuestions,
-                                                        easy: value,
-                                                    },
-                                                },
-                                            })
+                                        type="number"
+                                        value={
+                                            formState.query.numOfQuestions
+                                                .easy ?? "0"
                                         }
+                                        max={
+                                            pickedQuestions.filter(
+                                                item => item.difficulty === 1
+                                            ).length
+                                        }
+                                        min={0}
+                                        onChange={e => {
+                                            handleNumQuestion(
+                                                "easy",
+                                                e.currentTarget.value,
+                                                pickedQuestions.filter(
+                                                    item =>
+                                                        item.difficulty === 1
+                                                ).length
+                                            );
+                                        }}
                                     />
                                 </div>
                                 <div className="relative">
                                     <span className={styles.selection__label}>
                                         Medium
                                     </span>
-                                    <Selection
+                                    <CustomInput
                                         title=""
-                                        items={[1, 5, 10, 15].map(item => ({
-                                            label: item.toString(),
-                                            value: item,
-                                        }))}
-                                        value={formState.query.numOfQuestions.medium.toString()}
-                                        onChange={value =>
-                                            setFormState({
-                                                ...formState,
-                                                query: {
-                                                    ...formState.query,
-                                                    numOfQuestions: {
-                                                        ...formState.query
-                                                            .numOfQuestions,
-                                                        medium: value,
-                                                    },
-                                                },
-                                            })
+                                        type="number"
+                                        value={
+                                            formState.query.numOfQuestions
+                                                .medium ?? "0"
                                         }
+                                        max={
+                                            pickedQuestions.filter(
+                                                item => item.difficulty === 2
+                                            ).length
+                                        }
+                                        min={0}
+                                        onChange={e => {
+                                            handleNumQuestion(
+                                                "medium",
+                                                e.currentTarget.value,
+                                                pickedQuestions.filter(
+                                                    item =>
+                                                        item.difficulty === 2
+                                                ).length
+                                            );
+                                        }}
                                     />
                                 </div>
                                 <div className="relative">
                                     <span className={styles.selection__label}>
                                         Hard
                                     </span>
-                                    <Selection
+
+                                    <CustomInput
                                         title=""
-                                        items={[1, 5, 10, 15].map(item => ({
-                                            label: item.toString(),
-                                            value: item,
-                                        }))}
-                                        value={formState.query.numOfQuestions.hard.toString()}
-                                        onChange={value =>
-                                            setFormState({
-                                                ...formState,
-                                                query: {
-                                                    ...formState.query,
-                                                    numOfQuestions: {
-                                                        ...formState.query
-                                                            .numOfQuestions,
-                                                        hard: value,
-                                                    },
-                                                },
-                                            })
+                                        type="number"
+                                        value={
+                                            formState.query.numOfQuestions
+                                                .hard ?? "0"
                                         }
+                                        max={
+                                            pickedQuestions.filter(
+                                                item => item.difficulty === 3
+                                            ).length
+                                        }
+                                        min={0}
+                                        onChange={e => {
+                                            handleNumQuestion(
+                                                "hard",
+                                                e.currentTarget.value,
+                                                pickedQuestions.filter(
+                                                    item =>
+                                                        item.difficulty === 3
+                                                ).length
+                                            );
+                                        }}
                                     />
                                 </div>
                                 <div className="relative">
                                     <span className={styles.selection__label}>
                                         Advance
                                     </span>
-                                    <Selection
+                                    <CustomInput
                                         title=""
-                                        items={[1, 5, 10, 15].map(item => ({
-                                            label: item.toString(),
-                                            value: item,
-                                        }))}
-                                        value={formState.query.numOfQuestions.advance.toString()}
-                                        onChange={value =>
-                                            setFormState({
-                                                ...formState,
-                                                query: {
-                                                    ...formState.query,
-                                                    numOfQuestions: {
-                                                        ...formState.query
-                                                            .numOfQuestions,
-                                                        advance: value,
-                                                    },
-                                                },
-                                            })
+                                        type="number"
+                                        value={
+                                            formState.query.numOfQuestions
+                                                .advance ?? "0"
                                         }
+                                        max={
+                                            pickedQuestions.filter(
+                                                item => item.difficulty === 4
+                                            ).length
+                                        }
+                                        min={0}
+                                        onChange={e => {
+                                            handleNumQuestion(
+                                                "advance",
+                                                e.currentTarget.value,
+                                                pickedQuestions.filter(
+                                                    item =>
+                                                        item.difficulty === 4
+                                                ).length
+                                            );
+                                        }}
                                     />
                                 </div>
                             </div>
@@ -472,9 +584,12 @@ const CreateAssessment = () => {
                 </section>
                 <div className="flex items-center justify-end gap-4 p-4 xl:px-6">
                     <ButtonOutline type="button">Save & continue</ButtonOutline>
-                    <Button type="submit" disabled={isLoading}>
-                        {isLoading && <SpinLoading className="mr-2" />} Save all
-                        changes
+                    <Button
+                        type="submit"
+                        disabled={isLoading}
+                        isLoading={isLoading}
+                    >
+                        Save all changes
                     </Button>
                 </div>
             </form>

@@ -28,7 +28,7 @@ const AddTeamMebers = () => {
         error,
         isLoading,
     } = useQuery({
-        queryKey: [`jobpost-${jobId as string}-collaborators`],
+        queryKey: [`collaborators`, jobId],
         queryFn: () =>
             collaboratorsServices.getCollaboratorList(jobId as string),
     });
@@ -65,50 +65,9 @@ const AddTeamMebers = () => {
                     </p>
                 </div>
             )}
-            <div className="p-6">
-                <div className="mb-4">
-                    <h1 className="text-neutral-800 font-medium">
-                        New Memebers
-                    </h1>
-                    <p className="text-sm text-neutral-500">
-                        You can add other members to your team to collaborate on
-                        this work.
-                    </p>
-                </div>
+            <div className="py-4 px-6 border-t border-gray-300">
                 <div className="w-full flex items-center justify-between gap-4 flex-wrap">
-                    <div className="w-full md:w-auto flex items-center gap-2">
-                        <div className="flex-1 md:flex-auto">
-                            <Selection
-                                title=""
-                                items={[]}
-                                onChange={(value: string) => {}}
-                            />
-                        </div>
-                        <Button
-                            className="whitespace-nowrap"
-                            onClick={() => {
-                                if (!selectedInternal) return;
-
-                                const existingMember = datas.find(
-                                    member =>
-                                        member.employerDto.email ===
-                                        selectedInternal.email
-                                );
-                                if (existingMember)
-                                    return toast.error("Member already added");
-                                setDatas([
-                                    ...datas,
-                                    {
-                                        id: datas.length + 1,
-                                        ...selectedInternal,
-                                    },
-                                ]);
-                                setSelectedInternal(undefined);
-                            }}
-                        >
-                            Add to team
-                        </Button>
-                    </div>
+                    <div className="flex-1"></div>
                     <ButtonOutline
                         className="whitespace-nowrap w-full md:w-fit"
                         onClick={() => setShowModal(true)}
