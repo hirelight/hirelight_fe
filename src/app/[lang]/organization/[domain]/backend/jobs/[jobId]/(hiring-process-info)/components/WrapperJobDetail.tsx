@@ -60,7 +60,7 @@ const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
         }
     }, [isSuccess, queryRes, dispatch]);
 
-    if (isLoading) {
+    if (isLoading || !queryRes) {
         return (
             <div className="p-12 flex items-center justify-center">
                 <LoadingIndicator />

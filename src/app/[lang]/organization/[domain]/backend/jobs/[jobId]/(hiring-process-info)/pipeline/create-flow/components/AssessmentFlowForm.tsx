@@ -6,13 +6,12 @@ import { Reorder } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
+import moment from "moment";
 
 import { Button, CustomInput, DatePicker } from "@/components";
 import { ICreateAssessmentFlowDto } from "@/services/assessment-flows/assessment-flows.interface";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
 import { useAppDispatch } from "@/redux/reduxHooks";
-import { setAssessmentFlow } from "@/redux/slices/assessment-flow.slice";
-import { fetchAssessmentFlowById } from "@/redux/thunks/assessment-flow.thunk";
 import { isInvalidForm } from "@/helpers";
 
 import AssessmentFlowCard from "./AssessmentFlowCard";
@@ -21,7 +20,7 @@ import FlowStageForm from "./FlowStageForm";
 const initialData: ICreateAssessmentFlowDto = {
     name: "",
     startTime: new Date(),
-    endTime: new Date(),
+    endTime: moment(new Date()).add(1, "month").toDate(),
     jobPostId: "",
     assessments: [
         {
@@ -175,6 +174,11 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                             Start time
                         </h3>
                         <DatePicker
+                            value={formState.startTime}
+                            minDate={new Date()}
+                            maxDate={moment(formState.endTime)
+                                .subtract(7, "days")
+                                .toDate()}
                             onChange={date => {
                                 setFormState(prev => ({
                                     ...prev,
@@ -189,6 +193,13 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                             End time
                         </h3>
                         <DatePicker
+                            value={formState.endTime}
+                            minDate={moment(formState.startTime)
+                                .add(7, "days")
+                                .toDate()}
+                            maxDate={moment(formState.endTime)
+                                .add(1, "year")
+                                .toDate()}
                             onChange={date => {
                                 setFormState(prev => ({
                                     ...prev,

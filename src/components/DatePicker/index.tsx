@@ -151,14 +151,25 @@ const DatePicker: React.FC<DatePickerProps> = ({
         );
 
         for (let i = numOfDaysPrevMonth - 1; i >= 0; i--) {
+            const pastDate = new Date(
+                lastDate.getFullYear(),
+                lastDate.getMonth() - 1,
+                lastDayOfPrevMonth.getDate() - i
+            );
+
+            const isDisabled =
+                (minDate && moment(pastDate).isBefore(minDate, "date")) ||
+                (maxDate && moment(pastDate).isAfter(maxDate, "date"));
             let __outer = (
                 <span
                     key={"prevMonth" + i.toString()}
-                    className={`${styles.datepicker__cell} ${styles.before}`}
-                    onClick={handleDateChange}
-                    data-date={lastDayOfPrevMonth.getTime()}
+                    className={`${styles.datepicker__cell} ${styles.before} ${
+                        isDisabled ? styles.disabled : ""
+                    }`}
+                    onClick={isDisabled ? () => {} : handleDateChange}
+                    data-date={pastDate.getTime()}
                 >
-                    {lastDayOfPrevMonth.getDate() - i}
+                    {pastDate.getDate()}
                 </span>
             );
 
@@ -166,28 +177,24 @@ const DatePicker: React.FC<DatePickerProps> = ({
         }
 
         for (let i = 1; i <= lastDate.getDate(); i++) {
+            const curDate = new Date(
+                currentDate.getFullYear(),
+                currentDate.getMonth(),
+                i
+            );
+            const isDisabled =
+                (minDate && moment(curDate).isBefore(minDate, "date")) ||
+                (maxDate && moment(curDate).isAfter(maxDate, "date"));
             let __outer = (
                 <span
                     key={"currentMonth" + i.toString()}
                     className={`${styles.datepicker__cell} ${
-                        selectedDate &&
-                        isSameDate(
-                            selectedDate,
-                            new Date(
-                                currentDate.getFullYear(),
-                                currentDate.getMonth(),
-                                i
-                            )
-                        )
+                        selectedDate && isSameDate(selectedDate, curDate)
                             ? styles.selected
                             : ""
-                    }`}
-                    onClick={handleDateChange}
-                    data-date={new Date(
-                        currentDate.getFullYear(),
-                        currentDate.getMonth(),
-                        i
-                    ).getTime()}
+                    } ${isDisabled ? styles.disabled : ""}`}
+                    onClick={isDisabled ? () => {} : handleDateChange}
+                    data-date={curDate.getTime()}
                 >
                     {i}
                 </span>
@@ -203,11 +210,17 @@ const DatePicker: React.FC<DatePickerProps> = ({
                 i
             ).getTime();
 
+            const isDisabled =
+                (minDate && moment(nextDate).isBefore(minDate, "date")) ||
+                (maxDate && moment(nextDate).isAfter(maxDate, "date"));
+
             let __outer = (
                 <span
                     key={"nextMonth" + i.toString()}
-                    className={`${styles.datepicker__cell} ${styles.after}`}
-                    onClick={handleDateChange}
+                    className={`${styles.datepicker__cell} ${styles.after} ${
+                        isDisabled ? styles.disabled : ""
+                    }`}
+                    onClick={isDisabled ? () => {} : handleDateChange}
                     data-date={nextDate}
                 >
                     {i}

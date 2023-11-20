@@ -141,7 +141,7 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
             onClick={() => closeModal()}
         >
             <form
-                className="max-w-[640px] bg-white rounded-md p-8"
+                className="max-w-full w-[640px] bg-white rounded-md p-8"
                 onClick={e => e.stopPropagation()}
                 onSubmit={handleAddQuestion}
                 onKeyDown={e => {
@@ -149,12 +149,12 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                 }}
             >
                 <h2 className="text-xl font-semibold uppercase mb-2">
-                    Add new question
+                    Add other require informations
                 </h2>
-                <p className="text-neutral-500 text-sm mb-6">
+                {/* <p className="text-neutral-500 text-sm mb-6">
                     Ứng viên sau khi chuyển sang giai đoạn khác, giai đoạn hiện
                     tại sẽ được xem như hoàn thành và không thể quay lại được.
-                </p>
+                </p> */}
                 <div className="mb-6">
                     <Selection
                         title="Input type"
@@ -177,6 +177,7 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                         title="Question"
                         placeholder="Tell me something about you"
                         value={questionField.label}
+                        required={true}
                         onChange={(e: any) => {
                             console.log("Set input");
                             setQuestionField({

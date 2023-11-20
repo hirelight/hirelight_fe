@@ -4,6 +4,7 @@ import React, { createContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
+import moment from "moment";
 
 import {
     Button,
@@ -348,6 +349,10 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                         <DatePicker
                                             value={formState.startTime}
                                             pos={"top"}
+                                            maxDate={
+                                                new Date(formState.endTime)
+                                            }
+                                            minDate={new Date()}
                                             onChange={date => {
                                                 setFormState({
                                                     ...formState,
@@ -367,6 +372,13 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                         <DatePicker
                                             value={formState.endTime}
                                             pos={"top"}
+                                            maxDate={moment()
+                                                .add(1, "year")
+                                                .toDate()}
+                                            minDate={
+                                                new Date(formState.startTime) ??
+                                                new Date()
+                                            }
                                             onChange={date => {
                                                 setFormState({
                                                     ...formState,

@@ -26,9 +26,6 @@ const nextConfig = withBundleAnalyzer({
                   },
         ],
     },
-    experimental: {
-        serverActions: true,
-    },
     webpack: config => {
         config.resolve.alias.canvas = false;
 

@@ -7,6 +7,7 @@ import { useParams } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
+import { produce } from "immer";
 
 import {
     Button,
@@ -46,12 +47,12 @@ type ICreateMCAssessment = Omit<IEditAssessmentDto, "content" | "query"> & {
     };
     query: {
         numOfQuestions: {
-            easy: number | null;
-            medium: number | null;
-            hard: number | null;
-            advance: number | null;
+            easy?: number;
+            medium?: number;
+            hard?: number;
+            advance?: number;
         };
-    };
+    } | null;
 };
 
 const CreateAssessment = () => {
@@ -92,16 +93,7 @@ const CreateAssessment = () => {
                       },
                   },
               },
-        query: assessment.query
-            ? JSON.parse(assessment.query)
-            : {
-                  numOfQuestions: {
-                      easy: 0,
-                      medium: 0,
-                      hard: 0,
-                      advance: 0,
-                  },
-              },
+        query: assessment.query ? JSON.parse(assessment.query) : null,
         duration: assessment.duration ?? 0,
         index: assessment.index,
         assessmentQuestionAnswerSetContent:
@@ -144,7 +136,6 @@ const CreateAssessment = () => {
         e.preventDefault();
 
         if (validation()) return;
-        console.log(formState.query);
         setIsLoading(true);
         try {
             const res = await assessmentsServices.editAsync({
@@ -172,9 +163,9 @@ const CreateAssessment = () => {
             query: {
                 ...formState.query,
                 numOfQuestions: {
-                    ...formState.query.numOfQuestions,
+                    ...(formState.query?.numOfQuestions ?? {}),
                     [key]: !value
-                        ? 0
+                        ? undefined
                         : parseInt(value) > max
                         ? max
                         : parseInt(value),
@@ -199,15 +190,7 @@ const CreateAssessment = () => {
                         });
                         setFormState({
                             ...formState,
-                            query: {
-                                ...formState.query,
-                                numOfQuestions: {
-                                    easy: null,
-                                    medium: null,
-                                    hard: null,
-                                    advance: null,
-                                },
-                            },
+                            query: null,
                         });
                     }}
                 />
@@ -380,8 +363,10 @@ const CreateAssessment = () => {
                                         title=""
                                         type="number"
                                         value={
-                                            formState.query.numOfQuestions
-                                                .easy ?? "0"
+                                            formState.query
+                                                ? formState.query.numOfQuestions
+                                                      .easy ?? ""
+                                                : ""
                                         }
                                         max={
                                             pickedQuestions.filter(
@@ -389,6 +374,7 @@ const CreateAssessment = () => {
                                             ).length
                                         }
                                         min={0}
+                                        placeholder="Enter a quantity"
                                         onChange={e => {
                                             handleNumQuestion(
                                                 "easy",
@@ -409,8 +395,10 @@ const CreateAssessment = () => {
                                         title=""
                                         type="number"
                                         value={
-                                            formState.query.numOfQuestions
-                                                .medium ?? "0"
+                                            formState.query
+                                                ? formState.query.numOfQuestions
+                                                      .medium ?? ""
+                                                : ""
                                         }
                                         max={
                                             pickedQuestions.filter(
@@ -418,6 +406,7 @@ const CreateAssessment = () => {
                                             ).length
                                         }
                                         min={0}
+                                        placeholder="Enter a quantity"
                                         onChange={e => {
                                             handleNumQuestion(
                                                 "medium",
@@ -439,8 +428,10 @@ const CreateAssessment = () => {
                                         title=""
                                         type="number"
                                         value={
-                                            formState.query.numOfQuestions
-                                                .hard ?? "0"
+                                            formState.query
+                                                ? formState.query.numOfQuestions
+                                                      .hard ?? ""
+                                                : ""
                                         }
                                         max={
                                             pickedQuestions.filter(
@@ -448,6 +439,7 @@ const CreateAssessment = () => {
                                             ).length
                                         }
                                         min={0}
+                                        placeholder="Enter a quantity"
                                         onChange={e => {
                                             handleNumQuestion(
                                                 "hard",
@@ -467,9 +459,12 @@ const CreateAssessment = () => {
                                     <CustomInput
                                         title=""
                                         type="number"
+                                        placeholder="Enter a quantity"
                                         value={
-                                            formState.query.numOfQuestions
-                                                .advance ?? "0"
+                                            formState.query
+                                                ? formState.query.numOfQuestions
+                                                      .advance ?? ""
+                                                : ""
                                         }
                                         max={
                                             pickedQuestions.filter(
@@ -491,23 +486,7 @@ const CreateAssessment = () => {
                                 </div>
                             </div>
                         </div>
-                        {/* <div className="flex justify-between items-start">
-                            <strong>Time</strong>
-                            <div className="max-w-[400px] w-1/2">
-                                <Selection
-                                    title=""
-                                    items={[
-                                        "120 minutes",
-                                        "60 minutes",
-                                        "30 minutes",
-                                    ].map(item => ({
-                                        label: item,
-                                        value: item,
-                                    }))}
-                                    onChange={() => {}}
-                                />
-                            </div>
-                        </div> */}
+
                         <div className="flex justify-between items-start">
                             <label
                                 htmlFor="shuffle-questions"
@@ -528,17 +507,12 @@ const CreateAssessment = () => {
                                         formState.content.config.shuffleQuestion
                                     }
                                     onChange={e =>
-                                        setFormState({
-                                            ...formState,
-                                            content: {
-                                                ...formState.content,
-                                                config: {
-                                                    ...formState.content.config,
-                                                    shuffleQuestion:
-                                                        e.target.checked,
-                                                },
-                                            },
-                                        })
+                                        setFormState(prev =>
+                                            produce(prev, draft => {
+                                                draft.content.config.shuffleQuestion =
+                                                    e.target.checked;
+                                            })
+                                        )
                                     }
                                 />
                                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -563,19 +537,14 @@ const CreateAssessment = () => {
                                     checked={
                                         formState.content.config.shuffleAnswer
                                     }
-                                    onChange={e =>
-                                        setFormState({
-                                            ...formState,
-                                            content: {
-                                                ...formState.content,
-                                                config: {
-                                                    ...formState.content.config,
-                                                    shuffleAnswer:
-                                                        e.target.checked,
-                                                },
-                                            },
-                                        })
-                                    }
+                                    onChange={e => {
+                                        setFormState(prev =>
+                                            produce(prev, draft => {
+                                                draft.content.config.shuffleAnswer =
+                                                    e.target.checked;
+                                            })
+                                        );
+                                    }}
                                 />
                                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                             </label>

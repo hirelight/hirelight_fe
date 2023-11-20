@@ -12,7 +12,7 @@ import { setAssessmentFlow } from "@/redux/slices/assessment-flow.slice";
 
 const WrapperPipeline = ({ children }: { children: React.ReactNode }) => {
     const dispatch = useAppDispatch();
-    const { loading, data } = useAppSelector(state => state.assessmentFlow);
+
     const { assessmentFlowId } = useAppSelector(state => state.job.data);
     const {
         data: queryRes,
