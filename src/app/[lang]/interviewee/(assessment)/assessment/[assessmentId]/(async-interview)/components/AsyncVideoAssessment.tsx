@@ -15,6 +15,8 @@ type AsyncVideoAssessmentState = {
     setStream: React.Dispatch<React.SetStateAction<MediaStream | null>>;
     recordedVideo: string[];
     setRecordedVideo: React.Dispatch<React.SetStateAction<string[]>>;
+    assessmentData: any | null;
+    setAssessmentData: React.Dispatch<React.SetStateAction<any | null>>;
 };
 
 const AsyncVideoAssessmentContext =
@@ -30,6 +32,8 @@ export const useAsyncVideoAssessment = (): AsyncVideoAssessmentState => {
 };
 
 const AsyncVideoAssessment = () => {
+    const [assessmentData, setAssessmentData] = useState(null);
+
     const [permission, setPermission] = useState(true);
     const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
     const [stream, setStream] = useState<MediaStream | null>(null);
@@ -124,16 +128,6 @@ const AsyncVideoAssessment = () => {
         getPermission();
     }, [permission, audioContext]);
 
-    // useEffect(() => {
-    //     if (recordedVideo.length > 0) {
-    //         if (videoRef.current) {
-    //             videoRef.current.onloadedmetadata = function () {
-    //                 videoRef.current!!.controls = true;
-    //             };
-    //         }
-    //     }
-    // }, [recordedVideo]);
-
     if (!permission)
         return (
             <div className="h-screen w-screen bg-[#333e49] relative flex justify-center items-center">
@@ -148,18 +142,18 @@ const AsyncVideoAssessment = () => {
 
     return (
         <AsyncVideoAssessmentContext.Provider
-            value={{ stream, setStream, recordedVideo, setRecordedVideo }}
+            value={{
+                stream,
+                setStream,
+                recordedVideo,
+                setRecordedVideo,
+                assessmentData,
+                setAssessmentData,
+            }}
         >
-            <input
-                type="file"
-                onChange={e => {
-                    if (e.target.files && e.target.files.length > 0)
-                        handleUploadVide(e.target.files[0]);
-                }}
-            />
             <main className={styles.wrapper}>
-                <div className="bg-white min-w-[900px] w-full max-w-screen-xl mx-auto rounded-md drop-shadow-lg flex">
-                    <div className="flex-1">
+                <div className="bg-white w-full max-w-screen-xl mx-auto rounded-md drop-shadow-lg flex">
+                    <div className="flex-1 p-4">
                         <div className={styles.chat_container}>
                             <div className="w-12 h-12 rounded-full text-neutral-700">
                                 <UserCircleIcon />
@@ -235,13 +229,13 @@ const AsyncVideoAssessment = () => {
                                 />
                             )}
                             {/* <AudioRecorder /> */}
-                            {audioContext && stream && (
+                            {/* {audioContext && stream && (
                                 <SoundIndicator
                                     context={audioContext}
                                     stream={stream}
                                     devices={devices}
                                 />
-                            )}
+                            )} */}
                         </div>
                     </div>
                 </div>

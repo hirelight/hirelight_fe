@@ -3,53 +3,7 @@
     @apply bg-slate-100 h-screen w-screen flex justify-center py-10;
 }
 
-.button_flex {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-}
-.audio_controls,
-.video_controls {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.audio_player,
-.video_player {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.audio_player,
-.video_player,
-.recorded_player {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.live_player {
-    width: 300px;
-    height: 200px;
-    object-fit: cover;
-    background-color: black;
-    @apply rounded;
-}
-.recorded_player video {
-    width: 300px;
-    height: 400px;
-    object-fit: cover;
-}
-
-.chat_container {
-    padding: 1rem;
-    display: flex;
-    align-items: flex-start;
-}
-
 .content_container {
-    margin-left: 1rem;
     @apply flex-1;
 }
 
@@ -77,11 +31,13 @@
 
 .takes_wrapper {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
     gap: 1rem;
+    grid-auto-rows: 1fr;
 }
 
 .takes_placeholder {
+    width: auto;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -102,5 +58,31 @@
         font-weight: 500;
         text-transform: uppercase;
         @apply text-neutral-700 font-semibold text-xs;
+    }
+}
+
+.banner {
+    position: relative;
+    width: 100vw;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+    &::before {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: url("../../../../../../../../../public/images/interviewee_auth_bg.png");
+        // background-repeat: no-repeat;
+        background-position: 50% 0;
+        background-size: auto;
+        opacity: 0.3;
     }
 }

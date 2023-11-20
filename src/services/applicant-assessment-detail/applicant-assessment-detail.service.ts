@@ -8,6 +8,8 @@ import {
     IMCAppliAssessmentDto,
     ISubmitMCAnswerDto,
     IJobPostAppAssDetailDto,
+    ITrackAsyncAssessmentDto,
+    ISubmitAsyncAssessmentDto,
 } from "..";
 
 const moveCandidateToAssessment = async (
@@ -230,9 +232,11 @@ const submitMCAssessment = async (
 // ******************MC Assment************************
 const joinAsyncAssessment = async (
     applicantAsessmentDetailId: string
-): Promise<IResponse<IMCAppliAssessmentDto>> => {
+): Promise<IResponse<ICandidateAssessmentDetailDto>> => {
     try {
-        const res = await interceptor.put<IResponse<IMCAppliAssessmentDto>>(
+        const res = await interceptor.put<
+            IResponse<ICandidateAssessmentDetailDto>
+        >(
             endpoints.APPLICANT_ASSESSMENT_DETAILS +
                 `/async-video-interview-assessment/join/${applicantAsessmentDetailId}`
         );
@@ -245,8 +249,30 @@ const joinAsyncAssessment = async (
     }
 };
 
+const trackAsyncAssessment = async (
+    trackDto: ITrackAsyncAssessmentDto
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.put<
+            IResponse<ICandidateAssessmentDetailDto>
+        >(
+            endpoints.APPLICANT_ASSESSMENT_DETAILS +
+                `/async-video-interview-assessment/track/${trackDto.applicantAssessmentDetailId}`,
+            {
+                assessmentSubmissions: trackDto.assessmentSubmissions,
+            }
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const submitAsyncAssessment = async (
-    submitDto: ISubmitMCAnswerDto
+    submitDto: ISubmitAsyncAssessmentDto
 ): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.put<
@@ -254,7 +280,9 @@ const submitAsyncAssessment = async (
         >(
             endpoints.APPLICANT_ASSESSMENT_DETAILS +
                 `/async-video-interview-assessment/${submitDto.applicantAssessmentDetailId}`,
-            submitDto.answers
+            {
+                assessmentSubmissions: submitDto.assessmentSubmissions,
+            }
         );
 
         checkResErr(res.data);
@@ -285,6 +313,7 @@ export const mcAssessmentServices = {
 export const asyncAssessmentServices = {
     joinAsyncAssessment,
     submitAsyncAssessment,
+    trackAsyncAssessment,
 };
 
 export default applicantAssessmentDetailServices;

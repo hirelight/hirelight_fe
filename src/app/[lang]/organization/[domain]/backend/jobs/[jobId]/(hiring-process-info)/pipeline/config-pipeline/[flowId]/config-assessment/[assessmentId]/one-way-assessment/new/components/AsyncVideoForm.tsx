@@ -4,12 +4,15 @@ import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
+import { produce } from "immer";
 
 import {
     Button,
     ButtonOutline,
     CustomInput,
+    Modal,
     Portal,
+    QuestionPicker,
     Selection,
     Timer,
 } from "@/components";
@@ -34,13 +37,7 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
 });
 
 export type AsyncQuestionType = Omit<IQuestionAnswerDto, "content"> & {
-    content: QuestionAnswerContentJson & {
-        config: {
-            thinkTime: number;
-            numOfTakes: number;
-            duration: number;
-        };
-    };
+    content: QuestionAnswerContentJson;
 };
 
 type AsyncVideoForm = Omit<IEditAsyncVideoInterviewDto, "content"> & {
@@ -55,8 +52,13 @@ const AsyncVideoForm = () => {
 
     const queryClient = useQueryClient();
 
+    const [showPicker, setShowPicker] = React.useState(false);
     const [showCreate, setShowCreate] = React.useState(false);
-    const [questions, setQuestions] = React.useState<AsyncQuestionType[]>([]);
+    const [questions, setQuestions] = React.useState<AsyncQuestionType[]>(
+        assessment.assessmentQuestionAnswerSetContent
+            ? JSON.parse(assessment.assessmentQuestionAnswerSetContent)
+            : []
+    );
     const [formState, setFormState] = React.useState<AsyncVideoForm>({
         id: assessment.id,
         name: assessment.name,
@@ -77,10 +79,22 @@ const AsyncVideoForm = () => {
         e.preventDefault();
 
         try {
+            const sumOfDuration =
+                questions.reduce((prev, cur) => {
+                    const sum =
+                        cur.content.config!!.duration *
+                            cur.content.config!!.numOfTakes +
+                        cur.content.config!!.numOfTakes * 3 +
+                        cur.content.config!!.thinkTime *
+                            cur.content.config!!.numOfTakes;
+                    return prev + sum;
+                }, 0) +
+                10 * 60;
             const res = await assessmentsServices.editAsync({
                 ...formState,
                 content: JSON.stringify(formState.content),
                 assessmentQuestionAnswerSetContent: JSON.stringify(questions),
+                duration: sumOfDuration,
             });
 
             queryClient.invalidateQueries({
@@ -95,27 +109,68 @@ const AsyncVideoForm = () => {
     };
 
     return (
-        <form onSubmit={handleCreateOneWay} className="flex flex-col gap-8">
-            <section>
-                <h3 className="text-lg text-neutral-700 font-semibold bg-slate-100 p-4 xl:px-6 mb-6">
-                    Welcome page info
-                </h3>
-
-                <div className="flex items-start gap-6 mb-6 px-4 xl:px-6">
-                    <CustomInput
-                        title="Title"
-                        id="one-way-assessment__title"
-                        name="one-way-assessment__title"
-                        type="text"
-                        placeholder="One-way interview - UX researcher at 123"
-                        value={formState.name}
-                        onChange={e =>
-                            setFormState({ ...formState, name: e.target.value })
-                        }
-                        required
+        <React.Fragment>
+            <Portal>
+                <Modal
+                    isOpen={showPicker}
+                    onClose={() => setShowPicker(false)}
+                    className="min-w-[500px] p-6 bg-white"
+                >
+                    <QuestionPicker
+                        query={{ type: "essay" }}
+                        pickedQuestions={questions.map(item => ({
+                            ...item,
+                            content: JSON.stringify(item.content),
+                        }))}
+                        onPickedChange={newQuestions => {
+                            setQuestions(
+                                newQuestions.map(item =>
+                                    produce(
+                                        {
+                                            ...item,
+                                            content: JSON.parse(item.content),
+                                        },
+                                        draft => {
+                                            if (!draft.content.config) {
+                                                draft.content.config = {
+                                                    thinkTime: 0,
+                                                    numOfTakes: 1,
+                                                    duration: 60,
+                                                };
+                                            }
+                                        }
+                                    )
+                                )
+                            );
+                            setShowPicker(false);
+                        }}
                     />
+                </Modal>
+            </Portal>
+            <form onSubmit={handleCreateOneWay} className="flex flex-col gap-8">
+                <section>
+                    <h3 className="text-lg text-neutral-700 font-semibold bg-slate-100 p-4 xl:px-6 mb-6">
+                        Welcome page info
+                    </h3>
 
-                    <div>
+                    <div className="flex items-start gap-6 mb-6 px-4 xl:px-6">
+                        <CustomInput
+                            title="Title"
+                            id="one-way-assessment__title"
+                            name="one-way-assessment__title"
+                            type="text"
+                            placeholder="One-way interview - UX researcher at 123"
+                            value={formState.name}
+                            onChange={e =>
+                                setFormState({
+                                    ...formState,
+                                    name: e.target.value,
+                                })
+                            }
+                            required
+                        />
+
+                        {/* <div>
                         <Timer
                             title="Duration"
                             data={formState.duration}
@@ -127,106 +182,105 @@ const AsyncVideoForm = () => {
                             }
                             required
                         />
+                    </div> */}
                     </div>
-                </div>
 
-                <div className="flex flex-col gap-4 mb-6 px-4 xl:px-6">
-                    <h3 className="text-neutral-700 font-medium">
-                        Welcome note
-                    </h3>
-                    <QuillEditorNoSSR
-                        placeholder="Enter the job description here; include key areas of
+                    <div className="flex flex-col gap-4 mb-6 px-4 xl:px-6">
+                        <h3 className="text-neutral-700 font-medium">
+                            Description
+                        </h3>
+                        <QuillEditorNoSSR
+                            placeholder="Enter the job description here; include key areas of
         responsibility and what the candidate might do on a typical
         day."
-                        value={formState.content.welcomeNote}
-                        onChange={(value: string) =>
-                            setFormState({
-                                ...formState,
-                                content: {
-                                    ...formState.content,
-                                    welcomeNote: value,
-                                },
-                            })
-                        }
-                        className="min-h-[250px]"
-                        theme="snow"
-                    />
-                </div>
-            </section>
-
-            <section>
-                <h3 className="text-neutral-700 font-medium mb-4 p-4 xl:px-6 bg-slate-100">
-                    Questions
-                </h3>
-
-                <div className="flex flex-col gap-4 mb-6 px-4 xl:px-6">
-                    <h3 className="text-neutral-700 font-medium">
-                        Description
-                    </h3>
-                    <QuillEditorNoSSR
-                        placeholder="Enter the job description here; include key areas of
-        responsibility and what the candidate might do on a typical
-        day."
-                        className="min-h-[250px]"
-                        theme="snow"
-                        value={formState.description}
-                        onChange={(value: string) =>
-                            setFormState({
-                                ...formState,
-                                description: value,
-                            })
-                        }
-                    />
-                </div>
-
-                {questions.length > 0 && (
-                    <div className="px-4 xl:px-6 mb-6">
-                        <ul className="flex flex-col gap-6">
-                            {questions?.map(question => (
-                                <li key={question.id}>
-                                    <QuestionSection
-                                        data={question}
-                                        onUpdate={updatedQuestion => {
-                                            setQuestions(prev =>
-                                                prev.map(ques =>
-                                                    ques.id ===
-                                                    updatedQuestion.id
-                                                        ? updatedQuestion
-                                                        : ques
-                                                )
-                                            );
-                                        }}
-                                    />
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
-
-                <div className="mb-4 px-4 xl:px-6">
-                    {showCreate ? (
-                        <AddNewQuestionSection
-                            onFinish={() => setShowCreate(false)}
-                            onSaveTopic={(newQuestion: AsyncQuestionType) =>
-                                setQuestions(prev => prev.concat([newQuestion]))
+                            value={formState.description}
+                            onChange={(value: string) =>
+                                setFormState({
+                                    ...formState,
+                                    description: value,
+                                })
                             }
+                            className="min-h-[250px]"
+                            theme="snow"
                         />
-                    ) : (
+                    </div>
+                </section>
+
+                <section>
+                    <h3 className="text-neutral-700 font-medium mb-4 p-4 flex items-center justify-between xl:px-6 bg-slate-100">
+                        Questions
                         <button
                             type="button"
-                            className="relative flex items-center justify-center overflow-hidden text-sm font-medium text-blue_primary_600 rounded-lg group border border-dashed border-gray-400 transition-all ease-in duration-75 w-full hover:border-blue_primary_800 hover:text-blue_primary_800"
-                            onClick={() => setShowCreate(true)}
+                            className="text-sm font-semibold text-blue_primary_700 hover:text-blue_primary_800 hover:underline"
+                            onClick={() => setShowPicker(true)}
                         >
-                            <span className="relative py-4 px-5 flex items-center">
-                                <PlusCircleIcon className="w-5 h-5 mr-1" />
-                                Create new topic
-                            </span>
+                            Import questions
                         </button>
-                    )}
-                </div>
-            </section>
+                    </h3>
 
-            <section>
+                    {questions.length > 0 && (
+                        <div className="px-4 xl:px-6 mb-6">
+                            <ul className="flex flex-col gap-6">
+                                {questions?.map(question => (
+                                    <li key={question.id}>
+                                        <QuestionSection
+                                            data={question}
+                                            datas={questions}
+                                            onReorder={newOrder =>
+                                                setQuestions(newOrder)
+                                            }
+                                            onUpdate={updatedQuestion => {
+                                                setQuestions(prev =>
+                                                    prev.map(ques =>
+                                                        ques.id ===
+                                                        updatedQuestion.id
+                                                            ? updatedQuestion
+                                                            : ques
+                                                    )
+                                                );
+                                            }}
+                                            onDelete={() =>
+                                                setQuestions(prev =>
+                                                    prev.filter(
+                                                        item =>
+                                                            item.id !==
+                                                            question.id
+                                                    )
+                                                )
+                                            }
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    <div className="mb-4 px-4 xl:px-6">
+                        {showCreate ? (
+                            <AddNewQuestionSection
+                                onFinish={() => setShowCreate(false)}
+                                onSaveTopic={(newQuestion: AsyncQuestionType) =>
+                                    setQuestions(prev =>
+                                        prev.concat([newQuestion])
+                                    )
+                                }
+                            />
+                        ) : (
+                            <button
+                                type="button"
+                                className="relative flex items-center justify-center overflow-hidden text-sm font-medium text-blue_primary_600 rounded-lg group border border-dashed border-gray-400 transition-all ease-in duration-75 w-full hover:border-blue_primary_800 hover:text-blue_primary_800"
+                                onClick={() => setShowCreate(true)}
+                            >
+                                <span className="relative py-4 px-5 flex items-center">
+                                    <PlusCircleIcon className="w-5 h-5 mr-1" />
+                                    Create new topic
+                                </span>
+                            </button>
+                        )}
+                    </div>
+                </section>
+
+                {/* <section>
                 <h3 className="text-lg text-neutral-700 font-semibold bg-slate-100 p-4 xl:px-6 mb-6">
                     Configuration
                 </h3>
@@ -333,13 +387,14 @@ const AsyncVideoForm = () => {
                         </label>
                     </div>
                 </div>
-            </section>
+            </section> */}
 
-            <div className="flex items-center justify-end gap-4 p-4 xl:px-6">
-                <ButtonOutline>Save & continue</ButtonOutline>
-                <Button type="submit">Save all changes</Button>
-            </div>
-        </form>
+                <div className="flex items-center justify-end gap-4 p-4 xl:px-6">
+                    <ButtonOutline>Save & continue</ButtonOutline>
+                    <Button type="submit">Save all changes</Button>
+                </div>
+            </form>
+        </React.Fragment>
     );
 };
 

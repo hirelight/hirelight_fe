@@ -2,16 +2,20 @@ import {
     ArrowDownTrayIcon,
     PlusCircleIcon,
     TrashIcon,
+    XMarkIcon,
 } from "@heroicons/react/24/solid";
 import React, { FormEvent } from "react";
 import { AnimatePresence, Reorder } from "framer-motion";
 import { v4 as uuid } from "uuid";
 import dynamic from "next/dynamic";
+import { produce } from "immer";
+import { toast } from "react-toastify";
 
 import { Button, CustomInput, Selection } from "@/components";
 import { DragIndicatorIcon } from "@/icons";
 import questionAnswerServices from "@/services/questions/questions.service";
-import { humanReadable } from "@/helpers";
+import { extractTextFromHtml, humanReadable } from "@/helpers";
+import fileServices from "@/services/file-service/file.service";
 
 import { AsyncQuestionType } from "../new/components/AsyncVideoForm";
 
@@ -24,8 +28,18 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
 
 export const thinkTime = new Map<number, string>([
     [-1, "Unlimited time to think"],
+    [0, "No think time"],
+    [60, "1 minutes"],
     [180, "3 minutes"],
     [600, "10 minutes"],
+]);
+
+export const numOfTakes = new Map<number, string>([
+    [0, "No takes"],
+    [1, "One take"],
+    [2, "2 takes"],
+    [3, "3 takes"],
+    [5, "5 takes"],
 ]);
 
 type AddNewQuestionSectionProps = {
@@ -39,6 +53,9 @@ const AddNewQuestionSection = ({
     onSaveTopic,
     data,
 }: AddNewQuestionSectionProps) => {
+    const [error, setError] = React.useState({
+        nameErr: "",
+    });
     const [question, setQuestion] = React.useState<AsyncQuestionType>(
         data
             ? data
@@ -48,8 +65,8 @@ const AddNewQuestionSection = ({
                       name: "",
                       config: {
                           thinkTime: 0,
-                          numOfTakes: 0,
-                          duration: 0,
+                          numOfTakes: 1,
+                          duration: 60,
                       },
                       type: "essay",
                       answers: [],
@@ -64,21 +81,12 @@ const AddNewQuestionSection = ({
               }
     );
 
-    const handleAddNewQuestion = (e: FormEvent) => {
-        e.preventDefault();
-
-        const newQuestion = {
-            id: uuid(),
-            name: "",
-            config: {
-                thinkTime: "Unlimited time to think",
-                duration: "",
-                numOfTakes: "3",
-            },
-        };
-    };
-
     const handleAddNewSection = async () => {
+        if (!extractTextFromHtml(question.content.name).length) {
+            setError({ ...error, nameErr: "Name is required to create" });
+            return toast.error("Invalid input!");
+        }
+
         try {
             if (!question.status) {
                 const res = await questionAnswerServices.createAsync({
@@ -114,34 +122,125 @@ const AddNewQuestionSection = ({
         onFinish();
     };
 
+    const handleUploadVideo = async (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const fileList = e.currentTarget.files;
+        if (fileList && fileList.length) {
+            const fileSize = fileList[0].size / 1024 / 1024;
+            if (fileSize > 200) return toast.error("Maximum file is 200MB");
+            const formData = new FormData();
+            formData.append("formFile", fileList[0]);
+            try {
+                const res = await fileServices.uploadFile(formData);
+
+                toast.success(res.message);
+                setQuestion(prev =>
+                    produce(prev, draft => {
+                        draft.content.video = {
+                            url: res.data,
+                            fileName: fileList[0].name,
+                        };
+                    })
+                );
+            } catch (error: any) {
+                toast.error(
+                    error.message ? error.message : "Something went error"
+                );
+            }
+        }
+    };
+
     return (
         <div className="border border-gray-300 rounded-md">
             <div className="border-b border-gray-300 p-4 text-xl text-neutral-700">
-                <h4>New Question</h4>
+                <h4>Questions</h4>
             </div>
             <div className="p-4 bg-blue_primary_050">
                 <div className={`flex gap-2 items-stretch h-full mb-4`}>
                     <div className="min-w-[400px] flex-1">
                         <QuillEditorNoSSR
                             placeholder={"Question number "}
-                            onChange={(value: string) =>
+                            onChange={(value: string) => {
                                 setQuestion({
                                     ...question,
                                     content: {
                                         ...question.content,
                                         name: value,
                                     },
-                                })
-                            }
+                                });
+                                setError({ nameErr: "" });
+                            }}
                             value={question.content.name}
                             className="min-h-[144px] h-full bg-white"
                         />
+                        {error.nameErr && (
+                            <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                                <span className="font-medium"></span>{" "}
+                                {error.nameErr}
+                            </p>
+                        )}
                     </div>
-                    <div className="border border-dashed border-gray-300 bg-white rounded-md flex items-center justify-center p-4 hover:border-blue_primary_800 cursor-pointer">
+                    <button
+                        type="button"
+                        className="border border-dashed border-gray-300 bg-white rounded-md flex items-center justify-center p-4 hover:border-blue_primary_800 cursor-pointer relative"
+                        onClick={() => {
+                            const inputTag = document.getElementById(
+                                `question-file-${question.id}`
+                            ) as HTMLInputElement;
+                            if (inputTag) {
+                                inputTag.click();
+                            }
+                        }}
+                    >
                         <h3 className="text-blue_primary_800 font-medium">
                             Add a video to this question
+                            <p className="text-gray-500 text-sm mt-1">
+                                (File size maximum 200MB)
+                            </p>
                         </h3>
-                    </div>
+                        <input
+                            id={`question-file-${question.id}`}
+                            type="file"
+                            accept="video/*"
+                            className="sr-only"
+                            onChange={handleUploadVideo}
+                        />
+                        {question.content.video && (
+                            <div
+                                className="absolute inset-0 z-50 bg-gray-900 rounded-md border border-gray-900"
+                                onClick={e => e.stopPropagation()}
+                            >
+                                <video
+                                    controls
+                                    className="w-full h-full object-contain relative"
+                                >
+                                    <source src={question.content.video.url} />
+                                </video>
+                                <div
+                                    role="button"
+                                    className="absolute top-0 right-0 z-20 w-6 h-6 p-1 bg-white border border-gray-300 translate-x-1/2 -translate-y-1/2"
+                                    onClick={() => {
+                                        const inputTag =
+                                            document.getElementById(
+                                                `question-file-${question.id}`
+                                            ) as HTMLInputElement;
+                                        if (inputTag) {
+                                            inputTag.value = "";
+                                            setQuestion(prev =>
+                                                produce(prev, draft => {
+                                                    draft.content.video =
+                                                        undefined;
+                                                })
+                                            );
+                                        }
+                                    }}
+                                >
+                                    <XMarkIcon />
+                                </div>
+                            </div>
+                        )}
+                    </button>
                     <div className="flex flex-col gap-2 justify-between">
                         <Selection
                             title=""
@@ -151,82 +250,74 @@ const AddNewQuestionSection = ({
                             }))}
                             placeholder="Think time"
                             onChange={value =>
-                                setQuestion({
-                                    ...question,
-                                    content: {
-                                        ...question.content,
-                                        config: {
-                                            ...question.content.config,
-                                            thinkTime: value,
-                                        },
-                                    },
-                                })
+                                setQuestion(prev =>
+                                    produce(prev, draft => {
+                                        if (draft.content.config)
+                                            draft.content.config.thinkTime =
+                                                value;
+                                    })
+                                )
                             }
                             labelClassName="bg-white"
-                            value={thinkTime.get(
-                                question.content.config.thinkTime
-                            )}
+                            value={
+                                question.content.config
+                                    ? thinkTime.get(
+                                          question.content.config.thinkTime
+                                      )
+                                    : ""
+                            }
                         />
                         <Selection
                             title=""
-                            items={[3, 10, 30].map(item => ({
-                                label: item.toString(),
-                                value: item,
+                            items={[3, 5, 10].map(item => ({
+                                label: item.toString() + " minutes",
+                                value: item * 60,
                             }))}
                             labelClassName="bg-white"
                             placeholder="Duration"
                             value={
-                                question.content.config.duration.toString()
-                                    ? question.content.config.duration.toString()
+                                question.content.config
+                                    ? (
+                                          question.content.config.duration / 60
+                                      ).toString() + " minutes"
                                     : ""
                             }
                             onChange={(value: number) =>
-                                setQuestion({
-                                    ...question,
-                                    content: {
-                                        ...question.content,
-                                        config: {
-                                            ...question.content.config,
-                                            duration: value,
-                                        },
-                                    },
-                                })
+                                setQuestion(prev =>
+                                    produce(prev, draft => {
+                                        if (draft.content.config)
+                                            draft.content.config.duration =
+                                                value;
+                                    })
+                                )
                             }
                         />
                         <Selection
                             title=""
-                            items={[1, 3, 5].map(item => ({
-                                label: item + " takes",
-                                value: item,
+                            items={Array.from(numOfTakes.keys()).map(key => ({
+                                label: numOfTakes.get(key)!!,
+                                value: key,
                             }))}
-                            onChange={() => {}}
+                            onChange={value =>
+                                setQuestion(prev =>
+                                    produce(prev, draft => {
+                                        if (draft.content.config)
+                                            draft.content.config.numOfTakes =
+                                                value;
+                                    })
+                                )
+                            }
                             placeholder="Num of takes"
                             labelClassName="bg-white"
                             value={
-                                question.content.config.numOfTakes
-                                    ? question.content.config.numOfTakes +
-                                      " takes"
+                                question.content.config
+                                    ? numOfTakes.get(
+                                          question.content.config.numOfTakes
+                                      )
                                     : ""
                             }
                         />
                     </div>
-                </div>
-                <div className="flex gap-6 px-4">
-                    <button
-                        type="button"
-                        className="flex items-center gap-1 text-sm text-blue_primary_800 font-medium hover:underline"
-                        onClick={handleAddNewQuestion}
-                    >
-                        <PlusCircleIcon className="w-4 h-4" />
-                        <span>Add new question</span>
-                    </button>
-                    <button
-                        type="button"
-                        className="flex items-center gap-1 text-sm text-blue_primary_800 font-medium hover:underline"
-                    >
-                        <ArrowDownTrayIcon className="w-4 h-4" />
-                        <span>Import questions from library</span>
-                    </button>
                 </div>
             </div>
             <div className="border-t border-gray-300 px-4 py-6 flex items-center justify-between">

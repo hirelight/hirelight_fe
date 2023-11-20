@@ -99,7 +99,7 @@ const QuillEditor = ({
                 }
             }
         },
-        [id, onChange]
+        [onChange]
     );
 
     const uploadImage = async (file: File): Promise<string | null> => {

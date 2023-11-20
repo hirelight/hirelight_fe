@@ -89,3 +89,13 @@ export interface ISubmitMCAnswerDto {
     applicantAssessmentDetailId: string;
     answers: ICandidateMCDto[];
 }
+
+export interface ITrackAsyncAssessmentDto {
+    applicantAssessmentDetailId: string;
+    assessmentSubmissions: IQuestionAnswerDto[];
+}
+
+export interface ISubmitAsyncAssessmentDto {
+    applicantAssessmentDetailId: string;
+    assessmentSubmissions: IQuestionAnswerDto[];
+}

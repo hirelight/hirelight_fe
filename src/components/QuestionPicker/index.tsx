@@ -16,11 +16,16 @@ import QuestionPickerCard from "./QuestionPickerCard";
 import styles from "./styles.module.scss";
 
 type QuestionPickerProps = {
+    query?: {
+        type: "one-answer" | "multiple-answers" | "essay";
+        video?: any;
+    };
     pickedQuestions: IQuestionAnswerDto[];
     onPickedChange: (questions: IQuestionAnswerDto[]) => void;
 };
 
 const QuestionPicker: React.FC<QuestionPickerProps> = ({
+    query,
     pickedQuestions,
     onPickedChange,
 }) => {
@@ -103,6 +108,15 @@ const QuestionPicker: React.FC<QuestionPickerProps> = ({
             </div>
             <ul className={styles.set__list__wrapper}>
                 {questionsRes?.data
+                    ?.filter(item =>
+                        query
+                            ? (
+                                  JSON.parse(
+                                      item.content
+                                  ) as QuestionAnswerContentJson
+                              ).type === query.type
+                            : true
+                    )
                     ?.filter(item => filterOnSearch(item))
                     .map((item, index) => (
                         <li key={item.id}>
@@ -122,7 +136,9 @@ const QuestionPicker: React.FC<QuestionPickerProps> = ({
                 >
                     Save
                 </Button>
-                <ButtonOutline>Cancel</ButtonOutline>
+                <ButtonOutline onClick={() => onPickedChange(curPicks)}>
+                    Cancel
+                </ButtonOutline>
             </div>
         </>
     );

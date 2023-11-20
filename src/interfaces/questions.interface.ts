@@ -19,6 +19,10 @@ export interface QuestionAnswerContentJson {
         numOfTakes: number;
         duration: number;
     };
+    video?: {
+        url: string;
+        fileName: string;
+    };
     description?: string;
 }
 

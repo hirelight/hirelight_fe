@@ -5,7 +5,7 @@ import { Button, ButtonOutline, Selection } from "@/components";
 import fileServices from "@/services/file-service/file.service";
 import { SpinLoading } from "@/icons";
 
-import styles from "./AsyncVideoAssessment.module.scss";
+import styles from "./VideoRecorder.module.scss";
 import { useAsyncVideoAssessment } from "./AsyncVideoAssessment";
 
 const mimeType = 'video/webm; codecs="opus,vp8"';
@@ -31,40 +31,6 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
     const [videoChunks, setVideoChunks] = useState<Blob[]>([]);
     const { recordedVideo, setRecordedVideo } = useAsyncVideoAssessment();
     const [isLoading, setIsLoading] = useState(false);
-
-    // const toggleCamera = async () => {
-    //     if ("MediaRecorder" in window && liveVideoFeed.current) {
-    //         if (!stream) {
-    //             const videoConstraints = {
-    //                 audio: false,
-    //                 video: true,
-    //             };
-    //             const audioConstraints = { audio: true };
-    //             // create audio and video streams separately
-    //             const audioStream =
-    //                 await navigator.mediaDevices.getUserMedia(audioConstraints);
-    //             const videoStream =
-    //                 await navigator.mediaDevices.getUserMedia(videoConstraints);
-    //             setPermission(true);
-    //             //combine both audio and video streams
-    //             const combinedStream = new MediaStream([
-    //                 ...videoStream.getVideoTracks(),
-    //                 ...audioStream.getAudioTracks(),
-    //             ]);
-    //             //set videostream to live feed player
-    //             liveVideoFeed.current.srcObject = videoStream;
-    //         } else {
-    //             console.log("Turn off camera");
-    //             const tracks = stream.getTracks();
-
-    //             // Stop each track
-    //             tracks.forEach(track => {
-    //                 track.stop();
-    //             });
-    //             liveVideoFeed.current.srcObject = null;
-    //         }
-    //     }
-    // };
 
     const startRecording = async () => {
         console.log("Recording");

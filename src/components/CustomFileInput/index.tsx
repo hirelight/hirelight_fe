@@ -35,6 +35,10 @@ const CustomFileInput = (props: ICustomFileInput) => {
         const reader = new FileReader();
 
         if (fileList.length > 0 && inputRef.current) {
+            const fileSize = fileList[0].size;
+
+            if (fileSize / 1024 / 1024 >= 200)
+                return toast.error("Maximum file size is 200MB!");
             const formData = new FormData();
             formData.append("formFile", fileList[0]);
             const res = await fileServices.uploadFile(formData);

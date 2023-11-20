@@ -3,7 +3,11 @@ import endpoints from "@/utils/constants/service-endpoint";
 import { checkResErr } from "@/helpers";
 
 import interceptor from "../interceptor";
-import { IIntegrationDto } from "..";
+import {
+    ICreateIntegrationDto,
+    IEditIntegrationDto,
+    IIntegrationDto,
+} from "..";
 
 const getList = async (): Promise<IResponse<IIntegrationDto[]>> => {
     try {
@@ -33,7 +37,9 @@ const getById = async (id: string): Promise<IResponse<IIntegrationDto>> => {
     }
 };
 
-const createNew = async (createDto: any): Promise<IResponse<any>> => {
+const createNew = async (
+    createDto: ICreateIntegrationDto
+): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.post<IResponse<any>>(
             endpoints.THIRDPARTY_TOKENS,
@@ -48,7 +54,7 @@ const createNew = async (createDto: any): Promise<IResponse<any>> => {
     }
 };
 
-const edit = async (editDto: any): Promise<IResponse<any>> => {
+const edit = async (editDto: IEditIntegrationDto): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.put<IResponse<any>>(
             endpoints.THIRDPARTY_TOKENS + `/${editDto.id}`,
