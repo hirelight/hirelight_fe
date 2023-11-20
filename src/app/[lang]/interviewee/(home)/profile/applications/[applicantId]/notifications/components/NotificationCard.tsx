@@ -46,28 +46,29 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data }) => {
     };
 
     return (
-        <div className="p-6 flex items-start gap-4 bg-white rounded-md drop-shadow-lg hover:bg-slate-100 cursor-pointer">
+        <div className="p-6 flex items-center gap-4 bg-white rounded-md drop-shadow-lg">
             <Image alt="Company logo" src={logo} width={40} height={40} />
-            <div>
+            <div className="flex-1">
                 <h2 className="text-lg font-semibold mb-1">
                     {data.assessment.name}
                     <span className="ml-4">{getStatusBadge(data.status)}</span>
                 </h2>
-                <p className="text-sm text-gray-500 mb-4">Company name</p>
-                <div
+                <p className="text-sm text-gray-500">
+                    {data.applicantProfile.jobPost.organization.name}
+                </p>
+                {/* <div
                     className="text-neutral-700 text-sm ql-editor !p-0"
                     dangerouslySetInnerHTML={{
                         __html: data.assessment.description,
                     }}
-                ></div>
-
-                <ButtonOutline
-                    onClick={() => router.push(`/assessment/${data.id}`)}
-                    className="mt-4 !rounded-full"
-                >
-                    Take test
-                </ButtonOutline>
+                ></div> */}
             </div>
+            <ButtonOutline
+                onClick={() => router.push(`/assessment/${data.id}`)}
+                className="!rounded-full !py-1.5 !px-4"
+            >
+                Take test
+            </ButtonOutline>
         </div>
     );
 };

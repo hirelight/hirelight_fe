@@ -335,19 +335,15 @@ const CreateAssessment = () => {
                                             : undefined
                                     }
                                     onChange={value =>
-                                        setFormState({
-                                            ...formState,
-                                            content: {
-                                                ...formState.content,
-                                                config: {
-                                                    ...formState.content.config,
-                                                    autoEvaluate: {
+                                        setFormState(prev =>
+                                            produce(prev, draft => {
+                                                draft.content.config.autoEvaluate =
+                                                    {
                                                         enabled: true,
                                                         accuracy: value,
-                                                    },
-                                                },
-                                            },
-                                        })
+                                                    };
+                                            })
+                                        )
                                     }
                                 />
                             </div>

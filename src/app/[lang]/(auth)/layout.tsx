@@ -5,10 +5,7 @@ import dynamic from "next/dynamic";
 
 import styles from "./layout.module.scss";
 import AuthenWrapper from "./components/AuthenWrapper";
-
-const HeaderBarNoSSR = dynamic(() => import("./components/HeaderBar"), {
-    ssr: false,
-});
+import HeaderBar from "./components/HeaderBar";
 
 export const metadata: Metadata = {
     title: "Login",
@@ -18,7 +15,7 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
     return (
         <div className="flex flex-col min-h-screen w-full bg-slate-100">
             <AuthenWrapper>
-                <HeaderBarNoSSR />
+                <HeaderBar />
                 <div className={styles.wrapper}>{children}</div>
             </AuthenWrapper>
         </div>

@@ -38,9 +38,31 @@ const editAsync = async (
     }
 };
 
+const getListIntegrationAssessments = async (
+    service?: string
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.get(
+            endpoints.ASSESSMENTS + `/integration`,
+            {
+                params: {
+                    service,
+                },
+            }
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const assessmentsServices = {
     getById,
     editAsync,
+    getListIntegrationAssessments,
 };
 
 export default assessmentsServices;

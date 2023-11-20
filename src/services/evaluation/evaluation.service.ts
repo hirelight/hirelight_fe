@@ -8,6 +8,7 @@ import {
     ICreateEvaluationDto,
     IEditEvaluationDto,
     IEvaluationDto,
+    IProfileEvaluationDto,
 } from "./evaluation.interface";
 
 const createEvaluation = async (
@@ -62,9 +63,9 @@ const getById = async (
 
 const getListByProfileId = async (
     profileId: string
-): Promise<IResponse<IEvaluationDto[]>> => {
+): Promise<IResponse<IProfileEvaluationDto[]>> => {
     try {
-        const res = await interceptor.get<IResponse<IEvaluationDto[]>>(
+        const res = await interceptor.get<IResponse<IProfileEvaluationDto[]>>(
             endpoints.ASSESSMENT_EVALUATION + `/applicant-profiles/${profileId}`
         );
 
@@ -110,6 +111,20 @@ const getListByCollaboratorId = async (
     }
 };
 
+const deleteById = async (evaluationId: string): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.delete<IResponse<any>>(
+            endpoints.ASSESSMENT_EVALUATION + `/${evaluationId}`
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const evaluationServices = {
     createEvaluation,
     getById,
@@ -117,6 +132,7 @@ const evaluationServices = {
     getListByCollaboratorId,
     editEvaluation,
     getListByProfileId,
+    deleteById,
 };
 
 export default evaluationServices;

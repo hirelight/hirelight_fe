@@ -4,12 +4,11 @@ import React, { useCallback } from "react";
 import Image from "next/image";
 import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
-import { useParams, useRouter } from "next/navigation";
-import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { LocaleSwitcher } from "@/components";
-import { useAppDispatch } from "@/redux/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { logout } from "@/redux/slices/auth.slice";
 
 import logo from "/public/images/logo.svg";
@@ -24,6 +23,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({}) => {
     const router = useRouter();
 
     const dispatch = useAppDispatch();
+    const token = useAppSelector(state => state.auth.token);
 
     const handleLogout = useCallback(() => {
         dispatch(logout());
@@ -59,15 +59,15 @@ const HeaderBar: React.FC<HeaderBarProps> = ({}) => {
                     <div className="text-neutral-700 border-neutral-400">
                         <LocaleSwitcher />
                     </div>
-                    {Cookies.get("hirelight_access_token") && (
-                        <button
-                            type="button"
-                            onClick={handleLogout}
-                            className=" block p-1 rounded-md border border-neutral-400"
-                        >
-                            <ArrowLeftOnRectangleIcon className="w-6 h-6" />
-                        </button>
-                    )}
+                    <button
+                        type="button"
+                        onClick={handleLogout}
+                        className={`block p-1 rounded-md border border-neutral-400 ${
+                            !token ? "hidden" : ""
+                        }`}
+                    >
+                        <ArrowLeftOnRectangleIcon className="w-6 h-6" />
+                    </button>
                 </div>
             </div>
         </div>

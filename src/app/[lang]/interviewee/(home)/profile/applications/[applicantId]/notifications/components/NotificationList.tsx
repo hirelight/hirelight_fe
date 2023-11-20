@@ -16,8 +16,6 @@ const NotificationList = () => {
         queryFn: applicantAssessmentDetailServices.getMyInvitedAssessments,
     });
 
-    console.log(myAssessments);
-
     return (
         <ul className="space-y-4">
             {myAssessments?.data

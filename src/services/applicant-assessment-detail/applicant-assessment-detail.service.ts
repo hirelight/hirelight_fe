@@ -176,7 +176,7 @@ const joinMCAssessment = async (
     try {
         const res = await interceptor.put<IResponse<IMCAppliAssessmentDto>>(
             endpoints.APPLICANT_ASSESSMENT_DETAILS +
-                `/join/${applicantAsessmentDetailId}`
+                `/multiple-choice-question-assessment/join/${applicantAsessmentDetailId}`
         );
 
         checkResErr(res.data);
@@ -195,7 +195,7 @@ const trackMCAssessment = async (
             IResponse<ICandidateAssessmentDetailDto>
         >(
             endpoints.APPLICANT_ASSESSMENT_DETAILS +
-                `/track/${trackDto.applicantAssessmentDetailId}`,
+                `/multiple-choice-question-assessment/track/${trackDto.applicantAssessmentDetailId}`,
             trackDto.answers
         );
 
@@ -227,18 +227,64 @@ const submitMCAssessment = async (
     }
 };
 
+// ******************MC Assment************************
+const joinAsyncAssessment = async (
+    applicantAsessmentDetailId: string
+): Promise<IResponse<IMCAppliAssessmentDto>> => {
+    try {
+        const res = await interceptor.put<IResponse<IMCAppliAssessmentDto>>(
+            endpoints.APPLICANT_ASSESSMENT_DETAILS +
+                `/async-video-interview-assessment/join/${applicantAsessmentDetailId}`
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const submitAsyncAssessment = async (
+    submitDto: ISubmitMCAnswerDto
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.put<
+            IResponse<ICandidateAssessmentDetailDto>
+        >(
+            endpoints.APPLICANT_ASSESSMENT_DETAILS +
+                `/async-video-interview-assessment/${submitDto.applicantAssessmentDetailId}`,
+            submitDto.answers
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const applicantAssessmentDetailServices = {
     moveCandidateToAssessment,
     sendAssessment,
     employeeGetApplicantAssessDetailsList,
     getMyInvitedAssessments,
     getMyInvitedAssessmentById,
-    joinMCAssessment,
-    trackMCAssessment,
-    submitMCAssessment,
     employeeGetJobPostProfile,
     employeeApplicantDetailByAssessmentId,
     getAppAssDetailByProfileId,
+};
+
+export const mcAssessmentServices = {
+    joinMCAssessment,
+    trackMCAssessment,
+    submitMCAssessment,
+};
+
+export const asyncAssessmentServices = {
+    joinAsyncAssessment,
+    submitAsyncAssessment,
 };
 
 export default applicantAssessmentDetailServices;

@@ -4,15 +4,36 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
+import moment from "moment";
 
 import { Button, CustomInput, DatePicker } from "@/components";
 import { IAssessmentFlTempDto } from "@/services/assessment-flow-templates/assessment-flow-templates.interface";
-import { IAssessmentFlow } from "@/services/assessment-flows/assessment-flows.interface";
+import {
+    IAssessmentFlow,
+    ICreateAssessmentFlowDto,
+} from "@/services/assessment-flows/assessment-flows.interface";
 import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setAssessmentFlow } from "@/redux/slices/assessment-flow.slice";
 import { isInvalidForm } from "@/helpers";
+
+const initialData: ICreateAssessmentFlowDto = {
+    name: "",
+    startTime: new Date(),
+    endTime: moment(new Date()).add(1, "month").toDate(),
+    jobPostId: "",
+    assessments: [
+        {
+            name: "Sourced",
+            assessmentType: "SOURCED_ASSESSMENT",
+        },
+        {
+            name: "Hired",
+            assessmentType: "HIRED_ASSESSMENT",
+        },
+    ],
+};
 
 interface IChangePipeline {
     datas: (Omit<IAssessmentFlTempDto, "content"> & {
@@ -25,10 +46,12 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
     const router = useRouter();
 
     const queryClient = useQueryClient();
-    const dispatch = useAppDispatch();
-    const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
 
     const [isLoading, setIsLoading] = useState(false);
+    const [formState, setFormState] = useState<ICreateAssessmentFlowDto>({
+        ...initialData,
+        jobPostId: jobId as string,
+    });
     const [formErr, setFormErr] = useState({
         nameErr: "",
         flowTimelineErr: "",
@@ -45,7 +68,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
 
     const inValidInput = (): boolean => {
         const errors = formErr;
-        const { name, startTime, endTime } = assessmentFlow;
+        const { name, startTime, endTime } = formState;
 
         if (name === "") errors.nameErr = "Flow name must not be blank!";
 
@@ -75,7 +98,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
         setIsLoading(true);
         try {
             const res = await assessmentFlowsServices.createAsync({
-                ...assessmentFlow,
+                ...formState,
                 assessments: selectedTemplate!!.slice(1, -1).map(item => ({
                     name: item.name,
                     assessmentType: item.assessmentTypeName,
@@ -119,14 +142,12 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
             <div className="mb-4 grid grid-cols-1 md:grid-cols-2">
                 <CustomInput
                     title="Name"
-                    value={assessmentFlow.name}
+                    value={formState.name}
                     onChange={e => {
-                        dispatch(
-                            setAssessmentFlow({
-                                ...assessmentFlow,
-                                name: e.target.value,
-                            })
-                        );
+                        setFormState({
+                            ...formState,
+                            name: e.target.value,
+                        });
                         setFormErr({
                             ...formErr,
                             nameErr: "",
@@ -143,14 +164,16 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                         Start time
                     </h3>
                     <DatePicker
-                        value={new Date(assessmentFlow.startTime)}
+                        value={formState.startTime}
+                        minDate={new Date()}
+                        maxDate={moment(formState.endTime)
+                            .subtract(7, "days")
+                            .toDate()}
                         onChange={date => {
-                            dispatch(
-                                setAssessmentFlow({
-                                    ...assessmentFlow,
-                                    startTime: date,
-                                })
-                            );
+                            setFormState({
+                                ...formState,
+                                startTime: date,
+                            });
                             setFormErr({
                                 ...formErr,
                                 flowTimelineErr: "",
@@ -163,14 +186,18 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                         End time
                     </h3>
                     <DatePicker
-                        value={new Date(assessmentFlow.endTime)}
+                        value={formState.endTime}
+                        minDate={moment(formState.startTime)
+                            .add(7, "days")
+                            .toDate()}
+                        maxDate={moment(formState.endTime)
+                            .add(1, "year")
+                            .toDate()}
                         onChange={date => {
-                            dispatch(
-                                setAssessmentFlow({
-                                    ...assessmentFlow,
-                                    endTime: date,
-                                })
-                            );
+                            setFormState({
+                                ...formState,
+                                endTime: date,
+                            });
                             setFormErr({
                                 ...formErr,
                                 flowTimelineErr: "",

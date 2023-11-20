@@ -23,9 +23,23 @@ const QuestionList = () => {
         assesmentData!!.questionAnswerSet
     ) as ICandidateMCDto[];
 
+    // console.log(
+    //     moment.utc(assesmentData!!.startTime).local().toDate(),
+    //     moment
+    //         .utc(assesmentData!!.startTime)
+    //         .add(assesmentData!!.assessment.duration!!, "seconds")
+    //         .local()
+    //         .toDate()
+    // );
     console.log(
-        assesmentData!!.startTime,
-        assesmentData!!.assessment.duration!!
+        moment()
+            .subtract(7, "hours")
+            .diff(moment(assesmentData!!.startTime), "seconds"),
+        moment(
+            moment()
+                .subtract(7, "hours")
+                .diff(moment(assesmentData!!.startTime), "seconds")
+        ).format("HH:mm:ss")
     );
 
     return (
@@ -41,15 +55,16 @@ const QuestionList = () => {
                 <div className="text-center text-xl font-semibold p-6">
                     <h3>
                         {hhmmss(
-                            moment(assesmentData!!.startTime)
-                                .add(assesmentData!!.assessment.duration!!)
-                                .diff(new Date(), "seconds") < 0
-                                ? 0
-                                : moment(assesmentData!!.startTime)
-                                      .add(
-                                          assesmentData!!.assessment.duration!!
-                                      )
-                                      .diff(new Date(), "seconds")
+                            assesmentData?.assessment.duration!! -
+                                moment().diff(
+                                    moment(
+                                        moment
+                                            .utc(assesmentData!!.startTime)
+                                            .local()
+                                            .toDate()
+                                    ),
+                                    "seconds"
+                                )
                         )}
                     </h3>
                 </div>

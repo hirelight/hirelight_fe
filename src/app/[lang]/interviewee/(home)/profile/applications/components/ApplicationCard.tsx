@@ -27,7 +27,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ data }) => {
 
             <div className="flex-1">
                 <h4 className="text-neutral-700 font-medium text-sm sm:text-base">
-                    Company name
+                    {data.jobPost.organization.name}
                 </h4>
                 <h3 className="text-neutral-700 text-lg sm:text-2xl font-semibold mt-1 mb-2">
                     {data.jobPost.title}

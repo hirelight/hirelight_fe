@@ -15,9 +15,9 @@ import {
 import {
     ICandidateAssessmentDetailDto,
     IMCAppliAssessmentDto,
+    mcAssessmentServices,
 } from "@/services";
 import { ButtonOutline } from "@/components";
-import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
 import { SpinLoading } from "@/icons";
 import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
 
@@ -73,10 +73,7 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
     const handleJoinTest = async () => {
         setIsLoading(true);
         try {
-            const res =
-                await applicantAssessmentDetailServices.joinMCAssessment(
-                    data.id
-                );
+            const res = await mcAssessmentServices.joinMCAssessment(data.id);
             console.log(res);
             toast.success(res.message);
             setAssessmentData(res.data);
@@ -97,11 +94,10 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
     const handleSubmitTest = async () => {
         setIsLoading(true);
         try {
-            const res =
-                await applicantAssessmentDetailServices.submitMCAssessment({
-                    applicantAssessmentDetailId: data.id,
-                    answers: answers,
-                });
+            const res = await mcAssessmentServices.submitMCAssessment({
+                applicantAssessmentDetailId: data.id,
+                answers: answers,
+            });
             console.log(res);
             if (timerId) clearInterval(timerId);
             toast.success(res.message);
@@ -123,24 +119,21 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                     if (answers.length === 0) return;
 
                     console.log("Send track", answers);
-                    const res =
-                        await applicantAssessmentDetailServices.trackMCAssessment(
-                            {
-                                applicantAssessmentDetailId: data.id,
-                                answers: answers,
-                            }
-                        );
+                    const res = await mcAssessmentServices.trackMCAssessment({
+                        applicantAssessmentDetailId: data.id,
+                        answers: answers,
+                    });
 
                     toast.success(res.message);
                 }, 5000);
 
-                if (
-                    moment(assesmentData!!.startTime).add(duetime).toDate() >
-                        new Date() &&
-                    timerId
-                ) {
-                    clearInterval(timerId);
-                }
+                // if (
+                //     moment(assesmentData!!.startTime).add(duetime).toDate() >
+                //         new Date() &&
+                //     timerId
+                // ) {
+                //     clearInterval(timerId);
+                // }
 
                 // if (duetime)
                 //     setTimeout(() => {
@@ -211,25 +204,31 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                         <div className="flex justify-center items-center mt-4">
                             {data.status ===
                             ApplicantAssessmentDetailStatus.IN_PROGRESS ? (
-                                <ButtonOutline onClick={handleJoinTest}>
-                                    {isLoading && (
-                                        <SpinLoading className="mr-2" />
-                                    )}
-                                    Join test
+                                <ButtonOutline
+                                    disabled={isLoading}
+                                    isLoading={isLoading}
+                                    onClick={handleJoinTest}
+                                >
+                                    Re-join assessment
                                 </ButtonOutline>
                             ) : (
-                                <ButtonOutline onClick={handleJoinTest}>
-                                    {isLoading && (
-                                        <SpinLoading className="mr-2" />
-                                    )}
-                                    Take test
+                                <ButtonOutline
+                                    disabled={isLoading}
+                                    isLoading={isLoading}
+                                    onClick={handleJoinTest}
+                                >
+                                    Take assessment
                                 </ButtonOutline>
                             )}
                         </div>
                     )}
 
                     {assesmentData && (
-                        <div>
+                        <div
+                            className={`${
+                                submitted ? "pointer-events-none" : ""
+                            }`}
+                        >
                             <QuestionList />
                         </div>
                     )}

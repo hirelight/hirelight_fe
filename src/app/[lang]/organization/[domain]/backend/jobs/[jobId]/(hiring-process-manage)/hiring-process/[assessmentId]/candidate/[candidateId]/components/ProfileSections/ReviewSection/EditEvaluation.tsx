@@ -19,24 +19,17 @@ import { useAppSelector } from "@/redux/reduxHooks";
 
 import styles from "./AddEvaluation.module.scss";
 
-type AddEvaluationSectionProps = {
-    applicantAssessmentDetailId: string;
+type EditEvaluationProps = {
+    data: IEvaluationDto;
     close: () => void;
 };
 
-const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
-    applicantAssessmentDetailId,
-    close,
-}) => {
+const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
     const { candidateId } = useParams();
 
     const queryClient = useQueryClient();
 
-    const [addState, setAddState] = useState<ICreateEvaluationDto>({
-        applicantAssessmentDetailId: applicantAssessmentDetailId,
-        evaluation: "",
-        rating: -1,
-    });
+    const [addState, setAddState] = useState<IEvaluationDto>(data);
     const [addErr, setAddErr] = useState({
         evaluationErr: "",
         ratingErr: 0,
@@ -70,6 +63,10 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
         if (value === addState.rating) setAddState({ ...addState, rating: -1 });
         else setAddState({ ...addState, rating: value });
     };
+
+    useEffect(() => {
+        if (data) setAddState(data);
+    }, [data]);
 
     return (
         <m.div
@@ -152,4 +149,4 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
     );
 };
 
-export default AddEvaluationSection;
+export default EditEvaluation;

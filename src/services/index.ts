@@ -42,3 +42,9 @@ export * from "./applicant-profile/applicant-profile.service";
 
 export * from "./applicant-assessment-detail/applicant-assessment-detail.service";
 export * from "./applicant-assessment-detail/applicant-assessment-detail.interface";
+
+export * from "./evaluation/evaluation.interface";
+export * from "./evaluation/evaluation.service";
+
+export * from "./integration/integration.interface";
+export * from "./integration/integration.service";

@@ -9,7 +9,7 @@ import { fetchAccessToken, loginEmailPwd } from "../thunks/auth.thunk";
 
 type AuthSliceState = {
     token: string;
-    authUser?: IUserInfo;
+    authUser: IUserInfo | null;
     loading: boolean;
     authError: any | null;
 };
@@ -17,8 +17,10 @@ type AuthSliceState = {
 const token = Cookies.get("hirelight_access_token");
 
 const initialState: AuthSliceState = {
-    token: token ?? "",
-    authUser: token ? jwtDecode(token) : undefined,
+    token: Cookies.get("hirelight_access_token") ?? "",
+    authUser: Cookies.get("hirelight_access_token")
+        ? jwtDecode(Cookies.get("hirelight_access_token")!!)
+        : null,
     authError: null,
     loading: false,
 };
@@ -31,7 +33,7 @@ const authSlice = createSlice({
         },
         logout: state => {
             state.token = "";
-            state.authUser = undefined;
+            state.authUser = null;
             Cookies.remove("hirelight_access_token");
         },
     },
@@ -42,6 +44,7 @@ const authSlice = createSlice({
             })
             .addCase(fetchAccessToken.fulfilled, (state, action) => {
                 state.token = action.payload;
+                state.authUser = jwtDecode(action.payload);
                 Cookies.set("hirelight_access_token", action.payload, {
                     domain: ".localhost",
                     sameSite: "None",
@@ -60,6 +63,7 @@ const authSlice = createSlice({
             .addCase(loginEmailPwd.fulfilled, (state, action) => {
                 const { data, message } = action.payload;
                 state.token = data.accessToken;
+                state.authUser = jwtDecode(data.accessToken);
                 Cookies.set("hirelight_access_token", data.accessToken, {
                     domain: ".localhost",
                     sameSite: "None",

@@ -30,6 +30,8 @@ const APPLICANT_ASSESSMENT_DETAILS = "/applicant-assessment-details";
 
 const ASSESSMENT_EVALUATION = "/assessment-evaluations";
 
+const THIRDPARTY_TOKENS = "/thirdparty-tokens";
+
 const endpoints = {
     TAGS,
     ORGANIZATIONS,
@@ -50,6 +52,7 @@ const endpoints = {
     APPLICANT_PROFILES,
     APPLICANT_ASSESSMENT_DETAILS,
     ASSESSMENT_EVALUATION,
+    THIRDPARTY_TOKENS,
 };
 
 export default endpoints;

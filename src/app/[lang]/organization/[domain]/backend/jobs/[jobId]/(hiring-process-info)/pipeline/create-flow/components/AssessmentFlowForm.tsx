@@ -41,11 +41,10 @@ type AssessmentFlowFormProps = {
 const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
     data = initialData,
 }) => {
-    const { jobId, lang } = useParams();
+    const { jobId } = useParams();
     const router = useRouter();
 
     const queryClient = useQueryClient();
-    const dispatch = useAppDispatch();
     const [showAddStage, setShowAddStage] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [formState, setFormState] = useState<ICreateAssessmentFlowDto>({

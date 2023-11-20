@@ -84,13 +84,13 @@ const AssessmentFlowCard: React.FC<AssessmentFlowCardProps> = ({
                             >
                                 Edit
                             </button>
-                            <button
+                            {/* <button
                                 type="button"
                                 className="text-red-600 hover:underline hover:text-red-700"
                                 onClick={deleteStage}
                             >
                                 Delete
-                            </button>
+                            </button> */}
                         </div>
                     )}
                 </div>

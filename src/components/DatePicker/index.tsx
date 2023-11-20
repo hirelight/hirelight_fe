@@ -237,7 +237,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
     };
 
     useEffect(() => {
-        setSelectedDate(value);
+        if (value) setSelectedDate(new Date(value));
     }, [value]);
 
     return (

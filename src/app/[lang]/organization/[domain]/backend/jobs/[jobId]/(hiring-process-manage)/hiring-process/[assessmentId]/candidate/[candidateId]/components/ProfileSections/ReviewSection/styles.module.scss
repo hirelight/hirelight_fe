@@ -1,0 +1,16 @@
+.move__candidate__dialog {
+    max-height: 14rem;
+    min-width: 220px;
+    position: absolute;
+    left: 50%;
+    margin-bottom: 0.25rem;
+    background-color: white;
+    opacity: 0;
+    visibility: hidden;
+    overflow-y: auto;
+    @apply top-3 -translate-y-full -translate-x-1/2 transition-all ease-in duration-75 drop-shadow-xl border border-gray-300 rounded-md transform scale-95;
+
+    &.entering {
+        @apply ease-out duration-100  opacity-100 scale-100 visible;
+    }
+}

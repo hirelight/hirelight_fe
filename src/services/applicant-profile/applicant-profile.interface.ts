@@ -1,4 +1,4 @@
-import { IJobDto } from "..";
+import { IJobDto, IOrganizationDto } from "..";
 
 export interface IApplyJobDto {
     jobPostId: string;
@@ -23,7 +23,9 @@ export interface IApplicantProfileDto {
     id: string;
     candidateId: string;
     jobPostId: string;
-    jobPost: IJobDto;
+    jobPost: IJobDto & {
+        organization: IOrganizationDto;
+    };
     referrerId: string;
     content: string;
     firstName: string;

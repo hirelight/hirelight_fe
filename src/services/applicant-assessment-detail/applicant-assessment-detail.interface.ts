@@ -57,7 +57,9 @@ export interface ICandidateAssessmentDetailDto {
     };
     applicantProfileId: string;
     applicantProfile: IJobPostProfileDto & {
-        jobPost: IJobDto;
+        jobPost: IJobDto & {
+            organization: IOrganizationDto;
+        };
     };
     startTime: Date;
     endTime: Date;

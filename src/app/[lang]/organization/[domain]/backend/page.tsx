@@ -65,7 +65,7 @@ const Backend = async () => {
                     priority
                 />
             </div>
-            <div className="max-w-screen-xl mx-auto px-4">
+            <div className="max-w-screen-xl mx-auto px-4 pb-10">
                 <HydrationBoundary state={dehydrate(queryClient)}>
                     <JobList />
                 </HydrationBoundary>
