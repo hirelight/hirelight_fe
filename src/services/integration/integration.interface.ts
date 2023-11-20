@@ -3,8 +3,8 @@ export interface IIntegrationDto {
     organizationId: string;
     service: string;
     payload: string;
-    createdTime: Date;
-    updatedTime: Date;
+    createdTime: string;
+    updatedTime: string;
 }
 
 export interface ICreateIntegrationDto {

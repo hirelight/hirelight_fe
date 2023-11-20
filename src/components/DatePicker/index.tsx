@@ -37,7 +37,7 @@ const isSameDate = (date1: Date, date2: Date) => {
 interface DatePickerProps {
     id?: string;
     name?: string;
-    value?: Date;
+    value?: string | Date;
     onChange: (date: Date) => void;
     minDate?: Date;
     maxDate?: Date;

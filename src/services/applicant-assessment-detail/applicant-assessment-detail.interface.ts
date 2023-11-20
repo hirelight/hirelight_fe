@@ -21,12 +21,12 @@ export interface IJobPostAppAssDetailDto {
     applicantProfile: IApplicantProfileDto & {
         jobPost: IJobDto;
     };
-    startTime: Date;
-    endTime: Date;
+    startTime: string;
+    endTime: string;
     result: number;
     questionAnswerSet: string;
-    createdTime: Date;
-    updatedTime: Date;
+    createdTime: string;
+    updatedTime: string;
     status: ApplicantAssessmentDetailStatus;
 }
 
@@ -40,8 +40,8 @@ export interface IApplicantAssessmentDetailDto {
     endTime: null;
     result: null;
     questionAnswerSet: null;
-    createdTime: Date;
-    updatedTime: Date;
+    createdTime: string;
+    updatedTime: string;
     status: ApplicantAssessmentDetailStatus;
 }
 
@@ -61,12 +61,12 @@ export interface ICandidateAssessmentDetailDto {
             organization: IOrganizationDto;
         };
     };
-    startTime: Date;
-    endTime: Date;
+    startTime: string;
+    endTime: string;
     result: number;
     questionAnswerSet: string | null;
-    createdTime: Date;
-    updatedTime: Date;
+    createdTime: string;
+    updatedTime: string;
     status: ApplicantAssessmentDetailStatus;
 }
 
@@ -76,12 +76,12 @@ export interface IMCAppliAssessmentDto {
     assessment: IAssessmentDto;
     applicantProfileId: string;
     applicantProfile: IApplicantAssessmentDetailDto;
-    startTime: Date;
-    endTime: Date;
+    startTime: string;
+    endTime: string;
     result: number;
     questionAnswerSet: string;
-    createdTime: Date;
-    updatedTime: Date;
+    createdTime: string;
+    updatedTime: string;
     status: ApplicantAssessmentDetailStatus;
 }
 

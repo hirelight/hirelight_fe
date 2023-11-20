@@ -48,8 +48,8 @@ export interface ICandidateMCDto {
     content: string;
     difficulty: number;
     tagList: IQuestionTagDto[];
-    createdTime: Date;
-    updatedTime: Date;
+    createdTime: string;
+    updatedTime: string;
     status: string;
 }
 

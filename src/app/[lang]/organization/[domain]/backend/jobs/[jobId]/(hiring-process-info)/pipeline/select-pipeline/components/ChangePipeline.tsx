@@ -20,8 +20,8 @@ import { isInvalidForm } from "@/helpers";
 
 const initialData: ICreateAssessmentFlowDto = {
     name: "",
-    startTime: new Date(),
-    endTime: moment(new Date()).add(1, "month").toDate(),
+    startTime: "",
+    endTime: "",
     jobPostId: "",
     assessments: [
         {
@@ -72,11 +72,11 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
 
         if (name === "") errors.nameErr = "Flow name must not be blank!";
 
-        if (startTime.getTime() >= endTime.getTime())
+        if (moment(startTime).isAfter(endTime))
             errors.flowTimelineErr =
                 "Start time must be earlier than end time!";
 
-        if (endTime.getTime() <= new Date().getTime())
+        if (moment().isAfter(endTime))
             errors.flowTimelineErr = "End time must be in the future!";
 
         if (!selectedTemplate) errors.flowErr = "Select at least one template!";
@@ -172,7 +172,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                         onChange={date => {
                             setFormState({
                                 ...formState,
-                                startTime: date,
+                                startTime: date.toString(),
                             });
                             setFormErr({
                                 ...formErr,
@@ -196,7 +196,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                         onChange={date => {
                             setFormState({
                                 ...formState,
-                                endTime: date,
+                                endTime: date.toString(),
                             });
                             setFormErr({
                                 ...formErr,

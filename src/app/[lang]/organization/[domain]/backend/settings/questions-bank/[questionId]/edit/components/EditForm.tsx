@@ -79,8 +79,8 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
         },
         difficulty: 0,
         tagList: [],
-        createdTime: new Date(),
-        updatedTime: new Date(),
+        createdTime: "",
+        updatedTime: "",
         status: "",
     });
 

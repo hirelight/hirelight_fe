@@ -12,8 +12,8 @@ export interface IEvaluationDto {
     applicantAssessmentDetailId: string;
     evaluation: string;
     rating: number;
-    createdTime: Date;
-    updatedTime: Date;
+    createdTime: string;
+    updatedTime: string;
 }
 
 export interface IProfileEvaluationDto {
@@ -25,12 +25,12 @@ export interface IProfileEvaluationDto {
     })[];
     applicantProfileId: string;
     applicantProfile: IApplicantProfileDto;
-    startTime: Date;
-    endTime: Date;
+    startTime: string;
+    endTime: string;
     result: 0;
     questionAnswerSet: string | null;
-    createdTime: Date;
-    updatedTime: Date;
+    createdTime: string;
+    updatedTime: string;
     status: ApplicantAssessmentDetailStatus;
 }
 

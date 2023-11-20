@@ -12,8 +12,8 @@ export interface IAssessmentFlow {
 
 export interface ICreateAssessmentFlowDto {
     name: string;
-    startTime: Date;
-    endTime: Date;
+    startTime: string;
+    endTime: string;
     jobPostId: string;
     assessments: IAssessmentFlow[];
 }
@@ -21,8 +21,8 @@ export interface ICreateAssessmentFlowDto {
 export interface IEditAssessmentFlowDto {
     id: string;
     name: string;
-    startTime: Date;
-    endTime: Date;
+    startTime: string;
+    endTime: string;
     assessments: {
         name: string;
         id: string;
@@ -34,9 +34,9 @@ export interface IAssessmentFlowDto {
     id: string;
     creatorId: string;
     name: string;
-    startTime: Date;
-    endTime: Date;
-    createdTime: Date;
-    updatedTime: Date;
+    startTime: string;
+    endTime: string;
+    createdTime: string;
+    updatedTime: string;
     assessments: IAssessmentDto[];
 }

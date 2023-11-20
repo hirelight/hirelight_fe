@@ -14,11 +14,11 @@ const initialState: IAssessmentFlowState = {
     data: {
         name: "",
         assessments: [],
-        startTime: new Date(),
-        endTime: new Date(),
+        startTime: "",
+        endTime: "",
         creatorId: "",
-        createdTime: new Date(),
-        updatedTime: new Date(),
+        createdTime: "",
+        updatedTime: "",
     },
     loading: false,
 };
@@ -41,8 +41,8 @@ const assessmentFlowSlice = createSlice({
                 const { data, message } = action.payload;
                 state.data = {
                     ...data,
-                    startTime: new Date(data.startTime),
-                    endTime: new Date(data.endTime),
+                    startTime: data.startTime,
+                    endTime: data.endTime,
                 };
                 state.loading = false;
             })

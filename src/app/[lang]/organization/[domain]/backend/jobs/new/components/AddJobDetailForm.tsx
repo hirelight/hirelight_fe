@@ -97,8 +97,8 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
         minSalary: 0,
         maxSalary: 0,
         currency: "",
-        startTime: new Date(),
-        endTime: new Date(),
+        startTime: "",
+        endTime: "",
         area: "",
         experience: "",
         workModality: "",
@@ -151,12 +151,12 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
             errors.salaryErr = "Min salary must be lower than max salary";
         }
 
-        if (startTime.getTime() >= endTime.getTime()) {
+        if (moment(startTime).isAfter(endTime)) {
             errors.jobPublishTimeErr =
                 "Start time must be earlier than end time";
         }
 
-        if (endTime.getTime() <= new Date().getTime()) {
+        if (moment().isAfter(endTime)) {
             errors.jobPublishTimeErr = "End time must be in the future";
         }
 
@@ -356,7 +356,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                             onChange={date => {
                                                 setFormState({
                                                     ...formState,
-                                                    startTime: date,
+                                                    startTime: date.toString(),
                                                 });
                                                 setFormErr({
                                                     ...formErr,
@@ -382,7 +382,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                             onChange={date => {
                                                 setFormState({
                                                     ...formState,
-                                                    endTime: date,
+                                                    endTime: date.toString(),
                                                 });
                                                 setFormErr({
                                                     ...formErr,

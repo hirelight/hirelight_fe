@@ -5,12 +5,11 @@ import { Reorder } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
+import moment from "moment";
 
 import { Button, CustomInput, DatePicker } from "@/components";
 import { IEditAssessmentFlowDto } from "@/services/assessment-flows/assessment-flows.interface";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
-import { useAppDispatch } from "@/redux/reduxHooks";
-import { fetchAssessmentFlowById } from "@/redux/thunks/assessment-flow.thunk";
 import { isInvalidForm } from "@/helpers";
 
 import AssessmentFlowCard from "./AssessmentFlowCard";
@@ -28,8 +27,8 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [formState, setFormState] = useState<IEditAssessmentFlowDto>({
         ...data,
-        startTime: new Date(data.startTime),
-        endTime: new Date(data.endTime),
+        startTime: data.startTime,
+        endTime: data.endTime,
     });
     const [formErr, setFormErr] = useState({
         nameErr: "",
@@ -43,11 +42,11 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
 
         if (name === "") errors.nameErr = "Flow name must not be blank!";
 
-        if (startTime.getTime() >= endTime.getTime())
+        if (moment(startTime).isAfter(endTime))
             errors.flowTimelineErr =
                 "Start time must be earlier than end time!";
 
-        if (endTime.getTime() <= new Date().getTime())
+        if (moment().isAfter(endTime))
             errors.flowTimelineErr = "End time must be in the future!";
 
         if (formState.assessments.length < 3)
@@ -129,11 +128,11 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                             Start time
                         </h3>
                         <DatePicker
-                            value={formState.startTime}
+                            value={new Date(formState.startTime)}
                             onChange={date =>
                                 setFormState(prev => ({
                                     ...prev,
-                                    startTime: date,
+                                    startTime: date.toString(),
                                 }))
                             }
                         />
@@ -143,11 +142,11 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                             End time
                         </h3>
                         <DatePicker
-                            value={formState.endTime}
+                            value={new Date(formState.endTime)}
                             onChange={date =>
                                 setFormState(prev => ({
                                     ...prev,
-                                    endTime: date,
+                                    endTime: date.toString(),
                                 }))
                             }
                         />
