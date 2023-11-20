@@ -26,13 +26,6 @@ const MONTHS = [
     "November",
     "December",
 ];
-const isSameDate = (date1: Date, date2: Date) => {
-    return (
-        date1.getDate() === date2.getDate() &&
-        date1.getMonth() === date2.getMonth() &&
-        date1.getFullYear() === date2.getFullYear()
-    );
-};
 
 interface DatePickerProps {
     id?: string;
@@ -55,6 +48,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
     pos = "bottom",
     required,
 }) => {
+    console.log(minDate, maxDate);
     const wrapperRef = useOutsideClick<HTMLDivElement>(() =>
         setShowDatepicker(false)
     );
@@ -62,7 +56,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     const [showDatepicker, setShowDatepicker] = useState(false);
-    const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
     const [currentDate, setCurrentDate] = useState(
         selectedDate ? selectedDate : new Date()
     );
@@ -131,8 +125,9 @@ const DatePicker: React.FC<DatePickerProps> = ({
         setCurrentDate(date);
     };
 
-    const drawDaysInMonth = () => {
+    const drawDaysInMonth = (selectedDate: Date) => {
         const dayList: React.JSX.Element[] = [];
+
         const numOfDaysPrevMonth = new Date(
             currentDate.getFullYear(),
             currentDate.getMonth(),
@@ -189,7 +184,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
                 <span
                     key={"currentMonth" + i.toString()}
                     className={`${styles.datepicker__cell} ${
-                        selectedDate && isSameDate(selectedDate, curDate)
+                        selectedDate &&
+                        moment(selectedDate).isSame(curDate, "date")
                             ? styles.selected
                             : ""
                     } ${isDisabled ? styles.disabled : ""}`}
@@ -237,7 +233,10 @@ const DatePicker: React.FC<DatePickerProps> = ({
     };
 
     useEffect(() => {
-        if (value) setSelectedDate(new Date(value));
+        if (value) {
+            setSelectedDate(new Date(value));
+            setCurrentDate(new Date(value));
+        }
     }, [value]);
 
     return (
@@ -368,7 +367,11 @@ const DatePicker: React.FC<DatePickerProps> = ({
                                                     ))}
                                                 </div>
                                                 <div className="w-64 grid grid-cols-7">
-                                                    {drawDaysInMonth()}
+                                                    {drawDaysInMonth(
+                                                        value
+                                                            ? new Date(value)
+                                                            : new Date()
+                                                    )}
                                                 </div>
                                             </motion.div>
                                         )}
