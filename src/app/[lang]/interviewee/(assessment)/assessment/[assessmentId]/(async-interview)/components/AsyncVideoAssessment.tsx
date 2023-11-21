@@ -43,7 +43,7 @@ type AsyncVideoAssessmentState = {
     setCurPos: React.Dispatch<React.SetStateAction<number>>;
 
     handleJoinTest: () => void;
-    handleTrackTest: (pos: number) => void;
+    handleTrackTest: () => void;
 };
 
 const AsyncVideoAssessmentContext =
@@ -108,40 +108,33 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
         }
     };
 
-    const handleTrackTest = useCallback(
-        async (pos: number) => {
-            if (!assessmentData) return;
+    const handleTrackTest = useCallback(async () => {
+        if (!assessmentData) return;
 
-            try {
-                const res = await asyncAssessmentServices.trackAsyncAssessment({
-                    applicantAssessmentDetailId: assessmentData.id,
-                    assessmentSubmissions: assessmentData.questionAnswerSet.map(
-                        (item, index) => {
-                            if (index === pos)
-                                return {
-                                    ...answers[pos],
-                                    content: JSON.stringify(
-                                        answers[pos].content
-                                    ),
-                                };
+        try {
+            const res = await asyncAssessmentServices.trackAsyncAssessment({
+                applicantAssessmentDetailId: assessmentData.id,
+                assessmentSubmissions: answers.map((item, index) => {
+                    if (index === curPos)
+                        return {
+                            ...answers[curPos],
+                            content: JSON.stringify(answers[curPos].content),
+                        };
 
-                            return {
-                                ...item,
-                                content: JSON.stringify(item.content),
-                            };
-                        }
-                    ),
-                });
+                    return {
+                        ...item,
+                        content: JSON.stringify(item.content),
+                    };
+                }),
+            });
 
-                toast.success(res.message);
-            } catch (error: any) {
-                toast.error(
-                    error.message ? error.message : "Some thing went wrong"
-                );
-            }
-        },
-        [assessmentData]
-    );
+            toast.success(res.message);
+        } catch (error: any) {
+            toast.error(
+                error.message ? error.message : "Some thing went wrong"
+            );
+        }
+    }, [answers, assessmentData, curPos]);
 
     const handleSubmitTest = async () => {
         if (!assessmentData) return;
@@ -211,10 +204,8 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
     };
 
     useEffect(() => {
-        if (curPos) {
-            handleTrackTest(curPos);
-        }
-    }, [handleTrackTest, curPos]);
+        handleTrackTest();
+    }, [handleTrackTest, answers]);
 
     useEffect(() => {
         const getPermission = async () => {

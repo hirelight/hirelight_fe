@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import videojs, { ReadyCallback } from "video.js";
 import Player from "video.js/dist/types/player";

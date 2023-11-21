@@ -103,33 +103,27 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
                 const url = await uploadFile(myFile);
                 console.log(url);
                 setAnswers(
-                    answers.map((ans, index) => {
-                        if (index === curPos) {
-                            return produce(ans, draft => {
-                                if (!draft.content.files)
-                                    draft.content.files = [
-                                        {
-                                            name: myFile.name,
-                                            src: url,
-                                            type: "video/mp4",
-                                            isChosen: true,
-                                        },
-                                    ];
-                                else {
-                                    draft.content.files[
-                                        draft.content.files.length - 1
-                                    ].isChosen = false;
-                                    draft.content.files.push({
-                                        name: myFile.name,
-                                        src: url,
-                                        type: "video/mp4",
-                                        isChosen: true,
-                                    });
-                                }
+                    produce(answers, draft => {
+                        if (!draft[curPos].content.files)
+                            draft[curPos].content.files = [
+                                {
+                                    name: myFile.name,
+                                    src: url,
+                                    type: "video/mp4",
+                                    isChosen: true,
+                                },
+                            ];
+                        else {
+                            draft[curPos].content.files!![
+                                draft[curPos].content.files!!.length - 1
+                            ].isChosen = false;
+                            draft[curPos].content.files!!.push({
+                                name: myFile.name,
+                                src: url,
+                                type: "video/mp4",
+                                isChosen: true,
                             });
                         }
-
-                        return ans;
                     })
                 );
 
