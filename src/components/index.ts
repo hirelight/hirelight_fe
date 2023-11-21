@@ -19,6 +19,8 @@ import QuestionPicker from "./QuestionPicker";
 import AppFormView from "./ApplicationFormView";
 import QuillEditorProvider from "./QuillEditor/QuillEditorProvider";
 import Timer from "./Timer";
+import CountdownTimer from "./CountdownTimer";
+import VideoWrapper from "./VideoWrapper";
 
 export {
     Modal,
@@ -42,4 +44,6 @@ export {
     AppFormView,
     QuillEditorProvider,
     Timer,
+    CountdownTimer,
+    VideoWrapper,
 };

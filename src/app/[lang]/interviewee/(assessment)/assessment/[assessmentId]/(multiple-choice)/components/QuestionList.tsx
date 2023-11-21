@@ -1,46 +1,41 @@
 "use client";
 
-import React from "react";
-import { useQuery } from "@tanstack/react-query";
-import { toast } from "react-toastify";
+import React, { useCallback, useRef } from "react";
 import Link from "next/link";
-import moment, { duration } from "moment";
+import moment from "moment";
 
-import questionAnswerServices from "@/services/questions/questions.service";
-import { Pagination } from "@/components";
+import { CountdownTimer } from "@/components";
 import {
-    ICandidateMCContentJson,
     ICandidateMCDto,
+    QuestionAnswerContentJson,
 } from "@/interfaces/questions.interface";
-import { getRemainingTimeInSeconds, hhmmss } from "@/helpers";
+import { getReturnValues } from "@/components/CountdownTimer/useCountDown";
+import { hhmmss } from "@/helpers";
+import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
 
 import QuestionCard from "./QuestionCard";
 import { useMultipleChoiceAssessment } from "./MultipleChoiceAssessment";
 
 const QuestionList = () => {
-    const { assesmentData, answers } = useMultipleChoiceAssessment();
-    const questions = JSON.parse(
-        assesmentData!!.questionAnswerSet
-    ) as ICandidateMCDto[];
+    const {
+        assesmentData,
+        answers,
+        handleSubmitTest,
+        submitted,
+        stopAutoTask,
+    } = useMultipleChoiceAssessment();
 
-    // console.log(
-    //     moment.utc(assesmentData!!.startTime).local().toDate(),
-    //     moment
-    //         .utc(assesmentData!!.startTime)
-    //         .add(assesmentData!!.assessment.duration!!, "seconds")
-    //         .local()
-    //         .toDate()
-    // );
-    console.log(
-        moment()
-            .subtract(7, "hours")
-            .diff(moment(assesmentData!!.startTime), "seconds"),
-        moment(
-            moment()
-                .subtract(7, "hours")
-                .diff(moment(assesmentData!!.startTime), "seconds")
-        ).format("HH:mm:ss")
+    const targetDate = useRef<Date>(
+        moment
+            .utc(assesmentData!!.startTime)
+            .add(assesmentData!!.assessment.duration, "s")
+            .toDate()
     );
+
+    const onEnd = useCallback(() => {
+        stopAutoTask();
+        handleSubmitTest();
+    }, [handleSubmitTest, stopAutoTask]);
 
     return (
         <div className="flex gap-6 relative">
@@ -52,37 +47,62 @@ const QuestionList = () => {
                 ))}
             </ul>
             <div className="w-80 h-fit sticky top-4 bg-white border border-gray-200 rounded-md drop-shadow-lg">
-                <div className="text-center text-xl font-semibold p-6">
-                    <h3>
-                        {hhmmss(
-                            assesmentData?.assessment.duration!! -
-                                moment().diff(
-                                    moment(
+                <div className="text-center text-xl font-semibold">
+                    {!submitted ? (
+                        <CountdownTimer
+                            targetDate={targetDate.current ?? new Date()}
+                            onEnd={onEnd}
+                        />
+                    ) : (
+                        <div>
+                            {/* {moment(
+                                new Date(
+                                    targetDate.current.getTime() -
                                         moment
-                                            .utc(assesmentData!!.startTime)
-                                            .local()
+                                            .utc(assesmentData!!.updatedTime)
                                             .toDate()
-                                    ),
-                                    "seconds"
+                                            .getTime()
                                 )
-                        )}
-                    </h3>
+                            ).format("HH:mm:ss")} */}
+                            {hhmmss(
+                                moment
+                                    .utc(assesmentData?.startTime)
+                                    .add(1800, "s")
+                                    .diff(
+                                        moment.utc(assesmentData!!.updatedTime),
+                                        "seconds"
+                                    )
+                            )}
+                        </div>
+                    )}
                 </div>
                 <div className="bg-white p-4 rounded-md shadow-md grid grid-cols-5 gap-2">
-                    {answers.map((item, index) => (
-                        <Link
-                            key={item.id}
-                            href={`#${item.id}`}
-                            className="p-2 rounded-md text-sm bg-slate-100 flex justify-center items-center"
-                        >
-                            <span className="font-semibold text-sm">
-                                {index + 1}
-                            </span>
-                        </Link>
-                    ))}
+                    {answers.map((item, index) => {
+                        let haveAns = false;
+                        if (
+                            (
+                                JSON.parse(
+                                    item.content
+                                ) as QuestionAnswerContentJson
+                            ).answers.some(ans => ans.isChosen)
+                        )
+                            haveAns = true;
+                        return (
+                            <Link
+                                key={item.id}
+                                href={`#${item.id}`}
+                                className={`p-2 rounded-md text-sm  flex justify-center items-center ${
+                                    haveAns ? "bg-blue-200" : "bg-slate-100"
+                                }`}
+                            >
+                                <span className="font-semibold text-sm">
+                                    {index + 1}
+                                </span>
+                            </Link>
+                        );
+                    })}
                 </div>
             </div>
-            {/* {res?.data && res.data.length > 10 && <Pagination />} */}
         </div>
     );
 };

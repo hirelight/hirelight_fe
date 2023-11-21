@@ -22,8 +22,8 @@ const initialState: IAppFormTemplateState = {
             profile: [],
         },
         organizationId: "",
-        createdTime: "",
-        updatedTime: "",
+        createdTime: new Date(),
+        updatedTime: new Date(),
         updaterId: "",
     },
 };

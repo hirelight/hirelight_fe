@@ -1,4 +1,7 @@
-import { ICandidateMCDto } from "@/interfaces/questions.interface";
+import {
+    ICandidateMCDto,
+    QuestionAnswerContentJson,
+} from "@/interfaces/questions.interface";
 import {
     ApplicantAssessmentDetailStatus,
     AssessmentTypeKey,
@@ -21,12 +24,12 @@ export interface IJobPostAppAssDetailDto {
     applicantProfile: IApplicantProfileDto & {
         jobPost: IJobDto;
     };
-    startTime: string;
-    endTime: string;
+    startTime: Date | string;
+    endTime: Date | string;
     result: number;
     questionAnswerSet: string;
-    createdTime: string;
-    updatedTime: string;
+    createdTime: Date | string;
+    updatedTime: Date | string;
     status: ApplicantAssessmentDetailStatus;
 }
 
@@ -40,8 +43,8 @@ export interface IApplicantAssessmentDetailDto {
     endTime: null;
     result: null;
     questionAnswerSet: null;
-    createdTime: string;
-    updatedTime: string;
+    createdTime: Date | string;
+    updatedTime: Date | string;
     status: ApplicantAssessmentDetailStatus;
 }
 
@@ -51,7 +54,7 @@ export interface ICandidateAssessmentDetailDto {
     assessment: {
         id: string;
         name: string;
-        description: string;
+        description: string | null;
         assessmentTypeId: string;
         assessmentTypeName: AssessmentTypeKey;
     };
@@ -61,27 +64,31 @@ export interface ICandidateAssessmentDetailDto {
             organization: IOrganizationDto;
         };
     };
-    startTime: string;
-    endTime: string;
+    startTime: Date | string;
+    endTime: Date | string;
     result: number;
     questionAnswerSet: string | null;
-    createdTime: string;
-    updatedTime: string;
+    createdTime: Date | string;
+    updatedTime: Date | string;
     status: ApplicantAssessmentDetailStatus;
 }
 
-export interface IMCAppliAssessmentDto {
+export interface IMCAppliAssessmentDto extends ICandidateAssessmentDetailDto {
     id: string;
     assessmentId: string;
     assessment: IAssessmentDto;
     applicantProfileId: string;
-    applicantProfile: IApplicantAssessmentDetailDto;
-    startTime: string;
-    endTime: string;
+    applicantProfile: IJobPostProfileDto & {
+        jobPost: IJobDto & {
+            organization: IOrganizationDto;
+        };
+    };
+    startTime: Date | string;
+    endTime: Date | string;
     result: number;
     questionAnswerSet: string;
-    createdTime: string;
-    updatedTime: string;
+    createdTime: Date | string;
+    updatedTime: Date | string;
     status: ApplicantAssessmentDetailStatus;
 }
 
@@ -92,10 +99,52 @@ export interface ISubmitMCAnswerDto {
 
 export interface ITrackAsyncAssessmentDto {
     applicantAssessmentDetailId: string;
-    assessmentSubmissions: IQuestionAnswerDto[];
+    assessmentSubmissions: (Omit<IAsyncAnswer, "content"> & {
+        content: string;
+    })[];
 }
 
 export interface ISubmitAsyncAssessmentDto {
     applicantAssessmentDetailId: string;
-    assessmentSubmissions: IQuestionAnswerDto[];
+    assessmentSubmissions: (Omit<IAsyncAnswer, "content"> & {
+        content: string;
+    })[];
 }
+
+export interface IAsyncAssessDto {
+    id: string;
+    assessmentId: string;
+    assessment: IAssessmentDto;
+    applicantProfileId: string;
+    applicantProfile: IJobPostProfileDto & {
+        jobPost: IJobDto & {
+            organization: IOrganizationDto;
+        };
+    };
+    startTime: Date;
+    endTime: Date | null;
+    result: number | null;
+    questionAnswerSet: string;
+    createdTime: Date;
+    updatedTime: Date;
+    status: ApplicantAssessmentDetailStatus;
+}
+
+export interface IParsedAsyncAssess extends IAssessmentDto {
+    questionAnswerSet: (IQuestionAnswerDto & {
+        content: QuestionAnswerContentJson;
+    })[];
+}
+
+export type IAsyncAnswer = Omit<IQuestionAnswerDto, "content"> & {
+    content: QuestionAnswerContentJson & {
+        files?: VideoFile[];
+    };
+};
+
+type VideoFile = {
+    src: string;
+    name: string;
+    type: string;
+    isChosen?: boolean;
+};

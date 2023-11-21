@@ -10,6 +10,7 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
+import { produce } from "immer";
 
 import { IQuestionAnswerDto } from "@/services/questions/questions.interface";
 import {
@@ -46,25 +47,10 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
         e: React.ChangeEvent<HTMLInputElement>,
         pos: number
     ) => {
+        console.log(data.id, id);
         setAnswers(
             answers.map(item => {
                 if (item.id === id) {
-                    console.log(
-                        item,
-                        parsedContent,
-                        parsedContent.current.answers.map(
-                            (choice, choiceIndex) => {
-                                if (choiceIndex === pos) {
-                                    return {
-                                        ...choice,
-                                        isChosen: e.currentTarget.checked,
-                                    };
-                                }
-
-                                return choice;
-                            }
-                        )
-                    );
                     return {
                         ...data,
                         content: JSON.stringify({
@@ -72,9 +58,10 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                             answers: parsedContent.current.answers.map(
                                 (choice, choiceIndex) => {
                                     if (choiceIndex === pos) {
+                                        console.log(choice, e.target.checked);
                                         return {
                                             ...choice,
-                                            isChosen: e.currentTarget.checked,
+                                            isChosen: e.target.checked,
                                         };
                                     }
 
@@ -126,7 +113,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                                                     : answer.name
                                             }
                                             value={answer.name}
-                                            checked={answer.isChosen}
+                                            defaultChecked={answer.isChosen}
                                             className={`${styles.answer__input}`}
                                             onChange={e =>
                                                 handleChooseAnswer(e, index)

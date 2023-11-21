@@ -1,22 +1,49 @@
 "use client";
 
-import React, { createContext, useEffect, useRef, useState } from "react";
+import React, {
+    createContext,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 import fileServices from "@/services/file-service/file.service";
+import {
+    IParsedAsyncAssess,
+    ICandidateAssessmentDetailDto,
+    asyncAssessmentServices,
+    IQuestionAnswerDto,
+    IAsyncAnswer,
+} from "@/services";
+import { QuestionAnswerContentJson } from "@/interfaces/questions.interface";
 
 import VideoRecorder from "./VideoRecorder";
 import SoundIndicator from "./SoundIndicator";
 import styles from "./AsyncVideoAssessment.module.scss";
+import ChatSection from "./ChatSection";
+import Sidebar from "./Sidebar";
 
 type AsyncVideoAssessmentState = {
     stream: MediaStream | null;
     setStream: React.Dispatch<React.SetStateAction<MediaStream | null>>;
     recordedVideo: string[];
     setRecordedVideo: React.Dispatch<React.SetStateAction<string[]>>;
-    assessmentData: any | null;
-    setAssessmentData: React.Dispatch<React.SetStateAction<any | null>>;
+    assessmentData: IParsedAsyncAssess | null;
+    setAssessmentData: React.Dispatch<
+        React.SetStateAction<IParsedAsyncAssess | null>
+    >;
+    answers: IAsyncAnswer[];
+    setAnswers: React.Dispatch<React.SetStateAction<IAsyncAnswer[]>>;
+
+    curPos: number;
+    setCurPos: React.Dispatch<React.SetStateAction<number>>;
+
+    handleJoinTest: () => void;
+    handleTrackTest: (pos: number) => void;
 };
 
 const AsyncVideoAssessmentContext =
@@ -31,8 +58,19 @@ export const useAsyncVideoAssessment = (): AsyncVideoAssessmentState => {
     return context;
 };
 
-const AsyncVideoAssessment = () => {
-    const [assessmentData, setAssessmentData] = useState(null);
+type AsyncVideoAssessmentProps = {
+    data: ICandidateAssessmentDetailDto;
+};
+
+const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
+    data,
+}) => {
+    const queryClient = useQueryClient();
+
+    const [assessmentData, setAssessmentData] =
+        useState<IParsedAsyncAssess | null>(null);
+    const [answers, setAnswers] = useState<IAsyncAnswer[]>([]);
+    const [curPos, setCurPos] = useState<number>(0);
 
     const [permission, setPermission] = useState(true);
     const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
@@ -40,40 +78,127 @@ const AsyncVideoAssessment = () => {
     const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
     const [recordedVideo, setRecordedVideo] = useState<string[]>([]);
 
-    const toggleCamera = async () => {
+    const handleJoinTest = async () => {
         try {
-            if (!stream) {
-                const videoStream = await navigator.mediaDevices.getUserMedia({
-                    video: true,
-                    audio: true,
-                });
-                // //combine both audio and video streams
-                const combinedStream = new MediaStream([
-                    ...videoStream.getVideoTracks(),
-                    ...videoStream.getAudioTracks(),
-                ]);
-                setStream(combinedStream);
+            const res = await asyncAssessmentServices.joinAsyncAssessment(
+                data.id
+            );
+            console.log(res);
+            toast.success(res.message);
+            setAssessmentData({
+                ...(res.data as any),
+                questionAnswerSet: JSON.parse(
+                    res.data.questionAnswerSet
+                ) as (IQuestionAnswerDto & {
+                    content: QuestionAnswerContentJson;
+                })[],
+            });
 
-                // **********Initial AudioContext to keep track audio loudness************
-                const context = new AudioContext();
-                if (!audioContext) setAudioContext(context);
-            } else {
-                console.log("Turn off camera");
-                const tracks = stream.getTracks();
-
-                // Stop each track
-                tracks.forEach(track => {
-                    track.stop();
-                });
-                setStream(null);
-                setAudioContext(null);
-            }
-        } catch (error) {
-            console.error(error);
+            setAnswers(
+                JSON.parse(
+                    res.data.questionAnswerSet
+                ) as (IQuestionAnswerDto & {
+                    content: QuestionAnswerContentJson;
+                })[]
+            );
+        } catch (error: any) {
+            toast.error(
+                error.message ? error.message : "Some thing went wrong"
+            );
         }
     };
 
-    const handleUploadVide = async (file: File) => {
+    const handleTrackTest = useCallback(
+        async (pos: number) => {
+            if (!assessmentData) return;
+
+            try {
+                const res = await asyncAssessmentServices.trackAsyncAssessment({
+                    applicantAssessmentDetailId: assessmentData.id,
+                    assessmentSubmissions: assessmentData.questionAnswerSet.map(
+                        (item, index) => {
+                            if (index === pos)
+                                return {
+                                    ...answers[pos],
+                                    content: JSON.stringify(
+                                        answers[pos].content
+                                    ),
+                                };
+
+                            return {
+                                ...item,
+                                content: JSON.stringify(item.content),
+                            };
+                        }
+                    ),
+                });
+
+                toast.success(res.message);
+            } catch (error: any) {
+                toast.error(
+                    error.message ? error.message : "Some thing went wrong"
+                );
+            }
+        },
+        [assessmentData]
+    );
+
+    const handleSubmitTest = async () => {
+        if (!assessmentData) return;
+
+        try {
+            const res = await asyncAssessmentServices.submitAsyncAssessment({
+                applicantAssessmentDetailId: data.id,
+                assessmentSubmissions: assessmentData.questionAnswerSet.map(
+                    item => ({ ...item, content: JSON.stringify(item) })
+                ),
+            });
+            toast.success(res.message);
+            // router.push(`/${lang}/profile/applications`);
+            queryClient.invalidateQueries({
+                queryKey: [`my-assessment-${assessmentData!!.id}`],
+            });
+        } catch (error: any) {
+            toast.error(
+                error.message ? error.message : "Some thing went wrong"
+            );
+        }
+    };
+
+    // const toggleCamera = async () => {
+    //     try {
+    //         if (!stream) {
+    //             const videoStream = await navigator.mediaDevices.getUserMedia({
+    //                 video: true,
+    //                 audio: true,
+    //             });
+    //             // //combine both audio and video streams
+    //             const combinedStream = new MediaStream([
+    //                 ...videoStream.getVideoTracks(),
+    //                 ...videoStream.getAudioTracks(),
+    //             ]);
+    //             setStream(combinedStream);
+
+    //             // **********Initial AudioContext to keep track audio loudness************
+    //             const context = new AudioContext();
+    //             if (!audioContext) setAudioContext(context);
+    //         } else {
+    //             console.log("Turn off camera");
+    //             const tracks = stream.getTracks();
+
+    //             // Stop each track
+    //             tracks.forEach(track => {
+    //                 track.stop();
+    //             });
+    //             setStream(null);
+    //             setAudioContext(null);
+    //         }
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // };
+
+    const handleUploadVideo = async (file: File) => {
         try {
             const formData = new FormData();
             formData.append("formFile", file);
@@ -84,6 +209,12 @@ const AsyncVideoAssessment = () => {
             toast.error("Upload error");
         }
     };
+
+    useEffect(() => {
+        if (curPos) {
+            handleTrackTest(curPos);
+        }
+    }, [handleTrackTest, curPos]);
 
     useEffect(() => {
         const getPermission = async () => {
@@ -149,83 +280,24 @@ const AsyncVideoAssessment = () => {
                 setRecordedVideo,
                 assessmentData,
                 setAssessmentData,
+                handleJoinTest,
+                handleTrackTest,
+                answers,
+                setAnswers,
+                curPos,
+                setCurPos,
             }}
         >
             <main className={styles.wrapper}>
                 <div className="bg-white w-full max-w-screen-xl mx-auto rounded-md drop-shadow-lg flex">
-                    <div className="flex-1 p-4">
-                        <div className={styles.chat_container}>
-                            <div className="w-12 h-12 rounded-full text-neutral-700">
-                                <UserCircleIcon />
-                            </div>
-                            <div className={styles.content_container}>
-                                <div className={styles.message_card}>
-                                    <p className={styles.message_card_title}>
-                                        What inspired you to pursue this career?
-                                    </p>
-                                    <p className="text-sm text-gray-500 mb-2">
-                                        <span>Answertime: </span>{" "}
-                                        <span
-                                            className={
-                                                styles.message_card_badge
-                                            }
-                                        >
-                                            <strong>3 minutes</strong>
-                                        </span>
-                                    </p>
-                                    <p className="text-sm text-gray-500 mb-2">
-                                        <span>Number of takes: </span>{" "}
-                                        <span
-                                            className={
-                                                styles.message_card_badge
-                                            }
-                                        >
-                                            <strong>3</strong>
-                                        </span>
-                                    </p>
-                                </div>
-                                <div className={styles.takes_wrapper}>
-                                    {recordedVideo.length > 0 && (
-                                        <div>
-                                            <video controls>
-                                                <source
-                                                    src={recordedVideo[0]}
-                                                    type="video/mp4"
-                                                />
-                                                Sorry, your browser doesn&apos;t
-                                                support embedded videos, but
-                                                don&apos;t worry, you can
-                                                <a href={recordedVideo[0]}></a>
-                                                and watch it with your favorite
-                                                video player!
-                                            </video>
-                                        </div>
-                                    )}
-                                    {new Array(3).fill("").map((_, index) => (
-                                        <div
-                                            key={index}
-                                            className={styles.takes_placeholder}
-                                        >
-                                            <span
-                                                className={styles.takes_badge}
-                                            >
-                                                <strong>
-                                                    Takes {index + 1}
-                                                </strong>
-                                            </span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <Sidebar />
+                    <ChatSection />
                     <div className="min-w-[300px] p-6 border-l border-gray-300">
                         <div className="mb-4">
                             {stream && (
                                 <VideoRecorder
                                     devices={devices}
                                     stream={stream}
-                                    toggleCamera={toggleCamera}
                                 />
                             )}
                             {/* <AudioRecorder /> */}

@@ -11,8 +11,8 @@ export interface IQuestionAnswerDto {
     content: string;
     difficulty: number;
     tagList: IQuestionTagDto[];
-    createdTime: string;
-    updatedTime: string;
+    createdTime: Date | string;
+    updatedTime: Date | string;
     status: string;
 }
 
@@ -32,8 +32,8 @@ export interface IQuestionTagDto {
     name: string;
     status: string;
     updaterId: string;
-    createdTime: string;
-    updatedTime: string;
+    createdTime: Date | string;
+    updatedTime: Date | string;
 }
 
 export interface ICreateQuestionTagDto {

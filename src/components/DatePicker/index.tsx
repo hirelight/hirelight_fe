@@ -48,7 +48,6 @@ const DatePicker: React.FC<DatePickerProps> = ({
     pos = "bottom",
     required,
 }) => {
-    console.log(minDate, maxDate);
     const wrapperRef = useOutsideClick<HTMLDivElement>(() =>
         setShowDatepicker(false)
     );
@@ -110,15 +109,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
         setSelectedDate(parseDate);
         setCurrentDate(parseDate);
         setShowDatepicker(false);
-        onChange(
-            new Date(
-                `${parseDate.getFullYear()}-${parseDate.getMonth() + 1}-${
-                    parseDate.getDate() < 10
-                        ? `0${parseDate.getDate()}`
-                        : parseDate.getDate()
-                }`
-            )
-        );
+        onChange(parseDate);
     };
 
     const handleChangeBoard = (date: Date) => {

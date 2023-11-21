@@ -9,8 +9,8 @@ export interface IQuesAnsSetDto {
     organizationId: string;
     name: string;
     content: string;
-    createdTime: string;
-    updatedTime: string;
+    createdTime: Date | string;
+    updatedTime: Date | string;
     status: string;
 }
 

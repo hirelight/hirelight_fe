@@ -27,6 +27,7 @@ const QuestionPickerModal: React.FC<QuestionPickerModalProps> = ({
             className="bg-white p-6 rounded-md"
         >
             <QuestionPicker
+                query={{ type: "one-answer" || "multiple-answers" }}
                 pickedQuestions={pickedQuestions}
                 onPickedChange={onPickedChange}
             />

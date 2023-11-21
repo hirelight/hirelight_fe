@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import {
     EllipsisHorizontalIcon,
     EnvelopeIcon,
@@ -12,6 +12,8 @@ import { CalendarDaysIcon } from "@heroicons/react/24/outline";
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
 import { useAppSelector } from "@/redux/reduxHooks";
@@ -29,21 +31,25 @@ const Tooltip = dynamic(
         ),
     }
 );
-
-const assessments = [
-    "All",
-    "Sourced",
-    "Applied",
-    "Phone screen",
-    "Assessment",
-    "Interview",
-    "Offer",
-    "Hired",
-];
 const CandidateActionTabs = () => {
-    const { assessmentId, jobId } = useParams();
+    const { assessmentId, jobId, lang, candidateId } = useParams();
 
+    const queryClient = useQueryClient();
+    const router = useRouter();
     const [showDrawer, setShowDrawer] = React.useState(false);
+    const assessments = useAppSelector(
+        state => state.assessmentFlow.data.assessments
+    );
+    const nextAssesment = useMemo(
+        () =>
+            assessments[
+                assessments.findIndex(val => val.id === assessmentId) ===
+                assessments.length - 1
+                    ? assessments.findIndex(val => val.id === assessmentId)
+                    : assessments.findIndex(val => val.id === assessmentId) + 1
+            ],
+        [assessmentId, assessments]
+    );
     const applicantAssessmentDetail = useAppSelector(
         state => state.applicantAssessmentDetail.data!!
     );
@@ -56,6 +62,28 @@ const CandidateActionTabs = () => {
             toast.success(res.message);
         } catch (error) {
             console.error(error);
+        }
+    };
+
+    const handleMoveCandidate = async () => {
+        try {
+            const res =
+                await applicantAssessmentDetailServices.moveCandidateToAssessment(
+                    candidateId as string,
+                    nextAssesment.id
+                );
+
+            toast.success(res.message);
+            queryClient.invalidateQueries({
+                queryKey: [`job-${jobId}-profiles`],
+            });
+            router.push(
+                `/${lang}/backend/jobs/${jobId}/hiring-process/${assessmentId}`
+            );
+        } catch (error: any) {
+            toast.error(
+                error.message ? error.message : "Some thing went wrong"
+            );
         }
     };
 
@@ -122,20 +150,9 @@ const CandidateActionTabs = () => {
                         <button
                             type="button"
                             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm w-auto px-2 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 rounded-tl-md rounded-bl-md border-r border-blue-800 transition-all duration-300 whitespace-nowrap"
+                            onClick={handleMoveCandidate}
                         >
-                            Move to{" "}
-                            {
-                                assessments[
-                                    assessments.indexOf(
-                                        (assessmentId as string)
-                                            .charAt(0)
-                                            .toUpperCase() +
-                                            (assessmentId as string)
-                                                .slice(1)
-                                                .replace("-", " ")
-                                    ) + 1
-                                ]
-                            }
+                            Move to {nextAssesment.name}
                         </button>
                         <MoveCandidateDialog />
                     </div>

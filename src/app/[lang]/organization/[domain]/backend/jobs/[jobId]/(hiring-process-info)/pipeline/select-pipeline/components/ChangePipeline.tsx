@@ -20,8 +20,8 @@ import { isInvalidForm } from "@/helpers";
 
 const initialData: ICreateAssessmentFlowDto = {
     name: "",
-    startTime: "",
-    endTime: "",
+    startTime: new Date(),
+    endTime: new Date(),
     jobPostId: "",
     assessments: [
         {
@@ -172,7 +172,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                         onChange={date => {
                             setFormState({
                                 ...formState,
-                                startTime: date.toString(),
+                                startTime: date,
                             });
                             setFormErr({
                                 ...formErr,
@@ -196,7 +196,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                         onChange={date => {
                             setFormState({
                                 ...formState,
-                                endTime: date.toString(),
+                                endTime: date,
                             });
                             setFormErr({
                                 ...formErr,

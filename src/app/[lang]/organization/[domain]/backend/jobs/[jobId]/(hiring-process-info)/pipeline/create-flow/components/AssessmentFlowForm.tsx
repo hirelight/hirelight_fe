@@ -19,8 +19,8 @@ import FlowStageForm from "./FlowStageForm";
 
 const initialData: ICreateAssessmentFlowDto = {
     name: "",
-    startTime: "",
-    endTime: "",
+    startTime: new Date(),
+    endTime: moment().add(7, "days").toDate(),
     jobPostId: "",
     assessments: [
         {
@@ -173,7 +173,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                             Start time
                         </h3>
                         <DatePicker
-                            value={new Date(formState.startTime)}
+                            value={formState.startTime}
                             minDate={new Date()}
                             maxDate={moment(formState.endTime)
                                 .subtract(7, "days")
@@ -181,7 +181,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                             onChange={date => {
                                 setFormState(prev => ({
                                     ...prev,
-                                    startTime: date.toString(),
+                                    startTime: date,
                                 }));
                                 setFormErr({ ...formErr, flowTimelineErr: "" });
                             }}
@@ -202,7 +202,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                             onChange={date => {
                                 setFormState(prev => ({
                                     ...prev,
-                                    endTime: date.toString(),
+                                    endTime: date,
                                 }));
                                 setFormErr({ ...formErr, flowTimelineErr: "" });
                             }}

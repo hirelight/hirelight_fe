@@ -10,6 +10,7 @@ import {
     IJobPostAppAssDetailDto,
     ITrackAsyncAssessmentDto,
     ISubmitAsyncAssessmentDto,
+    IAsyncAssessDto,
 } from "..";
 
 const moveCandidateToAssessment = async (
@@ -217,7 +218,7 @@ const submitMCAssessment = async (
             IResponse<ICandidateAssessmentDetailDto>
         >(
             endpoints.APPLICANT_ASSESSMENT_DETAILS +
-                `/multiple-choice-question-assessment/${submitDto.applicantAssessmentDetailId}`,
+                `/multiple-choice-question-assessment/submit/${submitDto.applicantAssessmentDetailId}`,
             submitDto.answers
         );
 
@@ -232,11 +233,9 @@ const submitMCAssessment = async (
 // ******************MC Assment************************
 const joinAsyncAssessment = async (
     applicantAsessmentDetailId: string
-): Promise<IResponse<ICandidateAssessmentDetailDto>> => {
+): Promise<IResponse<IAsyncAssessDto>> => {
     try {
-        const res = await interceptor.put<
-            IResponse<ICandidateAssessmentDetailDto>
-        >(
+        const res = await interceptor.put<IResponse<IAsyncAssessDto>>(
             endpoints.APPLICANT_ASSESSMENT_DETAILS +
                 `/async-video-interview-assessment/join/${applicantAsessmentDetailId}`
         );
@@ -279,7 +278,7 @@ const submitAsyncAssessment = async (
             IResponse<ICandidateAssessmentDetailDto>
         >(
             endpoints.APPLICANT_ASSESSMENT_DETAILS +
-                `/async-video-interview-assessment/${submitDto.applicantAssessmentDetailId}`,
+                `/async-video-interview-assessment/submit/${submitDto.applicantAssessmentDetailId}`,
             {
                 assessmentSubmissions: submitDto.assessmentSubmissions,
             }

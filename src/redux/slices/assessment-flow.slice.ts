@@ -14,11 +14,11 @@ const initialState: IAssessmentFlowState = {
     data: {
         name: "",
         assessments: [],
-        startTime: "",
-        endTime: "",
+        startTime: new Date(),
+        endTime: new Date(),
         creatorId: "",
-        createdTime: "",
-        updatedTime: "",
+        createdTime: new Date(),
+        updatedTime: new Date(),
     },
     loading: false,
 };

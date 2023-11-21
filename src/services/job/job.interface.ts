@@ -14,8 +14,8 @@ export interface ICreateJobDto {
     minSalary: number;
     maxSalary: number;
     currency: string;
-    startTime: string;
-    endTime: string;
+    startTime: Date | string;
+    endTime: Date | string;
     area: string;
     experience: string;
     workModality: string;
@@ -35,8 +35,8 @@ export interface IJobDto extends ICreateJobDto {
     organizationId: string;
     employmentType: string;
     keywords: string;
-    createdTime: string;
-    updatedTime: string;
+    createdTime: Date | string;
+    updatedTime: Date | string;
     status: string;
 }
 
@@ -49,8 +49,8 @@ export interface ICandidateJobDto extends ICreateJobDto {
     organization: IOrganizationDto;
     employmentType: string;
     keywords: string;
-    createdTime: string;
-    updatedTime: string;
+    createdTime: Date | string;
+    updatedTime: Date | string;
     status: string;
 }
 
@@ -81,8 +81,8 @@ export interface IEditJobDto {
     minSalary: number;
     maxSalary: number;
     currency: string;
-    startTime: string;
-    endTime: string;
+    startTime: Date | string;
+    endTime: Date | string;
     area: string;
     experience: string;
     workModality: string;

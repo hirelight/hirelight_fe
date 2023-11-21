@@ -26,8 +26,8 @@ export interface IOrgEmployerDto {
             },
         ];
     };
-    createdTime: string;
-    updatedTime: string;
+    createdTime: Date | string;
+    updatedTime: Date | string;
     status: string;
 }
 
@@ -50,6 +50,6 @@ export interface IEmployerInvitationDto {
     invitationTypeName: string;
     inviteeEmail: string;
     authority: string;
-    createdTime: string;
-    expiredTime: string;
+    createdTime: Date | string;
+    expiredTime: Date | string;
 }

@@ -20,8 +20,6 @@ const AssessmentMediation = () => {
             ),
     });
 
-    console.log(assessmentRes);
-
     if (isLoading || !assessmentRes)
         return (
             <div className="p-14 flex justify-center">
@@ -35,7 +33,7 @@ const AssessmentMediation = () => {
             "MULTIPLE_CHOICE_QUESTION_ASSESSMENT" ? (
                 <MultipleChoiceAssessment data={assessmentRes.data} />
             ) : (
-                <AsyncVideoAssessment />
+                <AsyncVideoAssessment data={assessmentRes.data} />
             )}
         </div>
     );

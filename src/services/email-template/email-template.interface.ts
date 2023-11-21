@@ -14,8 +14,8 @@ export interface IEmailTemplatesDto {
     subject: string;
     content: string;
     parameters: string;
-    createdTime: string;
-    updatedTime: string;
+    createdTime: Date | string;
+    updatedTime: Date | string;
     status: string;
 }
 

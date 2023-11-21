@@ -93,7 +93,7 @@ const CreateQuestionPage = () => {
             type: "one-answer",
             answers: initialAnswers,
         },
-        difficulty: 0,
+        difficulty: 1,
         tagList: [],
     });
     const [formErr, setFormErr] = useState({

@@ -75,8 +75,8 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
             profile: [],
         },
         organizationId: null,
-        createdTime: "",
-        updatedTime: "",
+        createdTime: new Date(),
+        updatedTime: new Date(),
         updaterId: "",
     });
     const unOrderField = useMemo(() => {

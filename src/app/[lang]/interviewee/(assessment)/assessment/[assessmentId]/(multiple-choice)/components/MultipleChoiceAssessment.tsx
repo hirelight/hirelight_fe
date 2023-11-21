@@ -7,6 +7,7 @@ import { flushSync } from "react-dom";
 import { useParams, useRouter } from "next/navigation";
 import moment from "moment";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import { useQueryClient } from "@tanstack/react-query";
 
 import {
     ICandidateMCContentJson,
@@ -17,15 +18,21 @@ import {
     IMCAppliAssessmentDto,
     mcAssessmentServices,
 } from "@/services";
-import { ButtonOutline } from "@/components";
+import { ButtonOutline, CountdownTimer } from "@/components";
 import { SpinLoading } from "@/icons";
 import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
+import useTrackAssessment from "@/hooks/useTrackAssessment";
 
 import styles from "./MultipleChoiceAssessment.module.scss";
 
 import logo from "/public/images/logo.svg";
 
 import QuestionList from "./QuestionList";
+
+const THREE_DAYS_IN_MS = 3 * 24 * 60 * 60 * 1000;
+const NOW_IN_MS = new Date().getTime();
+
+const dateTimeAfterThreeDays = NOW_IN_MS + THREE_DAYS_IN_MS;
 
 type MultipleChoiceAssessmentState = {
     assesmentData: IMCAppliAssessmentDto | null;
@@ -34,6 +41,9 @@ type MultipleChoiceAssessmentState = {
     >;
     answers: ICandidateMCDto[];
     setAnswers: React.Dispatch<React.SetStateAction<ICandidateMCDto[]>>;
+    handleSubmitTest: () => void;
+    submitted: boolean;
+    stopAutoTask: () => void;
 };
 
 const MultipleChoiceAssessmentContext =
@@ -60,8 +70,7 @@ let timerId: NodeJS.Timer;
 const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
     data,
 }) => {
-    const { lang } = useParams();
-    const router = useRouter();
+    const queryClient = useQueryClient();
 
     const [answers, setAnswers] = useState<ICandidateMCDto[]>([]);
     const [assesmentData, setAssessmentData] =
@@ -69,6 +78,10 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
     const [displayTest, setDisplayTest] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [startAutoTask, stopAutoTask] = useTrackAssessment(
+        handleTrackTest,
+        30
+    );
 
     const handleJoinTest = async () => {
         setIsLoading(true);
@@ -91,18 +104,21 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
         }
     };
 
-    const handleSubmitTest = async () => {
+    const handleSubmitTest = useCallback(async () => {
         setIsLoading(true);
+
         try {
             const res = await mcAssessmentServices.submitMCAssessment({
                 applicantAssessmentDetailId: data.id,
                 answers: answers,
             });
-            console.log(res);
-            if (timerId) clearInterval(timerId);
+            setSubmitted(true);
             toast.success(res.message);
-            router.push(`/${lang}/profile/applications`);
+            // router.push(`/${lang}/profile/applications`);
             setIsLoading(false);
+            queryClient.invalidateQueries({
+                queryKey: [`my-assessment-${assesmentData!!.id}`],
+            });
         } catch (error: any) {
             console.error(error);
             toast.error(
@@ -110,56 +126,60 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
             );
             setIsLoading(false);
         }
-    };
+    }, [answers, assesmentData, data.id, queryClient]);
+
+    async function handleTrackTest() {
+        try {
+            const res = await mcAssessmentServices.trackMCAssessment({
+                applicantAssessmentDetailId: data.id,
+                answers: answers,
+            });
+
+            toast.success(res.message);
+        } catch (error: any) {
+            console.error(error);
+            if (
+                error.statusCode &&
+                error.statusCode === 400 &&
+                error.message &&
+                error.message ===
+                    "Assessment id not valid or assessment not available for tracking." &&
+                timerId
+            )
+                clearInterval(timerId);
+            toast.error(
+                error.message ? error.message : "Some thing went wrong"
+            );
+        }
+    }
 
     useEffect(() => {
-        const handleTrackTest = async (duetime: number) => {
-            try {
-                timerId = setInterval(async () => {
-                    if (answers.length === 0) return;
-
-                    console.log("Send track", answers);
-                    const res = await mcAssessmentServices.trackMCAssessment({
-                        applicantAssessmentDetailId: data.id,
-                        answers: answers,
-                    });
-
-                    toast.success(res.message);
-                }, 5000);
-
-                // if (
-                //     moment(assesmentData!!.startTime).add(duetime).toDate() >
-                //         new Date() &&
-                //     timerId
-                // ) {
-                //     clearInterval(timerId);
-                // }
-
-                // if (duetime)
-                //     setTimeout(() => {
-                //         if (timerId) clearInterval(timerId);
-                //     }, duetime);
-            } catch (error: any) {
-                console.error(error);
-                if (
-                    error.statusCode &&
-                    error.statusCode === 400 &&
-                    error.message &&
-                    error.message ===
-                        "Assessment id not valid or assessment not available for tracking." &&
-                    timerId
-                )
-                    clearInterval(timerId);
-                toast.error(
-                    error.message ? error.message : "Some thing went wrong"
-                );
-            }
-        };
-        if (answers.length > 0 && assesmentData) {
-            if (timerId) clearInterval(timerId);
-            handleTrackTest(assesmentData.assessment.duration!!);
+        if (
+            assesmentData &&
+            answers.length &&
+            [
+                ApplicantAssessmentDetailStatus.INVITED,
+                ApplicantAssessmentDetailStatus.IN_PROGRESS,
+            ].includes(assesmentData.status)
+        ) {
+            if (!submitted) startAutoTask();
+            else stopAutoTask();
         }
-    }, [answers, assesmentData, data.id]);
+    }, [assesmentData, answers, startAutoTask, submitted, stopAutoTask]);
+
+    useEffect(() => {
+        if (
+            [
+                ApplicantAssessmentDetailStatus.EVALUATED,
+                ApplicantAssessmentDetailStatus.PENDING_EVALUATION,
+            ].includes(data.status)
+        ) {
+            setDisplayTest(true);
+            setSubmitted(true);
+            setAnswers(JSON.parse(data.questionAnswerSet as string));
+            setAssessmentData(data as IMCAppliAssessmentDto);
+        }
+    }, [data]);
 
     useEffect(() => {
         // Clear tracking task on leaving page
@@ -184,10 +204,13 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
             </div>
             <MultipleChoiceAssessmentContext.Provider
                 value={{
+                    submitted,
                     answers,
                     setAnswers,
                     assesmentData,
                     setAssessmentData,
+                    handleSubmitTest,
+                    stopAutoTask,
                 }}
             >
                 <main className="max-w-screen-xl mx-auto p-4 xl:px-6">
@@ -198,6 +221,14 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                         <p className="text-center text-base text-gray-500 font-medium mb-6">
                             {data.applicantProfile.jobPost.title}
                         </p>
+                        {!displayTest && data.assessment.description && (
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: data.assessment.description,
+                                }}
+                                className="max-w-[40%]"
+                            ></div>
+                        )}
                     </div>
 
                     {!displayTest && (
@@ -232,7 +263,7 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                             <QuestionList />
                         </div>
                     )}
-                    {displayTest && data.status === "IN_PROGRESS" && (
+                    {displayTest && (
                         <div className="flex justify-center items-center">
                             <ButtonOutline onClick={handleSubmitTest}>
                                 {isLoading && <SpinLoading className="mr-2" />}

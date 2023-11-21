@@ -32,6 +32,14 @@ const QuestionPicker: React.FC<QuestionPickerProps> = ({
     const { data: questionsRes, error } = useQuery({
         queryKey: ["questions"],
         queryFn: questionAnswerServices.getListAsync,
+        select(data) {
+            return data.data.filter(item =>
+                query
+                    ? (JSON.parse(item.content) as QuestionAnswerContentJson)
+                          .type === query.type
+                    : true
+            );
+        },
     });
     const [search, setSearch] = useState("");
     const [curPicks, setCurPicks] = useState<IQuestionAnswerDto[]>([]);
@@ -87,7 +95,7 @@ const QuestionPicker: React.FC<QuestionPickerProps> = ({
                             className="absolute w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600 cursor-pointer "
                             onChange={e => {
                                 if (e.currentTarget.checked && questionsRes) {
-                                    setCurPicks(questionsRes.data);
+                                    setCurPicks(questionsRes);
                                 } else {
                                     setCurPicks([]);
                                 }
@@ -96,7 +104,7 @@ const QuestionPicker: React.FC<QuestionPickerProps> = ({
 
                         {questionsRes &&
                             curPicks.length > 0 &&
-                            curPicks.length < questionsRes.data.length && (
+                            curPicks.length < questionsRes.length && (
                                 <MinusBigIcon
                                     strokeWidth={2.2}
                                     className="absolute w-5 h-5 text-white bg-blue-600 border border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-0 dark:bg-gray-700 dark:border-gray-600 cursor-pointer"
@@ -107,16 +115,7 @@ const QuestionPicker: React.FC<QuestionPickerProps> = ({
                 </div>
             </div>
             <ul className={styles.set__list__wrapper}>
-                {questionsRes?.data
-                    ?.filter(item =>
-                        query
-                            ? (
-                                  JSON.parse(
-                                      item.content
-                                  ) as QuestionAnswerContentJson
-                              ).type === query.type
-                            : true
-                    )
+                {questionsRes
                     ?.filter(item => filterOnSearch(item))
                     .map((item, index) => (
                         <li key={item.id}>

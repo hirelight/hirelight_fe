@@ -3,6 +3,7 @@ import { FieldErrors, FieldValues } from "react-hook-form";
 
 import { IResponse } from "@/interfaces/service.interface";
 import interceptor from "@/services/interceptor";
+import fileServices from "@/services/file-service/file.service";
 
 export const debounce = <T extends (...args: any[]) => void>(
     func: T,
@@ -25,7 +26,7 @@ export const delayFunc = (ms: number) => {
     return new Promise(resolve => setTimeout(resolve, ms));
 };
 
-function pad(num: number) {
+export function pad(num: number) {
     return ("0" + num).slice(-2);
 }
 export function hhmmss(seconds: number) {
@@ -106,6 +107,16 @@ export const uploadImage = async (file: File): Promise<string | null> => {
     return res.data.data;
 };
 
+export const uploadFile = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("formFile", file);
+
+    const res = await fileServices.uploadFile(formData);
+    toast.success(res.message);
+
+    return res.data;
+};
+
 export const findInputError = (
     errors: FieldErrors<FieldValues>,
     name: string
@@ -132,7 +143,7 @@ export const isDevMode = () =>
     process.env.NODE_ENV === "development";
 
 export function getRemainingTimeInSeconds(
-    startTime: Date,
+    startTime: Date | string,
     duration: number
 ): number {
     const startDatetime: Date = new Date(startTime);

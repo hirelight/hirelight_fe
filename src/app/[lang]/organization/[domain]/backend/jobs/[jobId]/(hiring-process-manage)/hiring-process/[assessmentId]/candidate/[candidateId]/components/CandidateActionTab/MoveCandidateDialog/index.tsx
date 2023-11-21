@@ -4,6 +4,7 @@ import React from "react";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 import { ChevronDown } from "@/icons";
 import { useOutsideClick } from "@/hooks/useClickOutside";
@@ -14,7 +15,9 @@ import applicantAssessmentDetailServices from "@/services/applicant-assessment-d
 import styles from "./styles.module.scss";
 
 const MoveCandidateDialog = () => {
-    const { assessmentId, candidateId, jobId } = useParams();
+    const { assessmentId, candidateId, jobId, lang } = useParams();
+    const router = useRouter();
+
     const dialogRef = useOutsideClick<HTMLDivElement>(() =>
         setShowDialog(false)
     );
@@ -35,6 +38,9 @@ const MoveCandidateDialog = () => {
             queryClient.invalidateQueries({
                 queryKey: [`job-${jobId}-profiles`],
             });
+            router.push(
+                `/${lang}/backend/jobs/${jobId}/hiring-process/${assessmentId}`
+            );
         } catch (error: any) {
             toast.error(
                 error.message ? error.message : "Some thing went wrong"

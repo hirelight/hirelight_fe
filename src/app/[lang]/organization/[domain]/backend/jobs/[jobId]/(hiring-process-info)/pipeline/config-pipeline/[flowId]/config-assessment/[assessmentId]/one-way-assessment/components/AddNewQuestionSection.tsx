@@ -75,8 +75,8 @@ const AddNewQuestionSection = ({
                   tagList: [],
                   organizationId: "",
                   updaterId: "",
-                  createdTime: "",
-                  updatedTime: "",
+                  createdTime: new Date(),
+                  updatedTime: new Date(),
                   status: "",
               }
     );

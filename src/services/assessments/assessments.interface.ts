@@ -36,7 +36,7 @@ export interface IAssessmentDto {
     query: string | null;
     duration: number | null;
     index: number;
-    createdTime: string;
-    updatedTime: string;
+    createdTime: Date | string;
+    updatedTime: Date | string;
     status: string;
 }

@@ -1,9 +1,12 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
+import { produce } from "immer";
+import { v4 as uuid } from "uuid";
+import moment from "moment";
 
-import { Button, ButtonOutline, Selection } from "@/components";
-import fileServices from "@/services/file-service/file.service";
+import { Button, ButtonOutline, CountdownTimer, Selection } from "@/components";
 import { SpinLoading } from "@/icons";
+import { uploadFile } from "@/helpers";
 
 import styles from "./VideoRecorder.module.scss";
 import { useAsyncVideoAssessment } from "./AsyncVideoAssessment";
@@ -14,7 +17,7 @@ const mimeType = 'video/webm; codecs="opus,vp8"';
 type VideoRecorderProps = {
     stream: MediaStream;
     devices: MediaDeviceInfo[];
-    toggleCamera: () => void;
+    toggleCamera?: () => void;
 };
 
 const VideoRecorder: React.FC<VideoRecorderProps> = ({
@@ -22,6 +25,17 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
     devices,
     toggleCamera,
 }) => {
+    const {
+        answers,
+        setAnswers,
+        curPos,
+        setCurPos,
+        setRecordedVideo,
+        handleJoinTest,
+        assessmentData,
+        handleTrackTest,
+    } = useAsyncVideoAssessment();
+
     const [permission, setPermission] = useState(false);
     const mediaRecorder = useRef<MediaRecorder | null>(null);
     const liveVideoFeed = useRef<HTMLVideoElement>(null);
@@ -29,8 +43,21 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
         "inactive" | "recording"
     >("inactive");
     const [videoChunks, setVideoChunks] = useState<Blob[]>([]);
-    const { recordedVideo, setRecordedVideo } = useAsyncVideoAssessment();
     const [isLoading, setIsLoading] = useState(false);
+
+    const canRecord = useMemo(
+        () =>
+            answers[curPos] &&
+            (!answers[curPos].content.files ||
+                answers[curPos].content.files!!.length <
+                    answers[curPos].content.config!!.numOfTakes),
+        [answers, curPos]
+    );
+
+    const canMoveNext = useMemo(
+        () => answers[curPos] && answers[curPos].content.files,
+        [answers, curPos]
+    );
 
     const startRecording = async () => {
         console.log("Recording");
@@ -67,34 +94,52 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
 
         mediaRecorder.current.stop();
         mediaRecorder.current.onstop = async () => {
-            setIsLoading(true);
-            const videoBlob = new Blob(videoChunks, { type: mimeType });
-            const myFile = new File([videoBlob], "demo.mp4", {
-                type: mimeType,
-            });
-            const url = await handleUploadVideo(myFile);
-            console.log(url);
-            setRecordedVideo([url]);
-            setVideoChunks([]);
-            setIsLoading(false);
+            try {
+                setIsLoading(true);
+                const videoBlob = new Blob(videoChunks, { type: mimeType });
+                const myFile = new File([videoBlob], `takes-${curPos + 1}`, {
+                    type: mimeType,
+                });
+                const url = await uploadFile(myFile);
+                console.log(url);
+                setAnswers(
+                    answers.map((ans, index) => {
+                        if (index === curPos) {
+                            return produce(ans, draft => {
+                                if (!draft.content.files)
+                                    draft.content.files = [
+                                        {
+                                            name: myFile.name,
+                                            src: url,
+                                            type: "video/mp4",
+                                            isChosen: true,
+                                        },
+                                    ];
+                                else {
+                                    draft.content.files[
+                                        draft.content.files.length - 1
+                                    ].isChosen = false;
+                                    draft.content.files.push({
+                                        name: myFile.name,
+                                        src: url,
+                                        type: "video/mp4",
+                                        isChosen: true,
+                                    });
+                                }
+                            });
+                        }
+
+                        return ans;
+                    })
+                );
+
+                setRecordedVideo([url]);
+                setVideoChunks([]);
+                setIsLoading(false);
+            } catch (error) {
+                console.error(error);
+            }
         };
-    };
-
-    const handleUploadVideo = async (file: File) => {
-        try {
-            const formData = new FormData();
-            formData.append("formFile", file);
-
-            const res = await fileServices.uploadFile(formData);
-
-            console.log(res);
-            toast.success((await res).message);
-
-            return res.data;
-        } catch (error: any) {
-            console.log(error);
-            toast.error(error.message ? error.message : "Upload failure");
-        }
     };
 
     useEffect(() => {
@@ -155,20 +200,42 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
                 />
             </section>
 
+            {recordingStatus === "recording" && (
+                <div className="my-4">
+                    <CountdownTimer
+                        targetDate={moment().add(3, "minutes").toDate()}
+                        onEnd={stopRecording}
+                    />
+                </div>
+            )}
+
             <div className={styles.video_controls}>
-                {recordingStatus === "inactive" ? (
-                    <Button onClick={startRecording} type="button">
-                        Start Recording
-                    </Button>
-                ) : (
-                    <ButtonOutline onClick={stopRecording} type="button">
-                        Stop Recording
+                {canRecord &&
+                    (recordingStatus === "inactive" ? (
+                        <Button onClick={startRecording} type="button">
+                            Start Recording
+                        </Button>
+                    ) : (
+                        <ButtonOutline onClick={stopRecording} type="button">
+                            Stop Recording
+                        </ButtonOutline>
+                    ))}
+                {canMoveNext && (
+                    <ButtonOutline
+                        onClick={() => setCurPos(curPos + 1)}
+                        type="button"
+                    >
+                        Next question
                     </ButtonOutline>
                 )}
             </div>
-            {/* <button type="button" onClick={toggleCamera}>
-                Toggle camera
-            </button> */}
+            {!assessmentData && (
+                <div className="flex justify-center">
+                    <ButtonOutline onClick={handleJoinTest}>
+                        Start interview
+                    </ButtonOutline>
+                </div>
+            )}
         </main>
     );
 };

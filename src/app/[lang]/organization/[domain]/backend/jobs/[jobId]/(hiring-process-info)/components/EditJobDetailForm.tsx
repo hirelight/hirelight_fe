@@ -3,6 +3,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import moment from "moment";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setJob, setJobError } from "@/redux/slices/job.slice";
@@ -265,8 +266,10 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                         Start time
                                     </h3>
                                     <DatePicker
-                                        value={new Date(job.startTime)}
+                                        value={job.startTime}
                                         pos={"top"}
+                                        minDate={new Date()}
+                                        maxDate={new Date(job.endTime)}
                                         onChange={date => {
                                             dispatch(
                                                 setJob({
@@ -289,7 +292,11 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                     </h3>
                                     <DatePicker
                                         pos={"top"}
-                                        value={new Date(job.endTime)}
+                                        value={job.endTime}
+                                        minDate={new Date(job.startTime)}
+                                        maxDate={moment(job.endTime)
+                                            .add(1, "year")
+                                            .toDate()}
                                         onChange={date => {
                                             dispatch(
                                                 setJob({

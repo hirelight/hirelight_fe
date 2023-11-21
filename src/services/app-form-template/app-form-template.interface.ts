@@ -4,8 +4,8 @@ export interface IAppFormTemplateDto {
     updaterId: string;
     name: string;
     content: string;
-    createdTime: string;
-    updatedTime: string;
+    createdTime: Date | string;
+    updatedTime: Date | string;
 }
 
 export interface IEditAppFormTemplateDto {

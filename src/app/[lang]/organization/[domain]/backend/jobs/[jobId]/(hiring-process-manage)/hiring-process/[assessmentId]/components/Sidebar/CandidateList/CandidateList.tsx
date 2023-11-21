@@ -2,9 +2,8 @@
 
 import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
-import applicantProfileServices from "@/services/applicant-profile/applicant-profile.service";
 import { useAppDispatch } from "@/redux/reduxHooks";
 import { setCandidates } from "@/redux/slices/candidates.slice";
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
@@ -12,7 +11,9 @@ import applicantAssessmentDetailServices from "@/services/applicant-assessment-d
 import CandidateCard from "../CandidateCard/CandidateCard";
 
 const CandidateList = ({}: any) => {
-    const { jobId, assessmentId } = useParams();
+    const { jobId, assessmentId, candidateId } = useParams();
+    const router = useRouter();
+
     const dispatch = useAppDispatch();
     const { data: applicantDetail, isSuccess } = useQuery({
         queryKey: [`job-${jobId}-profiles`, assessmentId],
@@ -29,8 +30,20 @@ const CandidateList = ({}: any) => {
     useEffect(() => {
         if (isSuccess && applicantDetail) {
             dispatch(setCandidates(applicantDetail.data));
+            if (!candidateId && applicantDetail.data.length) {
+                router.push(
+                    `${assessmentId}/candidate/${applicantDetail.data[0].applicantProfileId}`
+                );
+            }
         }
-    }, [isSuccess, dispatch, applicantDetail]);
+    }, [
+        isSuccess,
+        dispatch,
+        applicantDetail,
+        candidateId,
+        router,
+        assessmentId,
+    ]);
 
     return (
         <ul className="bg-white">

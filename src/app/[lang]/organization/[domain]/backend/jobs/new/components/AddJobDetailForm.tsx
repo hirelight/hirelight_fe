@@ -97,8 +97,8 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
         minSalary: 0,
         maxSalary: 0,
         currency: "",
-        startTime: new Date().toString(),
-        endTime: new Date().toString(),
+        startTime: new Date(),
+        endTime: new Date(),
         area: "",
         experience: "",
         workModality: "",
@@ -356,7 +356,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                             onChange={date => {
                                                 setFormState({
                                                     ...formState,
-                                                    startTime: date.toString(),
+                                                    startTime: date,
                                                 });
                                                 setFormErr({
                                                     ...formErr,
@@ -383,7 +383,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                             onChange={date => {
                                                 setFormState({
                                                     ...formState,
-                                                    endTime: date.toString(),
+                                                    endTime: date,
                                                 });
                                                 setFormErr({
                                                     ...formErr,
