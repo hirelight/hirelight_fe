@@ -18,4 +18,10 @@ export enum ApplicantAssessmentDetailStatus {
     MOVED = "MOVED",
 }
 
+export const defaultAsessment = [
+    "SOURCED_ASSESSMENT",
+    "CV_SCREENING_ASSESSMENT",
+    "HIRED_ASSESSMENT",
+];
+
 export type AssessmentTypeKey = keyof typeof AssessmentTypes;

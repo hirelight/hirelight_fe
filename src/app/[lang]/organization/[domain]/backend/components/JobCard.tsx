@@ -44,7 +44,7 @@ const JobCard: React.FC<JobCardProps> = ({
     );
 
     const publishJobMutations = useMutation({
-        mutationKey: [`publish-job-${id}`],
+        mutationKey: [`publish-job`, id],
         mutationFn: (id: string) => jobServices.publishJobAsync(id),
         onSuccess: res => {
             toast.success(res.message, {

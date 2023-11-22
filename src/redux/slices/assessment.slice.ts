@@ -51,7 +51,6 @@ const assessmentSlice = createSlice({
                 const { data, message } = action.payload;
                 state.data = data;
                 state.loading = false;
-                toast.success(message);
             })
             .addCase(fetchAssessmentById.rejected, (state, action) => {
                 toast.error(action.error.message);

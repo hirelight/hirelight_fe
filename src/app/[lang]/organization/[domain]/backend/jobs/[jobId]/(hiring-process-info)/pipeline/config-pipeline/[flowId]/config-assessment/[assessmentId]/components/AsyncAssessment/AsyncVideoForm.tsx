@@ -27,9 +27,7 @@ import { QuestionAnswerContentJson } from "@/interfaces/questions.interface";
 
 import QuestionSection from "./QuestionSection";
 
-const AddNewQuestionSection = dynamic(
-    () => import("../../components/AddNewQuestionSection")
-);
+const AddNewQuestionSection = dynamic(() => import("./AddNewQuestionSection"));
 
 const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ssr: false,

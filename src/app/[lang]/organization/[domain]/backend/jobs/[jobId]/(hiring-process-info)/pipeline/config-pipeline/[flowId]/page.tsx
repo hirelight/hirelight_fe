@@ -1,8 +1,7 @@
 import React from "react";
 import { Metadata } from "next";
 
-import PipelineConfig from "./components/PipelineConfig";
-import PipelineHeader from "./components/PipelineHeader";
+import LoadingIndicator from "@/components/LoadingIndicator";
 
 export const metadata: Metadata = {
     title: "Hirelight - Backend | Pipeline Configuration",
@@ -10,12 +9,9 @@ export const metadata: Metadata = {
 
 const PipelineConfigurationHome = () => {
     return (
-        <React.Fragment>
-            <PipelineHeader />
-            <div className="p-6 w-full bg-white shadow-lg rounded-md">
-                <PipelineConfig />
-            </div>
-        </React.Fragment>
+        <div className="w-full py-11 flex items-center justify-center">
+            <LoadingIndicator />
+        </div>
     );
 };
 

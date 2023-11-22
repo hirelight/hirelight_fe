@@ -3,9 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
+import { Dialog, Transition } from "@headlessui/react";
 
 import { delayFunc } from "@/helpers/shareHelpers";
-import { Portal } from "@/components";
+import { CustomInput, DatePicker, Portal } from "@/components";
 import { CloseIcon } from "@/icons";
 
 const backdropVariants = {
@@ -28,78 +29,64 @@ interface IActionDrawer {
     loading?: boolean;
 }
 
-const ActionDrawer = ({ onClose, show = true }: IActionDrawer) => {
-    const { assessmentId } = useParams();
-
-    const [open, setOpen] = useState(show);
-
-    const closeDrawer = async () => {
-        setOpen(false);
-        await delayFunc(200);
-        onClose();
-    };
-
-    useEffect(() => {
-        setOpen(show);
-    }, [show]);
-
-    if (!show) return null;
-
+const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
     return (
-        <Portal>
-            <dialog open className="relative z-[9999] h-screen">
-                <button
-                    type="button"
-                    className="fixed top-0 z-10"
-                    onClick={closeDrawer}
+        <Transition appear show={show} as={React.Fragment}>
+            <Dialog as="div" onClose={onClose} className="relative z-[9999]">
+                <Transition.Child
+                    as={React.Fragment}
+                    enter="ease-out duration-300"
+                    enterFrom="opacity-0"
+                    enterTo="opacity-100"
+                    leave="ease-in duration-200"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
                 >
-                    toggle
-                </button>
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={open ? "backdropOpen" : "backdropClose"}
-                    className="fixed inset-0 bg-gray-500 bg-opacity-75"
-                    transition={{
-                        ease: open ? "easeOut" : "easeIn",
-                    }}
-                    variants={backdropVariants}
-                    onClick={closeDrawer}
-                ></motion.div>
-                <motion.div
-                    initial={{
-                        translateX: "100%",
-                    }}
-                    animate={open ? "drawerEnter" : "drawerLeave"}
-                    variants={drawerVariants}
-                    transition={{
-                        ease: open ? "easeOut" : "easeIn",
-                        duration: 0.15,
-                    }}
-                    className="fixed top-0 right-0 z-40 w-[640px] h-screen overflow-y-auto translate-x-full bg-white dark:bg-gray-800"
-                    onClick={e => e.stopPropagation()}
-                >
-                    <div className="p-6 border-b border-gray-300 flex justify-between items-center">
-                        <strong className="inline-flex items-center gap-1 text-2xl font-semibold text-neutral-700 dark:text-gray-400 ">
-                            <span
-                                id="drawer-label"
-                                className="after:content-['\2022'] after:my-0 after:ml-1"
-                            >
-                                Add evaluation
-                            </span>
-                            <span>
-                                {(assessmentId as string)
-                                    .charAt(0)
-                                    .toLocaleUpperCase() +
-                                    assessmentId.slice(1, assessmentId.length)}
-                            </span>
-                        </strong>
-                        <button type="button" onClick={closeDrawer}>
-                            <CloseIcon className="w-6 h-6" />
-                        </button>
+                    <div className="fixed inset-0 bg-black/25" />
+                </Transition.Child>
+                <div className="fixed inset-0 overflow-y-auto">
+                    <div>
+                        <Transition.Child
+                            as={React.Fragment}
+                            enter="ease-out duration-300"
+                            enterFrom="translate-x-full"
+                            enterTo="translate-x-0"
+                            leave="ease-in duration-200"
+                            leaveFrom="translate-x-0"
+                            leaveTo="translate-x-full"
+                        >
+                            <Dialog.Panel className="fixed top-0 right-0 z-40 w-[640px] h-screen overflow-y-auto bg-white dark:bg-gray-800">
+                                <Dialog.Title
+                                    as="h3"
+                                    className="p-6 border-b border-gray-300 flex justify-between items-center"
+                                >
+                                    <strong className="inline-flex items-center gap-1 text-2xl font-semibold text-neutral-700 dark:text-gray-400 ">
+                                        <span id="drawer-label">
+                                            Schedule face-to-face interview
+                                        </span>
+                                    </strong>
+                                    <button type="button" onClick={onClose}>
+                                        <CloseIcon className="w-6 h-6" />
+                                    </button>
+                                </Dialog.Title>
+                                <div className="p-6 flex-1 space-y-6">
+                                    <CustomInput
+                                        title="Subject"
+                                        placeholder="Interview with candidate - Position"
+                                        required
+                                    />
+                                    <DatePicker
+                                        title="Date"
+                                        onChange={() => {}}
+                                        required
+                                    />
+                                </div>
+                            </Dialog.Panel>
+                        </Transition.Child>
                     </div>
-                </motion.div>
-            </dialog>
-        </Portal>
+                </div>
+            </Dialog>
+        </Transition>
     );
 };
 

@@ -40,6 +40,11 @@ const InternationalizationProvider = ({ children, ...props }: any) => {
 
     React.useEffect(() => {
         const getTranslation = async () => {
+            const htmlEl = document.documentElement;
+
+            if (htmlEl) {
+                htmlEl.lang = lang as string;
+            }
             const data = await import(
                 `@/utils/dictionaries/${lang ?? "en"}.json`
             ).then(module => module.default);

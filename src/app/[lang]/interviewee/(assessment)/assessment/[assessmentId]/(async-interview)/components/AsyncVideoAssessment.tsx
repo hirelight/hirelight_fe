@@ -83,7 +83,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
             const res = await asyncAssessmentServices.joinAsyncAssessment(
                 data.id
             );
-            console.log(res);
+            console.log(JSON.parse(res.data.questionAnswerSet));
             toast.success(res.message);
             setAssessmentData({
                 ...(res.data as any),

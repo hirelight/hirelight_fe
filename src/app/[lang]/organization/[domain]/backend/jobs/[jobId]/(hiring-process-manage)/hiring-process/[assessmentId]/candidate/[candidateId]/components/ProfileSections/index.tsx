@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import React from "react";
+import { Tab } from "@headlessui/react";
 
 import styles from "./styles.module.scss";
 import ProfileSection from "./ProfileSection";
@@ -9,8 +10,11 @@ import ReviewSection from "./ReviewSection";
 
 enum ProfileTab {
     PROFILE = "Profile",
-    TIMELINE = "Timeline",
     REVIEW = "Review",
+}
+
+function classNames(...classes: any) {
+    return classes.filter(Boolean).join(" ");
 }
 
 const ProfileSections = () => {
@@ -22,33 +26,34 @@ const ProfileSections = () => {
 
     return (
         <div className="rounded-md border border-gray-300 bg-white">
-            <div role="tablist" className="p-4 xl:px-6 flex items-center gap-8">
-                {(Object.keys(ProfileTab) as (keyof typeof ProfileTab)[]).map(
-                    key => (
-                        <button
-                            role="tab"
-                            type="button"
+            <Tab.Group>
+                <Tab.List className="p-4 xl:px-6 flex items-center gap-8">
+                    {(
+                        Object.keys(ProfileTab) as (keyof typeof ProfileTab)[]
+                    ).map(key => (
+                        <Tab
                             key={key}
-                            className={styles.profile__tab__btn}
+                            className={({ selected }) =>
+                                classNames(
+                                    styles.profile__tab__btn,
+                                    selected ? styles.active : ""
+                                )
+                            }
                             onClick={() => setProfileTab(ProfileTab[key])}
                         >
-                            <span
-                                className={`${styles.profile__tab__text} ${
-                                    profileTab === ProfileTab[key]
-                                        ? styles.active
-                                        : ""
-                                }`}
-                            >
-                                {ProfileTab[key]}
-                            </span>
-                        </button>
-                    )
-                )}
-            </div>
-            <div className="p-4 xl:p-6">
-                {profileTab === ProfileTab.PROFILE && <ProfileSection />}
-                {profileTab === ProfileTab.REVIEW && <ReviewSection />}
-            </div>
+                            {ProfileTab[key]}
+                        </Tab>
+                    ))}
+                </Tab.List>
+                <Tab.Panels className="p-4 xl:p-6">
+                    <Tab.Panel>
+                        <ProfileSection />
+                    </Tab.Panel>
+                    <Tab.Panel>
+                        <ReviewSection />
+                    </Tab.Panel>
+                </Tab.Panels>
+            </Tab.Group>
         </div>
     );
 };

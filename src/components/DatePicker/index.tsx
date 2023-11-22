@@ -36,6 +36,7 @@ interface DatePickerProps {
     maxDate?: Date;
     pos?: "top" | "bottom";
     required?: boolean;
+    title?: string;
 }
 
 const DatePicker: React.FC<DatePickerProps> = ({
@@ -47,6 +48,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
     maxDate,
     pos = "bottom",
     required,
+    title,
 }) => {
     const wrapperRef = useOutsideClick<HTMLDivElement>(() =>
         setShowDatepicker(false)
@@ -232,6 +234,17 @@ const DatePicker: React.FC<DatePickerProps> = ({
 
     return (
         <div ref={wrapperRef} className="relative">
+            {title && (
+                <label htmlFor={id} className={styles.input__label}>
+                    {required && <span className="text-red-500 mr-1">*</span>}
+                    {title}
+                    {!required && (
+                        <span className="text-neutral-500 text-sm ml-1">
+                            (Optional)
+                        </span>
+                    )}
+                </label>
+            )}
             <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
                     <svg

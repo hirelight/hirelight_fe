@@ -8,12 +8,7 @@ const PipelineAssessmentLayout = ({
 }: {
     children: React.ReactNode;
 }) => {
-    return (
-        <div>
-            <TitleHeader />
-            <AssesmentDetailWrapper>{children}</AssesmentDetailWrapper>
-        </div>
-    );
+    return <AssesmentDetailWrapper>{children}</AssesmentDetailWrapper>;
 };
 
 export default PipelineAssessmentLayout;

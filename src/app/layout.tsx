@@ -49,10 +49,10 @@ export default function RootLayout({
     params,
 }: {
     children: React.ReactNode;
-    params: { lang: Locale };
+    params: any;
 }) {
     return (
-        <html lang={params.lang}>
+        <html lang="en">
             <body
                 className={`${inter.className} ${roboto_mono.className} ${publicSans.className}`}
             >

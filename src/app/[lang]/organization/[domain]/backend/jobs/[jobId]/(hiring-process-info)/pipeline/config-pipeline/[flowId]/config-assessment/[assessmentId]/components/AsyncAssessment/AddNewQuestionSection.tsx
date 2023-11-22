@@ -17,7 +17,7 @@ import questionAnswerServices from "@/services/questions/questions.service";
 import { extractTextFromHtml, humanReadable } from "@/helpers";
 import fileServices from "@/services/file-service/file.service";
 
-import { AsyncQuestionType } from "../new/components/AsyncVideoForm";
+import { AsyncQuestionType } from "./AsyncVideoForm";
 
 const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ssr: false,

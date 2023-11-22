@@ -13,7 +13,7 @@ import {
 import { DragIndicatorIcon } from "@/icons";
 import { Selection } from "@/components";
 
-import { AsyncQuestionType } from "../new/components/AsyncVideoForm";
+import { AsyncQuestionType } from "./AsyncVideoForm";
 
 const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ssr: false,

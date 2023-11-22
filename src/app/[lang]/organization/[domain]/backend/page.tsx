@@ -7,6 +7,7 @@ import { Metadata } from "next";
 import { cookies } from "next/headers";
 import jwtDecode from "jwt-decode";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import { redirect } from "next/navigation";
 
 import endpoints from "@/utils/constants/service-endpoint";
 import { IJobDto } from "@/services/job/job.interface";
@@ -27,7 +28,6 @@ const getJobList = async (): Promise<IResponse<IJobDto[]>> => {
         `${process.env.NEXT_PUBLIC_SERVER_API}${endpoints.JOBPOSTS}/search?OrganizationId=${decoded.organizationId}`,
         {
             method: "GET",
-            cache: "no-store",
             headers: {
                 mode: "cors",
                 credentials: "same-origin",

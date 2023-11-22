@@ -1,13 +1,11 @@
 .profile__tab__btn {
-    &:hover .profile__tab__text {
-        @apply bg-blue_primary_700 text-white;
-    }
-}
-
-.profile__tab__text {
     display: block;
     padding: 0.5rem 1rem;
     @apply text-blue_primary_800 text-sm font-semibold rounded-md;
+
+    &:hover .profile__tab__text {
+        @apply bg-blue_primary_700 text-white;
+    }
 
     &.active {
         @apply bg-blue_primary_700 text-white;

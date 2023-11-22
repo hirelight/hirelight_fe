@@ -8,7 +8,10 @@ import {
     ChatBubbleOvalLeftIcon,
     PencilSquareIcon,
 } from "@heroicons/react/24/solid";
-import { CalendarDaysIcon } from "@heroicons/react/24/outline";
+import {
+    CalendarDaysIcon,
+    PaperAirplaneIcon,
+} from "@heroicons/react/24/outline";
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
@@ -95,55 +98,56 @@ const CandidateActionTabs = () => {
             />
             <div className="sticky -top-4">
                 <div className="bg-white absolute top-6 right-3 py-2 px-4 flex items-center gap-4 rounded-md shadow-md text-neutral-600">
-                    <button
+                    {/* <button
                         type="button"
                         className={styles.candidate__action__btn}
                     >
                         <EllipsisHorizontalIcon className="w-5 h-5" />
                     </button>
-                    <div className="w-[1px] h-8 bg-gray-300"></div>
-                    <Tooltip content="Send email">
+                    <div className="w-[1px] h-8 bg-gray-300"></div> */}
+                    {/* <Tooltip content="Send email">
                         <button
                             type="button"
                             className={styles.candidate__action__btn}
+                            onClick={() => setShowDrawer(true)}
                         >
                             <EnvelopeIcon className="w-5 h-5" />
                         </button>
-                    </Tooltip>
+                    </Tooltip> */}
                     <Tooltip content="Create event">
                         <button
                             type="button"
                             className={styles.candidate__action__btn}
+                            onClick={() => setShowDrawer(true)}
                         >
-                            <CalendarDaysIcon className="w-5 h-5" />
+                            <CalendarDaysIcon className="w-6 h-6" />
                         </button>
                     </Tooltip>
-                    <div className="w-[1px] h-8 bg-gray-300"></div>
                     <Tooltip content="Send assessment">
                         <button
                             type="button"
                             className={styles.candidate__action__btn}
                             onClick={handleSendAssessment}
                         >
-                            <ChatBubbleOvalLeftIcon className="w-5 h-5" />
+                            <PaperAirplaneIcon className="w-6 h-6" />
                         </button>
                     </Tooltip>
-                    <Tooltip content="Add evaluation">
+                    {/* <Tooltip content="Add evaluation">
                         <button
                             type="button"
                             className={styles.candidate__action__btn}
                             onClick={() => setShowDrawer(true)}
                         >
-                            <PencilSquareIcon className="w-5 h-5" />
+                            <PencilSquareIcon className="w-6 h-6" />
                         </button>
-                    </Tooltip>
+                    </Tooltip> */}
                     <div className="w-[1px] h-8 bg-gray-300"></div>
                     <Tooltip content="Disqualified candidate">
                         <button
                             type="button"
                             className={styles.candidate__action__btn}
                         >
-                            <HandRaisedIcon className="w-5 h-5 text-red-600" />
+                            <HandRaisedIcon className="w-6 h-6 text-red-600" />
                         </button>
                     </Tooltip>
                     <div className="flex items-center ">

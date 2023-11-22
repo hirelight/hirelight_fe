@@ -34,7 +34,7 @@ const ProfileSection = () => {
             ? field.type === "date"
                 ? moment(field.value)
                 : field.value
-            : "No data";
+            : "";
 
         if (field.id === "resume")
             return (
@@ -55,8 +55,6 @@ const ProfileSection = () => {
                 </div>
             );
     };
-
-    console.log("Profile section render");
 
     React.useEffect(() => {
         const fetchLayout = async () => {
@@ -80,10 +78,10 @@ const ProfileSection = () => {
                         fields: section.fields
                             .map(item => {
                                 const isHaving = fieldMap.get(item.id);
-                                // if (isHaving) fieldMap.delete(isHaving.id);
+
                                 return isHaving ? isHaving : item;
                             })
-                            .filter(item => item.value !== undefined),
+                            .filter(item => item.value),
                     }))
                     .filter(
                         section => !section.fields.every(item => !item.value)
@@ -100,94 +98,82 @@ const ProfileSection = () => {
 
     return (
         <div className="">
-            {profileDatas.questions.length > 0 && (
-                <div
-                    role="tablist"
-                    className="w-full border-b border-gray-300 mb-6"
-                >
-                    <button
-                        type="button"
-                        role="tab"
-                        onClick={() => setProfileTab(0)}
-                        className={`${styles.profile__tab__btn} ${
-                            profileTab === 0 ? styles.active : ""
-                        }`}
+            <section>
+                <div className="w-full border-b border-gray-300 mb-6">
+                    <h3
+                        className={`inline-block ${styles.profile__tab__btn} ${styles.active}`}
                     >
                         <span>Details</span>
-                    </button>
-                    <button
-                        type="button"
-                        role="tab"
-                        onClick={() => setProfileTab(1)}
-                        className={`${styles.profile__tab__btn} ${
-                            profileTab === 1 ? styles.active : ""
-                        }`}
-                    >
-                        <span>Answers</span>
-                    </button>
+                    </h3>
                 </div>
-            )}
 
-            {sections?.map((section, index) => {
-                return (
-                    <div key={index} className="mb-4">
-                        <strong className="block text-sm text-neutral-600 uppercase mb-2">
-                            {section.label}
-                        </strong>
-                        {section.fields.map((field, index) => {
-                            return (
-                                <div key={index} className="mb-4 text-sm">
-                                    {getDetailByField(field)}
-                                </div>
-                            );
-                        })}
-                    </div>
-                );
-            })}
-
-            <section>
-                <strong className="block text-sm text-neutral-600 uppercase mb-6">
-                    Answers
-                </strong>
-                {formDetails.current.questions?.map((answer, index) => {
+                {sections?.map((section, index) => {
                     return (
-                        <div
-                            key={index}
-                            className="mb-4 text-sm border-b border-gray-300 pb-6 last:pb-0 last:border-none"
-                        >
-                            <div className="lg:basis-40 mr-6 text-neutral-500 flex gap-2 mb-2">
-                                <span>{answer.label}</span>
-                            </div>
-                            <div className="border-l-2 border-gray-300 pl-4 text-neutral-600">
-                                {answer.type === "file" ? (
-                                    <a
-                                        href={answer.value.value}
-                                        download
-                                        className="text-blue_primary_700 font-semibold hover:underline"
-                                    >
-                                        {answer.value.value}
-                                    </a>
-                                ) : answer.type === "date" ? (
-                                    moment(answer.value, "DD/MM/YYYY")
-                                        .toDate()
-                                        .toISOString()
-                                ) : Array.isArray(answer.value) ? (
-                                    answer.value?.map(choice => (
-                                        <div
-                                            key={choice}
-                                            className="mt-2 first:mt-0"
-                                        >
-                                            {choice}
-                                        </div>
-                                    ))
-                                ) : (
-                                    answer.value
-                                )}
-                            </div>
+                        <div key={index} className="mb-4">
+                            <strong className="block text-sm text-neutral-600 uppercase mb-2">
+                                {section.label}
+                            </strong>
+                            {section.fields.map((field, index) => {
+                                return (
+                                    <div key={index} className="mb-4 text-sm">
+                                        {getDetailByField(field)}
+                                    </div>
+                                );
+                            })}
                         </div>
                     );
                 })}
             </section>
+
+            {formDetails.current.questions.length > 0 && (
+                <section>
+                    <div className="w-full border-b border-gray-300 mb-6">
+                        <h3
+                            className={`inline-block ${styles.profile__tab__btn} ${styles.active}`}
+                        >
+                            <span>Answers</span>
+                        </h3>
+                    </div>
+                    {formDetails.current.questions.map((answer, index) => {
+                        return (
+                            <div
+                                key={index}
+                                className="mb-4 text-sm border-b border-gray-300 pb-6 last:pb-0 last:border-none"
+                            >
+                                <div className="lg:basis-40 mr-6 text-neutral-500 flex gap-2 mb-2">
+                                    <span>{answer.label}</span>
+                                </div>
+                                <div className="border-l-2 border-gray-300 pl-4 text-neutral-600">
+                                    {answer.type === "file" ? (
+                                        <a
+                                            href={answer.value.value}
+                                            download
+                                            className="text-blue_primary_700 font-semibold hover:underline"
+                                        >
+                                            {answer.value.value}
+                                        </a>
+                                    ) : answer.type === "date" ? (
+                                        moment(answer.value, "DD/MM/YYYY")
+                                            .toDate()
+                                            .toISOString()
+                                    ) : Array.isArray(answer.value) ? (
+                                        answer.value?.map(choice => (
+                                            <div
+                                                key={choice}
+                                                className="mt-2 first:mt-0"
+                                            >
+                                                {choice}
+                                            </div>
+                                        ))
+                                    ) : (
+                                        answer.value
+                                    )}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </section>
+            )}
         </div>
     );
 };

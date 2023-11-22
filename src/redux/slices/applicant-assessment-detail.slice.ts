@@ -23,7 +23,11 @@ const initialState: IApplicantProfileState = {
 const applicantAssessmentDetailSlice = createSlice({
     name: "applicantProfile",
     initialState: initialState,
-    reducers: {},
+    reducers: {
+        setApplicantDetail: (state, action) => {
+            state.data = action.payload;
+        },
+    },
     extraReducers(builder) {
         builder
             .addCase(getAppDetailByProfileId.pending, state => {
@@ -49,6 +53,6 @@ const applicantAssessmentDetailSlice = createSlice({
     },
 });
 
-export const {} = applicantAssessmentDetailSlice.actions;
+export const { setApplicantDetail } = applicantAssessmentDetailSlice.actions;
 
 export default applicantAssessmentDetailSlice.reducer;

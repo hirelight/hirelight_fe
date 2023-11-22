@@ -35,7 +35,7 @@ const moveCandidateToAssessment = async (
 };
 
 const employeeGetApplicantAssessDetailsList = async (
-    canididateId: string,
+    candidateId: string,
     jobpostId: string
 ): Promise<IResponse<IJobPostAppAssDetailDto[]>> => {
     try {
@@ -43,7 +43,7 @@ const employeeGetApplicantAssessDetailsList = async (
             endpoints.APPLICANT_ASSESSMENT_DETAILS + "/employee/search",
             {
                 params: {
-                    canididateId,
+                    candidateId,
                     jobpostId,
                 },
             }
@@ -70,6 +70,23 @@ const employeeGetJobPostProfile = async (
                     includeMovedStatus,
                 },
             }
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const employeeGetByDetailId = async (
+    applicantAssessmentId: string
+): Promise<IResponse<IJobPostAppAssDetailDto[]>> => {
+    try {
+        const res = await interceptor.get<IResponse<IJobPostAppAssDetailDto[]>>(
+            endpoints.APPLICANT_ASSESSMENT_DETAILS +
+                `/employee/${applicantAssessmentId}`
         );
 
         checkResErr(res.data);
@@ -300,6 +317,7 @@ const applicantAssessmentDetailServices = {
     getMyInvitedAssessmentById,
     employeeGetJobPostProfile,
     employeeApplicantDetailByAssessmentId,
+    employeeGetByDetailId,
     getAppAssDetailByProfileId,
 };
 

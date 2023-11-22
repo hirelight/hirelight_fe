@@ -9,9 +9,10 @@ import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 
 import styles from "./PipelineStages.module.scss";
 
-const defaultStage: AssessmentTypeKey[] = [
+export const defaultStage: AssessmentTypeKey[] = [
     "SOURCED_ASSESSMENT",
     "HIRED_ASSESSMENT",
+    "LIVE_VIDEO_INTERVIEW_ASSESSMENT",
 ];
 interface IPipelineStages {
     stages: IAssessmentDto[];
@@ -36,7 +37,7 @@ const PipelineStages = ({
                             )}
                             className={`${styles.stage__btn} ${
                                 defaultStage.includes(stage.assessmentTypeName)
-                                    ? "cursor-not-allowed opacity-70"
+                                    ? styles.disabled
                                     : "hover:bg-gray-400 hover:text-neutral-700"
                             } ${
                                 selectedStage && selectedStage.id === stage.id

@@ -2,9 +2,9 @@
 
 import React from "react";
 
-import AsyncVideoForm from "./components/AsyncVideoForm";
+import AsyncVideoForm from "./AsyncVideoForm";
 
-const NewOneWayInterview = () => {
+const AsyncAssessmentConfig = () => {
     return (
         <div className="bg-white py-6 drop-shadow-md rounded-md">
             <h2 className="text-xl text-neutral-700 text-center font-medium px-4 xl:px-6 mb-8">
@@ -15,4 +15,4 @@ const NewOneWayInterview = () => {
     );
 };
 
-export default NewOneWayInterview;
+export default AsyncAssessmentConfig;

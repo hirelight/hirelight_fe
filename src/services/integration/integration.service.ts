@@ -7,6 +7,7 @@ import {
     ICreateIntegrationDto,
     IEditIntegrationDto,
     IIntegrationDto,
+    IIntegrationToken,
 } from "..";
 
 const getList = async (): Promise<IResponse<IIntegrationDto[]>> => {
@@ -23,9 +24,11 @@ const getList = async (): Promise<IResponse<IIntegrationDto[]>> => {
     }
 };
 
-const getById = async (id: string): Promise<IResponse<IIntegrationDto>> => {
+const getTokenById = async (
+    id: string
+): Promise<IResponse<IIntegrationToken>> => {
     try {
-        const res = await interceptor.get<IResponse<IIntegrationDto>>(
+        const res = await interceptor.get<IResponse<IIntegrationToken>>(
             endpoints.THIRDPARTY_TOKENS + `/${id}`
         );
 
@@ -85,7 +88,7 @@ const deleteById = async (id: string): Promise<IResponse<any>> => {
 
 const integrationServices = {
     getList,
-    getById,
+    getTokenById,
     edit,
     createNew,
     deleteById,

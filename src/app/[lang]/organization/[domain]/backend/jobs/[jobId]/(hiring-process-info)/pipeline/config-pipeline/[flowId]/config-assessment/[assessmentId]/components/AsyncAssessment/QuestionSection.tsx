@@ -15,8 +15,7 @@ import { humanReadable } from "@/helpers";
 import AddNewQuestionSection, {
     numOfTakes,
     thinkTime,
-} from "../../components/AddNewQuestionSection";
-
+} from "./AddNewQuestionSection";
 import { AsyncQuestionType } from "./AsyncVideoForm";
 
 const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
