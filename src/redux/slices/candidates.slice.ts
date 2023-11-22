@@ -32,7 +32,7 @@ const candidatesSlice = createSlice({
             const isExisting = state.selectedCandidates.find(
                 item => item === action.payload
             );
-            console.log(isExisting, action.payload);
+
             if (isExisting !== undefined) {
                 state.selectedCandidates = state.selectedCandidates.filter(
                     item => item !== action.payload

@@ -157,19 +157,19 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
         //     console.log(`Key: ${key}, Value:`, value);
         // }
 
-        console.log({
-            form_structure: data.form_structure.map(sec => ({
-                ...sec,
-                fields: sec.fields.map(f => ({
-                    ...f,
-                    value: fieldMap.get(f.id)?.value,
-                })),
-            })),
-            questions: data.questions.map(f => ({
-                ...f,
-                value: fieldMap.get(f.id)?.value,
-            })),
-        });
+        // console.log({
+        //     form_structure: data.form_structure.map(sec => ({
+        //         ...sec,
+        //         fields: sec.fields.map(f => ({
+        //             ...f,
+        //             value: fieldMap.get(f.id)?.value,
+        //         })),
+        //     })),
+        //     questions: data.questions.map(f => ({
+        //         ...f,
+        //         value: fieldMap.get(f.id)?.value,
+        //     })),
+        // });
 
         const name = fieldMap.get("name")!!.value!! as string;
         try {

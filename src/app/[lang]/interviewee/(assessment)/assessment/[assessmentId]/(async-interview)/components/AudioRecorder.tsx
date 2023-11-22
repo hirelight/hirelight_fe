@@ -44,7 +44,6 @@ const AudioRecorder = () => {
 
         let localAudioChunks: Blob[] = [];
         mediaRecorder.current.ondataavailable = (event: BlobEvent) => {
-            console.log(event.data);
             if (typeof event.data === "undefined") return;
             if (event.data.size === 0) return;
             localAudioChunks.push(event.data);
@@ -64,7 +63,6 @@ const AudioRecorder = () => {
             const audioBlob = new Blob(audioChunks, { type: mimeType });
             //creates a playable URL from the blob file.
             const audioUrl = URL.createObjectURL(audioBlob);
-            console.log(audioUrl, audioBlob);
             setAudio(audioUrl);
             setAudioChunks([]);
         };

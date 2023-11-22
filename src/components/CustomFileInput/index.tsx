@@ -4,7 +4,6 @@ import React, { DetailedHTMLProps, InputHTMLAttributes } from "react";
 import { toast } from "react-toastify";
 
 import { SpinLoading } from "@/icons";
-import { uploadImage } from "@/helpers";
 import fileServices from "@/services/file-service/file.service";
 
 import styles from "./styles.module.scss";
@@ -83,14 +82,11 @@ const CustomFileInput = (props: ICustomFileInput) => {
                         handleFileChange([file]);
                     }
                     wrapperRef.current!!.classList.remove(styles.file__active);
-                    console.log(`… file[${i}].name = ${file.name}`);
                 }
             });
         } else {
             // Use DataTransfer interface to access the file(s)
-            [...ev.dataTransfer.files].forEach((file, i) => {
-                console.log(`… file[${i}].name = ${file.name}`);
-            });
+            [...ev.dataTransfer.files].forEach((file, i) => {});
         }
     };
 

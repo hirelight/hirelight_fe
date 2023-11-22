@@ -16,7 +16,6 @@ const EditQuestionSetPage = () => {
     const [data, setData] = useState<IQuesAnsSetDto>();
 
     useEffect(() => {
-        console.log(questionSetId);
         const fetchQuesSetById = async (id: string) => {
             setIsLoading(true);
             try {
@@ -24,7 +23,6 @@ const EditQuestionSetPage = () => {
 
                 toast.success(res.message);
                 setData(res.data);
-                console.log(res.data);
                 setIsLoading(false);
             } catch (error) {
                 console.error(error);

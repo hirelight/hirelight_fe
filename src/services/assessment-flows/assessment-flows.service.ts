@@ -18,7 +18,6 @@ const createAsync = async (
             `${endpoints.ASSESSMENT_FLOWS}`,
             createEmailTemplatesDto
         );
-        console.log(res);
         checkResErr(res.data);
         return res.data;
     } catch (error) {

@@ -9,7 +9,6 @@ const ApplicationForm = () => {
     const resumeRef = React.useRef<HTMLInputElement>(null);
 
     const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.files);
         if (e.target.files && e.target.files?.length > 0)
             setFileName(e.target.files[0].name);
     };

@@ -35,8 +35,6 @@ const QuestionSetForm: React.FC<QuestionSetFormProps> = ({ data }) => {
             });
 
             toast.success(res.message);
-
-            console.log(res);
         } catch (error) {
             console.error(error);
             toast.error("Create set error");
@@ -53,8 +51,6 @@ const QuestionSetForm: React.FC<QuestionSetFormProps> = ({ data }) => {
             });
 
             toast.success(res.message);
-
-            console.log(res);
         } catch (error) {
             console.error(error);
             toast.error("Edit set error");

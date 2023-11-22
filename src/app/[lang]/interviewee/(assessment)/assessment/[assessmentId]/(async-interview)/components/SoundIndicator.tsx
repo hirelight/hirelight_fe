@@ -15,20 +15,14 @@ const SoundIndicator: React.FC<SoundIndicatorProps> = ({
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
     const getDevices = () => {
-        if (!navigator.mediaDevices?.enumerateDevices) {
-            console.log("enumerateDevices() not supported.");
-        } else {
+        if (navigator.mediaDevices?.enumerateDevices) {
             // List cameras and microphones.
             navigator.mediaDevices
                 .enumerateDevices()
                 .then(devices => {
-                    devices
-                        .filter(device =>
-                            ["audioinput", "videoinput"].includes(device.kind)
-                        )
-                        .forEach(device => {
-                            console.log(device);
-                        });
+                    devices.filter(device =>
+                        ["audioinput", "videoinput"].includes(device.kind)
+                    );
                 })
                 .catch(err => {
                     console.error(`${err.name}: ${err.message}`);

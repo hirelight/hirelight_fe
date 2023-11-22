@@ -118,7 +118,6 @@ const EmailEditorToolbar: React.FC<IEmailEditorToolbar> = ({
     useEffect(() => {
         if (emailTemplateTypes.length > 0) {
             if (data) {
-                console.log(data);
                 const templateType = emailTemplateTypes.find(
                     item => item.id === data.emailTemplateType.id
                 )!!;

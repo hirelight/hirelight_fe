@@ -79,7 +79,6 @@ const NewOrganizationForm = () => {
                 }
             }
         } catch (error: any) {
-            console.log(error);
             toast.error(error.message ? error.message : "Create org failure!", {
                 position: "bottom-left",
             });

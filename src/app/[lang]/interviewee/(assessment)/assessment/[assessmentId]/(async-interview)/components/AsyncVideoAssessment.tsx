@@ -83,7 +83,6 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
             const res = await asyncAssessmentServices.joinAsyncAssessment(
                 data.id
             );
-            console.log(JSON.parse(res.data.questionAnswerSet));
             toast.success(res.message);
             setAssessmentData({
                 ...(res.data as any),
@@ -176,7 +175,6 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
     //             const context = new AudioContext();
     //             if (!audioContext) setAudioContext(context);
     //         } else {
-    //             console.log("Turn off camera");
     //             const tracks = stream.getTracks();
 
     //             // Stop each track

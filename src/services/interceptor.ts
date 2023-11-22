@@ -9,17 +9,12 @@ const interceptor = axios.create({
     baseURL: process.env.NEXT_PUBLIC_SERVER_API,
 });
 
-interceptor.interceptors.request.use(
-    (req: InternalAxiosRequestConfig<any>) => {
-        const token = Cookies.get("hirelight_access_token");
-        if (token && req.headers) req.headers.Authorization = `Bearer ${token}`;
+interceptor.interceptors.request.use((req: InternalAxiosRequestConfig<any>) => {
+    const token = Cookies.get("hirelight_access_token");
+    if (token && req.headers) req.headers.Authorization = `Bearer ${token}`;
 
-        return req;
-    },
-    err => {
-        console.log("Reqest err", err);
-    }
-);
+    return req;
+});
 
 interceptor.interceptors.response.use(
     (res: AxiosResponse) => {

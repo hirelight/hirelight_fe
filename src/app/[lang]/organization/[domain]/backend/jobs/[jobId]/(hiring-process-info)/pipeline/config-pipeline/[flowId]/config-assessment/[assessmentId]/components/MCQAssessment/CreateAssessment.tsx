@@ -115,7 +115,6 @@ const CreateAssessment = () => {
             error.descriptionErr = "Description must at least 100 characters";
 
         if (isInvalidForm(error)) {
-            console.log(error);
             setFormErr({ ...error });
             toast.error(
                 <div>
@@ -145,7 +144,6 @@ const CreateAssessment = () => {
                 assessmentQuestionAnswerSetContent:
                     JSON.stringify(pickedQuestions),
             });
-            console.log(res);
             queryClient.invalidateQueries({
                 queryKey: [`assessmentFlow`, flowId],
             });

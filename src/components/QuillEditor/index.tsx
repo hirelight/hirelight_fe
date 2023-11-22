@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import interceptor from "@/services/interceptor";
 import { IResponse } from "@/interfaces/service.interface";
-import { checkResErr, resizeImage } from "@/helpers";
+import { checkResErr, resizeImage, uploadFile } from "@/helpers";
 
 import styles from "./QuillEditor.module.scss";
 import EditorToolbar from "./EditorToolbar";
@@ -102,24 +102,6 @@ const QuillEditor = ({
         [onChange]
     );
 
-    const uploadImage = async (file: File): Promise<string | null> => {
-        const formData = new FormData();
-        formData.append("formFile", file);
-
-        const res = await interceptor.post<IResponse<any>>(
-            "/assessment-flows/images",
-            formData,
-            {
-                headers: { "Content-Type": "multipart/form-data" },
-            }
-        );
-        console.log(res.data);
-        toast.success(res.data.message);
-        checkResErr(res.data);
-
-        return res.data.data;
-    };
-
     const customImageHandler = React.useCallback(() => {
         const input = document.createElement("input");
         input.setAttribute("type", "file");
@@ -131,24 +113,10 @@ const QuillEditor = ({
                 const file = input.files[0];
                 if (file) {
                     const resizedImage = await resizeImage(file);
-                    const imageUrl = await uploadImage(resizedImage);
+                    const imageUrl = await uploadFile(resizedImage);
                     if (imageUrl === null) return;
 
                     insertImage(imageUrl);
-                    // const reader = new FileReader();
-
-                    // reader.onload = event => {
-                    //     const img = new Image();
-                    //     img.src = reader.result as string;
-                    //     img.addEventListener("load", () => {
-                    //         // Resize the image based on user input
-                    //         img.style.width = "auto";
-                    //         img.style.height = "120px"; // Maintain aspect ratio
-                    //         const imageUrl = img.src;
-                    //         insertImage(imageUrl);
-                    //     });
-                    // };
-                    // reader.readAsDataURL(file);
                 }
             }
         });

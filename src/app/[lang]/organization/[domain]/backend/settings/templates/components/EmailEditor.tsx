@@ -13,7 +13,7 @@ import {
 } from "@/services/email-template/email-template.interface";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { fetchEmailTemplateTypes } from "@/redux/thunks/email-templates.thunk";
-import { checkResErr, resizeImage } from "@/helpers";
+import { checkResErr, resizeImage, uploadFile } from "@/helpers";
 import interceptor from "@/services/interceptor";
 import { IResponse } from "@/interfaces/service.interface";
 
@@ -94,31 +94,12 @@ const EmailEditor: React.FC<IEmailEditor> = ({
                 if (onChange) {
                     const editorContent =
                         quillInstance.current!!.root.innerHTML;
-                    // console.log(editorContent);
                     onChange(editorContent);
                 }
             }
         },
         [onChange]
     );
-
-    const uploadImage = async (file: File): Promise<string | null> => {
-        const formData = new FormData();
-        formData.append("formFile", file);
-
-        const res = await interceptor.post<IResponse<any>>(
-            "/assessment-flows/images",
-            formData,
-            {
-                headers: { "Content-Type": "multipart/form-data" },
-            }
-        );
-        console.log(res.data);
-        toast.success(res.data.message);
-        checkResErr(res.data);
-
-        return res.data.data;
-    };
 
     const customImageHandler = React.useCallback(() => {
         const input = document.createElement("input");
@@ -131,7 +112,7 @@ const EmailEditor: React.FC<IEmailEditor> = ({
                 const file = input.files[0];
                 if (file) {
                     const resizedImage = await resizeImage(file);
-                    const imageUrl = await uploadImage(resizedImage);
+                    const imageUrl = await uploadFile(resizedImage);
                     if (imageUrl === null) return;
 
                     const img = new Image();

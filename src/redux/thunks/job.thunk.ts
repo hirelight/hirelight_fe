@@ -31,7 +31,7 @@ export const getJobById = createAsyncThunk(
         const appFormTemplateParsed = JSON.parse(
             appFormTemplateRes.data.content
         );
-        console.log(appFormTemplateParsed);
+
         const mergeAppForm = mergeAppFormFields(
             jobAppFormParsed,
             appFormTemplateParsed.app_form

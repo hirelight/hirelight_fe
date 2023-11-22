@@ -128,7 +128,6 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
 
         setLoading(true);
         try {
-            console.log(job.applicationForm);
             await dispatch(
                 updateJob({
                     ...job,

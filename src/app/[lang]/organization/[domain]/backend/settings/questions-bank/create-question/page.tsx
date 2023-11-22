@@ -230,7 +230,6 @@ const CreateQuestionPage = () => {
     };
 
     const handleUploadQuestions = async (file: File) => {
-        console.log(file);
         const formData = new FormData();
 
         formData.append("formFile", file);
@@ -239,7 +238,6 @@ const CreateQuestionPage = () => {
             const res =
                 await questionAnswerServices.uploadQuestionsAsync(formData);
             toast.success(res.message);
-            console.log(res);
         } catch (error) {
             console.error(error);
         }

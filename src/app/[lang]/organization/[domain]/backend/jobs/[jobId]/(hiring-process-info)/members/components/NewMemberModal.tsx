@@ -65,25 +65,6 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
         sendInvitationMutate.mutate();
     };
 
-    // useEffect(() => {
-    //     const getEmployers = async () => {
-    //         try {
-    //             const res = await employerOrgServices.getListAsync();
-    //             const filteredEmployers = res.data.filter(
-    //                 member =>
-    //                     member.employerDto.id.toString() !== authUser.userId
-    //             );
-    //             setEmployers(filteredEmployers);
-    //             console.log(res);
-    //         } catch (error) {
-    //             toast.error("Get employers failure");
-    //         }
-    //     };
-
-    //     getEmployers();
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
-
     return (
         <Modal
             position="top"

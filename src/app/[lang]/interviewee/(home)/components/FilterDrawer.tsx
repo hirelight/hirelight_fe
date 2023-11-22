@@ -161,7 +161,6 @@ const FilterDrawer = () => {
                                 ...filterFields,
                                 [key]: value,
                             });
-                            console.log(filterFields);
                         }}
                     />
 

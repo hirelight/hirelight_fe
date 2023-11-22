@@ -75,7 +75,6 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
         let localVideoChunks: Blob[] = [];
 
         mediaRecorder.current.ondataavailable = (event: BlobEvent) => {
-            console.log(event.data);
             if (typeof event.data === "undefined") return;
             if (event.data.size === 0) return;
 
@@ -101,7 +100,6 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
                     type: mimeType,
                 });
                 const url = await uploadFile(myFile);
-                console.log(url);
                 setAnswers(
                     produce(answers, draft => {
                         if (!draft[curPos].content.files)

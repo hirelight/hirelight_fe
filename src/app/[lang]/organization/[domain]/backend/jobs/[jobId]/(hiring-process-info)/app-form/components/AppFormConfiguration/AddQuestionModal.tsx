@@ -179,7 +179,6 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                         value={questionField.label}
                         required={true}
                         onChange={(e: any) => {
-                            console.log("Set input");
                             setQuestionField({
                                 ...questionField,
                                 label: e.target.value,

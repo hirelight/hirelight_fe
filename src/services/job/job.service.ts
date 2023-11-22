@@ -14,7 +14,7 @@ const createAsync = async (
             `${endpoints.JOBPOSTS}`,
             createJobDto
         );
-        console.log(res);
+
         checkResErr(res.data);
         return res.data;
     } catch (error) {

@@ -87,7 +87,7 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
         setIsLoading(true);
         try {
             const res = await mcAssessmentServices.joinMCAssessment(data.id);
-            console.log(res);
+
             toast.success(res.message);
             setAssessmentData(res.data);
             setDisplayTest(true);
@@ -184,7 +184,6 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
     useEffect(() => {
         // Clear tracking task on leaving page
         return () => {
-            console.log("Clear timeout");
             if (timerId) clearInterval(timerId!! as NodeJS.Timer);
         };
     }, []);

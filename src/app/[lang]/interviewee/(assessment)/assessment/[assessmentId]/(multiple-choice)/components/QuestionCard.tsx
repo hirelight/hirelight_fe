@@ -47,7 +47,6 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
         e: React.ChangeEvent<HTMLInputElement>,
         pos: number
     ) => {
-        console.log(data.id, id);
         setAnswers(
             answers.map(item => {
                 if (item.id === id) {
@@ -58,7 +57,6 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                             answers: parsedContent.current.answers.map(
                                 (choice, choiceIndex) => {
                                     if (choiceIndex === pos) {
-                                        console.log(choice, e.target.checked);
                                         return {
                                             ...choice,
                                             isChosen: e.target.checked,

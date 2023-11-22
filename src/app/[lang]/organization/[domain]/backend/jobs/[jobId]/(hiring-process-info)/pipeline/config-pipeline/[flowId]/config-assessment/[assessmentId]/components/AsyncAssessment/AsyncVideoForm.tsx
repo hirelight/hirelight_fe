@@ -99,10 +99,8 @@ const AsyncVideoForm = () => {
                 queryKey: ["assessmentFlow", flowId],
             });
             toast.success(res.message);
-            console.log(res);
-        } catch (error) {
-            console.log(error);
-            toast.error("Something went wrong");
+        } catch (error: any) {
+            toast.error(error.message ? error.message : "Something went wrong");
         }
     };
 

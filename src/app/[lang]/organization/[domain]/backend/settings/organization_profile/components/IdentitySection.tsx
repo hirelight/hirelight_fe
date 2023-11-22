@@ -64,14 +64,11 @@ const IdentitySection = () => {
                         handleFileChange([file]);
                     }
                     wrapperRef.current!!.classList.remove(styles.file__active);
-                    console.log(`… file[${i}].name = ${file.name}`);
                 }
             });
         } else {
             // Use DataTransfer interface to access the file(s)
-            [...ev.dataTransfer.files].forEach((file, i) => {
-                console.log(`… file[${i}].name = ${file.name}`);
-            });
+            [...ev.dataTransfer.files].forEach((file, i) => {});
         }
     };
 

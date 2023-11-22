@@ -19,7 +19,6 @@ const createAsync = async (
             `${endpoints.EMAIL_TEMPLATE}`,
             createEmailTemplatesDto
         );
-        console.log(res);
         checkResErr(res.data);
         return res.data;
     } catch (error) {
