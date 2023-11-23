@@ -17,3 +17,17 @@ export interface IOrganizationDto {
     location: string | null;
     ownerId: string;
 }
+
+export interface IEditOrganizationDto {
+    id: string;
+    name: string;
+    subdomain: string;
+    logoUrl: string;
+    description: string;
+    introduction: string;
+    industry: string;
+    numberOfEmployees: number;
+    nationality: string;
+    address: string;
+    location: string;
+}

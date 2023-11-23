@@ -34,14 +34,13 @@ const nextConfig = withBundleAnalyzer({
             process.env.NODE_ENV === "development"
                 ? {
                       protocol: "http",
-                      hostname: "localhost",
+                      hostname: process.env.NEXT_PUBLIC_SERVER_HOSTNAME,
                       port: "5555",
                       pathname: "/api/v1/assessment-flows/files/**",
                   }
                 : {
                       protocol: "http",
-                      hostname: "localhost",
-                      port: "5555",
+                      hostname: process.env.NEXT_PUBLIC_SERVER_HOSTNAME,
                       pathname: "/api/v1/assessment-flows/files/**",
                   },
         ],

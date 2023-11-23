@@ -143,7 +143,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                     <p className="font-semibold mb-2">
                         Difficulty:{" "}
                         <span className="font-normal">
-                            {QuestionDifficulty[difficulty]}
+                            {QuestionDifficulty[difficulty - 1]}
                         </span>
                     </p>
 

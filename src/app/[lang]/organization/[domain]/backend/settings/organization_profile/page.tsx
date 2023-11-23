@@ -4,6 +4,7 @@ import { Metadata } from "next";
 import styles from "./styles.module.scss";
 import ProfileSection from "./components/ProfileSection";
 import IdentitySection from "./components/IdentitySection";
+import OrgProfileForm from "./components/OrgProfileForm";
 
 export const metadata: Metadata = {
     title: "Hirelight - Edit Account - Hirelight",
@@ -12,9 +13,11 @@ export const metadata: Metadata = {
 const OrganizationProfile = () => {
     return (
         <div className="w-full flex flex-col gap-8">
-            <ProfileSection />
+            <OrgProfileForm>
+                <ProfileSection />
 
-            <IdentitySection />
+                <IdentitySection />
+            </OrgProfileForm>
         </div>
     );
 };

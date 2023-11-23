@@ -28,12 +28,13 @@ const IntegrationList = () => {
     });
 
     return (
-        <div>
+        <div className="bg-white rounded-md drop-shadow-lg">
             <ul>
                 {integrationRes?.data.map(integration => (
                     <li
                         key={integration.service}
                         onClick={() => setEditItem(integration)}
+                        className="border-b border-gray-300 last:border-b-0"
                     >
                         <IntegrationCard data={integration} />
                     </li>

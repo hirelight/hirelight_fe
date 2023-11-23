@@ -49,6 +49,13 @@ const Integrations = async () => {
 
     return (
         <div>
+            <div className="flex justify-between">
+                <h2
+                    className={`uppercase mb-4 text-sm text-neutral-700 font-semibold`}
+                >
+                    Supported Third party
+                </h2>
+            </div>
             <HydrationBoundary state={dehydrate(queryClient)}>
                 <IntegrationList />
             </HydrationBoundary>

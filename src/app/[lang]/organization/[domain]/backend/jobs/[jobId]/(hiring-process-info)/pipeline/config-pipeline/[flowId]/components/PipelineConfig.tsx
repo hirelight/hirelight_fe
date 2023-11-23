@@ -12,16 +12,18 @@ import PipelineConfigAssessment from "./PipelineConfigAssessment";
 type PipelineConfigProps = {};
 
 const PipelineConfig: React.FC<PipelineConfigProps> = ({}) => {
-    const { lang, jobId, flowId } = useParams();
+    const { lang, jobId, flowId, assessmentId } = useParams();
     const router = useRouter();
 
     const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
     const [selectedStage, setSelectedStage] = React.useState<
         IAssessmentDto | undefined
     >(
-        assessmentFlow.assessments.length > 2
-            ? assessmentFlow.assessments[1]
-            : undefined
+        assessmentId
+            ? assessmentFlow.assessments.find(
+                  item => item.id === assessmentId
+              )!!
+            : assessmentFlow.assessments[1]
     );
 
     const handleSelectStage = (stage: IAssessmentDto) => {

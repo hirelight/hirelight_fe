@@ -24,16 +24,11 @@ const HeaderBar: React.FC<HeaderBarProps> = ({}) => {
 
     const dispatch = useAppDispatch();
     const token = useAppSelector(state => state.auth.token);
-    const [isAuth, setIsAuth] = useState(false);
 
     const handleLogout = useCallback(() => {
         dispatch(logout());
         router.push("login");
     }, [router, dispatch]);
-
-    useEffect(() => {
-        if (token) setIsAuth(token ? true : false);
-    }, [token]);
 
     return (
         <div className="text-center w-full  h-fit bg-white dark:bg-blue-950 drop-shadow-md relative z-10">
@@ -64,7 +59,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({}) => {
                     <div className="text-neutral-700 border-neutral-400">
                         <LocaleSwitcher />
                     </div>
-                    {isAuth && (
+                    {token && (
                         <button
                             type="button"
                             onClick={handleLogout}

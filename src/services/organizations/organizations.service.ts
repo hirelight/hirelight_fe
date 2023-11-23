@@ -4,7 +4,11 @@ import endpoints from "@/utils/constants/service-endpoint";
 
 import interceptor from "../interceptor";
 
-import { ICreateOrgDto, IOrganizationDto } from "./organizations.interface";
+import {
+    ICreateOrgDto,
+    IEditOrganizationDto,
+    IOrganizationDto,
+} from "./organizations.interface";
 
 const getByIdAsync = async (
     orgId: string
@@ -26,6 +30,19 @@ const createNewOrganization = async (createNewOrgDto: ICreateOrgDto) => {
         const res = await interceptor.post(
             endpoints.ORGANIZATIONS,
             createNewOrgDto
+        );
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const editOrgProfile = async (editDto: IEditOrganizationDto) => {
+    try {
+        const res = await interceptor.put<IResponse<any>>(
+            endpoints.ORGANIZATIONS + `/${editDto.id}`,
+            editDto
         );
 
         return res.data;
@@ -109,6 +126,7 @@ const organizationsServices = {
     getOwnedOrganizations,
     getByIdAsync,
     getOwnedJoinedOrganizations,
+    editOrgProfile,
 };
 
 export default organizationsServices;

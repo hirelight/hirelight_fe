@@ -1,0 +1,27 @@
+.selection__label {
+    position: absolute;
+    top: -1px;
+    left: 10px;
+    z-index: 2;
+    transform: translateY(-50%);
+    display: block;
+    padding-inline: 0.25rem;
+    background-color: white;
+    @apply text-xs text-neutral-600;
+}
+
+.section__h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    @apply text-lg text-neutral-700 bg-slate-100;
+}
+
+@media screen and (min-width: 1440px) {
+    .section__h3 {
+        padding-inline: 1.5rem;
+    }
+}

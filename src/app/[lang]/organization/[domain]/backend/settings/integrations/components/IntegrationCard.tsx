@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
 import { produce } from "immer";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { ButtonOutline, CustomInput } from "@/components";
 import {
@@ -13,6 +14,8 @@ import {
 } from "@/services";
 import integrationServices from "@/services/integration/integration.service";
 import { IUserInfo } from "@/interfaces/user.interface";
+import { supportServices } from "@/utils/constants/integrations";
+import { HackerrankIcon, TestlifyLogo } from "@/icons";
 
 type IntegrationCardProps = {
     data: IIntegrationDto;
@@ -25,8 +28,13 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({ data }) => {
         data.token ? data.token.payload.split(",")[0] : ""
     );
     const [integrationToken, setIntegrationToken] = useState(
-        data.token ? data.token.payload.split(",")[1] : ""
+        data.token
+            ? data.token.payload.split(",")[
+                  data.service === "HACKERRANK" ? 0 : 1
+              ]
+            : ""
     );
+    const [showConfig, setShowConfig] = useState(false);
 
     const handleDeleteIntegration = async (id: string) => {
         try {
@@ -69,12 +77,20 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({ data }) => {
             handleUpdateIntegration({
                 id: integration.token.id,
                 service: integration.token.service,
-                payload: `${integrationOrgName},${integrationToken}`,
+                payload:
+                    integration.service.toUpperCase() ===
+                    supportServices.HACKERRANK
+                        ? integrationToken
+                        : `${integrationOrgName},${integrationToken}`,
             });
         } else {
             handleCreateIntegration({
                 service: integration.service,
-                payload: `${integrationOrgName},${integrationToken}`,
+                payload:
+                    integration.service.toUpperCase() ===
+                    supportServices.HACKERRANK
+                        ? integrationToken
+                        : `${integrationOrgName},${integrationToken}`,
             });
         }
     };
@@ -84,22 +100,102 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({ data }) => {
     }, [data]);
 
     return (
-        <>
-            <CustomInput title="Service" value={integration.service} readOnly />
-            <CustomInput
-                title="Integration organization name"
-                value={integrationOrgName}
-                onChange={e => setIntegrationOrgName(e.target.value)}
-            />
-            <CustomInput
-                title="Token"
-                value={integrationToken}
-                onChange={e => setIntegrationToken(e.target.value)}
-            />
-            <div>
-                <ButtonOutline onClick={handelSaveChange}>Save</ButtonOutline>
+        <div>
+            <div
+                className={
+                    "py-4 px-6 text-sm flex items-start cursor-default group hover:bg-amber-100/60" +
+                    ` ${showConfig ? "bg-amber-100/60" : ""}`
+                }
+            >
+                {data.service === supportServices.HACKERRANK ? (
+                    <HackerrankIcon className="w-14 h-14" />
+                ) : (
+                    <TestlifyLogo className="w-14 h-auto object-cover" />
+                )}
+                <div className="flex-1 ml-4">
+                    <h3 className="mb-2">
+                        <strong>{data.service}</strong>
+                    </h3>
+                    <p className="text-gray-600">
+                        {data.service === supportServices.HACKERRANK
+                            ? "HackerRank is the industry standard, end-to-end technical skills assessment platform that helps companies across industries to better evaluate, interview, and hire software developers."
+                            : `Criteria is an assessment company dedicated to helping
+                        organizations make better talent decisions using
+                        objective, multidimensional data. By combining
+                        leading-edge data science with rigorous validation
+                        backed by I/O psychologists, we provide the most precise
+                        assessments available.`}
+                    </p>
+                </div>
+                <div className="self-center px-4">
+                    <button
+                        type="button"
+                        className="font-semibold text-blue_primary_600 invisible group-hover:visible hover:text-blue_primary_800 hover:underline"
+                        onClick={() => setShowConfig(!showConfig)}
+                    >
+                        Settings
+                    </button>
+                </div>
             </div>
-        </>
+            <AnimatePresence>
+                {showConfig && (
+                    <motion.div
+                        initial={{
+                            opacity: 0,
+                            height: 0,
+                        }}
+                        animate={{
+                            opacity: 1,
+                            height: "auto",
+                            transition: {
+                                ease: "easeOut",
+                                duration: 0.15,
+                                opacity: {
+                                    delay: 0.15,
+                                    duration: 0.2,
+                                },
+                            },
+                        }}
+                        exit={{
+                            opacity: 0,
+                            height: 0,
+                            transition: {
+                                ease: "easeIn",
+                                duration: 0.15,
+                                height: {
+                                    delay: 0.15,
+                                    duration: 0.2,
+                                },
+                            },
+                        }}
+                    >
+                        <div className="p-6 space-y-4">
+                            {data.service !== "HACKERRANK" && (
+                                <CustomInput
+                                    title="Integration organization name"
+                                    value={integrationOrgName}
+                                    onChange={e =>
+                                        setIntegrationOrgName(e.target.value)
+                                    }
+                                    required
+                                />
+                            )}
+                            <CustomInput
+                                title="Token"
+                                value={integrationToken}
+                                onChange={e =>
+                                    setIntegrationToken(e.target.value)
+                                }
+                                required
+                            />
+                            <ButtonOutline onClick={handelSaveChange}>
+                                Update setting
+                            </ButtonOutline>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
     );
 };
 

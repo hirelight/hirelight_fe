@@ -261,7 +261,7 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
                                 value: index + 1,
                             },
                         }))}
-                        value={QuestionDifficulty[formState.difficulty]}
+                        value={QuestionDifficulty[formState.difficulty - 1]}
                         onChange={value => {
                             setFormState({
                                 ...formState,

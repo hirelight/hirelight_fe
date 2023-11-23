@@ -40,3 +40,8 @@ export interface IAssessmentDto {
     updatedTime: Date | string;
     status: string;
 }
+
+export interface ThirdPartyAssessment {
+    id: string;
+    name: string;
+}

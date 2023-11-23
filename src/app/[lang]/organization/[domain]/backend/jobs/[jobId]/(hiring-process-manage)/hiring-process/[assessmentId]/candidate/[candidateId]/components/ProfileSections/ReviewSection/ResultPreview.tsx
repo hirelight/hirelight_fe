@@ -1,10 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import Link from "next/link";
 
 import { IJobPostAppAssDetailDto, IQuestionAnswerDto } from "@/services";
 import { QuestionAnswerContentJson } from "@/interfaces/questions.interface";
-import { AssessmentTypeKey } from "@/interfaces/assessment.interface";
+import {
+    ApplicantAssessmentDetailStatus,
+    AssessmentTypeKey,
+} from "@/interfaces/assessment.interface";
 import { useAppSelector } from "@/redux/reduxHooks";
+
+type MCQResultType = (Omit<IQuestionAnswerDto, "content"> & {
+    content: QuestionAnswerContentJson;
+})[];
+
+type IntegrationResult = {
+    service: string;
+    orgName: string;
+    assessmentId: string;
+    assessmentName: string;
+    candidateId: string;
+    assessmentReport: string;
+};
 
 type ResultPreviewProps = {
     isOpen: boolean;
@@ -24,12 +41,14 @@ const ResultPreview: React.FC<ResultPreviewProps> = ({
                 assessment => assessment.id === data.assessmentId
             )!!
     );
-    const [result, setResult] = useState<any[]>([]);
+    const [result, setResult] = useState<any>();
 
-    const getResultOnType = (type: AssessmentTypeKey, result: any[]) => {
+    const getResultOnType = (type: AssessmentTypeKey, result: any) => {
         switch (type) {
             case "MULTIPLE_CHOICE_QUESTION_ASSESSMENT":
                 return <MCQResult results={result} />;
+            case "THIRD_PARTY_ASSESSMENT":
+                return <IntegrationResult results={result} />;
             default:
                 return null;
         }
@@ -38,7 +57,8 @@ const ResultPreview: React.FC<ResultPreviewProps> = ({
     useEffect(() => {
         if (
             data.assessment.assessmentTypeName ===
-            "MULTIPLE_CHOICE_QUESTION_ASSESSMENT"
+                "MULTIPLE_CHOICE_QUESTION_ASSESSMENT" &&
+            data.status !== ApplicantAssessmentDetailStatus.INVITED
         ) {
             const parsedTest = JSON.parse(
                 assessment.assessmentQuestionAnswerSetContent as string
@@ -91,6 +111,7 @@ const ResultPreview: React.FC<ResultPreviewProps> = ({
         assessment.assessmentQuestionAnswerSetContent,
         data.assessment.assessmentTypeName,
         data.questionAnswerSet,
+        data.status,
     ]);
 
     return (
@@ -157,7 +178,7 @@ export default ResultPreview;
 const MCQResult = ({
     results,
 }: {
-    results: (Omit<IQuestionAnswerDto, "content"> & {
+    results: (Omit<IQuestionAnswerDto, "conquestent"> & {
         content: QuestionAnswerContentJson;
     })[];
 }) => {
@@ -204,6 +225,22 @@ const MCQResult = ({
                     </ul>
                 </section>
             ))}
+        </div>
+    );
+};
+
+const IntegrationResult = ({ results }: { results: IntegrationResult }) => {
+    return (
+        <div className="text-sm">
+            <h3 className="mb-4">{results.assessmentName}</h3>
+            <Link
+                target="_blank"
+                href={results.assessmentReport}
+                title="Integration result"
+                className="font-semibold text-blue_primary_600 hover:text-blue_primary_800 hover:underline"
+            >
+                Report
+            </Link>
         </div>
     );
 };

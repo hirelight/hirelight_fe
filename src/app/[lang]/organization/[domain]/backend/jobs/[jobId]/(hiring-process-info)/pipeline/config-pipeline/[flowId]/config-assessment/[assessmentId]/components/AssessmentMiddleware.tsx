@@ -10,6 +10,7 @@ import PipelineStages from "../../../components/PipelineStages";
 
 import MCQAssessmentConfig from "./MCQAssessment";
 import AsyncAssessmentConfig from "./AsyncAssessment";
+import IntegrationAssessmentConfig from "./IntegrationAssessment";
 
 const AssessmentMiddleware = () => {
     const router = useRouter();
@@ -30,6 +31,8 @@ const AssessmentMiddleware = () => {
             return <MCQAssessmentConfig />;
         case "ASYNC_VIDEO_INTERVIEW_ASSESSMENT":
             return <AsyncAssessmentConfig />;
+        case "THIRD_PARTY_ASSESSMENT":
+            return <IntegrationAssessmentConfig />;
         default:
             return <PipelineConfigAssessment />;
     }

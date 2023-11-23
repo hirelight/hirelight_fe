@@ -27,6 +27,8 @@ import LinkedInIcon from "./LinkedInIcon";
 import MinusBigIcon from "./MinusBigIcon";
 import Logo from "./Logo";
 import CheckToSlot from "./CheckToSlot";
+import HackerrankIcon from "./HackerrankIcon";
+import TestlifyLogo from "./TestlifyLogo";
 
 export {
     Logo,
@@ -58,4 +60,6 @@ export {
     GoogleIcon,
     LinkedInIcon,
     MinusBigIcon,
+    HackerrankIcon,
+    TestlifyLogo,
 };

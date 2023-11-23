@@ -6,7 +6,7 @@ export const fetchAssessmentById = createAsyncThunk(
     "assessment/fetchById",
     async (id: string) => {
         const res = await assessmentsServices.getById(id);
-
+        console.log("Response", res);
         return res;
     }
 );

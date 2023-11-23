@@ -303,7 +303,7 @@ const CreateQuestionPage = () => {
                             },
                         }))}
                         required
-                        value={QuestionDifficulty[formState.difficulty]}
+                        value={QuestionDifficulty[formState.difficulty - 1]}
                         onChange={value => {
                             setFormState({
                                 ...formState,

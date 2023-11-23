@@ -99,16 +99,12 @@ export interface ISubmitMCAnswerDto {
 
 export interface ITrackAsyncAssessmentDto {
     applicantAssessmentDetailId: string;
-    assessmentSubmissions: (Omit<IAsyncAnswer, "content"> & {
-        content: string;
-    })[];
+    assessmentSubmissions: string;
 }
 
 export interface ISubmitAsyncAssessmentDto {
     applicantAssessmentDetailId: string;
-    assessmentSubmissions: (Omit<IAsyncAnswer, "content"> & {
-        content: string;
-    })[];
+    assessmentSubmissions: string;
 }
 
 export interface IAsyncAssessDto {

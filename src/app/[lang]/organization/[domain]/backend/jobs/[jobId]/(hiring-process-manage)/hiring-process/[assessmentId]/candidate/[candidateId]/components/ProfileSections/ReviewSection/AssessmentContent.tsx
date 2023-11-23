@@ -2,11 +2,15 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import { EyeIcon } from "@heroicons/react/24/solid";
+import Link from "next/link";
 
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
 import { useAppSelector } from "@/redux/reduxHooks";
 import { IJobPostAppAssDetailDto } from "@/services";
-import { defaultAsessment } from "@/interfaces/assessment.interface";
+import {
+    ApplicantAssessmentDetailStatus,
+    defaultAsessment,
+} from "@/interfaces/assessment.interface";
 
 import ResultPreview from "./ResultPreview";
 
@@ -67,9 +71,31 @@ const AssessmentCard = ({ data }: { data: IJobPostAppAssDetailDto }) => {
                 <h4 className="text-base font-semibold">
                     {data.assessment.name}
                 </h4>
-                <button type="button" onClick={() => setShowPreview(true)}>
-                    <EyeIcon className="text-neutral-700 w-6 h-6 absolute right-0 top-1/2 -translate-y-1/2" />
-                </button>
+                {data.status !== ApplicantAssessmentDetailStatus.INVITED && (
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2">
+                        {data.assessment.assessmentTypeName ===
+                        "MULTIPLE_CHOICE_QUESTION_ASSESSMENT" ? (
+                            <button
+                                type="button"
+                                onClick={() => setShowPreview(true)}
+                            >
+                                <EyeIcon className="text-neutral-700 w-6 h-6" />
+                            </button>
+                        ) : (
+                            <Link
+                                target="_blank"
+                                href={
+                                    JSON.parse(data.questionAnswerSet)
+                                        .assessmentReport
+                                }
+                                title="Integration result"
+                                className="text-sm font-semibold text-blue_primary_600 hover:text-blue_primary_800 hover:underline"
+                            >
+                                Report
+                            </Link>
+                        )}
+                    </div>
+                )}
             </div>
         </>
     );

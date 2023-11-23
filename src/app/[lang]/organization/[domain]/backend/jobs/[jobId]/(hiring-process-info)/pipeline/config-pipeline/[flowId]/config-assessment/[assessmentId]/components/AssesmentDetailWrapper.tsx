@@ -21,6 +21,8 @@ const AssesmentDetailWrapper = ({
         if (assessmentId) dispatch(fetchAssessmentById(assessmentId as string));
     }, [dispatch, assessmentId]);
 
+    console.log(data);
+
     if (loading || !data.id)
         return (
             <div className="p-12 flex items-center justify-center">

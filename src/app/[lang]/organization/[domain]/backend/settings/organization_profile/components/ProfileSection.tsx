@@ -1,12 +1,17 @@
 "use client";
 
 import React, { FormEvent } from "react";
+import { produce } from "immer";
 
 import { Button, CustomInput, LocationAutocomplete } from "@/components";
 
 import styles from "../styles.module.scss";
 
+import { useOrgProfileForm } from "./OrgProfileForm";
+
 const ProfileSection = () => {
+    const { orgData, setOrgData } = useOrgProfileForm();
+
     const handleSaveProfileChanges = (e: FormEvent) => {
         e.preventDefault();
     };
@@ -23,8 +28,14 @@ const ProfileSection = () => {
                         <CustomInput
                             type="text"
                             title="Organization name"
-                            value="Hirelight"
-                            onChange={() => {}}
+                            value={orgData.name}
+                            onChange={e =>
+                                setOrgData(
+                                    produce(orgData, draft => {
+                                        draft.name = e.target.value;
+                                    })
+                                )
+                            }
                             required
                         />
                     </div>
@@ -33,7 +44,15 @@ const ProfileSection = () => {
                         <LocationAutocomplete
                             type="text"
                             title="Location"
-                            value="Ho Chi Minh"
+                            value={orgData.address ?? ""}
+                            placeholder="Organization location"
+                            onChange={(e: any) =>
+                                setOrgData(
+                                    produce(orgData, draft => {
+                                        draft.address = e.target.value;
+                                    })
+                                )
+                            }
                             handlePlaceChange={() => {}}
                             required
                         />
@@ -44,8 +63,14 @@ const ProfileSection = () => {
                             <CustomInput
                                 type="text"
                                 title="Domain"
-                                value="hirelight_co"
-                                onChange={() => {}}
+                                value={orgData.subdomain ?? ""}
+                                onChange={e =>
+                                    setOrgData(
+                                        produce(orgData, draft => {
+                                            draft.subdomain = e.target.value;
+                                        })
+                                    )
+                                }
                                 className="pr-20"
                                 required
                             />
@@ -58,14 +83,7 @@ const ProfileSection = () => {
                             can&apos;t end with a dash
                         </p>
                     </div>
-                    <div>
-                        <CustomInput
-                            type="text"
-                            title="Industry"
-                            value="Software Engineer"
-                            onChange={() => {}}
-                        />
-                    </div>
+                    <div></div>
                 </div>
                 <div className="p-6 border-t border-gray-300">
                     <Button type="submit">Save changes</Button>

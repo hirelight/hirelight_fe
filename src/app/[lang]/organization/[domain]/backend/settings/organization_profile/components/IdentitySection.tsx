@@ -5,8 +5,16 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import { produce } from "immer";
 
 import { Button } from "@/components";
+import { uploadFile } from "@/helpers";
+import organizationsServices from "@/services/organizations/organizations.service";
+import { IEditOrganizationDto } from "@/services";
+
+import styles from "../styles.module.scss";
+
+import { useOrgProfileForm } from "./OrgProfileForm";
 
 const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ssr: false,
@@ -15,12 +23,12 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ),
 });
 
-import styles from "../styles.module.scss";
-
 const IdentitySection = () => {
     const inputRef = React.useRef<HTMLInputElement>(null);
     const wrapperRef = React.useRef<HTMLDivElement>(null);
     const imageRef = React.useRef<HTMLImageElement>(null);
+
+    const { orgData, setOrgData } = useOrgProfileForm();
 
     const [imageFile, setImageFile] = React.useState<File | undefined>();
     const [progressPer, setProgressPer] = React.useState(0);
@@ -39,6 +47,12 @@ const IdentitySection = () => {
             };
 
             reader.onloadend = () => setLoading(false);
+            const url = await uploadFile(fileList[0]);
+            setOrgData(
+                produce(orgData, draft => {
+                    draft.logoUrl = url;
+                })
+            );
             setImageFile(fileList[0]);
 
             reader.readAsText(fileList[0]);
@@ -72,8 +86,13 @@ const IdentitySection = () => {
         }
     };
 
-    const handleSaveIdentityChages = (e: FormEvent) => {
+    const handleSaveIdentityChages = async (e: FormEvent) => {
         e.preventDefault();
+        try {
+            const res = await organizationsServices.editOrgProfile({
+                ...(orgData as IEditOrganizationDto),
+            });
+        } catch (error) {}
     };
     return (
         <section>
@@ -132,7 +151,7 @@ const IdentitySection = () => {
                                     <Image
                                         ref={imageRef}
                                         alt="Logo"
-                                        src={URL.createObjectURL(imageFile)}
+                                        src={orgData.logoUrl ?? ""}
                                         height={64}
                                         width={64}
                                         className="h-16 w-auto object-contain"
@@ -192,7 +211,14 @@ const IdentitySection = () => {
                         </p>
                         <QuillEditorNoSSR
                             theme="snow"
-                            onChange={() => {}}
+                            value={orgData.introduction ?? ""}
+                            onChange={innerHtml =>
+                                setOrgData(
+                                    produce(orgData, draft => {
+                                        draft.introduction = innerHtml;
+                                    })
+                                )
+                            }
                             className="flex-1 min-h-[200px] rounded-md overflow-hidden"
                         />
                     </div>
@@ -209,7 +235,14 @@ const IdentitySection = () => {
                         </p>
                         <QuillEditorNoSSR
                             theme="snow"
-                            onChange={() => {}}
+                            value={orgData.description ?? ""}
+                            onChange={innerHtml =>
+                                setOrgData(
+                                    produce(orgData, draft => {
+                                        draft.description = innerHtml;
+                                    })
+                                )
+                            }
                             className="flex-1 min-h-[200px] rounded-md overflow-hidden"
                         />
                     </div>

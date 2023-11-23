@@ -7,6 +7,7 @@ import interceptor from "../interceptor";
 import {
     IAssessmentDto,
     IEditAsyncVideoInterviewDto,
+    ThirdPartyAssessment,
 } from "./assessments.interface";
 
 const getById = async (id: string): Promise<IResponse<IAssessmentDto>> => {
@@ -59,10 +60,32 @@ const getListIntegrationAssessments = async (
     }
 };
 
+const getListThirdParty = async (
+    service: string
+): Promise<IResponse<ThirdPartyAssessment[]>> => {
+    try {
+        const res = await interceptor.get<IResponse<ThirdPartyAssessment[]>>(
+            endpoints.ASSESSMENTS + `/integration`,
+            {
+                params: {
+                    service,
+                },
+            }
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const assessmentsServices = {
     getById,
     editAsync,
     getListIntegrationAssessments,
+    getListThirdParty,
 };
 
 export default assessmentsServices;

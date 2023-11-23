@@ -108,9 +108,9 @@ const AssessmentFlowCard: React.FC<AssessmentFlowCardProps> = ({
                                 opacity: 1,
                                 transition: {
                                     ease: "easeOut",
-                                    duration: 0.15,
+                                    duration: 0.2,
                                     opacity: {
-                                        delay: 0.15,
+                                        delay: 0.2,
                                         duration: 0.2,
                                     },
                                 },
@@ -123,7 +123,7 @@ const AssessmentFlowCard: React.FC<AssessmentFlowCardProps> = ({
                                     duration: 0.2,
                                     height: {
                                         delay: 0.2,
-                                        duration: 0.15,
+                                        duration: 0.2,
                                     },
                                 },
                             }}

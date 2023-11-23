@@ -1,13 +1,15 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 import { useAppSelector } from "@/redux/reduxHooks";
 import { JobPostStatus } from "@/interfaces/job-post.interface";
 
 const PipelineHeader = () => {
+    const { lang, jobId } = useParams();
+
     const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
     const router = useRouter();
     const job = useAppSelector(state => state.job.data);
@@ -17,7 +19,9 @@ const PipelineHeader = () => {
             return toast.error(
                 "Job is publish! Please unpublish job before edit"
             );
-        router.push(`${assessmentFlow.id}/edit`);
+        router.push(
+            `/${lang}/backend/jobs/${jobId}/pipeline/config-pipeline/${assessmentFlow.id}/edit`
+        );
     };
 
     return (

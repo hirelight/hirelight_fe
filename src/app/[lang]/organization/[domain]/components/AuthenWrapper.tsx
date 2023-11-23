@@ -8,11 +8,15 @@ import jwtDecode from "jwt-decode";
 
 import { IUserDto } from "@/services";
 import { isDevMode } from "@/helpers";
+import { useAppDispatch } from "@/redux/reduxHooks";
+import { setToken } from "@/redux/slices/auth.slice";
 
 const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
     const accessToken = useSearchParams().get("accessToken");
 
     const router = useRouter();
+
+    const dispatch = useAppDispatch();
 
     React.useEffect(() => {
         const token = Cookies.get("hirelight_access_token");
@@ -27,6 +31,7 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
                             secure: true,
                         }
                     );
+                    dispatch(setToken(accessToken));
                     router.push("/backend");
                 } else {
                     router.replace(
@@ -45,9 +50,10 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
                     `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/select-org`
                 );
             }
+            dispatch(setToken(token));
             router.push("/backend");
         }
-    }, [accessToken, router]);
+    }, [accessToken, dispatch, router]);
     return <>{children}</>;
 };
 

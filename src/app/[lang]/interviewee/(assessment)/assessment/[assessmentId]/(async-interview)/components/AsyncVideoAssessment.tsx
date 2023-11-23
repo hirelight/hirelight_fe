@@ -1,17 +1,10 @@
 "use client";
 
-import React, {
-    createContext,
-    useCallback,
-    useEffect,
-    useRef,
-    useState,
-} from "react";
-import { UserCircleIcon } from "@heroicons/react/24/solid";
+import React, { createContext, useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
+import { produce } from "immer";
 
-import fileServices from "@/services/file-service/file.service";
 import {
     IParsedAsyncAssess,
     ICandidateAssessmentDetailDto,
@@ -22,16 +15,21 @@ import {
 import { QuestionAnswerContentJson } from "@/interfaces/questions.interface";
 
 import VideoRecorder from "./VideoRecorder";
-import SoundIndicator from "./SoundIndicator";
 import styles from "./AsyncVideoAssessment.module.scss";
 import ChatSection from "./ChatSection";
 import Sidebar from "./Sidebar";
 
+type AsyncErr = {
+    deviceErr: {
+        camErr: string;
+        micErr: string;
+    };
+};
+
 type AsyncVideoAssessmentState = {
     stream: MediaStream | null;
     setStream: React.Dispatch<React.SetStateAction<MediaStream | null>>;
-    recordedVideo: string[];
-    setRecordedVideo: React.Dispatch<React.SetStateAction<string[]>>;
+
     assessmentData: IParsedAsyncAssess | null;
     setAssessmentData: React.Dispatch<
         React.SetStateAction<IParsedAsyncAssess | null>
@@ -39,11 +37,20 @@ type AsyncVideoAssessmentState = {
     answers: IAsyncAnswer[];
     setAnswers: React.Dispatch<React.SetStateAction<IAsyncAnswer[]>>;
 
+    permission: boolean;
+    setPermission: React.Dispatch<React.SetStateAction<boolean>>;
+
+    setupLoading: boolean;
+
     curPos: number;
     setCurPos: React.Dispatch<React.SetStateAction<number>>;
 
+    asyncError: AsyncErr;
+    setAsyncError: React.Dispatch<React.SetStateAction<AsyncErr>>;
+
     handleJoinTest: () => void;
-    handleTrackTest: () => void;
+    handleTrackTest: (updatedAnswer: IAsyncAnswer) => void;
+    handleSubmitTest: () => void;
 };
 
 const AsyncVideoAssessmentContext =
@@ -67,19 +74,44 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
 }) => {
     const queryClient = useQueryClient();
 
-    const [assessmentData, setAssessmentData] =
-        useState<IParsedAsyncAssess | null>(null);
-    const [answers, setAnswers] = useState<IAsyncAnswer[]>([]);
-    const [curPos, setCurPos] = useState<number>(0);
-
+    const [setupLoading, setSetupLoading] = useState(true);
     const [permission, setPermission] = useState(true);
     const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
     const [stream, setStream] = useState<MediaStream | null>(null);
     const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
-    const [recordedVideo, setRecordedVideo] = useState<string[]>([]);
+
+    const [assessmentData, setAssessmentData] =
+        useState<IParsedAsyncAssess | null>(null);
+    const [answers, setAnswers] = useState<IAsyncAnswer[]>([]);
+    const [curPos, setCurPos] = useState<number>(0);
+    const [asyncError, setAsyncError] = useState({
+        deviceErr: {
+            camErr: "",
+            micErr: "",
+        },
+    });
+
+    const handleSaveCurrentState = (joinTime?: Date) => {
+        const curStateString = localStorage.getItem("cur-state");
+        if (curStateString) {
+            let parsedCurState = JSON.parse(curStateString);
+            parsedCurState = {
+                ...parsedCurState,
+                joinTime,
+            };
+            localStorage.setItem("cur-state", JSON.stringify(parsedCurState));
+        } else {
+            const currentState = {
+                joinTime,
+            };
+
+            localStorage.setItem("cur-state", JSON.stringify(currentState));
+        }
+    };
 
     const handleJoinTest = async () => {
         try {
+            setSetupLoading(true);
             const res = await asyncAssessmentServices.joinAsyncAssessment(
                 data.id
             );
@@ -92,6 +124,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                     content: QuestionAnswerContentJson;
                 })[],
             });
+            handleSaveCurrentState(new Date(res.data.startTime));
 
             setAnswers(
                 JSON.parse(
@@ -100,53 +133,73 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                     content: QuestionAnswerContentJson;
                 })[]
             );
+            setSetupLoading(false);
         } catch (error: any) {
             toast.error(
                 error.message ? error.message : "Some thing went wrong"
             );
+            setSetupLoading(false);
         }
     };
 
-    const handleTrackTest = useCallback(async () => {
-        if (!assessmentData) return;
+    const handleRemoveRecordTime = useCallback(() => {
+        const curStateString = localStorage.getItem("cur-state");
+        if (curStateString) {
+            let parsedCurState = JSON.parse(curStateString);
+            if (parsedCurState.startRecordTime) {
+                parsedCurState = {
+                    ...parsedCurState,
+                    startRecordTime: null,
+                };
+            }
 
-        try {
-            const res = await asyncAssessmentServices.trackAsyncAssessment({
-                applicantAssessmentDetailId: assessmentData.id,
-                assessmentSubmissions: answers.map((item, index) => {
-                    if (index === curPos)
+            localStorage.setItem("cur-state", JSON.stringify(parsedCurState));
+        }
+    }, []);
+
+    const handleTrackTest = useCallback(
+        async (updatedAnswer: IAsyncAnswer) => {
+            if (!assessmentData) return;
+
+            try {
+                const updatedAnswers = answers.map(item => {
+                    if (item.id === updatedAnswer.id)
                         return {
-                            ...answers[curPos],
-                            content: JSON.stringify(answers[curPos].content),
+                            ...updatedAnswer,
+                            content: updatedAnswer.content,
                         };
 
-                    return {
-                        ...item,
-                        content: JSON.stringify(item.content),
-                    };
-                }),
-            });
+                    return item;
+                });
 
-            toast.success(res.message);
-        } catch (error: any) {
-            toast.error(
-                error.message ? error.message : "Some thing went wrong"
-            );
-        }
-    }, [answers, assessmentData, curPos]);
+                const res = await asyncAssessmentServices.trackAsyncAssessment({
+                    applicantAssessmentDetailId: assessmentData.id,
+                    assessmentSubmissions: JSON.stringify(updatedAnswers),
+                });
+                handleRemoveRecordTime();
+                toast.success(res.message);
+                setAnswers(updatedAnswers);
+            } catch (error: any) {
+                toast.error(
+                    error.message ? error.message : "Some thing went wrong"
+                );
+            }
+        },
+        [answers, assessmentData, handleRemoveRecordTime]
+    );
 
     const handleSubmitTest = async () => {
         if (!assessmentData) return;
 
         try {
+            const assessmentSubmissions = JSON.stringify(answers);
+
             const res = await asyncAssessmentServices.submitAsyncAssessment({
                 applicantAssessmentDetailId: data.id,
-                assessmentSubmissions: assessmentData.questionAnswerSet.map(
-                    item => ({ ...item, content: JSON.stringify(item) })
-                ),
+                assessmentSubmissions,
             });
             toast.success(res.message);
-            // router.push(`/${lang}/profile/applications`);
+
             queryClient.invalidateQueries({
                 queryKey: [`my-assessment-${assessmentData!!.id}`],
             });
@@ -157,61 +210,17 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
         }
     };
 
-    // const toggleCamera = async () => {
-    //     try {
-    //         if (!stream) {
-    //             const videoStream = await navigator.mediaDevices.getUserMedia({
-    //                 video: true,
-    //                 audio: true,
-    //             });
-    //             // //combine both audio and video streams
-    //             const combinedStream = new MediaStream([
-    //                 ...videoStream.getVideoTracks(),
-    //                 ...videoStream.getAudioTracks(),
-    //             ]);
-    //             setStream(combinedStream);
-
-    //             // **********Initial AudioContext to keep track audio loudness************
-    //             const context = new AudioContext();
-    //             if (!audioContext) setAudioContext(context);
-    //         } else {
-    //             const tracks = stream.getTracks();
-
-    //             // Stop each track
-    //             tracks.forEach(track => {
-    //                 track.stop();
-    //             });
-    //             setStream(null);
-    //             setAudioContext(null);
-    //         }
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
-
-    const handleUploadVideo = async (file: File) => {
-        try {
-            const formData = new FormData();
-            formData.append("formFile", file);
-            const res = await fileServices.uploadFile(formData);
-            setRecordedVideo([res.data]);
-            toast.success(res.message);
-        } catch (error) {
-            toast.error("Upload error");
-        }
-    };
-
-    useEffect(() => {
-        handleTrackTest();
-    }, [handleTrackTest, answers]);
-
     useEffect(() => {
         const getPermission = async () => {
             if ("MediaRecorder" in window) {
                 try {
+                    setSetupLoading(true);
                     const devices =
                         await navigator.mediaDevices.enumerateDevices();
+
                     setDevices(devices);
+                    console.log(devices);
+                    // Check for any webcam and audio input permission allowed available
                     if (
                         devices.some(
                             device =>
@@ -219,8 +228,37 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                                     device.kind
                                 ) && !device.label
                         )
-                    )
+                    ) {
+                        if (
+                            devices
+                                .filter(device =>
+                                    ["videoinput"].includes(device.kind)
+                                )
+                                .every(device => !device.label)
+                        ) {
+                            setAsyncError(prev =>
+                                produce(prev, draft => {
+                                    draft.deviceErr.camErr =
+                                        "Camera device not found!";
+                                })
+                            );
+                        }
+
+                        if (
+                            devices
+                                .filter(device =>
+                                    ["audioinput"].includes(device.kind)
+                                )
+                                .every(device => !device.label)
+                        )
+                            setAsyncError(prev =>
+                                produce(prev, draft => {
+                                    draft.deviceErr.micErr =
+                                        "Audio input device not found!";
+                                })
+                            );
                         setPermission(false);
+                    }
 
                     const videoStream =
                         await navigator.mediaDevices.getUserMedia({
@@ -233,12 +271,13 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                         ...videoStream.getAudioTracks(),
                     ]);
                     setStream(combinedStream);
-
+                    setSetupLoading(false);
                     // **********Initial AudioContext to keep track audio loudness************
                     const context = new AudioContext();
                     if (!audioContext) setAudioContext(context);
                 } catch (error) {
-                    console.error(error);
+                    console.error("Error nef", error);
+                    setSetupLoading(false);
                 }
             } else {
                 setPermission(false);
@@ -248,33 +287,74 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
         getPermission();
     }, [permission, audioContext]);
 
-    if (!permission)
-        return (
-            <div className="h-screen w-screen bg-[#333e49] relative flex justify-center items-center">
-                <div className="absolute w-[1000px] h-[1000px] -top-[500px] -left-[250px] rounded-full bg-[#c4cfde] bg-opacity-40"></div>
+    useEffect(() => {
+        const curStateString = localStorage.getItem("cur-state");
+        if (curStateString && answers.length) {
+            let parsedCurState = JSON.parse(curStateString);
+            setCurPos(parsedCurState.answerPos ?? 0);
+        }
+    }, [answers]);
 
-                <p className="text-center text-4xl text-white">
-                    To perform the interview, we need access <br /> to your
-                    microphone and camera.
-                </p>
+    useEffect(() => {
+        const handleTrackQuestionTime = () => {
+            const curStateString = localStorage.getItem("cur-state");
+            if (curStateString) {
+                let parsedCurState = JSON.parse(curStateString);
+                if (!parsedCurState.startQuestionTime) {
+                    parsedCurState = {
+                        ...parsedCurState,
+                        startQuestionTime: new Date(),
+                    };
+                } else {
+                    if (parsedCurState.answerPos < curPos)
+                        parsedCurState = {
+                            ...parsedCurState,
+                            startQuestionTime: new Date(),
+                        };
+                }
+
+                localStorage.setItem(
+                    "cur-state",
+                    JSON.stringify(parsedCurState)
+                );
+            }
+        };
+        if (assessmentData) handleTrackQuestionTime();
+    }, [assessmentData, curPos]);
+
+    if (typeof window !== "undefined" && !("MediaRecorder" in window))
+        return (
+            <div className="fixed inset-0 z-50">
+                <div className="h-screen w-screen bg-[#333e49] relative flex justify-center items-center">
+                    <div className="absolute w-[1000px] h-[1000px] -top-[500px] -left-[250px] rounded-full bg-[#c4cfde] bg-opacity-40"></div>
+
+                    <p className="text-center text-4xl text-white">
+                        To perform the interview, we need access <br /> to your
+                        microphone and camera.
+                    </p>
+                </div>
             </div>
         );
 
     return (
         <AsyncVideoAssessmentContext.Provider
             value={{
+                asyncError,
+                setAsyncError,
                 stream,
                 setStream,
-                recordedVideo,
-                setRecordedVideo,
                 assessmentData,
                 setAssessmentData,
                 handleJoinTest,
                 handleTrackTest,
+                handleSubmitTest,
                 answers,
                 setAnswers,
                 curPos,
                 setCurPos,
+                permission,
+                setPermission,
+                setupLoading,
             }}
         >
             <main className={styles.wrapper}>
@@ -283,20 +363,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                     <ChatSection />
                     <div className="min-w-[300px] p-6 border-l border-gray-300">
                         <div className="mb-4">
-                            {stream && (
-                                <VideoRecorder
-                                    devices={devices}
-                                    stream={stream}
-                                />
-                            )}
-                            {/* <AudioRecorder /> */}
-                            {/* {audioContext && stream && (
-                                <SoundIndicator
-                                    context={audioContext}
-                                    stream={stream}
-                                    devices={devices}
-                                />
-                            )} */}
+                            <VideoRecorder devices={devices} stream={stream} />
                         </div>
                     </div>
                 </div>
