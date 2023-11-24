@@ -13,11 +13,15 @@ import {
     IAsyncAnswer,
 } from "@/services";
 import { QuestionAnswerContentJson } from "@/interfaces/questions.interface";
+import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
+import { VideoWrapper } from "@/components";
+import { videoJsOptions } from "@/components/VideoWrapper";
 
 import VideoRecorder from "./VideoRecorder";
 import styles from "./AsyncVideoAssessment.module.scss";
 import ChatSection from "./ChatSection";
 import Sidebar from "./Sidebar";
+import ReviewPage from "./ReviewPage";
 
 type AsyncErr = {
     deviceErr: {
@@ -26,7 +30,19 @@ type AsyncErr = {
     };
 };
 
+export type AnswerState = {
+    answerPos: number;
+    outTime?: Date;
+    startQuestionTime?: Date;
+    startRecordTime?: Date;
+    isThinkEnd?: boolean;
+};
+
 type AsyncVideoAssessmentState = {
+    applicantDetail: ICandidateAssessmentDetailDto;
+
+    devices: MediaDeviceInfo[];
+
     stream: MediaStream | null;
     setStream: React.Dispatch<React.SetStateAction<MediaStream | null>>;
 
@@ -48,9 +64,9 @@ type AsyncVideoAssessmentState = {
     asyncError: AsyncErr;
     setAsyncError: React.Dispatch<React.SetStateAction<AsyncErr>>;
 
-    handleJoinTest: () => void;
-    handleTrackTest: (updatedAnswer: IAsyncAnswer) => void;
-    handleSubmitTest: () => void;
+    handleJoinTest: () => Promise<void>;
+    handleTrackTest: (updatedAnswer: IAsyncAnswer) => Promise<void>;
+    handleSubmitTest: () => Promise<void>;
 };
 
 const AsyncVideoAssessmentContext =
@@ -82,6 +98,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
 
     const [assessmentData, setAssessmentData] =
         useState<IParsedAsyncAssess | null>(null);
+    const [assessmentLoading, setAssessmentLoading] = useState(false);
     const [answers, setAnswers] = useState<IAsyncAnswer[]>([]);
     const [curPos, setCurPos] = useState<number>(0);
     const [asyncError, setAsyncError] = useState({
@@ -91,27 +108,36 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
         },
     });
 
-    const handleSaveCurrentState = (joinTime?: Date) => {
-        const curStateString = localStorage.getItem("cur-state");
-        if (curStateString) {
-            let parsedCurState = JSON.parse(curStateString);
-            parsedCurState = {
-                ...parsedCurState,
-                joinTime,
-            };
-            localStorage.setItem("cur-state", JSON.stringify(parsedCurState));
-        } else {
-            const currentState = {
-                joinTime,
-            };
+    const handleSetupOnJoin = (): number => {
+        const curStateString = localStorage.getItem(data.id);
+        if (curStateString && answers.length) {
+            let parsedCurState = JSON.parse(curStateString) as AnswerState;
 
-            localStorage.setItem("cur-state", JSON.stringify(currentState));
-        }
+            if (!parsedCurState.startQuestionTime) {
+                localStorage.setItem(
+                    data.id,
+                    JSON.stringify({
+                        ...parsedCurState,
+                        startQuestionTime: new Date(),
+                    })
+                );
+            }
+
+            return parsedCurState.answerPos ?? 0;
+        } else if (!curStateString) {
+            localStorage.setItem(
+                data.id,
+                JSON.stringify({
+                    startQuestionTime: new Date(),
+                })
+            );
+            return 0;
+        } else return 0;
     };
 
     const handleJoinTest = async () => {
         try {
-            setSetupLoading(true);
+            setAssessmentLoading(true);
             const res = await asyncAssessmentServices.joinAsyncAssessment(
                 data.id
             );
@@ -124,7 +150,6 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                     content: QuestionAnswerContentJson;
                 })[],
             });
-            handleSaveCurrentState(new Date(res.data.startTime));
 
             setAnswers(
                 JSON.parse(
@@ -133,17 +158,18 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                     content: QuestionAnswerContentJson;
                 })[]
             );
-            setSetupLoading(false);
+            setCurPos(handleSetupOnJoin());
+            setAssessmentLoading(false);
         } catch (error: any) {
             toast.error(
                 error.message ? error.message : "Some thing went wrong"
             );
-            setSetupLoading(false);
+            setAssessmentLoading(false);
         }
     };
 
     const handleRemoveRecordTime = useCallback(() => {
-        const curStateString = localStorage.getItem("cur-state");
+        const curStateString = localStorage.getItem(data.id);
         if (curStateString) {
             let parsedCurState = JSON.parse(curStateString);
             if (parsedCurState.startRecordTime) {
@@ -153,9 +179,9 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                 };
             }
 
-            localStorage.setItem("cur-state", JSON.stringify(parsedCurState));
+            localStorage.setItem(data.id, JSON.stringify(parsedCurState));
         }
-    }, []);
+    }, [data.id]);
 
     const handleTrackTest = useCallback(
         async (updatedAnswer: IAsyncAnswer) => {
@@ -177,6 +203,10 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                     assessmentSubmissions: JSON.stringify(updatedAnswers),
                 });
                 handleRemoveRecordTime();
+                queryClient.invalidateQueries({
+                    queryKey: [`my-assessment-${assessmentData!!.id}`],
+                });
+
                 toast.success(res.message);
                 setAnswers(updatedAnswers);
             } catch (error: any) {
@@ -185,7 +215,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                 );
             }
         },
-        [answers, assessmentData, handleRemoveRecordTime]
+        [answers, assessmentData, handleRemoveRecordTime, queryClient]
     );
 
     const handleSubmitTest = async () => {
@@ -203,6 +233,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
             queryClient.invalidateQueries({
                 queryKey: [`my-assessment-${assessmentData!!.id}`],
             });
+            localStorage.removeItem(data.id);
         } catch (error: any) {
             toast.error(
                 error.message ? error.message : "Some thing went wrong"
@@ -219,7 +250,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                         await navigator.mediaDevices.enumerateDevices();
 
                     setDevices(devices);
-                    console.log(devices);
+
                     // Check for any webcam and audio input permission allowed available
                     if (
                         devices.some(
@@ -287,40 +318,27 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
         getPermission();
     }, [permission, audioContext]);
 
+    // Tracking the question start time on question changes
     useEffect(() => {
-        const curStateString = localStorage.getItem("cur-state");
-        if (curStateString && answers.length) {
-            let parsedCurState = JSON.parse(curStateString);
-            setCurPos(parsedCurState.answerPos ?? 0);
-        }
-    }, [answers]);
-
-    useEffect(() => {
-        const handleTrackQuestionTime = () => {
-            const curStateString = localStorage.getItem("cur-state");
+        const handleSaveStateOnAnswerChange = () => {
+            const curStateString = localStorage.getItem(data.id);
             if (curStateString) {
-                let parsedCurState = JSON.parse(curStateString);
-                if (!parsedCurState.startQuestionTime) {
+                let parsedCurState = JSON.parse(curStateString) as AnswerState;
+                if (
+                    parsedCurState.answerPos !== curPos ||
+                    !parsedCurState.startQuestionTime
+                )
                     parsedCurState = {
                         ...parsedCurState,
+                        answerPos: curPos,
                         startQuestionTime: new Date(),
                     };
-                } else {
-                    if (parsedCurState.answerPos < curPos)
-                        parsedCurState = {
-                            ...parsedCurState,
-                            startQuestionTime: new Date(),
-                        };
-                }
 
-                localStorage.setItem(
-                    "cur-state",
-                    JSON.stringify(parsedCurState)
-                );
+                localStorage.setItem(data.id, JSON.stringify(parsedCurState));
             }
         };
-        if (assessmentData) handleTrackQuestionTime();
-    }, [assessmentData, curPos]);
+        if (assessmentData) handleSaveStateOnAnswerChange();
+    }, [assessmentData, curPos, data.id]);
 
     if (typeof window !== "undefined" && !("MediaRecorder" in window))
         return (
@@ -339,6 +357,8 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
     return (
         <AsyncVideoAssessmentContext.Provider
             value={{
+                devices,
+                applicantDetail: data,
                 asyncError,
                 setAsyncError,
                 stream,
@@ -362,8 +382,8 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                     <Sidebar />
                     <ChatSection />
                     <div className="min-w-[300px] p-6 border-l border-gray-300">
-                        <div className="mb-4">
-                            <VideoRecorder devices={devices} stream={stream} />
+                        <div className="mb-4 h-full">
+                            <VideoRecorder />
                         </div>
                     </div>
                 </div>

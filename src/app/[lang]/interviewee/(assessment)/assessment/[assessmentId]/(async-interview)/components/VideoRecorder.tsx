@@ -1,42 +1,68 @@
-import { useState, useRef, useEffect, useMemo, useCallback } from "react";
+import {
+    useState,
+    useRef,
+    useEffect,
+    useMemo,
+    useCallback,
+    createContext,
+    useContext,
+} from "react";
 import { toast } from "react-toastify";
 import { produce } from "immer";
-import { v4 as uuid } from "uuid";
 import moment from "moment";
 
 import { Button, ButtonOutline, CountdownTimer, Selection } from "@/components";
 import { SpinLoading } from "@/icons";
 import { uploadFile } from "@/helpers";
 import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
+import ProgressTimer from "@/components/ProgressTimer";
 
 import styles from "./VideoRecorder.module.scss";
-import { useAsyncVideoAssessment } from "./AsyncVideoAssessment";
+import { AnswerState, useAsyncVideoAssessment } from "./AsyncVideoAssessment";
+import DevicesSection from "./DevicesSection";
+import ActionSection from "./ActionSection";
 
 const mimeType = 'video/webm; codecs="opus,vp8"';
 // const mimeType = 'video/mp4; codecs="avc1.424028, mp4a.40.2"';
 
-type VideoRecorderProps = {
-    stream: MediaStream | null;
-    devices: MediaDeviceInfo[];
-    toggleCamera?: () => void;
+type VideoRecorderProps = {};
+
+type VideoRecorderState = {
+    isBreak: boolean;
+    setIsBreak: React.Dispatch<React.SetStateAction<boolean>>;
+
+    isUploading: boolean;
+    setIsUploading: React.Dispatch<React.SetStateAction<boolean>>;
+
+    recordingStatus: "inactive" | "recording";
+    setRecordingStatus: React.Dispatch<
+        React.SetStateAction<"inactive" | "recording">
+    >;
+
+    videoChunks: Blob[];
+    setVideoChunks: React.Dispatch<React.SetStateAction<Blob[]>>;
 };
 
-const VideoRecorder: React.FC<VideoRecorderProps> = ({
-    stream,
-    devices,
-    toggleCamera,
-}) => {
+const VideoRecorderContext = createContext<VideoRecorderState | null>(null);
+
+export const useVideoRecorder = (): VideoRecorderState => {
+    const context = useContext(VideoRecorderContext);
+
+    if (!context)
+        throw new Error("Please use ThemeProvider in your parent component!");
+
+    return context;
+};
+
+const VideoRecorder: React.FC<VideoRecorderProps> = () => {
     const {
+        applicantDetail,
         answers,
-        setAnswers,
         curPos,
-        setCurPos,
-        handleJoinTest,
-        assessmentData,
-        handleSubmitTest,
         permission,
-        asyncError,
-        handleTrackTest,
+        stream,
+        assessmentData,
+        handleJoinTest,
     } = useAsyncVideoAssessment();
 
     const mediaRecorder = useRef<MediaRecorder | null>(null);
@@ -45,70 +71,32 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
         "inactive" | "recording"
     >("inactive");
     const [videoChunks, setVideoChunks] = useState<Blob[]>([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
 
     const [isBreak, setIsBreak] = useState(false);
-    const [outTime, setOutTime] = useState();
-    const startQuestionTime = useMemo(() => {
-        const curStateString = localStorage.getItem("cur-state");
-        if (curStateString) {
-            let parsedCurState = JSON.parse(curStateString);
-            return parsedCurState.startQuestionTime
-                ? new Date(parsedCurState.startQuestionTime)
-                : new Date();
-        } else return null;
-    }, []);
-    const haveThinkTime = useMemo(
-        () =>
-            answers[curPos] &&
-            answers[curPos].content.config!!.thinkTime &&
-            !answers[curPos].content.files &&
-            recordingStatus === "inactive" &&
-            (startQuestionTime
-                ? moment(startQuestionTime)
-                      .add(
-                          answers[curPos].content.config!!.thinkTime,
-                          "seconds"
-                      )
-                      .isBefore(moment())
-                : true),
-        [answers, curPos, recordingStatus, startQuestionTime]
-    );
-    const canRecord = useMemo(
-        () =>
-            answers[curPos] &&
-            (!answers[curPos].content.files ||
-                answers[curPos].content.files!!.length <
-                    answers[curPos].content.config!!.numOfTakes),
-        [answers, curPos]
-    );
 
-    const canMoveNext = useMemo(
-        () =>
-            answers[curPos] &&
-            answers[curPos].content.files &&
-            curPos < answers.length - 1,
-        [answers, curPos]
-    );
-
-    const handleSaveStartRecordTime = () => {
-        const curStateString = localStorage.getItem("cur-state");
+    const handleSaveStartRecordTime = useCallback(() => {
+        const curStateString = localStorage.getItem(applicantDetail.id);
         if (curStateString) {
-            let parsedCurState = JSON.parse(curStateString);
+            let parsedCurState = JSON.parse(curStateString) as AnswerState;
             if (!parsedCurState.startRecordTime) {
                 parsedCurState = {
                     ...parsedCurState,
                     startRecordTime: new Date(),
+                    answerPos: curPos,
                 };
             }
 
-            localStorage.setItem("cur-state", JSON.stringify(parsedCurState));
+            localStorage.setItem(
+                applicantDetail.id,
+                JSON.stringify(parsedCurState)
+            );
         }
-    };
+    }, [applicantDetail.id, curPos]);
 
     const startRecording = useCallback(async () => {
         setRecordingStatus("recording");
-
+        setIsBreak(false);
         if (!stream) return;
 
         const media = new MediaRecorder(stream, { mimeType });
@@ -128,58 +116,7 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
         };
 
         setVideoChunks(localVideoChunks);
-    }, [stream]);
-
-    const stopRecording = useCallback(() => {
-        setRecordingStatus("inactive");
-        if (!mediaRecorder.current) return;
-
-        mediaRecorder.current.stop();
-        mediaRecorder.current.onstop = async () => {
-            try {
-                setIsLoading(true);
-
-                const videoBlob = new Blob(videoChunks, { type: mimeType });
-                const myFile = new File([videoBlob], `takes-${curPos + 1}`, {
-                    type: mimeType,
-                });
-                if (!canRecord) return;
-                const url = await uploadFile(myFile);
-                const updatedAns = produce(answers[curPos], draft => {
-                    if (!draft.content.files)
-                        draft.content.files = [
-                            {
-                                name: myFile.name,
-                                src: url,
-                                type: "video/mp4",
-                                isChosen: true,
-                            },
-                        ];
-                    else {
-                        draft.content.files!![
-                            draft.content.files!!.length - 1
-                        ].isChosen = false;
-                        draft.content.files!!.push({
-                            name: myFile.name,
-                            src: url,
-                            type: "video/mp4",
-                            isChosen: true,
-                        });
-                    }
-                });
-
-                handleTrackTest(updatedAns);
-
-                setVideoChunks([]);
-                setIsBreak(true);
-                setIsLoading(false);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-    }, [answers, canRecord, curPos, handleTrackTest, videoChunks]);
-
-    const handleCountdownEnd = () => {};
+    }, [handleSaveStartRecordTime, stream]);
 
     useEffect(() => {
         if (liveVideoFeed.current && stream)
@@ -188,147 +125,82 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
             );
     }, [stream]);
 
-    useEffect(() => {
-        console.log(answers[curPos], canRecord);
-        if (
-            answers[curPos] &&
-            !answers[curPos].content.config?.thinkTime &&
-            canRecord
-        ) {
-            startRecording();
-        }
-    }, [answers, curPos, canRecord, startRecording]);
-
-    useEffect(() => {
-        const curStateString = localStorage.getItem("cur-state");
-        if (curStateString) {
-            let parsedCurState = JSON.parse(curStateString);
-            setOutTime(parsedCurState.outTime);
-        }
-    }, []);
-
-    // Tracking current assessment state when get out
-    useEffect(() => {
-        function saveCurAnswerState(e: BeforeUnloadEvent) {
-            e.preventDefault();
-            if (recordingStatus === "recording") {
-                stopRecording();
-            }
-            const curStateString = localStorage.getItem("cur-state");
-            if (curStateString) {
-                let parsedCurState = JSON.parse(curStateString);
-                parsedCurState = {
-                    ...parsedCurState,
-                    answerData: answers[curPos],
-                    answerPos: curPos,
-                    outTime: new Date(),
-                };
-                localStorage.setItem(
-                    "cur-state",
-                    JSON.stringify(parsedCurState)
-                );
-            } else {
-                const currentState = {
-                    answerData: answers[curPos],
-                    answerPos: curPos,
-                    outTime: new Date(),
-                };
-
-                localStorage.setItem("cur-state", JSON.stringify(currentState));
-            }
-        }
-        window.addEventListener("beforeunload", saveCurAnswerState);
-        return () => {
-            window.removeEventListener("beforeunload", saveCurAnswerState);
-        };
-    }, [curPos, answers, recordingStatus, stopRecording]);
-
     return (
-        <main className="max-w-[300px]">
-            <div
-                className={`h-60 w-[300px] bg-gray-900 rounded-md mb-4 relative`}
-            >
-                {permission && (
-                    <video
-                        ref={liveVideoFeed}
-                        autoPlay
-                        playsInline
-                        className={`w-full h-full object-cover -scale-x-100 scale-y-100 rounded-md`}
-                    ></video>
+        <VideoRecorderContext.Provider
+            value={{
+                isBreak,
+                setIsBreak,
+                recordingStatus,
+                setRecordingStatus,
+                videoChunks,
+                setVideoChunks,
+                isUploading,
+                setIsUploading,
+            }}
+        >
+            <main className="max-w-[300px] h-full relative">
+                <div
+                    className={`h-60 w-[300px] bg-gray-900 rounded-md mb-4 relative`}
+                >
+                    {permission && (
+                        <video
+                            ref={liveVideoFeed}
+                            autoPlay
+                            playsInline
+                            className={`w-full h-full object-cover -scale-x-100 scale-y-100 rounded-md`}
+                        ></video>
+                    )}
+                    {isBreak && (
+                        <VideoCountDown
+                            onEnd={() => {
+                                startRecording();
+                            }}
+                        />
+                    )}
+                    {isUploading && (
+                        <div className="absolute inset-0 backdrop-brightness-50 flex items-center justify-center z-10">
+                            <SpinLoading className="w-10 h-10 text-blue_primary_600" />
+                        </div>
+                    )}
+                </div>
+
+                <DevicesSection />
+
+                {answers[curPos] && (
+                    <ActionSection
+                        mediaRecorder={mediaRecorder.current}
+                        selectedAnswer={answers[curPos]}
+                        startRecording={startRecording}
+                    />
                 )}
-                {isBreak && (
-                    <VideoCountDown onEnd={() => handleCountdownEnd()} />
-                )}
-                {isLoading && (
-                    <div className="absolute inset-0 backdrop-brightness-50 flex items-center justify-center z-10">
-                        <SpinLoading className="w-10 h-10 text-blue_primary_600" />
+
+                {!assessmentData && (
+                    <div className="flex justify-center">
+                        <ButtonOutline onClick={handleJoinTest}>
+                            {applicantDetail.status ===
+                            ApplicantAssessmentDetailStatus.IN_PROGRESS
+                                ? "Resume"
+                                : "Start interview"}
+                        </ButtonOutline>
                     </div>
                 )}
-            </div>
-            <section>
-                <h3 className="text-sm text-gray-500 font-semibold mb-2">
-                    Camera
-                </h3>
-                <Selection
-                    title=""
-                    items={devices
-                        .filter(item => item.kind === "videoinput")
-                        .map(item => ({
-                            label: item.label,
-                            value: item,
-                        }))}
-                    onChange={() => {}}
-                />
-                {asyncError.deviceErr.camErr && (
-                    <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                        <span className="font-medium">
-                            {asyncError.deviceErr.camErr}{" "}
-                        </span>
-                    </p>
-                )}
-            </section>
 
-            <div className="h-[1px] w-full bg-gray-300 my-4"></div>
-
-            <section className="mb-4">
-                <h3 className="text-sm text-gray-500 font-semibold mb-2">
-                    Microphone
-                </h3>
-                <Selection
-                    title=""
-                    items={devices
-                        .filter(item => item.kind === "audioinput")
-                        .map(item => ({
-                            label: item.label,
-                            value: item,
-                        }))}
-                    onChange={() => {}}
-                />
-                {asyncError.deviceErr.micErr && (
-                    <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                        <span className="font-medium">
-                            {asyncError.deviceErr.micErr}{" "}
-                        </span>
-                    </p>
-                )}
-            </section>
-            {answers[curPos] && haveThinkTime && startQuestionTime ? (
+                {/* {remainThinkTime && remainThinkTime > 0 && !isBreak ? (
                 <div className="my-4">
-                    <CountdownTimer
-                        targetDate={moment(startQuestionTime)
-                            .add(
-                                answers[curPos].content.config?.thinkTime,
-                                "seconds"
-                            )
+                    <ProgressTimer
+                        title="Think time"
+                        targetDate={moment()
+                            .add(remainThinkTime, "seconds")
                             .toDate()}
-                        onEnd={startRecording}
+                        onEnd={handleStartRecord}
                     />
                 </div>
             ) : null}
 
             {answers[curPos] && recordingStatus === "recording" && (
                 <div className="my-4">
-                    <CountdownTimer
+                    <ProgressTimer
+                        title="Answer time"
                         targetDate={moment()
                             .add(
                                 answers[curPos].content.config!!.duration,
@@ -342,32 +214,42 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
 
             <div className={styles.video_controls}>
                 {canRecord &&
-                    (recordingStatus === "inactive" ? (
-                        <Button onClick={startRecording} type="button">
-                            {canRecord &&
-                            answers[curPos].content.files &&
-                            answers[curPos].content.files!!.length > 0
-                                ? "Retake"
-                                : "Start Recording"}
-                        </Button>
+                    !isBreak &&
+                    recordingStatus === "inactive" &&
+                    (answers[curPos].content.files &&
+                    answers[curPos].content.files!!.length > 0 ? (
+                        <RetakeCountDown
+                            onClick={() => {
+                                setIsRetake(false);
+                                setIsBreak(true);
+                            }}
+                            onEnd={handleMoveNext}
+                        />
                     ) : (
-                        <ButtonOutline onClick={stopRecording} type="button">
-                            Stop Recording
-                        </ButtonOutline>
+                        <Button onClick={handleStartRecord} type="button">
+                            Start Recording
+                        </Button>
                     ))}
-                {canMoveNext && (
-                    <ButtonOutline
-                        onClick={() => setCurPos(curPos + 1)}
-                        type="button"
-                    >
+
+                {recordingStatus === "recording" && (
+                    <ButtonOutline onClick={stopRecording} type="button">
+                        Stop Recording
+                    </ButtonOutline>
+                )}
+                {canMoveNext && !isBreak && recordingStatus === "inactive" && (
+                    <ButtonOutline onClick={handleMoveNext} type="button">
                         Next question
                     </ButtonOutline>
                 )}
             </div>
+
             {!assessmentData && (
                 <div className="flex justify-center">
                     <ButtonOutline onClick={handleJoinTest}>
-                        Start interview
+                        {applicantDetail.status ===
+                        ApplicantAssessmentDetailStatus.IN_PROGRESS
+                            ? "Resume"
+                            : "Start interview"}
                     </ButtonOutline>
                 </div>
             )}
@@ -383,10 +265,18 @@ const VideoRecorder: React.FC<VideoRecorderProps> = ({
                     </div>
                 )}
 
-            <ButtonOutline onClick={stopRecording} type="button">
-                Stop Recording
-            </ButtonOutline>
-        </main>
+            {assessmentData && (
+                <div className="absolute left-1/2 bottom-6 -translate-x-1/2">
+                    <CountdownTimer
+                        targetDate={moment
+                            .utc(assessmentData.startTime)
+                            .add(assessmentData.assessment.duration, "seconds")
+                            .toDate()}
+                    />
+                </div>
+            )} */}
+            </main>
+        </VideoRecorderContext.Provider>
     );
 };
 export default VideoRecorder;
@@ -400,16 +290,51 @@ const VideoCountDown = ({ onEnd }: { onEnd: () => void }) => {
         }, 1000);
 
         return () => {
-            onEnd();
             clearInterval(timerId);
         };
-    }, [onEnd]);
+    }, []);
 
-    if (countdown === 0) return null;
+    useEffect(() => {
+        if (countdown === 0) {
+            onEnd();
+        }
+    }, [onEnd, countdown]);
 
     return (
         <div className="absolute inset-0 backdrop-brightness-50 flex items-center justify-center z-10">
             <h3 className="text-xl font-semibold text-white">{countdown}</h3>
         </div>
+    );
+};
+
+const RetakeCountDown = ({
+    onEnd,
+    onClick,
+}: {
+    onEnd: () => void;
+    onClick: () => void;
+}) => {
+    const [countdown, setCountDown] = useState(15);
+
+    useEffect(() => {
+        let timerId = setInterval(() => {
+            setCountDown(prev => (prev > 0 ? prev - 1 : prev));
+        }, 1000);
+
+        return () => {
+            clearInterval(timerId);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (countdown === 0) {
+            onEnd();
+        }
+    }, [onEnd, countdown]);
+
+    return (
+        <Button type="button" onClick={onClick}>
+            Retake {countdown}
+        </Button>
     );
 };

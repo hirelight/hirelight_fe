@@ -67,7 +67,7 @@ const AssessmentCard = ({ data }: { data: IJobPostAppAssDetailDto }) => {
                 close={() => setShowPreview(false)}
             />
 
-            <div className="pb-6 pt-4 border-b border-gray-300 flex gap-4 relative">
+            <div className="py-4 border-b border-gray-300 flex gap-4 relative">
                 <h4 className="text-base font-semibold">
                     {data.assessment.name}
                 </h4>
@@ -97,6 +97,8 @@ const AssessmentCard = ({ data }: { data: IJobPostAppAssDetailDto }) => {
                     </div>
                 )}
             </div>
+
+            {!data.result && <div className="mt-4">No submission yet</div>}
         </>
     );
 };

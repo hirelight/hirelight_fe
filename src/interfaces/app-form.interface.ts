@@ -33,6 +33,7 @@ export interface IAppFormField
         | "group"
         | "multiple"
         | "text-area"
+        | "paragraph"
         | HTMLInputTypeAttribute;
     supportedFileTypes?: string[];
     supportedMimeTypes?: string[];

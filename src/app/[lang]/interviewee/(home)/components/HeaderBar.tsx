@@ -99,7 +99,7 @@ const HeaderBar = () => {
                                 <div className="py-1" role="none">
                                     {/* <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" --> */}
                                     <Link
-                                        href={`/${lang}/profile/account`}
+                                        href={`/${lang}/profile/applications`}
                                         className={styles.avatar__dropdown__btn}
                                         role="menuitem"
                                         tabIndex={-1}

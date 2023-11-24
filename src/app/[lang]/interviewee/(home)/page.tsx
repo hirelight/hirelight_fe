@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 const JobsCenter = () => {
     return (
-        <main className="w-full bg-slate-100">
+        <main className="flex-1 w-full bg-slate-100">
             <div className="w-full pt-4 pb-6 relative shadow-md">
                 <div className="absolute inset-0 opacity-20 overflow-hidden">
                     <Image

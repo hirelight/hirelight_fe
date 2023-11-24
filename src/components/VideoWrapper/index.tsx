@@ -11,12 +11,7 @@ export const videoJsOptions = {
     controls: true,
     responsive: true,
     fluid: true,
-    sources: [
-        {
-            src: "http://localhost:5555/api/v1/assessment-flows/files/2fd5f9b7-5b50-407a-9934-fcee23b522a0DSCF8179.MP4",
-            type: "video/mp4",
-        },
-    ],
+    sources: [],
 };
 
 type VideoWrapperProps = {
@@ -24,74 +19,74 @@ type VideoWrapperProps = {
     onReady?: () => void;
 };
 
-export const VideoWrapper: React.FC<VideoWrapperProps> = ({
-    options = videoJsOptions,
-    onReady,
-}) => {
-    const videoRef = React.useRef<HTMLDivElement | null>(null);
-    const playerRef = React.useRef<Player | null>(null);
+const VideoWrapper: React.FC<VideoWrapperProps> = React.memo(
+    function VideoWrapper({ options = videoJsOptions, onReady }) {
+        const videoRef = React.useRef<HTMLDivElement | null>(null);
+        const playerRef = React.useRef<Player | null>(null);
 
-    const handlePlayerReady = (player: Player) => {
-        playerRef.current = player;
+        const handlePlayerReady = (player: Player) => {
+            playerRef.current = player;
 
-        // You can handle player events here, for example:
-        player.on("waiting", () => {
-            videojs.log("player is waiting");
-        });
+            // You can handle player events here, for example:
+            player.on("waiting", () => {
+                videojs.log("player is waiting");
+            });
 
-        player.on("dispose", () => {
-            videojs.log("player will dispose");
-        });
-    };
+            player.on("dispose", () => {
+                videojs.log("player will dispose");
+            });
+        };
 
-    React.useEffect(() => {
-        // Make sure Video.js player is only initialized once
-        if (!playerRef.current) {
-            // The Video.js player needs to be _inside_ the component el for React 18 Strict Mode.
-            const videoElement = document.createElement("video-js");
+        React.useEffect(() => {
+            // Make sure Video.js player is only initialized once
+            if (!playerRef.current) {
+                // The Video.js player needs to be _inside_ the component el for React 18 Strict Mode.
+                const videoElement = document.createElement("video-js");
 
-            videoElement.classList.add("vjs-big-play-centered");
+                videoElement.classList.add("vjs-big-play-centered");
 
-            if (videoRef.current) videoRef.current.appendChild(videoElement);
+                if (videoRef.current)
+                    videoRef.current.appendChild(videoElement);
 
-            const player = (playerRef.current = videojs(
-                videoElement,
-                options,
-                () => {
-                    videojs.log("player is ready");
-                    handlePlayerReady(player);
-                }
-            ));
+                const player = (playerRef.current = videojs(
+                    videoElement,
+                    options,
+                    () => {
+                        videojs.log("player is ready");
+                        handlePlayerReady(player);
+                    }
+                ));
 
-            // You could update an existing player in the `else` block here
-            // on prop change, for example:
-        } else {
+                // You could update an existing player in the `else` block here
+                // on prop change, for example:
+            } else {
+                const player = playerRef.current;
+
+                player.autoplay(options.autoplay);
+                player.src(options.sources);
+            }
+        }, [onReady, options, videoRef]);
+
+        // Dispose the Video.js player when the functional component unmounts
+        React.useEffect(() => {
             const player = playerRef.current;
 
-            player.autoplay(options.autoplay);
-            player.src(options.sources);
-        }
-    }, [onReady, options, videoRef]);
+            return () => {
+                if (player && !player.isDisposed()) {
+                    player.dispose();
+                    playerRef.current = null;
+                }
+            };
+        }, [playerRef]);
 
-    // Dispose the Video.js player when the functional component unmounts
-    React.useEffect(() => {
-        const player = playerRef.current;
-
-        return () => {
-            if (player && !player.isDisposed()) {
-                player.dispose();
-                playerRef.current = null;
-            }
-        };
-    }, [playerRef]);
-
-    return (
-        <div className="w-full max-w-full">
-            <div data-vjs-player>
-                <div ref={videoRef} />
+        return (
+            <div className="w-full max-w-full">
+                <div data-vjs-player>
+                    <div ref={videoRef} />
+                </div>
             </div>
-        </div>
-    );
-};
+        );
+    }
+);
 
 export default VideoWrapper;

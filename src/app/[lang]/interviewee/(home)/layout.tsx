@@ -17,7 +17,7 @@ const IntervieweeLayout = ({
     if (!token) redirect(`/${lang}/login`);
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen flex flex-col">
             <HeaderBar />
             {children}
         </div>

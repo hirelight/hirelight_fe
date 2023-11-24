@@ -13,7 +13,8 @@ import styles from "./ChatSection.module.scss";
 import { useAsyncVideoAssessment } from "./AsyncVideoAssessment";
 
 const ChatSection = () => {
-    const { answers, curPos, setupLoading } = useAsyncVideoAssessment();
+    const { answers, curPos, setupLoading, applicantDetail } =
+        useAsyncVideoAssessment();
 
     if (setupLoading)
         return (
@@ -38,14 +39,37 @@ const ChatSection = () => {
                     styles.chat_container + " flex justify-center !pt-[10%]"
                 }
             >
-                Start interview
+                <section>
+                    <h3 className="text-xl font-semibold mb-4">
+                        {applicantDetail.assessment.name}
+                    </h3>
+
+                    <div
+                        dangerouslySetInnerHTML={{
+                            __html:
+                                applicantDetail.assessment.description ?? "",
+                        }}
+                    ></div>
+
+                    <div className="h-[1px] w-full bg-gray-300 my-6"></div>
+
+                    <section>
+                        <h3 className="text-xl font-semibold mb-4">Note</h3>
+
+                        <ul className="list-disc ml-6 space-y-2">
+                            <li>
+                                When you start the interview the clock will auto
+                                start
+                            </li>
+                            <li>
+                                Each question will have different time settings:
+                                think time, answer time and amount of retakes
+                            </li>
+                        </ul>
+                    </section>
+                </section>
             </div>
         );
-
-    console.log(
-        answers[curPos].content.config!!.numOfTakes,
-        answers[curPos].content.files?.length ?? 0
-    );
 
     return (
         <div className={styles.chat_container}>
@@ -64,14 +88,27 @@ const ChatSection = () => {
                         }
                     </div>
                     <p className="text-sm text-gray-500 mb-2">
-                        <span>Answertime: </span>{" "}
+                        <span>Think time: </span>{" "}
                         <span className={styles.message_card_badge}>
                             <strong>
                                 {answers[curPos].content.config!!.thinkTime
                                     ? answers[curPos].content.config!!
                                           .thinkTime /
                                           60 +
-                                      "minutes"
+                                      " minutes"
+                                    : "No think time"}
+                            </strong>
+                        </span>
+                    </p>
+                    <p className="text-sm text-gray-500 mb-2">
+                        <span>Answer time: </span>{" "}
+                        <span className={styles.message_card_badge}>
+                            <strong>
+                                {answers[curPos].content.config!!.duration
+                                    ? answers[curPos].content.config!!
+                                          .duration /
+                                          60 +
+                                      " minutes"
                                     : "No think time"}
                             </strong>
                         </span>
@@ -88,6 +125,28 @@ const ChatSection = () => {
                         </span>
                     </p>
                 </div>
+
+                {/* ***************Question vide section*************** */}
+                <div className={styles.takes_wrapper}>
+                    {answers[curPos].content.video && (
+                        <div className="flex justify-center items-center relative rounded-md overflow-hidden border border-slate-300">
+                            <VideoWrapper
+                                options={{
+                                    ...{ ...videoJsOptions, autoplay: true },
+                                    sources: [
+                                        {
+                                            src: answers[curPos].content.video!!
+                                                .url,
+                                            type: "video/mp4",
+                                        },
+                                    ],
+                                }}
+                            />
+                        </div>
+                    )}
+                </div>
+
+                {/* ***************Takes Section*************** */}
                 <div className={styles.takes_wrapper}>
                     {answers[curPos] &&
                         answers[curPos].content.files &&

@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPinIcon, PhoneIcon } from "@heroicons/react/24/solid";
+import { MapPinIcon, PhoneIcon, UserIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import React, { useRef } from "react";
 
@@ -28,17 +28,23 @@ const ProfileHeader = () => {
             <div className="p-4 xl:px-6 flex gap-4">
                 <div>
                     <div className="w-20 aspect-square flex items-center justify-center rounded-full bg-white border border-gray-300 overflow-hidden">
-                        {/* <Image
-                            alt="Candidate avatar"
-                            src={
-                                personalDetail.current.fields.find(
-                                    item => item.id === "avatar"
-                                )?.value.value ?? ""
-                            }
-                            width={1000}
-                            height={1000}
-                            className="h-auto w-full object-contain my-auto"
-                        /> */}
+                        {personalDetail.current.fields.find(
+                            item => item.id === "avatar"
+                        )?.value ? (
+                            <Image
+                                alt="Candidate avatar"
+                                src={
+                                    personalDetail.current.fields.find(
+                                        item => item.id === "avatar"
+                                    )?.value.value
+                                }
+                                width={1000}
+                                height={1000}
+                                className="h-full w-full object-cover my-auto"
+                            />
+                        ) : (
+                            <UserIcon className="p-2 text-neutral-700" />
+                        )}
                     </div>
                 </div>
                 <div className="flex">
@@ -54,11 +60,11 @@ const ProfileHeader = () => {
                                 )?.value ?? ""}
                             </span>
                         </div>
-                        <div>
+                        {/* <div>
                             <span>
                                 Fpt Soft (2022 - now) • Hcm Uni (2020 - 2023)
                             </span>
-                        </div>
+                        </div> */}
                         <div className="my-4 flex gap-4">
                             <span className="flex items-center gap-1">
                                 <MapPinIcon className="w-4 h-4" />

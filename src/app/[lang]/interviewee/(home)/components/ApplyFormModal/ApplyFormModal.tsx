@@ -45,10 +45,10 @@ const ApplyFormModal: React.FC<ApplyFormModalProps> = ({ job, close }) => {
                 <AppFormView data={job} onApply={() => close()} />
                 <button
                     type="button"
-                    className="absolute -top-4 right-3 -translate-y-full"
+                    className="absolute -top-3 right-3 -translate-y-full"
                     onClick={close}
                 >
-                    <XMarkIcon className="w-6 h-6" />
+                    <XMarkIcon className="w-8 h-8 text-white" />
                 </button>
             </motion.div>
         </div>

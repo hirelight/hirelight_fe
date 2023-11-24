@@ -14,11 +14,13 @@ import { useParams } from "next/navigation";
 import React from "react";
 import dynamic from "next/dynamic";
 import moment from "moment";
+import { useQuery } from "@tanstack/react-query";
 
 import { Selection } from "@/components";
 import { useAppSelector } from "@/redux/reduxHooks";
 import currencies from "@/utils/shared/currencies.json";
 import { CurrencyKey } from "@/interfaces/job-post.interface";
+import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
 
 import styles from "./AssessmentInfoHeader.module.scss";
 
@@ -33,9 +35,17 @@ const Tooltip = dynamic(
 );
 
 const AssessmentInfoHeader = () => {
-    const { assessmentId } = useParams();
+    const { assessmentId, jobId } = useParams();
     const job = useAppSelector(state => state.job.data);
     const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
+    const { data: profileList } = useQuery({
+        queryKey: ["job-profile-list", jobId],
+        queryFn: () =>
+            applicantAssessmentDetailServices.employeeGetApplicantAssessDetailsList(
+                "",
+                jobId as string
+            ),
+    });
 
     return (
         <div className="bg-white shadow-md mt-8 mb-6">

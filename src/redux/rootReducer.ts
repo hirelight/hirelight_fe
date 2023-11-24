@@ -13,6 +13,7 @@ import applicantProfileReducer from "./slices/applicant-profile.slice";
 import assessmentReducer from "./slices/assessment.slice";
 import assessmentProfilesReducer from "./slices/assessment-profiles.slice";
 import applicantAssessmentDetailReducer from "./slices/applicant-assessment-detail.slice";
+import asyncAnswerReducer from "./slices/async-answer.slice";
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
     applicantProfile: applicantProfileReducer,
     applicantAssessmentDetail: applicantAssessmentDetailReducer,
     assessmentFlowTemplates: assessmentFlowTemplatesReducer,
+    asyncAnswer: asyncAnswerReducer,
 });
 
 export default rootReducer;

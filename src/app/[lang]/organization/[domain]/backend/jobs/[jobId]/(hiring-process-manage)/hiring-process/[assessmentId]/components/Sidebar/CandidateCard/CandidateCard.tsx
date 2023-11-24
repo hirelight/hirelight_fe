@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import React, { useRef } from "react";
 import Image from "next/image";
 import { UserIcon } from "@heroicons/react/24/solid";
+import moment from "moment";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setSelectCandidate } from "@/redux/slices/candidates.slice";
@@ -62,17 +63,17 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
                         />
                     </label>
                     <div className="w-12 h-12 rounded-full bg-white border border-gray-300 overflow-hidden">
-                        {/* {avatar.current ? (
+                        {avatar.current ? (
                             <Image
                                 alt="Candidate avatar"
                                 src={avatar.current.value ?? ""}
                                 width={500}
                                 height={500}
-                                className="h-full w-auto object-cover"
+                                className="h-full w-full object-cover"
                             />
-                        ) : ( */}
-                        <UserIcon />
-                        {/* )} */}
+                        ) : (
+                            <UserIcon className="p-2 text-neutral-700" />
+                        )}
                     </div>
                     <div className="flex-1 flex flex-col items-start text-sm text-neutral-700">
                         <div className="grid">
@@ -86,10 +87,9 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
                             </p>
                         </div>
                         <div>
-                            <p>At {"<assessment>"} stage</p>
-                        </div>
-                        <div>
-                            <span>4 days ago</span>
+                            <span>
+                                {moment.utc(profile.createdTime).fromNow()}
+                            </span>
                         </div>
                     </div>
                 </div>

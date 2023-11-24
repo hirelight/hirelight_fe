@@ -27,8 +27,9 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
 });
 
 export const thinkTime = new Map<number, string>([
-    [-1, "Unlimited time to think"],
     [0, "No think time"],
+    [15, "15 seconds"],
+    [30, "30 seconds"],
     [60, "1 minutes"],
     [180, "3 minutes"],
     [600, "10 minutes"],
@@ -269,7 +270,7 @@ const AddNewQuestionSection = ({
                         />
                         <Selection
                             title=""
-                            items={[3, 5, 10].map(item => ({
+                            items={[1, 2, 3, 4, 5, 10].map(item => ({
                                 label: item.toString() + " minutes",
                                 value: item * 60,
                             }))}

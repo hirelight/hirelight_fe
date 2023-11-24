@@ -126,7 +126,12 @@ export interface IAsyncAssessDto {
     status: ApplicantAssessmentDetailStatus;
 }
 
-export interface IParsedAsyncAssess extends IAssessmentDto {
+export interface IParsedAsyncAssess
+    extends Omit<
+        ICandidateAssessmentDetailDto,
+        "questionAnswerSet" | "assessment"
+    > {
+    assessment: IAssessmentDto;
     questionAnswerSet: (IQuestionAnswerDto & {
         content: QuestionAnswerContentJson;
     })[];

@@ -46,11 +46,19 @@ const ProfileSection = () => {
         else
             return (
                 <div className="flex flex-col lg:flex-row">
-                    <div className="lg:basis-40 mr-6 text-neutral-500 flex gap-2">
-                        <span>{field.label}:</span>
-                    </div>
-                    <div className="w-full flex flex-col gap-2 items-start text-neutral-600">
-                        <span>{value}</span>
+                    {field.type !== "paragraph" && (
+                        <div className="lg:basis-40 mr-6 text-neutral-500 flex gap-2">
+                            <span>{field.label}:</span>
+                        </div>
+                    )}
+                    <div
+                        className={`w-full flex flex-col gap-2 items-start text-neutral-600 ${
+                            field.type === "paragraph"
+                                ? "ql-editor !p-0 mt-2"
+                                : ""
+                        }`}
+                    >
+                        {value}
                     </div>
                 </div>
             );

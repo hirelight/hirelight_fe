@@ -35,8 +35,8 @@ const moveCandidateToAssessment = async (
 };
 
 const employeeGetApplicantAssessDetailsList = async (
-    candidateId: string,
-    jobpostId: string
+    candidateId: string | null,
+    jobpostId?: string
 ): Promise<IResponse<IJobPostAppAssDetailDto[]>> => {
     try {
         const res = await interceptor.get<IResponse<IJobPostAppAssDetailDto[]>>(
