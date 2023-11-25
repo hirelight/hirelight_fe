@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import Cookies from "js-cookie";
 import { useSearchParams } from "next/navigation";
 import jwtDecode from "jwt-decode";
@@ -12,6 +12,7 @@ import { isDevMode } from "@/helpers";
 import { useAppDispatch } from "@/redux/reduxHooks";
 import { setToken } from "@/redux/slices/auth.slice";
 import authServices from "@/services/auth/auth.service";
+import LoadingIndicator from "@/components/LoadingIndicator";
 
 const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
     const accessToken = useSearchParams().get("accessToken");
@@ -22,6 +23,8 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
 
     const dispatch = useAppDispatch();
 
+    const [loading, setLoading] = useState(true);
+
     React.useEffect(() => {
         console.log(orgId, orgAuth);
         const getOrgToken = async (id: string) => {
@@ -30,7 +33,9 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
                 const res = await authServices.getOrgAccessToken(id);
                 console.log("Get succes");
 
-                dispatch(setToken(res.data.accessToken));
+                Cookies.set("hirelight_access_token", res.data.accessToken);
+
+                // dispatch(setToken(res.data.accessToken));
             } catch (error: any) {
                 toast(
                     error.message
@@ -79,6 +84,13 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
             }
         }
     }, [accessToken, dispatch, orgAuth, orgId, router]);
+
+    if (loading)
+        return (
+            <div className="w-full flex items-center justify-center py-80">
+                <LoadingIndicator />
+            </div>
+        );
     return <>{children}</>;
 };
 
