@@ -19,7 +19,6 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
     const accessToken = useSearchParams().get("accessToken");
 
     const router = useRouter();
-
     const dispatch = useAppDispatch();
 
     const [loading, setLoading] = useState(true);
@@ -39,7 +38,7 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
         } else {
             const decoded = jwtDecode(token) as IUserDto;
             if (
-                typeof window !== undefined &&
+                typeof window !== "undefined" &&
                 decoded.organizationSubdomain !==
                     window.location.hostname.split(".")[0]
             ) {
@@ -52,12 +51,6 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
         }
     }, [accessToken, dispatch, router]);
 
-    if (loading)
-        return (
-            <div className="w-full flex items-center justify-center py-80">
-                <LoadingIndicator />
-            </div>
-        );
     return <>{children}</>;
 };
 

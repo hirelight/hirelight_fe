@@ -18,40 +18,7 @@ export const metadata: Metadata = {
     title: "Hirelight Backend",
 };
 
-const getJobList = async (): Promise<IResponse<IJobDto[]> | undefined> => {
-    const token = cookies().get("hirelight_access_token")!!.value;
-    const decoded: any = jwtDecode(token);
-    const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_API}${endpoints.JOBPOSTS}/search?OrganizationId=${decoded.organizationId}`,
-        {
-            method: "GET",
-            cache: "no-store",
-            headers: {
-                mode: "cors",
-                credentials: "same-origin",
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            next: {
-                tags: [],
-            },
-        }
-    );
-
-    if (!res.ok) {
-        return;
-    }
-
-    const jsonRes = await res.json();
-
-    checkResErr(jsonRes);
-
-    return jsonRes;
-};
-
 const Backend = async () => {
-    const initialData = await getJobList();
-
     return (
         <main className="relative">
             <div className="w-full max-h-[160px] overflow-hidden opacity-60">
@@ -63,7 +30,7 @@ const Backend = async () => {
                 />
             </div>
             <div className="max-w-screen-xl mx-auto px-4 pb-10">
-                <JobList initialData={initialData} />
+                <JobList />
             </div>
         </main>
     );
