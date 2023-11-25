@@ -31,6 +31,11 @@ const authSlice = createSlice({
         setToken: (state, action) => {
             state.token = action.payload;
             state.authUser = jwtDecode(action.payload);
+            Cookies.set("hirelight_access_token", action.payload, {
+                domain: `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+                sameSite: "None",
+                secure: true,
+            });
         },
         logout: state => {
             state.token = "";

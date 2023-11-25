@@ -29,9 +29,8 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
                 console.log("get org token");
                 const res = await authServices.getOrgAccessToken(id);
                 console.log("Get succes");
-                console.log(window.location.hostname.split(".")[0]);
 
-                Cookies.set("hirelight_access_token", res.data.accessToken);
+                dispatch(setToken(res.data.accessToken));
             } catch (error: any) {
                 toast(
                     error.message
