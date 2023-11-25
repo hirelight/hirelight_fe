@@ -35,7 +35,7 @@ const HeaderBar = () => {
         setShowAvatarDropdown(false);
         dispatch(logout());
         router.push(
-            `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`
+            `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login?authEnd=true`
         );
     };
 

@@ -4,13 +4,6 @@ import Image from "next/image";
 import banner from "/public/images/interviewee_auth_bg.png";
 
 import { Metadata } from "next";
-import { cookies } from "next/headers";
-import jwtDecode from "jwt-decode";
-
-import endpoints from "@/utils/constants/service-endpoint";
-import { IJobDto } from "@/services/job/job.interface";
-import { checkResErr } from "@/helpers/resErrHelpers";
-import { IResponse } from "@/interfaces/service.interface";
 
 import JobList from "./components/JobList";
 

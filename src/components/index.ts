@@ -21,6 +21,7 @@ import QuillEditorProvider from "./QuillEditor/QuillEditorProvider";
 import Timer from "./Timer";
 import CountdownTimer from "./CountdownTimer";
 import VideoWrapper from "./VideoWrapper";
+import DoubleRingLoading from "./DoubleRingLoading";
 
 export {
     Modal,
@@ -46,4 +47,5 @@ export {
     Timer,
     CountdownTimer,
     VideoWrapper,
+    DoubleRingLoading,
 };
