@@ -21,23 +21,17 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
     React.useEffect(() => {
         const token = Cookies.get("hirelight_access_token");
         if (!token) {
-            if (isDevMode()) {
-                if (accessToken) {
-                    Cookies.set(
-                        "hirelight_access_token",
-                        accessToken as string,
-                        {
-                            sameSite: "None",
-                            secure: true,
-                        }
-                    );
-                    dispatch(setToken(accessToken));
-                    router.push("/backend");
-                } else {
-                    router.replace(
-                        `${window.location.protocol}//www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`
-                    );
-                }
+            if (accessToken) {
+                Cookies.set("hirelight_access_token", accessToken as string, {
+                    sameSite: "None",
+                    secure: true,
+                });
+                dispatch(setToken(accessToken));
+                router.push("/backend");
+            } else {
+                router.replace(
+                    `${window.location.protocol}//www.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`
+                );
             }
         } else {
             const decoded = jwtDecode(token) as IUserDto;

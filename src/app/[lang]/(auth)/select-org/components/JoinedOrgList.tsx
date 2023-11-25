@@ -43,24 +43,9 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
         try {
             setPageLoading(true);
             const res = await authServices.getOrgAccessToken(orgId);
-            if (
-                process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes(
-                    "localhost" || process.env.NODE_ENV === "development"
-                )
-            )
-                router.replace(
-                    `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?accessToken=${res.data.accessToken}`
-                );
-            else {
-                Cookies.set("hirelight_access_token", res.data.accessToken, {
-                    domain: `${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-                    sameSite: "None",
-                    secure: true,
-                });
-                router.replace(
-                    `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend`
-                );
-            }
+            router.replace(
+                `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?accessToken=${res.data.accessToken}`
+            );
         } catch (error) {
             toast.error("Redirect failure");
             console.error(error);
