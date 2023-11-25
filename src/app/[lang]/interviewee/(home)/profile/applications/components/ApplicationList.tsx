@@ -3,14 +3,14 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
-import { useUserInfo } from "@/hooks/useUserInfo";
 import applicantProfileServices from "@/services/applicant-profile/applicant-profile.service";
 import { IUserInfo } from "@/interfaces/user.interface";
+import { useAppSelector } from "@/redux/reduxHooks";
 
 import ApplicationCard from "./ApplicationCard";
 
 const ApplicantList = () => {
-    const userData = useUserInfo<IUserInfo>();
+    const userData = useAppSelector(state => state.auth.authUser);
     const { data: queryRes } = useQuery({
         queryKey: ["my-applications"],
         queryFn: () =>

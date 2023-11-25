@@ -7,7 +7,6 @@ import logo from "/public/images/logo.svg";
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 
 import { Bell } from "@/icons";
 import { useOutsideClick } from "@/hooks/useClickOutside";

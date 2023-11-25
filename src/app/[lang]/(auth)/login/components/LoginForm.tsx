@@ -4,10 +4,8 @@ import React, { useCallback } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
-import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
 
-import { Portal } from "@/components/index";
 import { GoogleIcon, LinkedInIcon, SpinLoading } from "@/icons";
 import { LoginEmployerDto } from "@/services/auth/auth.interface";
 import { fetchAccessToken, loginEmailPwd } from "@/redux/thunks/auth.thunk";
@@ -40,8 +38,6 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
     });
     const [loading, setLoading] = React.useState(false);
 
-    const [pageLoading, setPageLoading] = React.useState(false);
-
     const isAdmin = useCallback((token: string) => {
         const decoded: any = jwtDecode(token);
 
@@ -72,7 +68,6 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
 
     const getToken = React.useCallback(
         async (loginId: string) => {
-            setPageLoading(true);
             try {
                 await dispatch(fetchAccessToken(loginId));
 
@@ -100,17 +95,6 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
 
     return (
         <form onSubmit={handleLogin}>
-            <Portal>
-                {pageLoading && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="fixed inset-0 z-[2000] w-full h-screen backdrop-brightness-50 backdrop-blur-sm flex items-center justify-center"
-                    >
-                        <SpinLoading className="w-32 h-32 text-blue_primary_600" />
-                    </motion.div>
-                )}
-            </Portal>
             <div className="flex flex-col gap-4">
                 <h1 className={styles.title}>
                     {_t.login_form.title.highlight}

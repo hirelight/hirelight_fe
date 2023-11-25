@@ -2,7 +2,6 @@
 
 import React, { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
-import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 

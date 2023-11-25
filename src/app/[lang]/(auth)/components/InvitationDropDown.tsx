@@ -4,7 +4,6 @@ import { EnvelopeIcon, InboxIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { useOutsideClick } from "@/hooks/useClickOutside";
@@ -12,12 +11,13 @@ import { delayFunc } from "@/helpers";
 import { IEmployerInvitationDto } from "@/services";
 import employerOrgServices from "@/services/employer-organization/employer-organization.service";
 import authServices from "@/services/auth/auth.service";
+import { useAppSelector } from "@/redux/reduxHooks";
 
 import styles from "./InvitationDropDown.module.scss";
 
 const InvitationDropDown = () => {
     const router = useRouter();
-    const token = Cookies.get("hirelight_access_token");
+    const token = useAppSelector(state => state.auth.token);
 
     const [invitations, setInvitations] = useState<IEmployerInvitationDto[]>(
         []
@@ -51,27 +51,11 @@ const InvitationDropDown = () => {
     const handleRedirectOnAccept = async (orgId: string, subdomain: string) => {
         try {
             const res = await authServices.getOrgAccessToken(orgId);
-            if (
-                process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes(
-                    "localhost" || process.env.NODE_ENV === "development"
-                )
-            )
-                router.replace(
-                    `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?accessToken=${res.data.accessToken}`
-                );
-            else {
-                Cookies.set("hirelight_access_token", res.data.accessToken, {
-                    domain: `${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-                    sameSite: "None",
-                    secure: true,
-                });
-                router.replace(
-                    `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend`
-                );
-            }
-        } catch (error) {
-            toast.error("Redirect failure");
-            console.error(error);
+            router.replace(
+                `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?accessToken=${res.data.accessToken}`
+            );
+        } catch (error: any) {
+            toast.error(error.message ? error.message : "Redirect failure");
         }
     };
 

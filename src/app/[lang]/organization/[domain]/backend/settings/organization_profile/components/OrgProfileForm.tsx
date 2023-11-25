@@ -1,12 +1,7 @@
 "use client";
 
 import React, { createContext, useEffect, useState } from "react";
-import jwtDecode from "jwt-decode";
-import Cookies from "js-cookie";
-import { useQuery } from "@tanstack/react-query";
 
-import { useUserInfo } from "@/hooks/useUserInfo";
-import { IUserInfo } from "@/interfaces/user.interface";
 import organizationsServices from "@/services/organizations/organizations.service";
 import { IOrganizationDto } from "@/services";
 import LoadingIndicator from "@/components/LoadingIndicator";

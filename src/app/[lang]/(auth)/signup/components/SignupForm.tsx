@@ -3,11 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import Cookies from "js-cookie";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-import { delayFunc } from "@/helpers/shareHelpers";
 import { GoogleIcon, LinkedInIcon, SpinLoading } from "@/icons";
 import authServices from "@/services/auth/auth.service";
 import { RegisterEmployerDto } from "@/services/auth/auth.interface";

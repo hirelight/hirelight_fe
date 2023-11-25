@@ -3,23 +3,20 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import Cookies from "js-cookie";
 import { useParams, useRouter } from "next/navigation";
-
-import { Bell } from "@/icons";
 
 import logo from "/public/images/logo.svg";
 
-import { LocaleSwitcher, ThemeSwitcher } from "@/components";
-import { useUserInfo } from "@/hooks/useUserInfo";
+import { LocaleSwitcher } from "@/components";
 import { useOutsideClick } from "@/hooks/useClickOutside";
+import { useAppSelector } from "@/redux/reduxHooks";
 
 import styles from "./HeaderBar.module.scss";
 
 const HeaderBar = () => {
     const { lang } = useParams();
     const router = useRouter();
-    const user = useUserInfo();
+    const { authUser } = useAppSelector(state => state.auth);
     const [showAvatarDropdown, setShowAvatarDropdown] = useState(false);
 
     const avatarDropdownRef = useOutsideClick<HTMLDivElement>(() =>
@@ -28,7 +25,7 @@ const HeaderBar = () => {
 
     const handleLogout = async () => {
         setShowAvatarDropdown(false);
-        Cookies.remove("hirelight_access_token");
+        localStorage.removeItem("hirelight_access_token");
         router.push(`/${lang}/login`);
     };
     return (
@@ -54,7 +51,7 @@ const HeaderBar = () => {
                         href={"/settings"}
                         className="rounded-full w-8 aspect-square border border-white"
                     ></Link> */}
-                    {!user ? (
+                    {!authUser ? (
                         <Link
                             href={`login`}
                             className="text-sm font-medium text-white hover:underline"

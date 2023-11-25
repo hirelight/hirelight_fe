@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import Cookies from "js-cookie";
 import jwtDecode from "jwt-decode";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
@@ -21,11 +20,12 @@ interface IJobHeader {}
 const JobHeader = ({}: IJobHeader) => {
     const pathname = usePathname();
     const { lang } = useParams();
-    const job = useAppSelector(state => state.job.data);
-    const token = Cookies.get("hirelight_access_token");
-    const decoded: any = token ? jwtDecode(token) : null;
-    const jobLoading = useAppSelector(state => state.job.loading);
+
     const dispatch = useAppDispatch();
+
+    const job = useAppSelector(state => state.job.data);
+    const { authUser } = useAppSelector(state => state.auth);
+    const jobLoading = useAppSelector(state => state.job.loading);
 
     const [isLoading, setIsLoading] = useState(false);
     const queryClient = useQueryClient();
@@ -130,8 +130,8 @@ const JobHeader = ({}: IJobHeader) => {
                             draft
                         </button>
                         {job.assessmentFlowId &&
-                            decoded &&
-                            decoded.userId === job.creatorId.toString() &&
+                            authUser &&
+                            authUser.userId === job.creatorId.toString() &&
                             job.status === "DRAFT" && (
                                 <button
                                     type="button"

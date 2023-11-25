@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import jwtDecode from "jwt-decode";
 
@@ -14,8 +13,6 @@ type AuthSliceState = {
     loading: boolean;
     authError: any | null;
 };
-
-const token = Cookies.get("hirelight_access_token");
 
 const initialState: AuthSliceState = {
     token: "",

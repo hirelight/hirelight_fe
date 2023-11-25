@@ -2,7 +2,6 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect } from "react";
-import Cookies from "js-cookie";
 
 import { useAppDispatch } from "@/redux/reduxHooks";
 import { logout } from "@/redux/slices/auth.slice";

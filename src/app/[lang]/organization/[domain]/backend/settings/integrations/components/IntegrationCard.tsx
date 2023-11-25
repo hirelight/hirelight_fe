@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
-import Cookies from "js-cookie";
-import jwtDecode from "jwt-decode";
-import { produce } from "immer";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { ButtonOutline, CustomInput } from "@/components";
@@ -13,7 +10,6 @@ import {
     IIntegrationDto,
 } from "@/services";
 import integrationServices from "@/services/integration/integration.service";
-import { IUserInfo } from "@/interfaces/user.interface";
 import { supportServices } from "@/utils/constants/integrations";
 import { HackerrankIcon, TestlifyLogo } from "@/icons";
 

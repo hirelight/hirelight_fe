@@ -1,25 +1,29 @@
 import React from "react";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import dynamic from "next/dynamic";
+
+import { DoubleRingLoading } from "@/components";
 
 import HeaderBar from "./components/HeaderBar";
 
-const IntervieweeLayout = ({
-    children,
-    params,
-}: {
-    children: React.ReactNode;
-    params: any;
-}) => {
-    const { lang } = params;
-    const token = cookies().get("hirelight_access_token");
+const IntervieweeAuthWrapper = dynamic(
+    () => import("../components/IntervieweeAuthWrapper"),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="w-screen h-screen justify-center pt-[30%]">
+                <DoubleRingLoading className="w-32 h-32" />
+            </div>
+        ),
+    }
+);
 
-    if (!token) redirect(`/${lang}/login`);
-
+const IntervieweeLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <div className="min-h-screen flex flex-col">
-            <HeaderBar />
-            {children}
+            <IntervieweeAuthWrapper>
+                <HeaderBar />
+                {children}
+            </IntervieweeAuthWrapper>
         </div>
     );
 };

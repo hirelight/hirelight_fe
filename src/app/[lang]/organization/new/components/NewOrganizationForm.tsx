@@ -4,8 +4,6 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import { UserIcon } from "@heroicons/react/24/solid";
-import Cookies from "js-cookie";
-import jwtDecode from "jwt-decode";
 import { toast } from "react-toastify";
 
 import { SpinLoading } from "@/icons";
@@ -16,14 +14,14 @@ import {
 } from "@/services/organizations/organizations.interface";
 import { IResponse } from "@/interfaces/service.interface";
 import authServices from "@/services/auth/auth.service";
+import { useAppSelector } from "@/redux/reduxHooks";
 
 import styles from "./NewOrganizationForm.module.scss";
 
 const NewOrganizationForm = () => {
     const router = useRouter();
     const loginId = useSearchParams().get("loginId");
-    const token = Cookies.get("hirelight_access_token")!!;
-    const decoded: any = jwtDecode(token);
+    const { authUser } = useAppSelector(state => state.auth);
 
     const [newOrgFormErr, setNewOrgFormErr] = React.useState({
         nameErr: "",
@@ -54,29 +52,9 @@ const NewOrganizationForm = () => {
                     autoClose: 1000,
                 });
 
-                if (
-                    process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes(
-                        "localhost"
-                    ) ||
-                    process.env.NODE_ENV === "development"
-                )
-                    router.replace(
-                        `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?loginId=${loginId}&accessToken=${resOrgToken.data.accessToken}`
-                    );
-                else {
-                    Cookies.set(
-                        "hirelight_access_token",
-                        resOrgToken.data.accessToken,
-                        {
-                            domain: `${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-                            sameSite: "None",
-                            secure: true,
-                        }
-                    );
-                    router.replace(
-                        `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend`
-                    );
-                }
+                router.replace(
+                    `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?accessToken=${resOrgToken.data.accessToken}`
+                );
             }
         } catch (error: any) {
             toast.error(error.message ? error.message : "Create org failure!", {
@@ -117,13 +95,9 @@ const NewOrganizationForm = () => {
                             <UserIcon className="w-full h-full text-neutral-700" />
                         </div>
                         <div className="inline-flex flex-col text-sm text-left">
-                            <strong>{`${
-                                decoded.firstName ? decoded.firstName : ""
-                            } ${
-                                decoded.lastName ? decoded.lastName : ""
-                            }`}</strong>
+                            <strong>{`${authUser?.firstName} ${authUser?.lastName}`}</strong>
                             <p className="text-gray-500">
-                                {decoded.emailAddress}
+                                {authUser?.emailAddress}
                             </p>
                         </div>
                     </div>

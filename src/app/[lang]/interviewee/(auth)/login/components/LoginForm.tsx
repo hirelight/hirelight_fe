@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import React, { FormEvent, useState } from "react";
-import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
@@ -11,9 +10,14 @@ import { Button } from "@/components";
 import { SpinLoading } from "@/icons";
 import { LoginCandidateDto } from "@/services/auth/auth.interface";
 import authServices from "@/services/auth/auth.service";
+import { useAppDispatch } from "@/redux/reduxHooks";
+import { setToken } from "@/redux/slices/auth.slice";
 
 const LoginForm = () => {
     const router = useRouter();
+
+    const dispatch = useAppDispatch();
+
     const [formState, setFormState] = useState<LoginCandidateDto>({
         email: "",
         password: "",
@@ -33,19 +37,8 @@ const LoginForm = () => {
             const res = await authServices.loginCandidate(formState);
 
             toast.success(res.message);
-            if (
-                process.env.NEXT_PUBLIC_ROOT_DOMAIN?.includes(
-                    "localhost" || process.env.NODE_ENV === "development"
-                )
-            )
-                Cookies.set("hirelight_access_token", res.data.accessToken, {
-                    secure: true,
-                });
-            else
-                Cookies.set("hirelight_access_token", res.data.accessToken, {
-                    domain: `jobs.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-                    secure: true,
-                });
+            dispatch(setToken(res.data.accessToken));
+
             router.push("/");
         } catch (error) {
             console.error(error);

@@ -8,9 +8,9 @@ import { useQuery } from "@tanstack/react-query";
 
 import { Button, ButtonOutline, Portal, Selection } from "@/components";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
-import { useUserInfo } from "@/hooks/useUserInfo";
 import { IUserDto } from "@/services";
 import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
+import { useAppSelector } from "@/redux/reduxHooks";
 
 import styles from "./AddTeamMembers.module.scss";
 import NewMemberModal from "./NewMemberModal";
@@ -18,11 +18,10 @@ import CollaboratorList from "./CollaboratorList";
 
 const AddTeamMebers = () => {
     const { jobId } = useParams();
-    const userData = useUserInfo<IUserDto>();
+    const userData = useAppSelector(state => state.auth.authUser);
 
     const [datas, setDatas] = React.useState<ICollaboratorDto[]>([]);
     const [showModal, setShowModal] = React.useState(false);
-    const [selectedInternal, setSelectedInternal] = React.useState<any>();
     const {
         data: res,
         error,

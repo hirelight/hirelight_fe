@@ -4,7 +4,6 @@ import { IResponse } from "@/interfaces/service.interface";
 
 export const checkResErr = (res: IResponse<any>) => {
     if (res.status && res.status >= 400) {
-        console.error(res);
         throw new Error(res.title);
     } else if (res.statusCode && res.statusCode >= 400)
         throw new Error(res.message);
@@ -41,9 +40,7 @@ export const handleError = (res: IResponse<any>) => {
             default:
                 toast.error("Something went wrong!");
         }
-    }
-
-    if (res.status) {
+    } else if (res.status) {
         switch (res.status) {
             case 400: {
                 if (res.message) toast.error(res.message);

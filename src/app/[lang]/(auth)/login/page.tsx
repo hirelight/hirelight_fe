@@ -2,6 +2,9 @@ import React from "react";
 import Link from "next/link";
 import { Metadata } from "next";
 
+import { Portal } from "@/components";
+import { SpinLoading } from "@/icons";
+
 import { Locale } from "../../../../../i18n.config";
 import { getDictionary } from "../../../../utils/dictionaries/dictionnary";
 
@@ -11,11 +14,25 @@ export const metadata: Metadata = {
     title: "Hirelight Recruitment Software - Sign in",
 };
 
-const Login = async ({ params }: { params: { lang: Locale } }) => {
+const Login = async ({
+    params,
+    searchParams,
+}: {
+    params: { lang: Locale };
+    searchParams: any;
+}) => {
     const { login_page, common } = await getDictionary(params.lang);
 
     return (
         <div className="min-w-[500px] max-w-[500px] min-h-[400px] relative bg-white shadow-lg rounded-md p-8 mx-0 md:mx-6 text-center">
+            {searchParams["status"] && searchParams["loginId"] && (
+                <Portal>
+                    <div className="fixed inset-0 z-[2000] w-full h-screen backdrop-brightness-50 backdrop-blur-sm flex items-center justify-center">
+                        <SpinLoading className="w-32 h-32 text-blue_primary_600" />
+                    </div>
+                </Portal>
+            )}
+
             <LoginForm _t={{ login_form: login_page.login_form, common }} />
             <div className="mt-8 text-sm text-center relative flex flex-col items-center">
                 <p className="text-gray-500">{login_page.dont_have_account}</p>
