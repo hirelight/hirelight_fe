@@ -12,7 +12,9 @@ import { GoogleIcon, LinkedInIcon, SpinLoading } from "@/icons";
 import { LoginEmployerDto } from "@/services/auth/auth.interface";
 import { fetchAccessToken, loginEmailPwd } from "@/redux/thunks/auth.thunk";
 import { useAppDispatch } from "@/redux/reduxHooks";
-import { decryptData } from "@/helpers/authHelpers";
+import { decryptData, encryptData } from "@/helpers/authHelpers";
+import authServices from "@/services/auth/auth.service";
+import { setToken } from "@/redux/slices/auth.slice";
 
 import styles from "./LoginForm.module.scss";
 
@@ -74,13 +76,14 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
         async (loginId: string) => {
             setPageLoading(true);
             try {
-                await dispatch(fetchAccessToken(loginId));
-
+                const res = await authServices.getAccessToken(loginId);
+                encryptData("hirelight_access_token", res.data.accessToken);
+                dispatch(setToken(res.data.accessToken));
                 router.push(
                     `/select-org?isOrgOwner=${isOrgOwner}&isOrgMember=${isOrgMember}`
                 );
             } catch (error) {
-                console.error(error);
+                console.log("🚀 ~ file: LoginForm.tsx:86 ~ error:", error);
             }
         },
         [dispatch, isOrgMember, isOrgOwner, router]
