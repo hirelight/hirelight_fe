@@ -10,6 +10,7 @@ import moment from "moment";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
+import { AnimatePresence, LazyMotion, domAnimation } from "framer-motion";
 
 import { IApplicantAssessmentDetailDto, IEvaluationDto } from "@/services";
 import { useAppSelector } from "@/redux/reduxHooks";
@@ -23,7 +24,7 @@ import EditEvaluation from "./EditEvaluation";
 
 export const getRating = (value: number, children?: React.ReactNode) => {
     switch (value) {
-        case 0:
+        case 1:
             return (
                 <span className="flex gap-1 items-center text-red-500 text-sm font-medium">
                     {children ?? null}
@@ -32,18 +33,19 @@ export const getRating = (value: number, children?: React.ReactNode) => {
             );
         case 5:
             return (
-                <span className="flex gap-1 items-center text-amber-400 text-sm font-medium">
-                    {children ?? null}
-                    <StarIcon className="w-5 h-5" />
-                </span>
-            );
-        case 10:
-            return (
                 <span className="flex gap-1 items-center text-green-400 text-sm font-medium">
                     {children ?? null}
                     <HandThumbUpIcon className="w-5 h-5" />
                 </span>
             );
+        case 10:
+            return (
+                <span className="flex gap-1 items-center text-amber-400 text-sm font-medium">
+                    {children ?? null}
+                    <StarIcon className="w-5 h-5" />
+                </span>
+            );
+
         default:
             return null;
     }
@@ -87,7 +89,16 @@ const EvaluationCard: React.FC<EvaluationCardProps> = ({ data }) => {
     };
 
     if (showEdit)
-        return <EditEvaluation data={data} close={() => setShowEdit(false)} />;
+        return (
+            <LazyMotion features={domAnimation}>
+                <AnimatePresence>
+                    <EditEvaluation
+                        data={data}
+                        close={() => setShowEdit(false)}
+                    />
+                </AnimatePresence>
+            </LazyMotion>
+        );
 
     return (
         <React.Fragment>

@@ -6,11 +6,12 @@ import { XMarkIcon } from "@heroicons/react/24/solid";
 import { AnimatePresence } from "framer-motion";
 import moment from "moment";
 import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
 
 import { Button, ButtonOutline, Portal } from "@/components";
 import { ApplicationFormJSON, IJobDto, JobContentJson } from "@/services";
-import { IAppFormSection } from "@/interfaces";
 import logo from "@/app/icon.svg";
+import { decryptData } from "@/helpers/authHelpers";
 
 import ApplyFormModal from "../ApplyFormModal/ApplyFormModal";
 
@@ -26,6 +27,10 @@ const JobDescriptionBeside: React.FC<JobDescriptionBesideProps> = ({
     data,
     close,
 }) => {
+    const router = useRouter();
+    const { lang } = useParams();
+    const token = decryptData("hirelight_access_token");
+
     const [showModal, setShowModal] = useState(false);
 
     return (
@@ -78,7 +83,13 @@ const JobDescriptionBeside: React.FC<JobDescriptionBesideProps> = ({
                         </span>
                         <div className="flex items-center gap-1">
                             <ButtonOutline>Share job</ButtonOutline>
-                            <Button onClick={() => setShowModal(true)}>
+                            <Button
+                                onClick={() => {
+                                    if (!token)
+                                        return router.push(`/${lang}/login`);
+                                    setShowModal(true);
+                                }}
+                            >
                                 Apply now
                             </Button>
                         </div>

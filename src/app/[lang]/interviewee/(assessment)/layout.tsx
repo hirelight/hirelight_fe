@@ -10,7 +10,7 @@ const IntervieweeAuthWrapper = dynamic(
     {
         ssr: false,
         loading: () => (
-            <div className="w-screen h-screen justify-center pt-[30%]">
+            <div className="w-screen h-screen flex justify-center items-center">
                 <DoubleRingLoading className="w-32 h-32" />
             </div>
         ),

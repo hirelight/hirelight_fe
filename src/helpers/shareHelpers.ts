@@ -94,7 +94,6 @@ export const uploadFile = async (file: File): Promise<string> => {
     formData.append("formFile", file);
 
     const res = await fileServices.uploadFile(formData);
-    toast.success(res.message);
 
     return res.data;
 };

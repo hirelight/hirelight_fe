@@ -39,7 +39,7 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
     });
     const [addErr, setAddErr] = useState({
         evaluationErr: "",
-        ratingErr: 0,
+        ratingErr: "",
     });
 
     const validateAddInput = () => {
@@ -55,7 +55,7 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
             const res = await evaluationServices.createEvaluation(addState);
             toast.success(res.message);
             queryClient.invalidateQueries({
-                queryKey: ["evaluations", candidateId],
+                queryKey: ["assessment-evaluations", candidateId],
             });
         } catch (error: any) {
             console.error(error);
@@ -129,9 +129,9 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
                         <button
                             type="button"
                             className={`${styles.rate_btn} ${
-                                addState.rating === 0 ? styles.active : ""
+                                addState.rating === 1 ? styles.active : ""
                             }`}
-                            onClick={handleRating.bind(null, 0)}
+                            onClick={handleRating.bind(null, 1)}
                         >
                             <HandThumbDownIcon />
                         </button>

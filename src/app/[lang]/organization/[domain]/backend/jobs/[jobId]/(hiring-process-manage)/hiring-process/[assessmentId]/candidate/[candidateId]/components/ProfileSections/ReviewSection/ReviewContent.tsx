@@ -152,7 +152,11 @@ const ReviewContent = () => {
 
             <ul>
                 {querRes?.data
-                    .filter(item => item.assessmentEvaluations.length > 0)
+                    .filter(
+                        item =>
+                            item.assessmentEvaluations.length > 0 &&
+                            item.id !== applicantAssessmentDetail.id
+                    )
                     .map(item => (
                         <section key={item.id} className="text-sm">
                             <div className="pb-6 pt-4 border-b border-gray-300 flex gap-4">

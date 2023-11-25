@@ -262,14 +262,18 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                             <QuestionList />
                         </div>
                     )}
-                    {displayTest && (
-                        <div className="flex justify-center items-center">
-                            <ButtonOutline onClick={handleSubmitTest}>
-                                {isLoading && <SpinLoading className="mr-2" />}
-                                Submit
-                            </ButtonOutline>
-                        </div>
-                    )}
+                    {displayTest &&
+                        data.status ===
+                            ApplicantAssessmentDetailStatus.IN_PROGRESS && (
+                            <div className="flex justify-center items-center">
+                                <ButtonOutline onClick={handleSubmitTest}>
+                                    {isLoading && (
+                                        <SpinLoading className="mr-2" />
+                                    )}
+                                    Submit
+                                </ButtonOutline>
+                            </div>
+                        )}
                 </main>
             </MultipleChoiceAssessmentContext.Provider>
         </div>

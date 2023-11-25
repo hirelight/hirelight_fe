@@ -28,6 +28,7 @@ const HeaderBar = () => {
         localStorage.removeItem("hirelight_access_token");
         router.push(`/${lang}/login`);
     };
+
     return (
         <header className="w-full bg-blue_primary_600 px-4 md:px-10">
             <div className="max-w-screen-xl mx-auto py-3 flex justify-between">

@@ -29,26 +29,26 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
 
     const queryClient = useQueryClient();
 
-    const [addState, setAddState] = useState<IEvaluationDto>(data);
-    const [addErr, setAddErr] = useState({
+    const [editState, setEditState] = useState<IEvaluationDto>(data);
+    const [editErr, setEditErr] = useState({
         evaluationErr: "",
-        ratingErr: 0,
+        ratingErr: "",
     });
 
     const validateAddInput = () => {
-        if (!addState.evaluation)
-            setAddErr({
-                ...addErr,
+        if (!editState.evaluation)
+            setEditErr({
+                ...editErr,
                 evaluationErr: "Evaluation comment required!",
             });
     };
 
-    const handleAddEvaluation = async () => {
+    const handleEditEvaluation = async () => {
         try {
-            const res = await evaluationServices.createEvaluation(addState);
+            const res = await evaluationServices.editEvaluation(editState);
             toast.success(res.message);
             queryClient.invalidateQueries({
-                queryKey: ["evaluations", candidateId],
+                queryKey: ["assessment-evaluations", candidateId],
             });
         } catch (error: any) {
             console.error(error);
@@ -60,12 +60,13 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
     };
 
     const handleRating = (value: number) => {
-        if (value === addState.rating) setAddState({ ...addState, rating: -1 });
-        else setAddState({ ...addState, rating: value });
+        if (value === editState.rating)
+            setEditState({ ...editState, rating: -1 });
+        else setEditState({ ...editState, rating: value });
     };
 
     useEffect(() => {
-        if (data) setAddState(data);
+        if (data) setEditState(data);
     }, [data]);
 
     return (
@@ -92,13 +93,14 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
                     <textarea
                         placeholder="Add note"
                         className="w-full text-sm placeholder:text-sm outline-none border-none focus:border-none focus:outline-none focus:ring-0 resize-none"
+                        value={editState.evaluation}
                         onChange={e => {
                             e.currentTarget.style.height = 0 + "px";
                             e.currentTarget.style.height =
                                 e.currentTarget.scrollHeight + "px";
 
-                            setAddState({
-                                ...addState,
+                            setEditState({
+                                ...editState,
                                 evaluation: e.currentTarget.value,
                             });
                         }}
@@ -108,7 +110,7 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
                         <button
                             type="button"
                             className={`${styles.rate_btn} ${
-                                addState.rating === 10 ? styles.active : ""
+                                editState.rating === 10 ? styles.active : ""
                             }`}
                             onClick={handleRating.bind(null, 10)}
                         >
@@ -117,7 +119,7 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
                         <button
                             type="button"
                             className={`${styles.rate_btn} ${
-                                addState.rating === 5 ? styles.active : ""
+                                editState.rating === 5 ? styles.active : ""
                             }`}
                             onClick={handleRating.bind(null, 5)}
                         >
@@ -126,9 +128,9 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
                         <button
                             type="button"
                             className={`${styles.rate_btn} ${
-                                addState.rating === 0 ? styles.active : ""
+                                editState.rating === 1 ? styles.active : ""
                             }`}
-                            onClick={handleRating.bind(null, 0)}
+                            onClick={handleRating.bind(null, 1)}
                         >
                             <HandThumbDownIcon />
                         </button>
@@ -143,7 +145,7 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
                 >
                     Cancel
                 </button>
-                <Button onClick={handleAddEvaluation}>Save evaluation</Button>
+                <Button onClick={handleEditEvaluation}>Save evaluation</Button>
             </div>
         </m.div>
     );
