@@ -9,7 +9,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
     const token = decryptData("hirelight_access_token");
     React.useEffect(() => {
-        if (!token)
+        if (!token && typeof window !== "undefined")
             router.replace(
                 `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`
             );
