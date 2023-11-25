@@ -45,7 +45,7 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
 
             if (!isDevMode()) {
                 router.replace(
-                    `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?orgId=${subdomain}&orgAuth=true`
+                    `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?orgId=${orgId}&orgAuth=true`
                 );
             } else {
                 const res = await authServices.getOrgAccessToken(orgId);
@@ -76,53 +76,54 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
             <div className="flex flex-col gap-4">
                 <h1 className={styles.title}>Organization List:</h1>
 
-                {res?.data && res.data.length > 0 ? (
-                    <ul>
-                        {res.data.map(org => (
-                            <li
-                                key={org.id}
-                                className="group border border-gray-300 first:rounded-tl-md first:rounded-tr-md last:rounded-bl-md last:rounded-br-md overflow-hidden"
-                            >
-                                <button
-                                    type="button"
-                                    className="w-full p-4 flex items-center justify-betwee gap-2 text-neutral-700 group-hover:text-blue_primary_700 group-hover:bg-gray-100"
-                                    onClick={handleRedirect.bind(
-                                        null,
-                                        org.id,
-                                        org.subdomain
-                                    )}
+                {res &&
+                    (res.data.length > 0 ? (
+                        <ul>
+                            {res.data.map(org => (
+                                <li
+                                    key={org.id}
+                                    className="group border border-gray-300 first:rounded-tl-md first:rounded-tr-md last:rounded-bl-md last:rounded-br-md overflow-hidden"
                                 >
-                                    <strong className="mr-auto">
-                                        {org.name}
-                                    </strong>
-                                    {org.ownerId.toString() ===
-                                        decoded.userId && (
-                                        <span className="text-sm text-gray-500 group-hover:text-blue_primary_700">
-                                            Owned
+                                    <button
+                                        type="button"
+                                        className="w-full p-4 flex items-center justify-betwee gap-2 text-neutral-700 group-hover:text-blue_primary_700 group-hover:bg-gray-100"
+                                        onClick={handleRedirect.bind(
+                                            null,
+                                            org.id,
+                                            org.subdomain
+                                        )}
+                                    >
+                                        <strong className="mr-auto">
+                                            {org.name}
+                                        </strong>
+                                        {org.ownerId.toString() ===
+                                            decoded.userId && (
+                                            <span className="text-sm text-gray-500 group-hover:text-blue_primary_700">
+                                                Owned
+                                            </span>
+                                        )}
+                                        <span>
+                                            <ChevronRightIcon className="w-5 h-5" />
                                         </span>
-                                    )}
-                                    <span>
-                                        <ChevronRightIcon className="w-5 h-5" />
-                                    </span>
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <div className="w-full flex flex-col items-center">
-                        <BuildingOffice2Icon className="w-24 h-24 text-neutral-700 mb-2" />
-                        <div className="text-sm text-gray-500 max-w-[80%] mb-6">
-                            <p>
-                                You have not been member of any organization.
-                                Please check your invitation or create your
-                                organization!
-                            </p>
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    ) : (
+                        <div className="w-full flex flex-col items-center">
+                            <BuildingOffice2Icon className="w-24 h-24 text-neutral-700 mb-2" />
+                            <div className="text-sm text-gray-500 max-w-[80%] mb-6">
+                                <p>
+                                    You have not been member of any
+                                    organization. Please check your invitation
+                                    or create your organization!
+                                </p>
+                            </div>
+                            <Button onClick={handleRedirectNewOrg}>
+                                Create new organization
+                            </Button>
                         </div>
-                        <Button onClick={handleRedirectNewOrg}>
-                            Create new organization
-                        </Button>
-                    </div>
-                )}
+                    ))}
             </div>
         </div>
     );
