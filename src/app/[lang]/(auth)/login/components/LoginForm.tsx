@@ -75,7 +75,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
         async (loginId: string) => {
             setPageLoading(true);
             try {
-                const res = await dispatch(fetchAccessToken(loginId));
+                await dispatch(fetchAccessToken(loginId));
 
                 router.push(
                     `/select-org?isOrgOwner=${isOrgOwner}&isOrgMember=${isOrgMember}`

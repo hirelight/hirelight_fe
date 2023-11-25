@@ -35,7 +35,9 @@ const authSlice = createSlice({
         logout: state => {
             state.token = "";
             state.authUser = null;
-            Cookies.remove("hirelight_access_token");
+            Cookies.remove("hirelight_access_token", {
+                domain: `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+            });
         },
     },
     extraReducers(builder) {

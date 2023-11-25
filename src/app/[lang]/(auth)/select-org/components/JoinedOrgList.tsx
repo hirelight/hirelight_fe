@@ -14,7 +14,7 @@ import { Button, Portal } from "@/components";
 import { SpinLoading } from "@/icons";
 import { IOrganizationDto } from "@/services/organizations/organizations.interface";
 import authServices from "@/services/auth/auth.service";
-import { validWorkEmail } from "@/helpers";
+import { isDevMode, validWorkEmail } from "@/helpers";
 import organizationsServices from "@/services/organizations/organizations.service";
 
 import styles from "./JoinedOrgList.module.scss";
@@ -42,10 +42,17 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
     const handleRedirect = async (orgId: string, subdomain: string) => {
         try {
             setPageLoading(true);
-            const res = await authServices.getOrgAccessToken(orgId);
-            router.replace(
-                `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?accessToken=${res.data.accessToken}`
-            );
+
+            if (!isDevMode()) {
+                router.replace(
+                    `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?orgId=${subdomain}&orgAuth=true`
+                );
+            } else {
+                const res = await authServices.getOrgAccessToken(orgId);
+                router.replace(
+                    `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?accessToken=${res.data.accessToken}`
+                );
+            }
         } catch (error) {
             toast.error("Redirect failure");
             console.error(error);
