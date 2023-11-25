@@ -31,7 +31,9 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
                 console.log("Get succes");
 
                 Cookies.set("hirelight_access_token", res.data.accessToken, {
-                    domain: `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
+                    domain: `${window.location.hostname.split(".")[0]}.${
+                        process.env.NEXT_PUBLIC_ROOT_DOMAIN
+                    }`,
                     sameSite: "None",
                     secure: true,
                 });
