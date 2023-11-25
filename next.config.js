@@ -39,8 +39,8 @@ const nextConfig = withBundleAnalyzer({
                       pathname: "/api/v1/assessment-flows/files/**",
                   }
                 : {
-                      protocol: "http",
-                      hostname: process.env.SERVER_HOSTNAME,
+                      protocol: "https",
+                      hostname: "hirelight.azurewebsites.net",
                       pathname: "/api/v1/assessment-flows/files/**",
                   },
         ],
