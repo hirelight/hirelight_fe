@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useRef } from "react";
 
 import { Selection } from "@/components";
 
@@ -6,6 +6,14 @@ import { useAsyncVideoAssessment } from "./AsyncVideoAssessment";
 
 const DevicesSection = () => {
     const { devices, asyncError } = useAsyncVideoAssessment();
+    const audioDevices = useMemo(
+        () => devices.filter(item => item.kind === "audioinput"),
+        [devices]
+    );
+    const videoDevices = useMemo(
+        () => devices.filter(item => item.kind === "videoinput"),
+        [devices]
+    );
 
     return (
         <React.Fragment>
@@ -15,12 +23,11 @@ const DevicesSection = () => {
                 </h3>
                 <Selection
                     title=""
-                    items={devices
-                        .filter(item => item.kind === "videoinput")
-                        .map(item => ({
-                            label: item.label,
-                            value: item,
-                        }))}
+                    value={videoDevices[0] ? videoDevices[0].label : ""}
+                    items={videoDevices.map(item => ({
+                        label: item.label,
+                        value: item,
+                    }))}
                     onChange={() => {}}
                 />
                 {asyncError.deviceErr.camErr && (
@@ -40,12 +47,11 @@ const DevicesSection = () => {
                 </h3>
                 <Selection
                     title=""
-                    items={devices
-                        .filter(item => item.kind === "audioinput")
-                        .map(item => ({
-                            label: item.label,
-                            value: item,
-                        }))}
+                    value={audioDevices[0] ? audioDevices[0].label : ""}
+                    items={audioDevices.map(item => ({
+                        label: item.label,
+                        value: item,
+                    }))}
                     onChange={() => {}}
                 />
                 {asyncError.deviceErr.micErr && (

@@ -1,9 +1,9 @@
 import React from "react";
 
-import LoadingIndicator from "@/components/LoadingIndicator";
+import CanididateProfileLoadingSkeleton from "./candidate/[candidateId]/components/CanididateProfileLoadingSkeleton";
 
 const AssessmentInfoMainLoading = () => {
-    return <div>Loading...</div>;
+    return <CanididateProfileLoadingSkeleton />;
 };
 
 export default AssessmentInfoMainLoading;

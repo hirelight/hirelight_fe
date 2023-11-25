@@ -91,7 +91,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
     const queryClient = useQueryClient();
 
     const [setupLoading, setSetupLoading] = useState(true);
-    const [permission, setPermission] = useState(true);
+    const [permission, setPermission] = useState(false);
     const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
     const [stream, setStream] = useState<MediaStream | null>(null);
     const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
@@ -204,7 +204,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                 });
                 handleRemoveRecordTime();
                 queryClient.invalidateQueries({
-                    queryKey: [`my-assessment-${assessmentData!!.id}`],
+                    queryKey: [`my-assessment`, assessmentData.id],
                 });
 
                 toast.success(res.message);
@@ -231,7 +231,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
             toast.success(res.message);
 
             queryClient.invalidateQueries({
-                queryKey: [`my-assessment-${assessmentData!!.id}`],
+                queryKey: [`my-assessment`, assessmentData!!.id],
             });
             localStorage.removeItem(data.id);
         } catch (error: any) {
@@ -246,12 +246,26 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
             if ("MediaRecorder" in window) {
                 try {
                     setSetupLoading(true);
+
+                    const videoStream =
+                        await navigator.mediaDevices.getUserMedia({
+                            video: true,
+                            audio: true,
+                        });
+
+                    setPermission(true);
+                    // //combine both audio and video streams
+                    const combinedStream = new MediaStream([
+                        ...videoStream.getVideoTracks(),
+                        ...videoStream.getAudioTracks(),
+                    ]);
+                    setStream(combinedStream);
+                    setSetupLoading(false);
+
+                    // Check for any webcam and audio input permission allowed available
                     const devices =
                         await navigator.mediaDevices.enumerateDevices();
 
-                    setDevices(devices);
-
-                    // Check for any webcam and audio input permission allowed available
                     if (
                         devices.some(
                             device =>
@@ -288,21 +302,12 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                                         "Audio input device not found!";
                                 })
                             );
-                        setPermission(false);
                     }
-
-                    const videoStream =
-                        await navigator.mediaDevices.getUserMedia({
-                            video: true,
-                            audio: true,
-                        });
-                    // //combine both audio and video streams
-                    const combinedStream = new MediaStream([
-                        ...videoStream.getVideoTracks(),
-                        ...videoStream.getAudioTracks(),
-                    ]);
-                    setStream(combinedStream);
-                    setSetupLoading(false);
+                    setDevices(devices);
+                    console.log(
+                        "🚀 ~ file: AsyncVideoAssessment.tsx:253 ~ getPermission ~ devices:",
+                        devices
+                    );
                     // **********Initial AudioContext to keep track audio loudness************
                     const context = new AudioContext();
                     if (!audioContext) setAudioContext(context);
@@ -311,12 +316,14 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                     setSetupLoading(false);
                 }
             } else {
-                setPermission(false);
+                alert(
+                    "The MediaRecorder API is not supported in your browser."
+                );
             }
         };
 
         getPermission();
-    }, [permission, audioContext]);
+    }, [audioContext]);
 
     // Tracking the question start time on question changes
     useEffect(() => {
@@ -339,8 +346,8 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
         };
         if (assessmentData) handleSaveStateOnAnswerChange();
     }, [assessmentData, curPos, data.id]);
-
-    if (typeof window !== "undefined" && !("MediaRecorder" in window))
+    // console.log(window, "MediaRecorder" in window);
+    if ("MediaRecorder" in window && !permission)
         return (
             <div className="fixed inset-0 z-50">
                 <div className="h-screen w-screen bg-[#333e49] relative flex justify-center items-center">

@@ -28,3 +28,25 @@
         }
     }
 }
+
+.assessment_tab_wrapper {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding: 0.75rem 0;
+
+    &::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: rgb(222, 222, 222);
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: rgb(151, 151, 151);
+        border-radius: 12px;
+    }
+}

@@ -40,7 +40,7 @@ const fetchMyAssessmentById = async (id: string) => {
 const AssessmentPage = async ({ params }: any) => {
     const queryClient = getQueryClient();
     await queryClient.prefetchQuery({
-        queryKey: [`my-assessment-${params.assessmentId}`],
+        queryKey: [`my-assessment`, params.assessmentId],
         queryFn: () => fetchMyAssessmentById(params.assessmentId),
     });
     return (

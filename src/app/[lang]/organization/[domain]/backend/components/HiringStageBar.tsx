@@ -13,7 +13,7 @@ import styles from "./HiringStageBar.module.scss";
 
 type HiringStageBarProps = {
     curStatus: JobPostStatus;
-    onChange: (status: JobPostStatus) => void;
+    onChange?: (status: JobPostStatus) => void;
     jobList: IJobDto[];
 };
 
@@ -57,7 +57,7 @@ const HiringStageBar: React.FC<HiringStageBarProps> = ({
             stageBtnWrapperRef.current.classList.toggle("invisible");
             stageBtnWrapperRef.current.classList.toggle("opacity-0");
         }
-        if (stage) onChange(stage);
+        if (stage && onChange) onChange(stage);
     };
 
     return (

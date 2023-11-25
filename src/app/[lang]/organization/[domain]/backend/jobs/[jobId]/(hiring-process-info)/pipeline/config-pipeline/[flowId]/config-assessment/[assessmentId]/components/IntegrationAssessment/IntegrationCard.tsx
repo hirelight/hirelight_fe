@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Transition } from "@headlessui/react";
 import { useQuery } from "@tanstack/react-query";
@@ -9,6 +9,7 @@ import { IIntegrationDto, ThirdPartyAssessment } from "@/services";
 import { supportServices } from "@/utils/constants/integrations";
 import { HackerrankIcon, TestlifyLogo } from "@/icons";
 import assessmentsServices from "@/services/assessments/assessments.service";
+import { handleError } from "@/helpers";
 
 type IntegrationCardProps = {
     data: IIntegrationDto;
@@ -34,19 +35,11 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({
     const { lang } = useParams();
     const router = useRouter();
 
-    const [integrationAssessments, setIntegrationAssessments] = useState([]);
     const [showList, setShowList] = useState(false);
-
-    const { data: thirdPartyTests } = useQuery({
-        queryKey: ["assessment-test", data.service],
-        queryFn: () => {
-            if (data.token)
-                return assessmentsServices.getListThirdParty(data.service);
-        },
-    });
+    const [assessments, setAssessments] = useState<ThirdPartyAssessment[]>([]);
 
     const handleShowAssessment = () => {
-        if (thirdPartyTests && thirdPartyTests.data.length > 0) {
+        if (assessments && assessments?.length > 0) {
             setShowList(!showList);
         } else {
             router.push(
@@ -54,6 +47,21 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({
             );
         }
     };
+
+    useEffect(() => {
+        const getIntegrationAssessment = async (service: string) => {
+            try {
+                const res =
+                    await assessmentsServices.getListThirdParty(service);
+
+                setAssessments(res.data);
+            } catch (error: any) {
+                handleError(error);
+            }
+        };
+
+        if (data.token) getIntegrationAssessment(data.service);
+    }, [data.service, data.token]);
 
     return (
         <div>
@@ -129,7 +137,7 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({
                         }}
                     >
                         <ul className="p-6 space-y-4">
-                            {thirdPartyTests?.data.map(assessment => (
+                            {assessments?.map(assessment => (
                                 <li key={assessment.id}>
                                     <div className="flex items-center">
                                         <input

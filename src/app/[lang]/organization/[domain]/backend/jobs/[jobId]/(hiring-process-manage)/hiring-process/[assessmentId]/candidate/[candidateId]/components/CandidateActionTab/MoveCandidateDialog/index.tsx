@@ -36,7 +36,10 @@ const MoveCandidateDialog = () => {
 
             toast.success(res.message);
             queryClient.invalidateQueries({
-                queryKey: [`job-${jobId}-profiles`],
+                queryKey: [`job-profiles`, jobId, assessmentId],
+            });
+            queryClient.invalidateQueries({
+                queryKey: ["job-profiles", jobId],
             });
             router.push(
                 `/${lang}/backend/jobs/${jobId}/hiring-process/${assessmentId}`

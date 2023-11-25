@@ -117,7 +117,7 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
             // router.push(`/${lang}/profile/applications`);
             setIsLoading(false);
             queryClient.invalidateQueries({
-                queryKey: [`my-assessment-${assesmentData!!.id}`],
+                queryKey: [`my-assessment`, assesmentData!!.id],
             });
         } catch (error: any) {
             console.error(error);

@@ -65,9 +65,8 @@ const JobCard: React.FC<JobCardProps> = ({
         },
     });
 
-    const handlePublishJob = async (id: string) => {
-        setIsLoading(true);
-        await publishJobMutations.mutateAsync(id);
+    const handlePublishJob = (id: string) => {
+        publishJobMutations.mutate(id);
     };
 
     return (
@@ -91,7 +90,9 @@ const JobCard: React.FC<JobCardProps> = ({
                             className="focus:outline-none text-white bg-green-500 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-1 dark:bg-green-600 dark:hover:bg-green-800 dark:focus:ring-green-700 hidden md:block"
                             onClick={handlePublishJob.bind(null, id)}
                         >
-                            {isLoading && <SpinLoading className="mr-2" />}
+                            {publishJobMutations.isPending && (
+                                <SpinLoading className="mr-2" />
+                            )}
                             Publish
                         </button>
                     )}

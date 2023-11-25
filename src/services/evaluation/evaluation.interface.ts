@@ -10,6 +10,7 @@ export interface IEvaluationDto {
     id: string;
     collaboratorId: string;
     applicantAssessmentDetailId: string;
+    applicantAssessmentDetail: IApplicantAssessmentDetailDto;
     evaluation: string;
     rating: number;
     createdTime: Date | string;
@@ -20,9 +21,7 @@ export interface IProfileEvaluationDto {
     id: string;
     assessmentId: string;
     assessment: IAssessmentDto;
-    assessmentEvaluations: (IEvaluationDto & {
-        applicantAssessmentDetail: IApplicantAssessmentDetailDto;
-    })[];
+    assessmentEvaluations: IEvaluationDto[];
     applicantProfileId: string;
     applicantProfile: IApplicantProfileDto;
     startTime: Date | string;

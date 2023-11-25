@@ -39,10 +39,9 @@ const AssessmentInfoHeader = () => {
     const job = useAppSelector(state => state.job.data);
     const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
     const { data: profileList } = useQuery({
-        queryKey: ["job-profile-list", jobId],
+        queryKey: ["job-profiles", jobId],
         queryFn: () =>
-            applicantAssessmentDetailServices.employeeGetApplicantAssessDetailsList(
-                "",
+            applicantAssessmentDetailServices.employeeGetJobPostProfile(
                 jobId as string
             ),
     });
@@ -105,10 +104,18 @@ const AssessmentInfoHeader = () => {
                 </div>
                 <div className="mb-8">
                     <span className="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-4 py-1 rounded dark:bg-blue-900 dark:text-blue-300">
-                        Num of candidates: <span>7</span>
+                        Num of candidates:{" "}
+                        <span>{profileList?.data.length ?? 0}</span>
                     </span>
                     <span className="bg-green-100 text-green-800 text-sm font-medium mr-2 px-4 py-1 rounded dark:bg-green-900 dark:text-green-300">
-                        In progress: <span>5</span>
+                        In progress:{" "}
+                        <span>
+                            {profileList?.data.filter(
+                                candidate =>
+                                    candidate.assessment.assessmentTypeName !==
+                                    "SOURCED_ASSESSMENT"
+                            ).length ?? 0}
+                        </span>
                     </span>
                     <div className="inline-flex items-center gap-2 text-sm text-neutral-500">
                         <div className="flex items-center gap-1">
@@ -133,15 +140,21 @@ const AssessmentInfoHeader = () => {
                         </div>
                         <div className="flex items-center gap-1">
                             <ArrowPathIcon className="w-4 h-4" />
-                            <span>{moment(job.updatedTime).fromNow()}</span>
+                            <span>{moment.utc(job.updatedTime).fromNow()}</span>
                         </div>
                     </div>
                 </div>
 
                 {assessmentFlow.id && (
                     <div className="w-full">
-                        <div role="tablist" className="flex">
-                            <div role="tab" className="flex-1 text-center">
+                        <div
+                            role="tablist"
+                            className={styles.assessment_tab_wrapper}
+                        >
+                            <div
+                                role="tab"
+                                className="flex-1 flex-shrink-0 text-center"
+                            >
                                 <Link
                                     href={`/backend/jobs/${job.id}/hiring-process/all`}
                                     className={`${styles.assessment__btn}`}
@@ -164,7 +177,7 @@ const AssessmentInfoHeader = () => {
                                     <div
                                         role="tab"
                                         key={assessment.id}
-                                        className="flex-1 text-center"
+                                        className="flex-1 flex-shrink-0 text-center"
                                     >
                                         <Link
                                             href={`/backend/jobs/${job.id}/hiring-process/${assessment.id}`}

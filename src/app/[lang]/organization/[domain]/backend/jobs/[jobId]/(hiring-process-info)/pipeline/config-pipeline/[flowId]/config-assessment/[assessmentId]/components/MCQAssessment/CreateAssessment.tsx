@@ -321,10 +321,19 @@ const CreateAssessment = () => {
                             <div className="max-w-[400px] w-1/2">
                                 <Selection
                                     title=""
-                                    items={[80, 50, 25].map(item => ({
-                                        label: `${item}%`,
-                                        value: item,
-                                    }))}
+                                    items={[
+                                        {
+                                            label: "Disable evaluated",
+                                            value: 0,
+                                        },
+                                    ].concat(
+                                        new Array(10)
+                                            .fill("")
+                                            .map((item, index) => ({
+                                                label: `${(index + 1) * 10}%`,
+                                                value: (index + 1) * 10,
+                                            }))
+                                    )}
                                     value={
                                         formState.content.config.autoEvaluate
                                             .accuracy
@@ -337,7 +346,10 @@ const CreateAssessment = () => {
                                             produce(prev, draft => {
                                                 draft.content.config.autoEvaluate =
                                                     {
-                                                        enabled: true,
+                                                        enabled:
+                                                            value === 0
+                                                                ? false
+                                                                : true,
                                                         accuracy: value,
                                                     };
                                             })

@@ -13,6 +13,7 @@ export const defaultStage: AssessmentTypeKey[] = [
     "SOURCED_ASSESSMENT",
     "HIRED_ASSESSMENT",
     "LIVE_VIDEO_INTERVIEW_ASSESSMENT",
+    "CV_SCREENING_ASSESSMENT",
 ];
 interface IPipelineStages {
     stages: IAssessmentDto[];

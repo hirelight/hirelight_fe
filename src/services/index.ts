@@ -48,3 +48,6 @@ export * from "./evaluation/evaluation.service";
 
 export * from "./integration/integration.interface";
 export * from "./integration/integration.service";
+
+export * from "./meeting/meeting.interface";
+export * from "./meeting/meeting.service";

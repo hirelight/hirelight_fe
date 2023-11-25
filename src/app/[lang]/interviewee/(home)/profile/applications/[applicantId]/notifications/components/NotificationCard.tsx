@@ -19,6 +19,18 @@ type NotificationCardProps = {
 const NotificationCard: React.FC<NotificationCardProps> = ({ data }) => {
     const router = useRouter();
 
+    const handleNavigate = () => {
+        if (data.status === ApplicantAssessmentDetailStatus.INVITED)
+            router.push(`/assessment/${data.id}`);
+        else if (
+            [
+                ApplicantAssessmentDetailStatus.PENDING_EVALUATION,
+                ApplicantAssessmentDetailStatus.EVALUATED,
+            ].includes(data.status)
+        )
+            router.push(`/assessment/${data.id}/review`);
+    };
+
     const getStatusBadge = (status: ApplicantAssessmentDetailStatus) => {
         switch (status) {
             case ApplicantAssessmentDetailStatus.INVITED:
@@ -45,6 +57,23 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data }) => {
         }
     };
 
+    const getActionText = (status: ApplicantAssessmentDetailStatus) => {
+        switch (status) {
+            case ApplicantAssessmentDetailStatus.INVITED:
+                return "Take test";
+            case ApplicantAssessmentDetailStatus.IN_PROGRESS:
+                return "Resume";
+            case ApplicantAssessmentDetailStatus.MOVED ||
+                ApplicantAssessmentDetailStatus.NON_ATTENDANCE:
+                return "";
+            case ApplicantAssessmentDetailStatus.PENDING_EVALUATION ||
+                ApplicantAssessmentDetailStatus.EVALUATED:
+                return "View submission";
+            default:
+                return null;
+        }
+    };
+
     return (
         <div className="p-6 flex items-center gap-4 bg-white rounded-md drop-shadow-lg">
             <Image alt="Company logo" src={logo} width={40} height={40} />
@@ -64,10 +93,10 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data }) => {
                 ></div> */}
             </div>
             <ButtonOutline
-                onClick={() => router.push(`/assessment/${data.id}`)}
+                onClick={handleNavigate}
                 className="!rounded-full !py-1.5 !px-4"
             >
-                Take test
+                {getActionText(data.status)}
             </ButtonOutline>
         </div>
     );

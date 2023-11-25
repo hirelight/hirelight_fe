@@ -29,6 +29,7 @@ import Logo from "./Logo";
 import CheckToSlot from "./CheckToSlot";
 import HackerrankIcon from "./HackerrankIcon";
 import TestlifyLogo from "./TestlifyLogo";
+import FileCircleMinus from "./FileCircleMinus";
 
 export {
     Logo,
@@ -62,4 +63,5 @@ export {
     MinusBigIcon,
     HackerrankIcon,
     TestlifyLogo,
+    FileCircleMinus,
 };

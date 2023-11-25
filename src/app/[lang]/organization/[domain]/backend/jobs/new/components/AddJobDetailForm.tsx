@@ -220,9 +220,8 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
         } catch (error: any) {
             console.error(error);
             toast.error(error.message ? error.message : "Create job failure");
+            setLoading(false);
         }
-
-        setLoading(false);
     };
 
     return (

@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
     BookmarkSlashIcon,
     PencilIcon,
@@ -34,12 +34,21 @@ const ReviewContent = () => {
         applicantAssessmentDetail.id as string
     );
     const { data: querRes } = useQuery({
-        queryKey: ["evaluations", candidateId],
+        queryKey: ["profile-evaluations", candidateId],
         queryFn: () =>
             evaluationServices.getListByProfileId(
                 applicantAssessmentDetail.applicantProfileId as string
             ),
     });
+    const { data: curDetailEvaluate } = useQuery({
+        queryKey: ["assessment-evaluations", candidateId],
+        queryFn: () =>
+            evaluationServices.getListByApplicantAssessmentDetailId(
+                applicantAssessmentDetail.id as string
+            ),
+    });
+
+    console.log(curDetailEvaluate);
 
     const [showAdd, setShowAdd] = useState(false);
 
@@ -63,14 +72,14 @@ const ReviewContent = () => {
     };
 
     return (
-        <div>
-            {!querRes?.data.filter(item => item.assessmentEvaluations.length)
-                .length ? (
+        <div className="mt-4">
+            {!curDetailEvaluate?.data.length ? (
                 <div className="flex justify-center items-center p-6">
                     <BookmarkSlashIcon className="w-16 h-16 text-neutral-700" />
                     <div className="ml-6 p-2">
                         <h3 className="mb-2 text-lg font-semibold">
-                            You don’t have any evaluations yet
+                            You don’t have any evaluations for current
+                            assessment yet
                         </h3>
                         <p className="mb-6 text-sm">
                             Evaluations you or other team members add will
@@ -83,69 +92,122 @@ const ReviewContent = () => {
                 </div>
             ) : (
                 <div>
-                    {querRes?.data
-                        .filter(item => item.assessmentEvaluations.length)
-                        .map(item => (
-                            <section key={item.id} className="text-sm">
-                                <div className="pb-6 pt-4 border-b border-gray-300 flex gap-4">
-                                    <h4 className="text-base font-semibold">
-                                        {item.assessment.name}
-                                    </h4>
+                    <section
+                        key={applicantAssessmentDetail.id}
+                        className="text-sm"
+                    >
+                        <div className="pb-6 pt-4 border-b border-gray-300 flex gap-4">
+                            <h4 className="text-base font-semibold">
+                                {applicantAssessmentDetail.assessment.name}
+                            </h4>
 
-                                    <div>
-                                        {Array.from(
-                                            item.assessmentEvaluations
-                                                .reduce((prev, cur) => {
-                                                    if (!prev.has(cur.rating)) {
-                                                        prev.set(cur.rating, {
-                                                            value: cur,
-                                                            count: 1,
-                                                        });
-                                                    } else {
-                                                        prev.set(cur.rating, {
-                                                            value: cur,
-                                                            count:
-                                                                prev.get(
-                                                                    cur.rating
-                                                                ).count + 1,
-                                                        });
-                                                    }
+                            <div>
+                                {Array.from(
+                                    curDetailEvaluate.data
+                                        ?.reduce((prev, cur) => {
+                                            if (!prev.has(cur.rating)) {
+                                                prev.set(cur.rating, {
+                                                    value: cur,
+                                                    count: 1,
+                                                });
+                                            } else {
+                                                prev.set(cur.rating, {
+                                                    value: cur,
+                                                    count:
+                                                        prev.get(cur.rating)
+                                                            .count + 1,
+                                                });
+                                            }
 
-                                                    return prev;
-                                                }, new Map())
-                                                .values()
-                                        ).map(item => (
-                                            <div
-                                                key={item.value.rating}
-                                                className="flex gap-1"
-                                            >
-                                                {getRating(
-                                                    item.value.rating,
-                                                    <span>{item.count}</span>
-                                                )}
-                                            </div>
-                                        ))}
+                                            return prev;
+                                        }, new Map())
+                                        .values()
+                                ).map(item => (
+                                    <div
+                                        key={item.value.rating}
+                                        className="inline-flex gap-1 mr-3"
+                                    >
+                                        {getRating(
+                                            item.value.rating,
+                                            <span>{item.count}</span>
+                                        )}
                                     </div>
-                                </div>
+                                ))}
+                            </div>
+                        </div>
 
-                                <ul>
-                                    {item.assessmentEvaluations.map(
-                                        evaluation => (
-                                            <li
-                                                key={evaluation.id}
-                                                className="py-6 border-b border-gray-300"
-                                            >
-                                                <EvaluationCard
-                                                    data={evaluation}
-                                                />
-                                            </li>
-                                        )
-                                    )}
-                                </ul>
-                            </section>
-                        ))}
+                        <ul>
+                            {curDetailEvaluate.data?.map(evaluation => (
+                                <li
+                                    key={evaluation.id}
+                                    className="py-6 border-b border-gray-300"
+                                >
+                                    <EvaluationCard data={evaluation} />
+                                </li>
+                            ))}
+                        </ul>
+                    </section>
                 </div>
             )}
+
+            <ul>
+                {querRes?.data
+                    .filter(item => item.assessmentEvaluations.length > 0)
+                    .map(item => (
+                        <section key={item.id} className="text-sm">
+                            <div className="pb-6 pt-4 border-b border-gray-300 flex gap-4">
+                                <h4 className="text-base font-semibold">
+                                    {item.assessment.name}
+                                </h4>
+
+                                <div>
+                                    {Array.from(
+                                        item.assessmentEvaluations
+                                            ?.reduce((prev, cur) => {
+                                                if (!prev.has(cur.rating)) {
+                                                    prev.set(cur.rating, {
+                                                        value: cur,
+                                                        count: 1,
+                                                    });
+                                                } else {
+                                                    prev.set(cur.rating, {
+                                                        value: cur,
+                                                        count:
+                                                            prev.get(cur.rating)
+                                                                .count + 1,
+                                                    });
+                                                }
+
+                                                return prev;
+                                            }, new Map())
+                                            .values()
+                                    ).map(item => (
+                                        <div
+                                            key={item.value.rating}
+                                            className="inline-flex gap-1 mr-3"
+                                        >
+                                            {getRating(
+                                                item.value.rating,
+                                                <span>{item.count}</span>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <ul>
+                                {item.assessmentEvaluations?.map(evaluation => (
+                                    <li
+                                        key={evaluation.id}
+                                        className="py-6 border-b border-gray-300"
+                                    >
+                                        <EvaluationCard data={evaluation} />
+                                    </li>
+                                ))}
+                            </ul>
+                        </section>
+                    ))}
+            </ul>
 
             <Menu as="div" className="relative inline-block text-left py-6">
                 <div>

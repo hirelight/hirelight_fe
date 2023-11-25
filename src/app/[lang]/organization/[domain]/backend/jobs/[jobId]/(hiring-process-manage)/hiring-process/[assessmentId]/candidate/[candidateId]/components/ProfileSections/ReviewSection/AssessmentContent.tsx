@@ -43,7 +43,7 @@ const AssessmentContent = () => {
                     detail =>
                         !defaultAsessment.includes(
                             detail.assessment.assessmentTypeName
-                        )
+                        ) && detail.questionAnswerSet
                 )
                 .map(detail => (
                     <div key={detail.id}>
@@ -73,8 +73,8 @@ const AssessmentCard = ({ data }: { data: IJobPostAppAssDetailDto }) => {
                 </h4>
                 {data.status !== ApplicantAssessmentDetailStatus.INVITED && (
                     <div className="absolute right-0 top-1/2 -translate-y-1/2">
-                        {data.assessment.assessmentTypeName ===
-                        "MULTIPLE_CHOICE_QUESTION_ASSESSMENT" ? (
+                        {data.assessment.assessmentTypeName !==
+                        "THIRD_PARTY_ASSESSMENT" ? (
                             <button
                                 type="button"
                                 onClick={() => setShowPreview(true)}
@@ -86,7 +86,7 @@ const AssessmentCard = ({ data }: { data: IJobPostAppAssDetailDto }) => {
                                 target="_blank"
                                 href={
                                     JSON.parse(data.questionAnswerSet)
-                                        .assessmentReport
+                                        .assessmentReport ?? "#"
                                 }
                                 title="Integration result"
                                 className="text-sm font-semibold text-blue_primary_600 hover:text-blue_primary_800 hover:underline"

@@ -16,7 +16,7 @@ const CandidateList = ({}: any) => {
 
     const dispatch = useAppDispatch();
     const { data: applicantDetail, isSuccess } = useQuery({
-        queryKey: [`job-${jobId}-profiles`, assessmentId],
+        queryKey: [`job-profiles`, jobId, assessmentId],
         queryFn: () =>
             assessmentId === "all"
                 ? applicantAssessmentDetailServices.employeeGetJobPostProfile(

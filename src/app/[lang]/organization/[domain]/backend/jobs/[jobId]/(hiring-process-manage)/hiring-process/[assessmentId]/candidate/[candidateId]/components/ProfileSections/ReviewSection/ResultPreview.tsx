@@ -2,13 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import Link from "next/link";
 
-import { IJobPostAppAssDetailDto, IQuestionAnswerDto } from "@/services";
+import {
+    IAsyncAnswer,
+    IJobPostAppAssDetailDto,
+    IQuestionAnswerDto,
+} from "@/services";
 import { QuestionAnswerContentJson } from "@/interfaces/questions.interface";
 import {
     ApplicantAssessmentDetailStatus,
     AssessmentTypeKey,
 } from "@/interfaces/assessment.interface";
 import { useAppSelector } from "@/redux/reduxHooks";
+import { VideoWrapper } from "@/components";
+import { videoJsOptions } from "@/components/VideoWrapper";
 
 type MCQResultType = (Omit<IQuestionAnswerDto, "content"> & {
     content: QuestionAnswerContentJson;
@@ -49,6 +55,8 @@ const ResultPreview: React.FC<ResultPreviewProps> = ({
                 return <MCQResult results={result} />;
             case "THIRD_PARTY_ASSESSMENT":
                 return <IntegrationResult results={result} />;
+            case "ASYNC_VIDEO_INTERVIEW_ASSESSMENT":
+                return <AsyncResult results={result} />;
             default:
                 return null;
         }
@@ -147,7 +155,7 @@ const ResultPreview: React.FC<ResultPreviewProps> = ({
                                 >
                                     {data.assessment.name}
                                 </Dialog.Title>
-                                <div className="mt-2 max-h-[600px] overflow-auto">
+                                <div className="mt-2 max-h-[600px] pr-4 overflow-auto">
                                     {result &&
                                         getResultOnType(
                                             data.assessment.assessmentTypeName,
@@ -156,13 +164,16 @@ const ResultPreview: React.FC<ResultPreviewProps> = ({
                                 </div>
 
                                 <div className="mt-4">
-                                    <button
-                                        type="button"
-                                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                                        onClick={close}
-                                    >
-                                        Result: {data.result}%
-                                    </button>
+                                    {data.assessment.assessmentTypeName ===
+                                        "MULTIPLE_CHOICE_QUESTION_ASSESSMENT" && (
+                                        <button
+                                            type="button"
+                                            className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                            onClick={close}
+                                        >
+                                            Result: {data.result}%
+                                        </button>
+                                    )}
                                 </div>
                             </Dialog.Panel>
                         </Transition.Child>
@@ -223,6 +234,75 @@ const MCQResult = ({
                             </li>
                         ))}
                     </ul>
+                </section>
+            ))}
+        </div>
+    );
+};
+
+const AsyncResult = ({ results }: { results: IAsyncAnswer[] }) => {
+    console.log(results);
+    return (
+        <div className="space-y-8 text-sm mb-4">
+            {results?.map((item, quesNo) => (
+                <section key={item.id}>
+                    <div className="flex items-start gap-2 ql-editor !p-0 mb-4">
+                        <span>{quesNo + 1}.</span>
+                        <div
+                            dangerouslySetInnerHTML={{
+                                __html: item.content.name,
+                            }}
+                        ></div>
+                    </div>
+
+                    {item.content.files && (
+                        <div className="rounded-md overflow-hidden">
+                            <VideoWrapper
+                                options={{
+                                    ...videoJsOptions,
+                                    sources: [
+                                        {
+                                            src: item.content.files[0].src,
+                                            type: item.content.files[0].type,
+                                        },
+                                    ],
+                                }}
+                            />
+                        </div>
+                    )}
+
+                    {/* <ul className="space-y-2 pl-2">
+                        {item.content.answers.map((ans, index) => (
+                            <li
+                                key={index}
+                                className={`flex items-center font-medium gap-2  ${
+                                    ans.isChosen && ans.isChosen !== ans.correct
+                                        ? "text-red-600"
+                                        : ans.correct
+                                        ? "text-green-600"
+                                        : ""
+                                }`}
+                            >
+                                <input
+                                    type={
+                                        item.content.type === "one-answer"
+                                            ? "radio"
+                                            : "checkbox"
+                                    }
+                                    defaultChecked={ans.isChosen}
+                                    className={`w-4 h-4 text-inherit bg-gray-100 border-gray-300 pointer-events-none`}
+                                    readOnly={true}
+                                />
+
+                                <div
+                                    className="ql-editor !p-0"
+                                    dangerouslySetInnerHTML={{
+                                        __html: ans.name,
+                                    }}
+                                ></div>
+                            </li>
+                        ))}
+                    </ul> */}
                 </section>
             ))}
         </div>

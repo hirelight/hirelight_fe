@@ -1,4 +1,12 @@
 import { IAppFormField, IAppFormSection } from "@/interfaces";
+import { AssessmentTypeKey } from "@/interfaces/assessment.interface";
+
+export const defaulAssessmentStages: AssessmentTypeKey[] = [
+    "SOURCED_ASSESSMENT",
+    "HIRED_ASSESSMENT",
+    "LIVE_VIDEO_INTERVIEW_ASSESSMENT",
+    "CV_SCREENING_ASSESSMENT",
+];
 
 export const jobFunctions = [
     { id: 0, name: "Accounting" },

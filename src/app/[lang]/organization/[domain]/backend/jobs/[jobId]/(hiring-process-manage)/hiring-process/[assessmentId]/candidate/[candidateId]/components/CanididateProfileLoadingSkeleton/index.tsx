@@ -5,7 +5,7 @@ import ProfileSectionSkeleton from "./ProfileSectionSkeletion";
 
 const CanididateProfileLoadingSkeleton = () => {
     return (
-        <div className="w-full min-h-screen mb-10 relative">
+        <div className="w-full min-h-screen flex flex-col mb-10 relative">
             <ProfileHeaderSkeleton />
             <ProfileSectionSkeleton />
         </div>
