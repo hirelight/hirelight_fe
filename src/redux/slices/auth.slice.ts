@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import jwtDecode from "jwt-decode";
 
 import { IUserInfo } from "@/interfaces/user.interface";
+import { decryptData, encryptData } from "@/helpers/authHelpers";
 
 import { fetchAccessToken, loginEmailPwd } from "../thunks/auth.thunk";
 
@@ -17,13 +18,19 @@ type AuthSliceState = {
 const token = Cookies.get("hirelight_access_token");
 
 const initialState: AuthSliceState = {
-    token: Cookies.get("hirelight_access_token") ?? "",
-    authUser: Cookies.get("hirelight_access_token")
-        ? jwtDecode(Cookies.get("hirelight_access_token")!!)
-        : null,
+    token: "",
+    authUser: null,
     authError: null,
     loading: false,
 };
+
+// Check localStorage for existing data
+const savedData = decryptData("hirelight_access_token");
+if (savedData) {
+    initialState.token = savedData;
+    initialState.authUser = jwtDecode(savedData);
+}
+
 const authSlice = createSlice({
     initialState,
     name: "auth",
@@ -31,18 +38,12 @@ const authSlice = createSlice({
         setToken: (state, action) => {
             state.token = action.payload;
             state.authUser = jwtDecode(action.payload);
-            Cookies.set("hirelight_access_token", action.payload, {
-                domain: `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-                sameSite: "None",
-                secure: true,
-            });
+            encryptData("hirelight_access_token", action.payload);
         },
         logout: state => {
             state.token = "";
             state.authUser = null;
-            Cookies.remove("hirelight_access_token", {
-                domain: `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-            });
+            localStorage.removeItem("hirelight_access_token");
         },
     },
     extraReducers(builder) {
@@ -53,11 +54,7 @@ const authSlice = createSlice({
             .addCase(fetchAccessToken.fulfilled, (state, action) => {
                 state.token = action.payload;
                 state.authUser = jwtDecode(action.payload);
-                Cookies.set("hirelight_access_token", action.payload, {
-                    domain: `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-                    sameSite: "None",
-                    secure: true,
-                });
+                encryptData("hirelight_access_token", action.payload);
                 state.loading = false;
             })
             .addCase(fetchAccessToken.rejected, (state, action) => {
@@ -72,11 +69,7 @@ const authSlice = createSlice({
                 const { data, message } = action.payload;
                 state.token = data.accessToken;
                 state.authUser = jwtDecode(data.accessToken);
-                Cookies.set("hirelight_access_token", data.accessToken, {
-                    domain: `.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`,
-                    sameSite: "None",
-                    secure: true,
-                });
+                encryptData("hirelight_access_token", data.accessToken);
                 state.loading = false;
                 toast.success(message);
             })

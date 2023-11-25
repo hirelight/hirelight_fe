@@ -13,9 +13,6 @@ export const metadata: Metadata = {
 };
 
 const SelectOrgPage = async ({ params }: any) => {
-    const token = cookies().get("hirelight_access_token");
-
-    if (!token) return redirect(`/${params.lang}/login`);
     return (
         <div className="min-w-[540px] relative bg-white shadow-lg rounded-md p-8 mx-auto text-center">
             <div className="w-24 h-24 mx-auto mb-6 border border-gray-300 rounded-full overflow-hidden">

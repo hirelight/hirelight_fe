@@ -3,17 +3,16 @@
 import React, { useCallback } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Cookies from "js-cookie";
-import { toast } from "react-toastify";
 import jwtDecode from "jwt-decode";
 
-import authServices from "@/services/auth/auth.service";
 import { Portal } from "@/components/index";
 import { GoogleIcon, LinkedInIcon, SpinLoading } from "@/icons";
 import { LoginEmployerDto } from "@/services/auth/auth.interface";
 import { fetchAccessToken, loginEmailPwd } from "@/redux/thunks/auth.thunk";
 import { useAppDispatch } from "@/redux/reduxHooks";
+import { decryptData } from "@/helpers/authHelpers";
 
 import styles from "./LoginForm.module.scss";
 
@@ -88,7 +87,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
     );
 
     React.useEffect(() => {
-        const accessToken = Cookies.get("hirelight_access_token");
+        const accessToken = decryptData("hirelight_access_token");
         if (!accessToken) {
             if (loginStatus && loginId) {
                 getToken(loginId);

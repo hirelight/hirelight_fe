@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import jwtDecode from "jwt-decode";
-import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import { BuildingOffice2Icon } from "@heroicons/react/24/outline";
@@ -16,6 +15,8 @@ import { IOrganizationDto } from "@/services/organizations/organizations.interfa
 import authServices from "@/services/auth/auth.service";
 import { isDevMode, validWorkEmail } from "@/helpers";
 import organizationsServices from "@/services/organizations/organizations.service";
+import { decryptData } from "@/helpers/authHelpers";
+import { useAppSelector } from "@/redux/reduxHooks";
 
 import styles from "./JoinedOrgList.module.scss";
 
@@ -23,8 +24,7 @@ type JoinedOrgListProps = {};
 
 const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
     const router = useRouter();
-    const token = Cookies.get("hirelight_access_token")!!;
-    const decoded: any = jwtDecode(token);
+    const { authUser } = useAppSelector(state => state.auth);
 
     const { data: res, error } = useQuery({
         queryKey: ["joined-owned-organizations"],
@@ -34,7 +34,7 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
     const [pageLoading, setPageLoading] = useState(false);
 
     const handleRedirectNewOrg = () => {
-        if (validWorkEmail(decoded.emailAddress))
+        if (authUser && validWorkEmail(authUser.emailAddress))
             router.push("/organization/new");
         else toast.error("Only work email can create organization");
     };
@@ -43,16 +43,10 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
         try {
             setPageLoading(true);
 
-            if (!isDevMode()) {
-                router.replace(
-                    `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?orgId=${orgId}&orgAuth=true`
-                );
-            } else {
-                const res = await authServices.getOrgAccessToken(orgId);
-                router.replace(
-                    `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?accessToken=${res.data.accessToken}`
-                );
-            }
+            const res = await authServices.getOrgAccessToken(orgId);
+            router.replace(
+                `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?accessToken=${res.data.accessToken}`
+            );
         } catch (error) {
             toast.error("Redirect failure");
             console.error(error);
@@ -96,12 +90,13 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
                                         <strong className="mr-auto">
                                             {org.name}
                                         </strong>
-                                        {org.ownerId.toString() ===
-                                            decoded.userId && (
-                                            <span className="text-sm text-gray-500 group-hover:text-blue_primary_700">
-                                                Owned
-                                            </span>
-                                        )}
+                                        {authUser &&
+                                            org.ownerId.toString() ===
+                                                authUser.userId && (
+                                                <span className="text-sm text-gray-500 group-hover:text-blue_primary_700">
+                                                    Owned
+                                                </span>
+                                            )}
                                         <span>
                                             <ChevronRightIcon className="w-5 h-5" />
                                         </span>

@@ -3,14 +3,15 @@ import axios, {
     InternalAxiosRequestConfig,
     AxiosResponse,
 } from "axios";
-import Cookies from "js-cookie";
+
+import { decryptData } from "@/helpers/authHelpers";
 
 const interceptor = axios.create({
     baseURL: process.env.NEXT_PUBLIC_SERVER_API,
 });
 
 interceptor.interceptors.request.use((req: InternalAxiosRequestConfig<any>) => {
-    const token = Cookies.get("hirelight_access_token");
+    const token = decryptData("hirelight_access_token");
     if (token && req.headers) req.headers.Authorization = `Bearer ${token}`;
 
     return req;
@@ -28,7 +29,7 @@ interceptor.interceptors.response.use(
     (error: AxiosError) => {
         console.log("Interceptor err", error.toJSON());
         if (error.response?.status === 401) {
-            Cookies.remove("hirelight_access_token");
+            localStorage.removeItem("hirelight_access_token");
         }
 
         if (error.response) {

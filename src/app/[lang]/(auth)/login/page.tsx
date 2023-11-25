@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
 import { Metadata } from "next";
-import { cookies } from "next/headers";
 
 import { Locale } from "../../../../../i18n.config";
 import { getDictionary } from "../../../../utils/dictionaries/dictionnary";
