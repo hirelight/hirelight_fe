@@ -1,14 +1,24 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import { CalendarIcon, TagIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 
 import { ButtonOutline } from "@/components";
 import { EllipsisVertical } from "@/icons";
 
+import CreateMeetingModal from "./CreateMeetingModal";
+import ActionDrawer from "./ActionDrawer";
+
 const Sidebar = () => {
+    const [isShow, setIsShow] = useState(false);
+
     return (
         <div className="w-fit max-w-md flex flex-col gap-4 p-4">
-            <ButtonOutline className="mb-6">Create new event</ButtonOutline>
+            <ActionDrawer show={isShow} onClose={() => setIsShow(false)} />
+            <ButtonOutline className="mb-6" onClick={() => setIsShow(true)}>
+                Create new event
+            </ButtonOutline>
             <section>
                 <h3 className="flex items-center font-medium text-lg mb-4">
                     <CalendarIcon className="w-6 h-6 mr-2" />

@@ -95,6 +95,9 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                 JSON.parse(res.data.questionAnswerSet!!) as ICandidateMCDto[]
             );
             setIsLoading(false);
+            queryClient.invalidateQueries({
+                queryKey: [`my-assessment`, assesmentData!!.id],
+            });
         } catch (error: any) {
             console.error(error);
             toast.error(

@@ -52,7 +52,7 @@ const InvitationDropDown = () => {
         try {
             const res = await authServices.getOrgAccessToken(orgId);
             router.replace(
-                `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?accessToken=${res.data.accessToken}`
+                `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend?accessToken=${res.data.accessToken}`
             );
         } catch (error: any) {
             toast.error(error.message ? error.message : "Redirect failure");

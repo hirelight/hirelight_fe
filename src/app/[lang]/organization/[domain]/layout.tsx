@@ -9,7 +9,7 @@ import HeaderBar from "./components/HeaderBar";
 const AuthenWrapper = dynamic(() => import("./components/AuthenWrapper"), {
     ssr: false,
     loading: () => (
-        <div className="w-screen h-screen flex pt-[30%] justify-center">
+        <div className="w-screen h-screen flex items-center justify-center">
             <DoubleRingLoading className="w-28 h-28" />
         </div>
     ),

@@ -32,8 +32,11 @@ const ASSESSMENT_EVALUATION = "/assessment-evaluations";
 
 const THIRDPARTY_TOKENS = "/thirdparty-tokens";
 
+const MEETINGS = "/meetings";
+
 const endpoints = {
     TAGS,
+    MEETINGS,
     ORGANIZATIONS,
     ORGANIZATIONS_EMPLOYER,
     JOBPOSTS,

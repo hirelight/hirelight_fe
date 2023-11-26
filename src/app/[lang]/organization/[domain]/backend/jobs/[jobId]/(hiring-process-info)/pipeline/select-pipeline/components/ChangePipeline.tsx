@@ -21,7 +21,7 @@ import { isInvalidForm } from "@/helpers";
 const initialData: ICreateAssessmentFlowDto = {
     name: "",
     startTime: new Date(),
-    endTime: new Date(),
+    endTime: moment().add(7, "days").toDate(),
     jobPostId: "",
     assessments: [
         {

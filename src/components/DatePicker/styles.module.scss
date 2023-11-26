@@ -1,3 +1,11 @@
+.input__label {
+    @apply block mb-2 text-sm font-medium text-neutral-900 dark:text-white;
+
+    &.error {
+        @apply text-red-700 dark:text-red-500;
+    }
+}
+
 .datepicker__header {
 }
 .datepicker__main {

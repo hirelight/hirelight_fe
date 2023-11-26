@@ -37,6 +37,7 @@ interface DatePickerProps {
     pos?: "top" | "bottom";
     required?: boolean;
     title?: string;
+    errorText?: string;
 }
 
 const DatePicker: React.FC<DatePickerProps> = ({
@@ -49,6 +50,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
     pos = "bottom",
     required,
     title,
+    errorText,
 }) => {
     const wrapperRef = useOutsideClick<HTMLDivElement>(() =>
         setShowDatepicker(false)
@@ -235,7 +237,13 @@ const DatePicker: React.FC<DatePickerProps> = ({
     return (
         <div ref={wrapperRef} className="relative">
             {title && (
-                <label htmlFor={id} className={styles.input__label}>
+                <label
+                    htmlFor={id}
+                    className={
+                        styles.input__label +
+                        ` ${errorText ? styles.error : ""}`
+                    }
+                >
                     {required && <span className="text-red-500 mr-1">*</span>}
                     {title}
                     {!required && (
@@ -245,35 +253,45 @@ const DatePicker: React.FC<DatePickerProps> = ({
                     )}
                 </label>
             )}
-            <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
-                    <svg
-                        className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                    >
-                        <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                    </svg>
-                </div>
-                <input
-                    type="text"
-                    id={id}
-                    name={name}
-                    required={required}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    onFocusCapture={() => setShowDatepicker(true)}
-                    placeholder="dd/mm/yyyy"
-                    value={moment(selectedDate).format("DD/MM/YY") ?? ""}
-                    onChange={e => {
-                        e.preventDefault();
+            <div>
+                <div className="relative">
+                    <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
+                        <svg
+                            className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                        >
+                            <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                        </svg>
+                    </div>
+                    <input
+                        type="text"
+                        id={id}
+                        name={name}
+                        required={required}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        onFocusCapture={() => setShowDatepicker(true)}
+                        placeholder="dd/mm/yyyy"
+                        value={moment(selectedDate).format("DD/MM/YY") ?? ""}
+                        onChange={e => {
+                            e.preventDefault();
 
-                        onChange(
-                            moment(e.currentTarget.value, "DD/MM/YY").toDate()
-                        );
-                    }}
-                />
+                            onChange(
+                                moment(
+                                    e.currentTarget.value,
+                                    "DD/MM/YY"
+                                ).toDate()
+                            );
+                        }}
+                    />
+                </div>{" "}
+                {errorText && (
+                    <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                        <span className="font-medium">{errorText} </span>
+                    </p>
+                )}
             </div>
             <AnimatePresence>
                 {showDatepicker && (

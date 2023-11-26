@@ -5,6 +5,7 @@ import {
     HandThumbDownIcon,
     HandThumbUpIcon,
     StarIcon,
+    UserCircleIcon,
 } from "@heroicons/react/24/solid";
 import moment from "moment";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -114,13 +115,16 @@ const EvaluationCard: React.FC<EvaluationCardProps> = ({ data }) => {
                 />
             </Portal>
             <div className="flex items-center gap-4 mb-4">
-                <Image
+                {/* <Image
                     src={process.env.NEXT_PUBLIC_AVATAR_URL as string}
                     alt="Collaborator avatar"
                     width={30}
                     height={30}
                     className="w-8 h-8 rounded-full object-cover"
-                />
+                /> */}
+                <div className="w-10 h-10 rounded-full text-neutral-600">
+                    <UserCircleIcon />
+                </div>
                 <div className="flex-1">
                     <h3 className="font-semibold mb-2 flex items-center gap-2">
                         Nguyen Kien <span>{getRating(data.rating)}</span>

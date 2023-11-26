@@ -45,7 +45,7 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
 
             const res = await authServices.getOrgAccessToken(orgId);
             router.replace(
-                `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?accessToken=${res.data.accessToken}`
+                `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend?accessToken=${res.data.accessToken}`
             );
         } catch (error) {
             toast.error("Redirect failure");

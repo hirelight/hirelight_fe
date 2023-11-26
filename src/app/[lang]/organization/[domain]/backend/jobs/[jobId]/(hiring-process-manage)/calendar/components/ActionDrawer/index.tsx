@@ -26,16 +26,6 @@ import { isInvalidForm } from "@/helpers";
 
 import SelectAttendeeList from "./SelectAttendeeList";
 
-const backdropVariants = {
-    backdropOpen: { opacity: 1 },
-    backdropClose: { opacity: 0 },
-};
-
-const drawerVariants = {
-    drawerEnter: { translateX: 0 },
-    drawerLeave: { translateX: "100%" },
-};
-
 interface IActionDrawer {
     title?: string;
     description?: string;
@@ -46,33 +36,10 @@ interface IActionDrawer {
     loading?: boolean;
 }
 
-const people = [
-    { name: "Wade Cooper" },
-    { name: "Arlene Mccoy" },
-    { name: "Devon Webb" },
-    { name: "Tom Cook" },
-    { name: "Tanya Fox" },
-    { name: "Hellen Schmidt" },
-];
-
 const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
     const { jobId, assessmentId } = useParams();
 
     const authUser = useAppSelector(state => state.auth.authUser);
-    const { data: applicantAssessmentDetail } = useAppSelector(
-        state => state.applicantAssessmentDetail
-    );
-    const avaterDetail = useRef<IAppFormField | undefined>(
-        (
-            JSON.parse(
-                applicantAssessmentDetail!!.applicantProfile.content
-            ) as ApplicationFormJSON
-        ).form_structure
-            .find(
-                item => item.id === AppFormDefaultSection.PERSONAL_INFORMATION
-            )!!
-            .fields.find(field => field.id === "avatar")
-    );
 
     const [formErr, setFormErr] = useState({
         nameErr: "",
@@ -83,8 +50,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
     });
     const [formState, setFormState] = useState<ICreateMeetings>({
         assessmentId: assessmentId as string,
-        candidateId:
-            applicantAssessmentDetail?.applicantProfile.candidateId ?? "",
+        candidateId: "",
         startTime: new Date(),
         endTime: new Date(),
         name: "",
@@ -275,7 +241,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
 
                                     <hr className="h-[1px] w-full my-8 bg-gray-300" />
 
-                                    <h4 className="block mb-6 text-sm font-medium text-neutral-900 dark:text-white">
+                                    <h4 className="block mb-4 text-sm font-medium text-neutral-900 dark:text-white">
                                         Schedule
                                     </h4>
                                     <div>
@@ -319,42 +285,10 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                         )}
                                     </div>
 
+                                    <h4 className="block mb-4 text-sm font-medium text-neutral-900 dark:text-white">
+                                        Assessors
+                                    </h4>
                                     <ul className="space-y-4">
-                                        <li>
-                                            <div className="flex items-center gap-2">
-                                                {avaterDetail.current &&
-                                                avaterDetail.current.value ? (
-                                                    <Image
-                                                        src={
-                                                            avaterDetail.current
-                                                                .value.value
-                                                        }
-                                                        alt="Collaborator avatar"
-                                                        width={30}
-                                                        height={30}
-                                                        className="w-8 h-8 rounded-full object-cover"
-                                                    />
-                                                ) : (
-                                                    <div className="w-10 h-10 rounded-full text-neutral-600">
-                                                        <UserCircleIcon />
-                                                    </div>
-                                                )}
-                                                <div className="flex-1 text-sm">
-                                                    <h3 className="font-semibold">
-                                                        {applicantAssessmentDetail
-                                                            ?.applicantProfile
-                                                            .firstName +
-                                                            " " +
-                                                            applicantAssessmentDetail
-                                                                ?.applicantProfile
-                                                                .lastName}
-                                                    </h3>
-                                                    <p className="text-gray-500">
-                                                        Candidate
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </li>
                                         {selected.map(selectAttendee => (
                                             <li key={selectAttendee.id}>
                                                 <div className="flex items-center gap-2">

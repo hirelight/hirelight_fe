@@ -31,18 +31,17 @@ const nextConfig = withBundleAnalyzer({
     },
     images: {
         remotePatterns: [
-            process.env.NODE_ENV === "development"
-                ? {
-                      protocol: "http",
-                      hostname: "localhost",
-                      port: "5555",
-                      pathname: "/api/v1/assessment-flows/files/**",
-                  }
-                : {
-                      protocol: "https",
-                      hostname: "hirelight.azurewebsites.net",
-                      pathname: "/api/v1/assessment-flows/files/**",
-                  },
+            {
+                protocol: "http",
+                hostname: "localhost",
+                port: "5555",
+                pathname: "/api/v1/assessment-flows/files/**",
+            },
+            {
+                protocol: "https",
+                hostname: "hirelight.azurewebsites.net",
+                pathname: "/api/v1/assessment-flows/files/**",
+            },
         ],
     },
     webpack: config => {

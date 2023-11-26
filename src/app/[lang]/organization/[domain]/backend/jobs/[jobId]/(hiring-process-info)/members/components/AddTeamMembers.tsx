@@ -11,6 +11,7 @@ import collaboratorsServices from "@/services/collaborators/collaborators.servic
 import { IUserDto } from "@/services";
 import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
 import { useAppSelector } from "@/redux/reduxHooks";
+import queryKeyConst from "@/utils/constants/query-key.constant";
 
 import styles from "./AddTeamMembers.module.scss";
 import NewMemberModal from "./NewMemberModal";
@@ -27,7 +28,7 @@ const AddTeamMebers = () => {
         error,
         isLoading,
     } = useQuery({
-        queryKey: [`collaborators`, jobId],
+        queryKey: [queryKeyConst.COLLABORATOR_LIST, jobId],
         queryFn: () =>
             collaboratorsServices.getCollaboratorList(jobId as string),
     });

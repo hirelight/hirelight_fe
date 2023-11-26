@@ -7,10 +7,12 @@ import { Tab } from "@headlessui/react";
 import styles from "./styles.module.scss";
 import ProfileSection from "./ProfileSection";
 import ReviewSection from "./ReviewSection";
+import MeetingSection from "./MeetingSection";
 
 enum ProfileTab {
     PROFILE = "Profile",
     REVIEW = "Review",
+    MEETING = "Meetings",
 }
 
 function classNames(...classes: any) {
@@ -51,6 +53,9 @@ const ProfileSections = () => {
                     </Tab.Panel>
                     <Tab.Panel>
                         <ReviewSection />
+                    </Tab.Panel>
+                    <Tab.Panel>
+                        <MeetingSection />
                     </Tab.Panel>
                 </Tab.Panels>
             </Tab.Group>

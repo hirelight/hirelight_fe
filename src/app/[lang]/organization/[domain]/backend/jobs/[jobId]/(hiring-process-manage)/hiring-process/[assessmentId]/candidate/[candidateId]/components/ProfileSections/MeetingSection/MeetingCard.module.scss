@@ -1,0 +1,8 @@
+.content__wrapper {
+    display: grid;
+    grid-template-columns: minmax(100px, 150px) 1fr;
+
+    gap: 1rem;
+    margin-top: 1.5rem;
+    @apply text-neutral-700;
+}

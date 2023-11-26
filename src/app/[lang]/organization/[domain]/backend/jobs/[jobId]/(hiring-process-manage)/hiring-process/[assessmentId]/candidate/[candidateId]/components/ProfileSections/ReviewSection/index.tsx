@@ -3,6 +3,8 @@
 import React from "react";
 import { Tab } from "@headlessui/react";
 
+import { useAppSelector } from "@/redux/reduxHooks";
+
 import ReviewContent from "./ReviewContent";
 import AssessmentContent from "./AssessmentContent";
 
@@ -11,6 +13,12 @@ function classNames(...classes: any) {
 }
 
 const ReviewSection = () => {
+    const authUser = useAppSelector(state => state.auth.authUser);
+    console.log(
+        "🚀 ~ file: index.tsx:16 ~ ReviewSection ~ authUser:",
+        authUser
+    );
+
     return (
         <div>
             <Tab.Group>

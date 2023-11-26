@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import jwtDecode from "jwt-decode";
@@ -13,6 +13,7 @@ import { decryptData } from "@/helpers/authHelpers";
 const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
     const accessToken = useSearchParams().get("accessToken");
 
+    const { lang } = useParams();
     const router = useRouter();
     const dispatch = useAppDispatch();
 
@@ -21,7 +22,7 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
         if (!token) {
             if (accessToken) {
                 dispatch(setToken(accessToken));
-                router.push("/backend");
+                router.push(`/${lang}/backend`);
             } else {
                 router.replace(
                     `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`
@@ -37,10 +38,12 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
                 router.replace(
                     `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/select-org`
                 );
+            } else if (accessToken) {
+                dispatch(setToken(accessToken));
+                router.push(`/${lang}/backend`);
             }
-            router.push("/backend");
         }
-    }, [accessToken, dispatch, router]);
+    }, [accessToken, dispatch, lang, router]);
 
     return <>{children}</>;
 };

@@ -23,6 +23,7 @@ import CountdownTimer from "./CountdownTimer";
 import VideoWrapper from "./VideoWrapper";
 import DoubleRingLoading from "./DoubleRingLoading";
 import EmployeePrivateWrapper from "./EmployeePrivateWrapper";
+import TimerPicker from "./TimerPicker";
 
 export {
     Modal,
@@ -50,4 +51,5 @@ export {
     VideoWrapper,
     DoubleRingLoading,
     EmployeePrivateWrapper,
+    TimerPicker,
 };

@@ -30,7 +30,7 @@ import QuestionPickerModal from "./QuestionPickerModal";
 
 const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ssr: false,
-    loading: () => <p>Loading ...</p>,
+    loading: () => <div className="min-h-[300px] border border-gray-300"></div>,
 });
 
 type ICreateMCAssessment = Omit<IEditAssessmentDto, "content" | "query"> & {

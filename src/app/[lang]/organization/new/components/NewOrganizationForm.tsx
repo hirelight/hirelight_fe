@@ -53,7 +53,7 @@ const NewOrganizationForm = () => {
                 });
 
                 router.replace(
-                    `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}?accessToken=${resOrgToken.data.accessToken}`
+                    `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend?accessToken=${resOrgToken.data.accessToken}`
                 );
             }
         } catch (error: any) {
