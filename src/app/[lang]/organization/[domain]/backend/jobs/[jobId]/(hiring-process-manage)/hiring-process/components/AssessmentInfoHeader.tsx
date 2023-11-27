@@ -21,6 +21,7 @@ import { useAppSelector } from "@/redux/reduxHooks";
 import currencies from "@/utils/shared/currencies.json";
 import { CurrencyKey } from "@/interfaces/job-post.interface";
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
+import { Calendar } from "@/icons";
 
 import styles from "./AssessmentInfoHeader.module.scss";
 
@@ -35,7 +36,7 @@ const Tooltip = dynamic(
 );
 
 const AssessmentInfoHeader = () => {
-    const { assessmentId, jobId } = useParams();
+    const { assessmentId, jobId, lang } = useParams();
     const job = useAppSelector(state => state.job.data);
     const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
     const { data: profileList } = useQuery({
@@ -64,7 +65,9 @@ const AssessmentInfoHeader = () => {
                         <ul className="flex gap-6">
                             <li>
                                 <Tooltip content="Edit job">
-                                    <Link href={`/backend/jobs/${job.id}/edit`}>
+                                    <Link
+                                        href={`/${lang}/backend/jobs/${job.id}/edit`}
+                                    >
                                         <PencilIcon className="w-5 h-5" />
                                     </Link>
                                 </Tooltip>
@@ -77,9 +80,11 @@ const AssessmentInfoHeader = () => {
                                 </Tooltip>
                             </li>
                             <li>
-                                <Tooltip content="Achive this job">
-                                    <Link href={"#"}>
-                                        <ArchiveBoxIcon className="w-5 h-5" />
+                                <Tooltip content="Job events">
+                                    <Link
+                                        href={`/${lang}/backend/jobs/${job.id}/calendar`}
+                                    >
+                                        <Calendar className="w-5 h-5" />
                                     </Link>
                                 </Tooltip>
                             </li>
@@ -156,7 +161,7 @@ const AssessmentInfoHeader = () => {
                                 className="flex-1 flex-shrink-0 text-center"
                             >
                                 <Link
-                                    href={`/backend/jobs/${job.id}/hiring-process/all`}
+                                    href={`/${lang}/backend/jobs/${job.id}/hiring-process/all`}
                                     className={`${styles.assessment__btn}`}
                                 >
                                     <span
@@ -180,7 +185,7 @@ const AssessmentInfoHeader = () => {
                                         className="flex-1 flex-shrink-0 text-center"
                                     >
                                         <Link
-                                            href={`/backend/jobs/${job.id}/hiring-process/${assessment.id}`}
+                                            href={`/${lang}/backend/jobs/${job.id}/hiring-process/${assessment.id}`}
                                             className={`${styles.assessment__btn}`}
                                         >
                                             <span

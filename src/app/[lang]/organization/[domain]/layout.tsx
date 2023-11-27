@@ -18,10 +18,7 @@ const AuthenWrapper = dynamic(() => import("./components/AuthenWrapper"), {
 const OrganizationLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <div className="w-full min-h-screen relative bg-slate-100 flex flex-col">
-            <AuthenWrapper>
-                <HeaderBar />
-                <main className="flex-1 relative z-0">{children}</main>
-            </AuthenWrapper>
+            <AuthenWrapper>{children}</AuthenWrapper>
         </div>
     );
 };

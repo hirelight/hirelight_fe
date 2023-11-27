@@ -1,0 +1,10 @@
+.subsection {
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    @apply text-sm border-b border-gray-300;
+}
+
+.subsection_title {
+    @apply text-base uppercase font-semibold mb-4;
+}

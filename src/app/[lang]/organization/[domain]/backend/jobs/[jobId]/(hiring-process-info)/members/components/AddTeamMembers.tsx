@@ -45,11 +45,12 @@ const AddTeamMebers = () => {
             <Portal>
                 <NewMemberModal
                     isOpen={showModal}
+                    collabList={res ? res.data : []}
                     onClose={() => setShowModal(false)}
                     onSendInvitation={handleAddMemeber}
                 />
             </Portal>
-            {res && res?.data!!.length > 0 ? (
+            {res && res.data.length > 0 ? (
                 <div className={styles.table__wrapper}>
                     <CollaboratorList datas={res.data} />
                 </div>

@@ -1,6 +1,9 @@
+"use client";
+
 import React, { FormEvent, useState } from "react";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { toast } from "react-toastify";
+import jwtDecode from "jwt-decode";
 
 import {
     CustomFileInput,
@@ -12,6 +15,7 @@ import {
 import { IAppFormField, IAppFormSection, ICustomField } from "@/interfaces";
 import interceptor from "@/services/interceptor";
 import { ApplicationFormJSON } from "@/services";
+import { decryptData } from "@/helpers/authHelpers";
 
 type AppFormSectionProps = {
     jobPostId: string;
@@ -24,6 +28,8 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
     data,
     onApply,
 }) => {
+    const token = decryptData("hirelight_access_token");
+
     const inputFieldOnType = (field: IAppFormField) => {
         switch (field.type) {
             case "text-area":
@@ -50,7 +56,9 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                         />
                     </div>
                 );
-            case "file":
+            case "file": {
+                if (field.id === "avatar") return null;
+
                 return (
                     <div key={field.label} className=" mb-6">
                         <CustomFileInput
@@ -62,6 +70,7 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                         />
                     </div>
                 );
+            }
             case "boolean":
                 return (
                     <div key={field.label} className=" mb-6">
@@ -86,7 +95,7 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                         <SelectionInput field={field as ICustomField} />
                     </div>
                 );
-            default:
+            default: {
                 return (
                     <div key={field.label} className=" mb-6">
                         <CustomInput
@@ -95,9 +104,18 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                             title={field.label}
                             type={field.type}
                             required={field.required}
+                            readOnly={field.id === "email" ? true : false}
+                            value={
+                                field.id === "email"
+                                    ? token
+                                        ? (jwtDecode(token) as any).emailAddress
+                                        : ""
+                                    : undefined
+                            }
                         />
                     </div>
                 );
+            }
         }
     };
 

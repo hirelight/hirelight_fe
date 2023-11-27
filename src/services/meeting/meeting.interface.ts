@@ -1,4 +1,5 @@
 export interface IMeetingDto {
+    id: string;
     creatorId: string;
     assessmentId: string;
     candidateId: string;
@@ -12,7 +13,7 @@ export interface IMeetingDto {
     location: string;
     createdTime: Date;
     updatedTime: Date;
-    status: string;
+    status: MeetingStatus;
     candidate: {
         email: string;
         firstName: string;
@@ -38,7 +39,7 @@ export interface IMeetingDto {
 export interface MeetingEmployer {
     employerId: string;
     meetingId: string;
-    status: string;
+    status: MeetingStatus;
     scheduleTime: string;
     employer: {
         id: string;
@@ -51,9 +52,9 @@ export interface MeetingEmployer {
 
 export interface ICreateMeetings {
     assessmentId: string;
-    candidateId: string;
-    startTime: Date;
-    endTime: Date;
+    candidateId: string | null;
+    startTime: Date | string;
+    endTime: Date | string;
     name: string;
     description: string;
     meetingLink: string;
@@ -64,11 +65,20 @@ export interface ICreateMeetings {
 export interface IEditMeetingDto {
     id: string;
     candidateId: string;
-    startTime: Date;
-    endTime: Date;
+    startTime: Date | string;
+    endTime: Date | string;
     name: string;
     description: string;
     meetingLink: string;
     recordLink: string;
     location: string;
 }
+
+export enum MeetingStatusEnum {
+    MEETING_ACCEPTED = "MEETING_ACCEPTED",
+    MEETING_DECLINED = "MEETING_DECLINED",
+    MEETING_SCHEDULING = "MEETING_SCHEDULING",
+    IDLE = "IDLE",
+}
+
+export type MeetingStatus = keyof typeof MeetingStatusEnum;

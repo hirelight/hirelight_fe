@@ -2,7 +2,7 @@ import React from "react";
 
 import HeaderBar from "../components/HeaderBar";
 
-const BackendLayout = ({ children }: { children: React.ReactNode }) => {
+const CalendarPageLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <>
             <HeaderBar />
@@ -11,4 +11,4 @@ const BackendLayout = ({ children }: { children: React.ReactNode }) => {
     );
 };
 
-export default BackendLayout;
+export default CalendarPageLayout;

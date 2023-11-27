@@ -9,7 +9,7 @@ export const checkResErr = (res: IResponse<any>) => {
         throw new Error(res.message);
 };
 
-export const handleError = (res: IResponse<any>) => {
+export const handleError = (res: IResponse<any> | any) => {
     if (res.statusCode) {
         switch (res.statusCode) {
             case 400: {
@@ -70,5 +70,7 @@ export const handleError = (res: IResponse<any>) => {
             default:
                 toast.error("Something went wrong!");
         }
+    } else {
+        toast.error(res.message ? res.message : "Something went wrong");
     }
 };

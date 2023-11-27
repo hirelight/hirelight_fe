@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
 import { useAppSelector } from "@/redux/reduxHooks";
+import meetingServices from "@/services/meeting/meeting.service";
 
 import MoveCandidateDialog from "./MoveCandidateDialog";
 import styles from "./CandidateActionTabs.module.scss";

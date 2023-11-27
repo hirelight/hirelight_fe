@@ -23,6 +23,7 @@ export const decryptData = (name: string): string | null => {
                     const decoded: any = jwtDecode(decrypted);
                     if (decoded.exp < Date.now() / 1000) {
                         localStorage.removeItem("hirelight_access_token");
+                        window.location.href = `http://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login?authEnd=true`;
                     }
                 } catch (error) {
                     return null;

@@ -7,17 +7,20 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
+import { useAppSelector } from "@/redux/reduxHooks";
 
 import styles from "./InvitationDropDown.module.scss";
 
 const InvitationDropDown = () => {
+    const authUser = useAppSelector(state => state.auth.authUser);
+
     const [showDropdown, setShowDropdown] = React.useState(false);
     const dropDownRef = useOutsideClick<HTMLDivElement>(() =>
         setShowDropdown(false)
     );
     const queryClient = useQueryClient();
     const { data: invitationRes } = useQuery({
-        queryKey: ["invitations"],
+        queryKey: ["invitations", authUser ? authUser.userId : ""],
         queryFn: collaboratorsServices.getCollabInvitations,
     });
     const acceptInvitationMutation = useMutation({
@@ -25,7 +28,7 @@ const InvitationDropDown = () => {
             collaboratorsServices.acceptJobCollabInvitation(jobPostId),
         onSuccess: res => {
             queryClient.invalidateQueries({
-                queryKey: ["invitations"],
+                queryKey: ["invitations", authUser ? authUser.userId : ""],
             });
             toast.success(res.message, {
                 position: "bottom-right",

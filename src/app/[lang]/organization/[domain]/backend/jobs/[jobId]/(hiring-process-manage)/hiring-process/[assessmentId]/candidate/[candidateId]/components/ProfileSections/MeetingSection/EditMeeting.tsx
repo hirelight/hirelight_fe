@@ -19,13 +19,13 @@ import {
 } from "@/components";
 import { CloseIcon } from "@/icons";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { ApplicationFormJSON, ICreateMeetings } from "@/services";
+import { ApplicationFormJSON, ICreateMeetings, IMeetingDto } from "@/services";
 import { AppFormDefaultSection, IAppFormField } from "@/interfaces";
 import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
 import meetingServices from "@/services/meeting/meeting.service";
 import { isInvalidForm } from "@/helpers";
 
-import SelectAttendeeList from "./SelectAttendeeList";
+import SelectAttendeeList from "../../CandidateActionTab/ActionDrawer/SelectAttendeeList";
 
 const backdropVariants = {
     backdropOpen: { opacity: 1 },
@@ -45,6 +45,7 @@ interface IActionDrawer {
     show?: boolean;
     onClose: () => void;
     loading?: boolean;
+    data: IMeetingDto;
 }
 
 const people = [
@@ -56,23 +57,12 @@ const people = [
     { name: "Hellen Schmidt" },
 ];
 
-const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
+const EditMeeting = ({ onClose, show, data }: IActionDrawer) => {
     const { jobId, assessmentId, candidateId } = useParams();
 
     const authUser = useAppSelector(state => state.auth.authUser);
     const { data: applicantAssessmentDetail } = useAppSelector(
         state => state.applicantAssessmentDetail
-    );
-    const avaterDetail = useRef<IAppFormField | undefined>(
-        (
-            JSON.parse(
-                applicantAssessmentDetail!!.applicantProfile.content
-            ) as ApplicationFormJSON
-        ).form_structure
-            .find(
-                item => item.id === AppFormDefaultSection.PERSONAL_INFORMATION
-            )!!
-            .fields.find(field => field.id === "avatar")
     );
     const queryClient = useQueryClient();
 
@@ -83,20 +73,14 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
         timeErr: "",
         dateErr: "",
     });
-    const [formState, setFormState] = useState<ICreateMeetings>({
-        assessmentId: assessmentId as string,
-        candidateId: null,
-        startTime: moment.utc().toDate(),
-        endTime: moment.utc().toDate(),
-        name: "",
-        description: "",
-        meetingLink: "",
-        location: "",
-        employerIds: [],
+    const [formState, setFormState] = useState<IMeetingDto>({
+        ...data,
+        startTime: moment.utc(data.startTime).toDate(),
+        endTime: moment.utc(data.endTime).toDate(),
     });
     const [meetingTime, setMeetingTime] = useState({
-        startTime: moment.utc().toDate(),
-        endTime: moment.utc().add(1, "hours").toDate(),
+        startTime: moment.utc(data.startTime).toDate(),
+        endTime: moment.utc(data.endTime).toDate(),
     });
 
     const [selected, setSelected] = useState<ICollaboratorDto[]>([]);
@@ -113,8 +97,14 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
         if (meetingLink.length === 0) {
             errors.meetingLinkErr = "Meeting link is required";
         }
-
-        if (moment(meetingTime.startTime).isAfter(meetingTime.endTime)) {
+        if (
+            moment(
+                moment(meetingTime.startTime).format("HH:mm"),
+                "HH:mm"
+            ).isAfter(
+                moment(moment(meetingTime.endTime).format("HH:mm"), "HH:mm")
+            )
+        ) {
             errors.timeErr = "Start time must not greator than end time";
         }
 
@@ -137,35 +127,36 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
         return statusErr;
     };
 
-    const handleCreateMeeting = async () => {
+    const handleEditMeeting = async () => {
         if (isInvalidFormInput()) return;
         try {
-            const res = await meetingServices.createMeetings([
-                {
-                    ...formState,
-                    employerIds: selected.map(item => item.employerDto.id),
-                    startTime: moment
-                        .parseZone(
-                            moment(formState.startTime)
-                                .minutes(
-                                    moment(meetingTime.startTime).minutes()
-                                )
-                                .hours(moment(meetingTime.startTime).hours())
-                                .format()
-                        )
-                        .utc()
-                        .format(),
-                    endTime: moment
-                        .parseZone(
-                            moment(formState.endTime)
-                                .minutes(moment(meetingTime.endTime).minutes())
-                                .hours(moment(meetingTime.endTime).hours())
-                                .format()
-                        )
-                        .utc()
-                        .format(),
-                },
-            ]);
+            const res = await meetingServices.editMeeting({
+                id: formState.id,
+                candidateId: formState.candidateId,
+                description: formState.description,
+                recordLink: formState.recordLinks,
+                location: formState.location,
+                meetingLink: formState.meetingLink,
+                name: formState.name,
+                startTime: moment
+                    .parseZone(
+                        moment(formState.startTime)
+                            .minutes(moment(meetingTime.startTime).minutes())
+                            .hours(moment(meetingTime.startTime).hours())
+                            .format()
+                    )
+                    .utc()
+                    .format(),
+                endTime: moment
+                    .parseZone(
+                        moment(formState.endTime)
+                            .minutes(moment(meetingTime.endTime).minutes())
+                            .hours(moment(meetingTime.endTime).hours())
+                            .format()
+                    )
+                    .utc()
+                    .format(),
+            });
 
             toast.success(res.message);
             queryClient.invalidateQueries({
@@ -435,7 +426,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                     />
                                 </div>
                                 <div className="p-6 border-t border-gray-300 flex-shrink-0 flex justify-end">
-                                    <Button onClick={handleCreateMeeting}>
+                                    <Button onClick={handleEditMeeting}>
                                         Create meeting
                                     </Button>
                                 </div>
@@ -448,4 +439,4 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
     );
 };
 
-export default ActionDrawer;
+export default EditMeeting;

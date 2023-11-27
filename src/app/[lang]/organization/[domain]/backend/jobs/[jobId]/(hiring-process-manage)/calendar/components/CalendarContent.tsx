@@ -1,10 +1,20 @@
 "use client";
 
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 import React, { useRef } from "react";
 
+import meetingServices from "@/services/meeting/meeting.service";
+
 const CalendarContent = () => {
+    const { jobId } = useParams();
+
     const timeRef = useRef<HTMLDivElement>(null);
+    const { data: meetings } = useQuery({
+        queryKey: ["meetings", jobId],
+        queryFn: () => meetingServices.getListByJobpostId(jobId as string),
+    });
 
     return (
         <div className="flex-1 flex flex-col max-h-full">

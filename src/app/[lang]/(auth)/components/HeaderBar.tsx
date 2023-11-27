@@ -55,7 +55,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({}) => {
                             <BellAlertIcon className="w-6 h-6" />
                         </button>
                     </div> */}
-                    <InvitationDropDownNoSSR />
+                    {token && <InvitationDropDownNoSSR />}
                     <div className="text-neutral-700 border-neutral-400">
                         <LocaleSwitcher />
                     </div>

@@ -6,11 +6,33 @@ import { ICreateMeetings, IEditMeetingDto, IMeetingDto } from "..";
 import interceptor from "../interceptor";
 
 const getListByAssessmentId = async (
-    assessmentId: string
+    assessmentId: string,
+    candidateId?: string
 ): Promise<IResponse<IMeetingDto[]>> => {
     try {
         const res = await interceptor.get<IResponse<IMeetingDto[]>>(
-            endpoints.MEETINGS + `/search-by-assessment/${assessmentId}`
+            endpoints.MEETINGS + `/search-by-assessment-candidate`,
+            {
+                params: {
+                    assessmentId,
+                    candidateId,
+                },
+            }
+        );
+
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const getListByJobpostId = async (
+    jobpostId: string
+): Promise<IResponse<IMeetingDto[]>> => {
+    try {
+        const res = await interceptor.get<IResponse<IMeetingDto[]>>(
+            endpoints.MEETINGS + `/search-by-assessment-candidate/${jobpostId}`
         );
 
         checkResErr(res.data);
@@ -141,11 +163,18 @@ const employerDeclineMeeting = async (
 };
 
 const employerReScheduleMeeting = async (
-    meetingId: string
+    meetingId: string,
+    scheduleTime: string
 ): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.put<IResponse<any>>(
-            endpoints.MEETINGS + `/reschedule-employer/${meetingId}`
+            endpoints.MEETINGS + `/reschedule-employer/${meetingId}`,
+            scheduleTime,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
         );
 
         checkResErr(res.data);
@@ -186,11 +215,13 @@ const candidateDeclineMeeting = async (
 };
 
 const candidateReScheduleMeeting = async (
-    meetingId: string
+    meetingId: string,
+    scheduleTime: string
 ): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.put<IResponse<any>>(
-            endpoints.MEETINGS + `/reschedule-candidate/${meetingId}`
+            endpoints.MEETINGS + `/reschedule-candidate/${meetingId}`,
+            scheduleTime
         );
 
         checkResErr(res.data);
@@ -214,6 +245,7 @@ const meetingServices = {
     deleteMeeting,
     candidateReScheduleMeeting,
     getMeetingById,
+    getListByJobpostId,
 };
 
 export default meetingServices;

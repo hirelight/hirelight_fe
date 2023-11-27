@@ -16,6 +16,23 @@ const MeetingSection = () => {
         queryKey: ["meeting-list", assessmentId, candidateId],
         queryFn: () =>
             meetingServices.getListByAssessmentId(assessmentId as string),
+        select(data) {
+            return {
+                ...data,
+                data: data.data.sort(function (a, b) {
+                    return (
+                        Math.abs(
+                            Date.now() -
+                                moment.utc(a.startTime).toDate().getTime()
+                        ) -
+                        Math.abs(
+                            Date.now() -
+                                moment.utc(b.startTime).toDate().getTime()
+                        )
+                    );
+                }),
+            };
+        },
     });
 
     return (

@@ -12,10 +12,12 @@ import collaboratorsServices from "@/services/collaborators/collaborators.servic
 import { useAppSelector } from "@/redux/reduxHooks";
 import { SpinLoading } from "@/icons";
 import employerOrgServices from "@/services/employer-organization/employer-organization.service";
+import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
 
 import PermissionTable from "./PermissionTable";
 
 interface NewMemberModalProps {
+    collabList: ICollaboratorDto[];
     isOpen: boolean;
     onClose: () => void;
     onSendInvitation: (newMember: any) => void;
@@ -25,6 +27,7 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
     isOpen = false,
     onClose,
     onSendInvitation,
+    collabList,
 }) => {
     const { jobId } = useParams();
 
@@ -37,6 +40,14 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
     const { data: memberRes } = useQuery({
         queryKey: ["members"],
         queryFn: employerOrgServices.getListAsync,
+        select(data) {
+            return data.data.filter(
+                item =>
+                    !collabList.find(
+                        collab => collab.employerDto.id === item.employerDto.id
+                    )
+            );
+        },
     });
     const sendInvitationMutate = useMutation({
         mutationFn: () =>
@@ -108,7 +119,7 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
                                     : ""
                             }
                             items={
-                                memberRes?.data.map(item => ({
+                                memberRes?.map(item => ({
                                     label: item.employerDto.email,
                                     value: item,
                                 })) ?? []

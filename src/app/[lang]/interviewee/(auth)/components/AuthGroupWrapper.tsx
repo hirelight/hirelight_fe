@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { decryptData } from "@/helpers/authHelpers";
@@ -10,9 +10,11 @@ const AuthGroupWrapper = ({ children }: { children: React.ReactNode }) => {
     const { lang } = useParams();
     const token = decryptData("hirelight_access_token");
 
-    if (token) router.push(`/${lang}`);
+    useEffect(() => {
+        if (token) router.push(`/${lang}`);
+    }, [router, token, lang]);
 
-    return token ? null : <>{children}</>;
+    return token ? <div></div> : <>{children}</>;
 };
 
 export default AuthGroupWrapper;
