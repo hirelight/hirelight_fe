@@ -87,6 +87,7 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
     }, [appFormTemplate.content.app_form]);
 
     const [showAddSection, setShowAddSection] = React.useState(false);
+    const [loading, setLoading] = useState(false);
 
     const fetchAppFormTemplate = useCallback(async () => {
         try {
@@ -103,6 +104,7 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
     }, []);
 
     const handleSaveAppFormTemplateChanges = async () => {
+        setLoading(true);
         try {
             if (appFormTemplate.organizationId) {
                 const res = await appFormTemplateServices.editAsync({
@@ -121,6 +123,7 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
         } catch (error) {
             toast.error("Save failure!");
         }
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -137,7 +140,7 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
                 </h2>
 
                 <div className={pageStyles.section__content__wrapper}>
-                    <div className="p-4 md:p-6">
+                    {/* <div className="p-4 md:p-6">
                         <div className="mb-6">
                             <h4 className={`${pageStyles.content__h4} mb-1`}>
                                 Manage your account’s candidate custom fields
@@ -159,7 +162,7 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
                                 Show disabled fields
                             </span>
                         </label>
-                    </div>
+                    </div> */}
 
                     <section className={styles.fields__container}>
                         <div className={styles.fields__header__container}>
@@ -322,6 +325,8 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
                         <Button
                             type="submit"
                             className="mr-4"
+                            disabled={loading}
+                            isLoading={loading}
                             onClick={handleSaveAppFormTemplateChanges}
                         >
                             Save changes

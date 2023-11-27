@@ -94,7 +94,7 @@ const EditMemberPermission: React.FC<EditMemberPermissionProps> = ({
                             title="Email"
                             type="email"
                             placeholder="Email"
-                            value={member.employerDto.firstName}
+                            value={member.employerDto.email}
                             required
                             readOnly
                         />
@@ -119,9 +119,12 @@ const EditMemberPermission: React.FC<EditMemberPermissionProps> = ({
                 </div>
 
                 <div className="p-6 border-t border-gray-300 text-right">
-                    <Button type="submit">
-                        {isLoading && <SpinLoading className="mr-3" />}Save
-                        changes
+                    <Button
+                        type="submit"
+                        disabled={isLoading}
+                        isLoading={isLoading}
+                    >
+                        Save changes
                     </Button>
                 </div>
             </form>

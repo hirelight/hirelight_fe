@@ -4,11 +4,13 @@ import React, { FormEvent, useState } from "react";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { Reorder } from "framer-motion";
 import { m } from "framer-motion";
+import { toast } from "react-toastify";
 
 import { CloseIcon } from "@/icons";
 import { Button, CustomInput } from "@/components";
 import { IAssessmentFlTempDto } from "@/services/assessment-flow-templates/assessment-flow-templates.interface";
 import { IAssessmentFlow } from "@/services/assessment-flows/assessment-flows.interface";
+import { isInvalidForm } from "@/helpers";
 
 import AssessmentFlowCard from "../AssessmentFlowCard";
 
@@ -30,6 +32,7 @@ const initialData: AssessmentFlowTemplate = {
 };
 
 type AssessmentFlowFormProps = {
+    isLoading?: boolean;
     onSave: (newTemplate: IAssessmentFlTempDto) => void;
     onClose: () => void;
     data?: AssessmentFlowTemplate;
@@ -42,13 +45,39 @@ export type AssessmentFlowTemplate = Omit<IAssessmentFlTempDto, "content"> & {
 const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
     onSave,
     onClose,
+    isLoading,
     data = initialData,
 }) => {
     const [showAddStage, setShowAddStage] = useState(false);
     const [formState, setFormState] = useState<AssessmentFlowTemplate>(data);
+    const [formErr, setFormErr] = useState({
+        nameErr: "",
+        flowErr: "",
+    });
+
+    const inValidInput = (): boolean => {
+        const errors = formErr;
+        const { name, assessments } = formState;
+
+        if (!name) errors.nameErr = "Assessment name is required!";
+
+        if (assessments.length < 3)
+            errors.flowErr =
+                "You need to add at least 1 more assessment except from two default assessments";
+
+        if (isInvalidForm(errors)) {
+            setFormErr({ ...errors });
+            toast.error("Invalid input");
+            return true;
+        }
+
+        return false;
+    };
 
     const handleCreateFlow = (e: FormEvent) => {
         e.preventDefault();
+
+        if (inValidInput()) return;
 
         onSave({
             ...formState,
@@ -86,6 +115,10 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                 prev.assessments[prev.assessments.length - 1],
             ]),
         }));
+        setFormErr({
+            ...formErr,
+            flowErr: "",
+        });
         setShowAddStage(false);
     };
 
@@ -125,50 +158,21 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                             <CustomInput
                                 title="Name"
                                 value={formState.name}
-                                onChange={e =>
+                                onChange={e => {
                                     setFormState(prev => ({
                                         ...prev,
                                         name: e.target.value,
-                                    }))
-                                }
+                                    }));
+                                    setFormErr({
+                                        ...formErr,
+                                        nameErr: "",
+                                    });
+                                }}
+                                errorText={formErr.nameErr}
                                 required
                             />
-                            <div></div>
+                            <div className="hidden md:block"></div>
                         </div>
-                        {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                        <div>
-                            <CustomInput
-                                title="Department"
-                                value={formState.department}
-                                onChange={e =>
-                                    setFormState(prev => ({
-                                        ...prev,
-                                        department: e.target.value,
-                                    }))
-                                }
-                            />
-                            <p className="text-xs text-neutral-500 mt-1">
-                                If no department is selected, the pipeline will
-                                be available for all jobs in all departments.
-                            </p>
-                        </div>
-                        <div>
-                            <CustomInput
-                                title="Location"
-                                value={formState.location}
-                                onChange={e =>
-                                    setFormState(prev => ({
-                                        ...prev,
-                                        location: e.target.value,
-                                    }))
-                                }
-                            />
-                            <p className="text-xs text-neutral-500 mt-1">
-                                If no location is selected, the pipeline will be
-                                available for all jobs in all locations.
-                            </p>
-                        </div>
-                    </div> */}
                         <section className="text-sm">
                             <strong className="block mb-6">
                                 Add or edit flow stages
@@ -207,6 +211,13 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                                         />
                                     )
                                 )}
+                                {formErr.flowErr && (
+                                    <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                                        <span className="font-medium">
+                                            {formErr.flowErr}{" "}
+                                        </span>
+                                    </p>
+                                )}
                             </Reorder.Group>
 
                             {showAddStage ? (
@@ -227,7 +238,13 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                         </section>
                     </div>
                     <div className="p-4 flex items-center gap-4 text-sm">
-                        <Button onClick={handleCreateFlow}>Save</Button>
+                        <Button
+                            disabled={isLoading}
+                            isLoading={isLoading}
+                            onClick={handleCreateFlow}
+                        >
+                            Save
+                        </Button>
                         <button
                             type="button"
                             className="font-semibold text-neutral-500 hover:underline hover:text-neutral-700"

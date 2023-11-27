@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import LoadingIndicator from "@/components/LoadingIndicator";
@@ -14,6 +14,7 @@ import { defaultStage } from "./PipelineStages";
 
 const WrapperPipelineDetail = ({ children }: { children: React.ReactNode }) => {
     const { flowId, assessmentId, jobId, lang } = useParams();
+    const path = usePathname();
     const router = useRouter();
 
     const dispatch = useAppDispatch();
@@ -32,7 +33,10 @@ const WrapperPipelineDetail = ({ children }: { children: React.ReactNode }) => {
                     endTime: new Date(flowRes.data.endTime),
                 })
             );
-            if (!assessmentId) {
+            if (
+                path.split("/")[path.split("/").length - 2] ===
+                "config-pipeline"
+            ) {
                 router.push(
                     `${flowId}/config-assessment/${
                         flowRes.data.assessments.find(

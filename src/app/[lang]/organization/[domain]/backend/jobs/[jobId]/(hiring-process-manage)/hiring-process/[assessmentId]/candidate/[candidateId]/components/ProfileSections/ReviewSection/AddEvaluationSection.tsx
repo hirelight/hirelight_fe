@@ -16,6 +16,7 @@ import {
 } from "@/services/evaluation/evaluation.interface";
 import evaluationServices from "@/services/evaluation/evaluation.service";
 import { useAppSelector } from "@/redux/reduxHooks";
+import { isInvalidForm } from "@/helpers";
 
 import styles from "./AddEvaluation.module.scss";
 
@@ -32,6 +33,7 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
 
     const queryClient = useQueryClient();
 
+    const [loading, setLoading] = useState(false);
     const [addState, setAddState] = useState<ICreateEvaluationDto>({
         applicantAssessmentDetailId: applicantAssessmentDetailId,
         evaluation: "",
@@ -42,15 +44,26 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
         ratingErr: "",
     });
 
-    const validateAddInput = () => {
+    const inValidateAddInput = () => {
+        const errors = { ...addErr };
         if (!addState.evaluation)
-            setAddErr({
-                ...addErr,
-                evaluationErr: "Evaluation comment required!",
-            });
+            errors.evaluationErr = "Evaluation comment required!";
+        if (addState.rating < 0)
+            errors.ratingErr = "Please select at least one rating!";
+
+        if (isInvalidForm(errors)) {
+            toast.error("Invalid input");
+            setAddErr(errors);
+            return true;
+        }
+
+        return false;
     };
 
     const handleAddEvaluation = async () => {
+        if (inValidateAddInput()) return;
+
+        setLoading(true);
         try {
             const res = await evaluationServices.createEvaluation(addState);
             toast.success(res.message);
@@ -58,11 +71,11 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
                 queryKey: ["assessment-evaluations", candidateId],
             });
         } catch (error: any) {
-            console.error(error);
             toast.error(
                 error.message ? error.message : "Something went wrong!"
             );
         }
+        setLoading(false);
         close();
     };
 
@@ -136,6 +149,14 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
                             <HandThumbDownIcon />
                         </button>
                     </div>
+                    {(addErr.ratingErr || addErr.evaluationErr) && (
+                        <p className="mt-2 text-sm text-red-600 dark:text-red-500 space-y-1">
+                            <p className="font-medium">
+                                {addErr.evaluationErr}{" "}
+                            </p>
+                            <p className="font-medium">{addErr.ratingErr} </p>
+                        </p>
+                    )}
                 </div>
             </section>
             <div className="border-t border-gray-300 py-4 px-6 flex justify-end">
@@ -146,7 +167,13 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
                 >
                     Cancel
                 </button>
-                <Button onClick={handleAddEvaluation}>Save evaluation</Button>
+                <Button
+                    disabled={loading}
+                    isLoading={loading}
+                    onClick={handleAddEvaluation}
+                >
+                    Save evaluation
+                </Button>
             </div>
         </m.div>
     );

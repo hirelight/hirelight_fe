@@ -13,6 +13,7 @@ import {
     TrashIcon,
 } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
+import { Tooltip } from "flowbite-react";
 
 import {
     Button,
@@ -42,6 +43,16 @@ const initialAnswers = new Array(4).fill({
     correct: false,
 });
 
+const intialData: CreateQuestionForm = {
+    content: {
+        name: "",
+        type: "one-answer",
+        answers: initialAnswers,
+    },
+    difficulty: 1,
+    tagList: [],
+};
+
 const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ssr: false,
     loading: () => (
@@ -61,25 +72,13 @@ const CreateQuestionPage = () => {
             checkResErr(res);
             toast.success(res.message);
 
-            setFormState({
-                content: {
-                    name: "",
-                    type: "one-answer",
-                    answers: new Array(4).fill({
-                        name: "",
-                        correct: false,
-                    }),
-                },
-                difficulty: 1,
-                tagList: [],
-            });
+            setFormState(intialData);
 
             queryClient.invalidateQueries({ queryKey: ["questions"] });
             router.push(`/${lang}/backend/settings/questions-bank`);
         },
         onError: err => {
-            console.error(err);
-            toast.error("Create question failure");
+            toast.error(err.message ? err.message : "Create question failure");
         },
     });
     const { data: tagListRes, error } = useQuery({
@@ -87,15 +86,7 @@ const CreateQuestionPage = () => {
         queryFn: questionAnswerServices.getTagListAsync,
     });
     const [showAddTag, setShowAddTag] = useState(false);
-    const [formState, setFormState] = useState<CreateQuestionForm>({
-        content: {
-            name: "",
-            type: "one-answer",
-            answers: initialAnswers,
-        },
-        difficulty: 1,
-        tagList: [],
-    });
+    const [formState, setFormState] = useState<CreateQuestionForm>(intialData);
     const [formErr, setFormErr] = useState({
         difficultyErr: "",
         tagListErr: "",
@@ -235,11 +226,15 @@ const CreateQuestionPage = () => {
         formData.append("formFile", file);
 
         try {
-            const res =
-                await questionAnswerServices.uploadQuestionsAsync(formData);
-            toast.success(res.message);
-        } catch (error) {
-            console.error(error);
+            await toast.promise(
+                questionAnswerServices.uploadQuestionsAsync(formData),
+                {
+                    pending: "Uploading question",
+                    success: "Upload question successfully!",
+                }
+            );
+        } catch (error: any) {
+            toast.error(error.message ? error.message : "Somthing went wrong");
         }
     };
 
@@ -270,25 +265,30 @@ const CreateQuestionPage = () => {
                         <ArrowUpTrayIcon />
                     </button> */}
                     <div className="flex gap-4 absolute top-1/2 right-0 -translate-y-1/2">
-                        <button
-                            type="button"
-                            onClick={downloadFileAtUrl}
-                            className="w-6 h-6 block"
-                        >
-                            <ArrowDownTrayIcon />
-                        </button>
-                        <label className="w-6 h-6 block">
-                            <ArrowUpTrayIcon />
-                            <input
-                                type="file"
-                                className="sr-only"
-                                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                onChange={e => {
-                                    const files = e.target.files;
-                                    if (files) handleUploadQuestions(files[0]);
-                                }}
-                            />
-                        </label>
+                        <Tooltip content="Download file template">
+                            <button
+                                type="button"
+                                onClick={downloadFileAtUrl}
+                                className="w-6 h-6 block"
+                            >
+                                <ArrowDownTrayIcon />
+                            </button>
+                        </Tooltip>
+                        <Tooltip content="Upload questions file">
+                            <label className="w-6 h-6 block">
+                                <ArrowUpTrayIcon />
+                                <input
+                                    type="file"
+                                    className="sr-only"
+                                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                    onChange={e => {
+                                        const files = e.target.files;
+                                        if (files)
+                                            handleUploadQuestions(files[0]);
+                                    }}
+                                />
+                            </label>
+                        </Tooltip>
                     </div>
                 </h1>
 
@@ -547,13 +547,20 @@ const CreateQuestionPage = () => {
                         </Button>
                     )}
                     <div>
-                        <Link
-                            href={"/en/backend/settings/questions-bank"}
+                        <ButtonOutline
+                            type="button"
                             className="mr-2"
+                            onClick={() => router.back()}
                         >
-                            <ButtonOutline type="button">Cancel</ButtonOutline>
-                        </Link>
-                        <Button type="submit">Save</Button>
+                            Cancel
+                        </ButtonOutline>
+                        <Button
+                            type="submit"
+                            disabled={createMutation.isPending}
+                            isLoading={createMutation.isPending}
+                        >
+                            Save
+                        </Button>
                     </div>
                 </div>
             </form>

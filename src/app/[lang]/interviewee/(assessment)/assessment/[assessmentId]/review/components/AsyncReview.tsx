@@ -40,6 +40,7 @@ const AsyncReviewPage: React.FC<ReviewPageProps> = ({ data }) => {
         () => JSON.parse(data.questionAnswerSet!!),
         [data]
     );
+    const [loading, setLoading] = useState(false);
     const [submitedAns, setSubmitedAns] = useState<IAsyncAnswer[]>(
         parseAnswerSet.map(item => ({
             ...item,
@@ -55,6 +56,7 @@ const AsyncReviewPage: React.FC<ReviewPageProps> = ({ data }) => {
     );
 
     const handleSubmitTest = async () => {
+        setLoading(true);
         try {
             const res = await asyncAssessmentServices.submitAsyncAssessment({
                 applicantAssessmentDetailId: data.id,
@@ -70,6 +72,7 @@ const AsyncReviewPage: React.FC<ReviewPageProps> = ({ data }) => {
                 error.message ? error.message : "Some thing went wrong"
             );
         }
+        setLoading(false);
     };
 
     return (
@@ -192,7 +195,11 @@ const AsyncReviewPage: React.FC<ReviewPageProps> = ({ data }) => {
                     {data.status ===
                         ApplicantAssessmentDetailStatus.IN_PROGRESS && (
                         <div className="flex justify-between items-center">
-                            <Button onClick={handleSubmitTest}>
+                            <Button
+                                disabled={loading}
+                                isLoading={loading}
+                                onClick={handleSubmitTest}
+                            >
                                 Submit answer
                             </Button>
                             <CountdownTimerNoSSR

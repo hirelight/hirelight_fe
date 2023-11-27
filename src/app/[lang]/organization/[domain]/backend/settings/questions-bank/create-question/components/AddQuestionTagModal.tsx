@@ -22,16 +22,15 @@ const AddQuestionTagModal: React.FC<AddQuestionTagModalProps> = ({
     const createTagMutation = useMutation({
         mutationFn: (createDto: ICreateQuestionTagDto) =>
             questionAnswerServices.createTagAsync(createDto),
-        onSuccess: res => {
-            toast.success(res.message);
-
+        onSuccess: () => {
             setTagName("");
             queryClient.invalidateQueries({ queryKey: ["question-tags"] });
             onClose();
         },
         onError: err => {
-            console.error(err);
-            toast.error("Create question tag failure");
+            toast.error(
+                err.message ? err.message : "Create question tag failure"
+            );
         },
     });
 
@@ -63,7 +62,13 @@ const AddQuestionTagModal: React.FC<AddQuestionTagModalProps> = ({
                 <ButtonOutline type="button" onClick={onClose}>
                     Cancel
                 </ButtonOutline>
-                <Button onClick={handleCreateNewTag}>Create</Button>
+                <Button
+                    disabled={createTagMutation.isPending}
+                    isLoading={createTagMutation.isPending}
+                    onClick={handleCreateNewTag}
+                >
+                    Create
+                </Button>
             </div>
         </Modal>
     );

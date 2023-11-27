@@ -17,13 +17,8 @@ import QuestionCard from "./QuestionCard";
 import { useMultipleChoiceAssessment } from "./MultipleChoiceAssessment";
 
 const QuestionList = () => {
-    const {
-        assesmentData,
-        answers,
-        handleSubmitTest,
-        submitted,
-        stopAutoTask,
-    } = useMultipleChoiceAssessment();
+    const { assesmentData, answers, handleSubmitTest, stopAutoTask } =
+        useMultipleChoiceAssessment();
 
     const targetDate = useRef<Date>(
         moment
@@ -48,7 +43,8 @@ const QuestionList = () => {
             </ul>
             <div className="w-80 h-fit sticky top-4 bg-white border border-gray-200 rounded-md drop-shadow-lg">
                 <div className="text-center text-xl font-semibold">
-                    {!submitted ? (
+                    {assesmentData?.status ===
+                    ApplicantAssessmentDetailStatus.IN_PROGRESS ? (
                         <CountdownTimer
                             targetDate={targetDate.current ?? new Date()}
                             onEnd={onEnd}

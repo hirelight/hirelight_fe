@@ -27,8 +27,8 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [formState, setFormState] = useState<IEditAssessmentFlowDto>({
         ...data,
-        startTime: data.startTime,
-        endTime: data.endTime,
+        startTime: moment.utc(data.startTime).toDate(),
+        endTime: moment.utc(data.endTime).toDate(),
     });
     const [formErr, setFormErr] = useState({
         nameErr: "",
@@ -53,21 +53,23 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
             errors.flowErr =
                 "Except from Sourced and Hired. Assessment flow need at least one assessment";
 
-        const isInvalid = isInvalidForm(errors);
-        if (isInvalid) setFormErr({ ...errors });
-
-        return isInvalid;
-    };
-
-    const handleUpdateFlow = async (e: FormEvent) => {
-        e.preventDefault();
-        if (inValidInput())
-            return toast.error(
+        if (isInvalidForm(errors)) {
+            setFormErr({ ...errors });
+            toast.error(
                 <div>
                     <p>Invalid input</p>
                     <p>Check issue in red!</p>
                 </div>
             );
+            return true;
+        }
+
+        return false;
+    };
+
+    const handleUpdateFlow = async (e: FormEvent) => {
+        e.preventDefault();
+        if (inValidInput()) return;
 
         setIsLoading(true);
         try {
@@ -129,10 +131,14 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                         </h3>
                         <DatePicker
                             value={new Date(formState.startTime)}
+                            minDate={moment().toDate()}
                             onChange={date =>
                                 setFormState(prev => ({
                                     ...prev,
                                     startTime: date.toString(),
+                                    endTime: moment(date).isAfter(prev.endTime)
+                                        ? moment(date).add(7, "days").toDate()
+                                        : prev.endTime,
                                 }))
                             }
                         />
@@ -143,6 +149,8 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                         </h3>
                         <DatePicker
                             value={new Date(formState.endTime)}
+                            minDate={moment(formState.startTime).toDate()}
+                            maxDate={moment().add(1, "years").toDate()}
                             onChange={date =>
                                 setFormState(prev => ({
                                     ...prev,

@@ -59,7 +59,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ employer, index }) => {
                     <div
                         className={`${styles.row__wrapper} flex items-center gap-2`}
                     >
-                        <span className="inline-block h-8 w-8 flex-shrink-0 rounded-full bg-white border border-slate-500 overflow-auto">
+                        {/* <span className="inline-block h-8 w-8 flex-shrink-0 rounded-full bg-white border border-slate-500 overflow-auto">
                             <Image
                                 src={
                                     process.env.NEXT_PUBLIC_AVATAR_URL as string
@@ -69,7 +69,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ employer, index }) => {
                                 height={32}
                                 unoptimized
                             />
-                        </span>
+                        </span> */}
                         {employer.employerDto.firstName}{" "}
                         {employer.employerDto.lastName ?? ""}
                     </div>
@@ -79,12 +79,10 @@ const MemberCard: React.FC<MemberCardProps> = ({ employer, index }) => {
                         {employer.employerDto.email}
                     </div>
                 </td>
-                <td className="hidden md:table-cell">
-                    <div className={styles.row__wrapper}>{employer.status}</div>
-                </td>
+
                 <td className="hidden lg:table-cell">
                     <div className={styles.row__wrapper}>
-                        {employer.role.name}
+                        {employer.role.name.toLowerCase().replace("_", " ")}
                     </div>
                 </td>
                 <td>

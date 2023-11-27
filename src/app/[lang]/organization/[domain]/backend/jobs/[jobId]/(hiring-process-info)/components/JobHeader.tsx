@@ -33,7 +33,9 @@ const JobHeader = ({}: IJobHeader) => {
         mutationKey: [`publish-job-${job.id}`],
         mutationFn: (id: string) => jobServices.requestPublishJob(id),
         onSuccess: res => {
-            queryClient.invalidateQueries({ queryKey: ["jobs"] });
+            queryClient.invalidateQueries({
+                queryKey: ["jobs", authUser!!.organizationId],
+            });
             toast.success(res.message, {
                 position: "bottom-right",
                 autoClose: 1000,
@@ -122,7 +124,7 @@ const JobHeader = ({}: IJobHeader) => {
                     <div className="hidden md:block">
                         <button
                             type="button"
-                            className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700"
+                            className="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700 disabled:cursor-not-allowed disabled:opacity-80"
                             onClick={handleSaveAndContinue}
                             disabled={jobLoading}
                         >
@@ -131,11 +133,11 @@ const JobHeader = ({}: IJobHeader) => {
                         </button>
                         {job.assessmentFlowId &&
                             authUser &&
-                            authUser.userId === job.creatorId.toString() &&
+                            authUser.userId === job.creatorId &&
                             job.status === "DRAFT" && (
                                 <button
                                     type="button"
-                                    className="text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                                    className="text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 disabled:cursor-not-allowed disabled:opacity-80"
                                     onClick={handleRequestPublish.bind(
                                         null,
                                         job.id

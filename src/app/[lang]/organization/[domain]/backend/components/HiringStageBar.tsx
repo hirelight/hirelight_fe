@@ -3,6 +3,7 @@
 import React, { useMemo, useRef } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import moment from "moment";
 
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import { Plus } from "@/icons";
@@ -36,6 +37,16 @@ const HiringStageBar: React.FC<HiringStageBarProps> = ({
         () =>
             jobList.filter(job => job.status === JobPostStatus.PENDING_APPROVAL)
                 .length,
+        [jobList]
+    );
+
+    const numOfWaiting = useMemo(
+        () =>
+            jobList.filter(
+                job =>
+                    job.status === JobPostStatus.INACTIVE &&
+                    moment.utc(job.startTime).isAfter(moment())
+            ).length,
         [jobList]
     );
 
@@ -133,6 +144,27 @@ const HiringStageBar: React.FC<HiringStageBarProps> = ({
                             {numOfPending > 0 && (
                                 <span className={styles.stageButtonBadge}>
                                     {numOfPending}
+                                </span>
+                            )}
+                        </button>
+                    </li>
+                    <li className="py-2 px-4 sm:py-0 sm:px-0 relative">
+                        <button
+                            type="button"
+                            className={`${styles.stageButton} ${
+                                curStatus === JobPostStatus.INACTIVE
+                                    ? styles.active
+                                    : ""
+                            }`}
+                            onClick={handleShowBtnList.bind(
+                                null,
+                                JobPostStatus.INACTIVE
+                            )}
+                        >
+                            Pending publish
+                            {numOfWaiting > 0 && (
+                                <span className={styles.stageButtonBadge}>
+                                    {numOfWaiting}
                                 </span>
                             )}
                         </button>

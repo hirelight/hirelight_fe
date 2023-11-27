@@ -45,7 +45,8 @@ const InvitationDropDown = () => {
 
     const handleAcceptInvitation = async (jobPostId: string) => {
         try {
-            acceptInvitationMutation.mutate(jobPostId);
+            await acceptInvitationMutation.mutateAsync(jobPostId);
+            setShowDropdown(false);
         } catch (error) {
             console.error(error);
         }
@@ -72,10 +73,7 @@ const InvitationDropDown = () => {
             >
                 {invitationRes?.data?.map(invitation => (
                     <li key={invitation.id}>
-                        <div
-                            className={styles.dropdown__item}
-                            onClick={() => setShowDropdown(false)}
-                        >
+                        <div className={styles.dropdown__item}>
                             <div>
                                 <InboxIcon className="w-6 h-6" />
                             </div>

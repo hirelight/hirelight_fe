@@ -52,7 +52,6 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
         onSuccess: async res => {
             toast.success(res.message);
             queryClient.invalidateQueries({ queryKey: ["questions"] });
-            await delayFunc(500);
             router.replace(`/${lang}/backend/settings/questions-bank`);
         },
         onError: err => {
@@ -499,13 +498,19 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
                         </Button>
                     )}
                     <div>
-                        <Link
-                            href={"/en/backend/settings/questions-bank"}
+                        <ButtonOutline
+                            type="button"
+                            onClick={() => router.back()}
                             className="mr-2"
                         >
-                            <ButtonOutline type="button">Cancel</ButtonOutline>
-                        </Link>
-                        <Button type="submit">Save changes</Button>
+                            Cancel
+                        </ButtonOutline>
+                        <Button
+                            type="submit"
+                            isLoading={updateMutation.isPending}
+                        >
+                            Save changes
+                        </Button>
                     </div>
                 </div>
             </form>

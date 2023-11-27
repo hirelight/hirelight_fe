@@ -31,6 +31,9 @@ const FlowStageForm: React.FC<FlowStageFormProps> = ({
     data = initialData,
 }) => {
     const [formState, setFormState] = useState<IAssessmentFlow>(data);
+    const [formErr, setFormErr] = useState({
+        nameErr: "",
+    });
 
     const handleCreateStage = (e: FormEvent) => {
         e.preventDefault();
@@ -49,12 +52,16 @@ const FlowStageForm: React.FC<FlowStageFormProps> = ({
                 <CustomInput
                     title="Assessment name"
                     value={formState.name}
-                    onChange={e =>
+                    onChange={e => {
                         setFormState(prev => ({
                             ...prev,
                             name: e.target.value,
-                        }))
-                    }
+                        }));
+                        setFormErr({
+                            nameErr: "",
+                        });
+                    }}
+                    errorText={formErr.nameErr}
                     required
                 />
                 <Selection

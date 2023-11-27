@@ -64,6 +64,8 @@ type AsyncVideoAssessmentState = {
     asyncError: AsyncErr;
     setAsyncError: React.Dispatch<React.SetStateAction<AsyncErr>>;
 
+    assessmentLoading: boolean;
+
     handleJoinTest: () => Promise<void>;
     handleTrackTest: (updatedAnswer: IAsyncAnswer) => Promise<void>;
     handleSubmitTest: () => Promise<void>;
@@ -91,7 +93,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
     const queryClient = useQueryClient();
 
     const [setupLoading, setSetupLoading] = useState(true);
-    const [permission, setPermission] = useState(false);
+    const [permission, setPermission] = useState(true);
     const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
     const [stream, setStream] = useState<MediaStream | null>(null);
     const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
@@ -187,6 +189,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
         async (updatedAnswer: IAsyncAnswer) => {
             if (!assessmentData) return;
 
+            setAssessmentLoading(true);
             try {
                 const updatedAnswers = answers.map(item => {
                     if (item.id === updatedAnswer.id)
@@ -214,6 +217,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                     error.message ? error.message : "Some thing went wrong"
                 );
             }
+            setAssessmentLoading(false);
         },
         [answers, assessmentData, handleRemoveRecordTime, queryClient]
     );
@@ -221,6 +225,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
     const handleSubmitTest = async () => {
         if (!assessmentData) return;
 
+        setAssessmentLoading(true);
         try {
             const assessmentSubmissions = JSON.stringify(answers);
 
@@ -239,6 +244,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                 error.message ? error.message : "Some thing went wrong"
             );
         }
+        setAssessmentLoading(false);
     };
 
     useEffect(() => {
@@ -287,6 +293,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                                         "Camera device not found!";
                                 })
                             );
+                            setPermission(false);
                         }
 
                         if (
@@ -295,19 +302,17 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                                     ["audioinput"].includes(device.kind)
                                 )
                                 .every(device => !device.label)
-                        )
+                        ) {
                             setAsyncError(prev =>
                                 produce(prev, draft => {
                                     draft.deviceErr.micErr =
                                         "Audio input device not found!";
                                 })
                             );
+                            setPermission(false);
+                        }
                     }
                     setDevices(devices);
-                    console.log(
-                        "🚀 ~ file: AsyncVideoAssessment.tsx:253 ~ getPermission ~ devices:",
-                        devices
-                    );
                     // **********Initial AudioContext to keep track audio loudness************
                     const context = new AudioContext();
                     if (!audioContext) setAudioContext(context);
@@ -342,6 +347,14 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                     };
 
                 localStorage.setItem(data.id, JSON.stringify(parsedCurState));
+            } else {
+                localStorage.setItem(
+                    data.id,
+                    JSON.stringify({
+                        answerPos: curPos ?? undefined,
+                        startQuestionTime: new Date(),
+                    })
+                );
             }
         };
         if (assessmentData) handleSaveStateOnAnswerChange();
@@ -382,6 +395,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                 permission,
                 setPermission,
                 setupLoading,
+                assessmentLoading,
             }}
         >
             <main className={styles.wrapper}>

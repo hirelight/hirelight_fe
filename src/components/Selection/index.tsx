@@ -42,6 +42,7 @@ interface ISelection<T = any> extends CustomSelection<T> {
     labelClassName?: string;
     items: { label: string; value: T }[];
     multiple?: boolean;
+    isLoading?: boolean;
 }
 
 const Selection = <T extends object | any>(props: ISelection<T>) => {
@@ -56,6 +57,7 @@ const Selection = <T extends object | any>(props: ISelection<T>) => {
         labelClassName,
         multiple = false,
         id,
+        isLoading,
     } = props;
     const [show, setShow] = React.useState(false);
     const [search, setSearch] = React.useState("");
@@ -177,40 +179,51 @@ const Selection = <T extends object | any>(props: ISelection<T>) => {
                         />
                     </div>
                     <ul className="max-h-52 overflow-y-auto overflow-x-hidden">
-                        {items
-                            .filter(item =>
-                                item.label
-                                    .toLowerCase()
-                                    .includes(search.toLowerCase())
-                            )
-                            .map((item, index: number) => {
-                                const isSelected = selected.includes(
-                                    item.label
-                                );
+                        {isLoading
+                            ? new Array(4).fill("").map((_, index) => (
+                                  <li
+                                      key={index}
+                                      className="relative animate-pulse p-2.5"
+                                  >
+                                      <div className="h-5 w-full bg-slate-200"></div>
+                                  </li>
+                              ))
+                            : items
+                                  .filter(item =>
+                                      item.label
+                                          .toLowerCase()
+                                          .includes(search.toLowerCase())
+                                  )
+                                  .map((item, index: number) => {
+                                      const isSelected = selected.includes(
+                                          item.label
+                                      );
 
-                                return (
-                                    <li key={index} className="relative">
-                                        <button
-                                            type="button"
-                                            className={`w-full text-left text-neutral-700 p-2.5 cursor-pointer hover:bg-slate-200 ${
-                                                isSelected ? "bg-slate-100" : ""
-                                            }`}
-                                            onClick={handleSelectItem.bind(
-                                                null,
-                                                item.label,
-                                                item.value
-                                            )}
-                                        >
-                                            <span>{item.label}</span>
-                                        </button>
-                                        {isSelected && (
-                                            <span className="absolute right-4 top-1/2 -translate-y-1/2">
-                                                <CheckIcon className="w-5 h-5 text-blue_primary_700" />
-                                            </span>
-                                        )}
-                                    </li>
-                                );
-                            })}
+                                      return (
+                                          <li key={index} className="relative">
+                                              <button
+                                                  type="button"
+                                                  className={`w-full text-left text-neutral-700 p-2.5 cursor-pointer hover:bg-slate-200 ${
+                                                      isSelected
+                                                          ? "bg-slate-100"
+                                                          : ""
+                                                  }`}
+                                                  onClick={handleSelectItem.bind(
+                                                      null,
+                                                      item.label,
+                                                      item.value
+                                                  )}
+                                              >
+                                                  <span>{item.label}</span>
+                                              </button>
+                                              {isSelected && (
+                                                  <span className="absolute right-4 top-1/2 -translate-y-1/2">
+                                                      <CheckIcon className="w-5 h-5 text-blue_primary_700" />
+                                                  </span>
+                                              )}
+                                          </li>
+                                      );
+                                  })}
                     </ul>
                 </div>
                 <select

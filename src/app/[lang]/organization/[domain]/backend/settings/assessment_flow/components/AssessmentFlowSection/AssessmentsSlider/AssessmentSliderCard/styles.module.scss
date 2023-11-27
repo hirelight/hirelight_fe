@@ -14,14 +14,16 @@
 $lastLiColor: #ff5733;
 
 .card__wrapper {
-    width: 124px;
+    min-width: 124px;
     height: 6rem;
+    overflow: hidden;
     flex-shrink: 0;
     background-color: white;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 0.5rem;
 
     @apply drop-shadow-lg rounded-md last:mr-0 mr-4 text-neutral-700;
 }

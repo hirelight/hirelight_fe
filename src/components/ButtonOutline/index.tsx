@@ -19,7 +19,7 @@ const ButtonOutline = (props: IButtonOutline) => {
         <button
             {...rest}
             type={type ?? "button"}
-            className={`relative inline-flex items-center justify-center overflow-hidden text-sm font-medium text-neutral-800 rounded-lg group border-2 border-blue_primary_700 hover:bg-blue_primary_800 hover:border-blue_primary_800 px-5 py-2.5 dark:text-white dark:bg-gray-900 hover:text-white transition-all ease-in duration-75 ${className}`}
+            className={`relative inline-flex items-center justify-center overflow-hidden text-sm font-medium text-neutral-800 rounded-lg group border-2 border-blue_primary_700 hover:bg-blue_primary_800 hover:border-blue_primary_800 px-5 py-2.5 dark:text-white dark:bg-gray-900 hover:text-white transition-all ease-in duration-75 disabled:cursor-not-allowed ${className}`}
         >
             {children}
             {isLoading && <SpinLoading className="ml-2" />}

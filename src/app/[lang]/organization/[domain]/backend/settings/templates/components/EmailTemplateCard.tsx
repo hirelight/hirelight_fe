@@ -140,7 +140,7 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
                                     </button>
                                 </PopoverWarning>
                             </div>
-                            <div ref={deleteWarningRef}>
+                            {/* <div ref={deleteWarningRef}>
                                 <PopoverWarning
                                     show={showDeleteWarning}
                                     content={t.popover.delete_warning.content}
@@ -177,7 +177,7 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
                                         {t.btn.delete}
                                     </button>
                                 </PopoverWarning>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 )}

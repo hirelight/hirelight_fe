@@ -98,6 +98,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
         startTime: moment.utc().toDate(),
         endTime: moment.utc().add(1, "hours").toDate(),
     });
+    const [loading, setLoading] = useState(false);
 
     const [selected, setSelected] = useState<ICollaboratorDto[]>([]);
 
@@ -139,6 +140,8 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
 
     const handleCreateMeeting = async () => {
         if (isInvalidFormInput()) return;
+
+        setLoading(true);
         try {
             const res = await meetingServices.createMeetings([
                 {
@@ -174,6 +177,8 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
         } catch (error: any) {
             toast.error(error.message ? error.message : "Something went wrong");
         }
+
+        setLoading(false);
     };
 
     const handleResetErr = (key: string) => {
@@ -435,7 +440,11 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                     />
                                 </div>
                                 <div className="p-6 border-t border-gray-300 flex-shrink-0 flex justify-end">
-                                    <Button onClick={handleCreateMeeting}>
+                                    <Button
+                                        disabled={loading}
+                                        isLoading={loading}
+                                        onClick={handleCreateMeeting}
+                                    >
                                         Create meeting
                                     </Button>
                                 </div>

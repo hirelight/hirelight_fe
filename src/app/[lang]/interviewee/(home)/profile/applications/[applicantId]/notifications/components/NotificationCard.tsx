@@ -26,7 +26,16 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data }) => {
             [
                 ApplicantAssessmentDetailStatus.PENDING_EVALUATION,
                 ApplicantAssessmentDetailStatus.EVALUATED,
+                ApplicantAssessmentDetailStatus.IN_PROGRESS,
             ].includes(data.status)
+        )
+            router.push(`/assessment/${data.id}/review`);
+        else if (
+            [
+                ApplicantAssessmentDetailStatus.MOVED,
+                ApplicantAssessmentDetailStatus.EVALUATED,
+            ].includes(data.status) &&
+            data.result !== null
         )
             router.push(`/assessment/${data.id}/review`);
     };
@@ -57,20 +66,24 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data }) => {
         }
     };
 
-    const getActionText = (status: ApplicantAssessmentDetailStatus) => {
+    const getActionText = (
+        status: ApplicantAssessmentDetailStatus,
+        result: number | null
+    ) => {
         switch (status) {
             case ApplicantAssessmentDetailStatus.INVITED:
                 return "Take test";
             case ApplicantAssessmentDetailStatus.IN_PROGRESS:
                 return "Resume";
-            case ApplicantAssessmentDetailStatus.MOVED ||
-                ApplicantAssessmentDetailStatus.NON_ATTENDANCE:
+            case ApplicantAssessmentDetailStatus.MOVED:
+                if (result !== null) return "View submission";
                 return "";
-            case ApplicantAssessmentDetailStatus.PENDING_EVALUATION ||
-                ApplicantAssessmentDetailStatus.EVALUATED:
+            case ApplicantAssessmentDetailStatus.PENDING_EVALUATION:
+                return "View submission";
+            case ApplicantAssessmentDetailStatus.EVALUATED:
                 return "View submission";
             default:
-                return null;
+                return "End";
         }
     };
 
@@ -96,7 +109,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data }) => {
                 onClick={handleNavigate}
                 className="!rounded-full !py-1.5 !px-4"
             >
-                {getActionText(data.status)}
+                {getActionText(data.status, data.result)}
             </ButtonOutline>
         </div>
     );

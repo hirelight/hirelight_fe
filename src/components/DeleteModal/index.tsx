@@ -1,8 +1,6 @@
 "use client";
 
-import { resolve } from "path";
-
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { delayFunc } from "@/helpers/shareHelpers";
 import { SpinLoading } from "@/icons";
@@ -13,7 +11,7 @@ interface IDeleteModal {
     title?: string;
     description?: string;
     onCancel?: () => void;
-    onConfirm?: () => void;
+    onConfirm?: () => Promise<any> | any;
     show?: boolean;
     onClose: () => void;
     loading?: boolean;
@@ -26,11 +24,10 @@ const DeleteModal = ({
     title,
     description,
     show = false,
-    loading = false,
+    loading,
 }: IDeleteModal) => {
     const backdropRef = React.useRef<HTMLDivElement>(null);
     const panelRef = React.useRef<HTMLDivElement>(null);
-    const [isLoading, setIsLoading] = useState(loading);
 
     const closeModal = async () => {
         if (backdropRef.current)
@@ -51,14 +48,9 @@ const DeleteModal = ({
     };
 
     const handleConfirm = async () => {
-        await delayFunc(2000);
-        await closeModal();
         if (onConfirm) await onConfirm();
+        closeModal();
     };
-
-    React.useEffect(() => {
-        setIsLoading(loading);
-    }, [loading]);
 
     if (!show) {
         return null;
@@ -147,10 +139,11 @@ const DeleteModal = ({
                         <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                             <button
                                 type="button"
-                                className="inline-flex w-full items-center justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                                className="inline-flex w-full items-center justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto disabled:cursor-not-allowed disabled:opacity-70"
                                 onClick={handleConfirm}
+                                disabled={loading}
                             >
-                                {isLoading && <SpinLoading className="mr-3" />}
+                                {loading && <SpinLoading className="mr-3" />}
                                 {title?.includes("Delete")
                                     ? "Delete"
                                     : "Deactivate"}

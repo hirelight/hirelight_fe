@@ -2,21 +2,18 @@
 
 import React from "react";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import moment from "moment";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setJob, setJobError } from "@/redux/slices/job.slice";
 import {
     Button,
-    ButtonOutline,
     CustomInput,
     DatePicker,
     LocationAutocomplete,
 } from "@/components";
-import { SpinLoading } from "@/icons";
 import { updateJob } from "@/redux/thunks/job.thunk";
-import { extractTextFromHtml } from "@/helpers";
+import { extractTextFromHtml, isInvalidForm } from "@/helpers";
 
 import styles from "./EditJobDetailForm.module.scss";
 import DescriptionSection from "./DescriptionSection";
@@ -27,13 +24,11 @@ type EditJobDetailFormProps = {};
 
 const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
     const [loading, setLoading] = React.useState(false);
-    const router = useRouter();
 
     const dispatch = useAppDispatch();
     const { data: job, error: jobErr } = useAppSelector(state => state.job);
 
-    const isInvalidFormInput = (): boolean => {
-        let statusErr = false;
+    const isInvalidInput = (): boolean => {
         const {
             title,
             area,
@@ -58,22 +53,25 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
         if (minSalary > 0 && maxSalary > 0 && minSalary >= maxSalary)
             errors.salaryErr = "Min salary must be lower than max salary";
 
-        if (contentLength.description === 0) {
+        if (!contentLength.description) {
             errors.contentErr = {
                 ...errors.contentErr,
-                descriptionErr: "Description required",
+                descriptionErr: "Description field required",
             };
         }
 
-        if (contentLength.requirements === 0) {
+        if (!contentLength.requirements) {
             errors.contentErr = {
                 ...errors.contentErr,
-                requirementsErr: "Description required",
+                requirementsErr: "Requirment field required",
             };
         }
 
         if (
-            Object.values(contentLength).reduce((prev, cur) => prev + cur) < 700
+            contentLength.description +
+                contentLength.requirements +
+                contentLength.benefits <
+            700
         ) {
             errors.contentErr = {
                 ...errors.contentErr,
@@ -81,29 +79,15 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
             };
         }
 
-        if (new Date(startTime).getTime() > new Date(endTime).getTime())
+        if (moment(startTime).isAfter(endTime))
             errors.jobPublishTimeErr =
                 "Start time must be earlier than end time";
 
-        if (new Date(endTime).getTime() <= new Date().getTime())
+        if (moment(endTime).isBefore(moment()))
             errors.jobPublishTimeErr = "End time must be in the future";
 
-        const checkError = (errs: any) => {
-            for (let key of Object.keys(errs)) {
-                if (typeof errs[key as any] === "object") {
-                    checkError(errs[key as any]);
-                } else {
-                    if (errs[key as any] !== "") {
-                        statusErr = true;
-                        break;
-                    }
-                }
-            }
-        };
-        checkError(errors);
-
-        if (statusErr) {
-            dispatch(setJobError(errors));
+        if (isInvalidForm(errors)) {
+            dispatch(setJobError({ ...errors }));
             toast.error(
                 <div>
                     <p>Invalid input</p>
@@ -114,15 +98,17 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                     autoClose: 1500,
                 }
             );
+
+            return true;
         }
 
-        return statusErr;
+        return false;
     };
 
-    const handleSubmitJobDetail = async (e: any, isNavigating: boolean) => {
+    const handleSubmitJobDetail = async (e: any) => {
         e.preventDefault();
 
-        if (isInvalidFormInput()) {
+        if (isInvalidInput()) {
             return;
         }
 
@@ -133,13 +119,14 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                     ...job,
                     id: job.id,
                     content: JSON.stringify(job.content),
+                    startTime: moment.parseZone(job.startTime).utc().format(),
+                    endTime: moment.parseZone(job.endTime).utc().format(),
                     applicationForm: JSON.stringify(job.applicationForm),
                 })
             );
-            if (isNavigating) router.push("app-form");
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            toast.error("Edit job failure");
+            toast.error(error.message ? error.message : "Edit job failure");
         }
         setLoading(false);
     };
@@ -148,7 +135,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
         <>
             <form
                 className="flex"
-                onSubmit={e => handleSubmitJobDetail(e, false)}
+                onSubmit={e => handleSubmitJobDetail(e)}
                 onKeyDown={e => {
                     if (e.key === "Enter") e.preventDefault();
                 }}
@@ -268,12 +255,18 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                         value={job.startTime}
                                         pos={"top"}
                                         minDate={new Date()}
-                                        maxDate={new Date(job.endTime)}
                                         onChange={date => {
                                             dispatch(
                                                 setJob({
                                                     ...job,
                                                     startTime: date,
+                                                    endTime: moment(
+                                                        date
+                                                    ).isAfter(job.endTime)
+                                                        ? moment(date)
+                                                              .add(7, "days")
+                                                              .toDate()
+                                                        : job.endTime,
                                                 })
                                             );
                                             dispatch(
@@ -292,7 +285,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                     <DatePicker
                                         pos={"top"}
                                         value={job.endTime}
-                                        minDate={new Date(job.startTime)}
+                                        minDate={job.startTime as Date}
                                         maxDate={moment(job.endTime)
                                             .add(1, "year")
                                             .toDate()}
@@ -327,23 +320,13 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
 
                     {/* ****************Bottom Button********************* */}
                     <div className="flex gap-4 p-5 border-t border-t-slate-300">
-                        <ButtonOutline
-                            type="submit"
-                            className="flex items-center"
-                            disabled={loading}
-                            isLoading={loading}
-                        >
-                            Save draft
-                        </ButtonOutline>
                         <Button
-                            onClick={e => {
-                                handleSubmitJobDetail(e, true);
-                            }}
                             className="flex items-center"
                             disabled={loading}
                             isLoading={loading}
+                            type="submit"
                         >
-                            Save & continue
+                            Save changes
                         </Button>
                     </div>
                 </div>

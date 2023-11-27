@@ -29,12 +29,9 @@ import logo from "/public/images/logo.svg";
 
 import QuestionList from "./QuestionList";
 
-const THREE_DAYS_IN_MS = 3 * 24 * 60 * 60 * 1000;
-const NOW_IN_MS = new Date().getTime();
-
-const dateTimeAfterThreeDays = NOW_IN_MS + THREE_DAYS_IN_MS;
-
 type MultipleChoiceAssessmentState = {
+    isLoading: boolean;
+
     assesmentData: IMCAppliAssessmentDto | null;
     setAssessmentData: React.Dispatch<
         React.SetStateAction<IMCAppliAssessmentDto | null>
@@ -42,7 +39,6 @@ type MultipleChoiceAssessmentState = {
     answers: ICandidateMCDto[];
     setAnswers: React.Dispatch<React.SetStateAction<ICandidateMCDto[]>>;
     handleSubmitTest: () => void;
-    submitted: boolean;
     stopAutoTask: () => void;
 };
 
@@ -65,8 +61,6 @@ type MultipleChoiceAssessmentProps = {
     data: ICandidateAssessmentDetailDto;
 };
 
-let timerId: NodeJS.Timer;
-
 const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
     data,
 }) => {
@@ -77,7 +71,6 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
         useState<IMCAppliAssessmentDto | null>(null);
     const [displayTest, setDisplayTest] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [submitted, setSubmitted] = useState(false);
     const [startAutoTask, stopAutoTask] = useTrackAssessment(
         handleTrackTest,
         30
@@ -94,6 +87,7 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
             setAnswers(
                 JSON.parse(res.data.questionAnswerSet!!) as ICandidateMCDto[]
             );
+
             setIsLoading(false);
             queryClient.invalidateQueries({
                 queryKey: [`my-assessment`, data.id],
@@ -115,8 +109,8 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                 applicantAssessmentDetailId: data.id,
                 answers: answers,
             });
-            setSubmitted(true);
             toast.success(res.message);
+            stopAutoTask();
             // router.push(`/${lang}/profile/applications`);
             setIsLoading(false);
             queryClient.invalidateQueries({
@@ -129,7 +123,7 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
             );
             setIsLoading(false);
         }
-    }, [answers, assesmentData, data.id, queryClient]);
+    }, [answers, assesmentData, data.id, queryClient, stopAutoTask]);
 
     async function handleTrackTest() {
         try {
@@ -157,10 +151,9 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                 ApplicantAssessmentDetailStatus.IN_PROGRESS,
             ].includes(assesmentData.status)
         ) {
-            if (!submitted) startAutoTask();
-            else stopAutoTask();
+            startAutoTask();
         }
-    }, [assesmentData, answers, startAutoTask, submitted, stopAutoTask]);
+    }, [assesmentData, answers, startAutoTask, stopAutoTask]);
 
     useEffect(() => {
         if (
@@ -170,18 +163,10 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
             ].includes(data.status)
         ) {
             setDisplayTest(true);
-            setSubmitted(true);
             setAnswers(JSON.parse(data.questionAnswerSet as string));
             setAssessmentData(data as IMCAppliAssessmentDto);
         }
     }, [data]);
-
-    useEffect(() => {
-        // Clear tracking task on leaving page
-        return () => {
-            if (timerId) clearInterval(timerId!! as NodeJS.Timer);
-        };
-    }, []);
 
     return (
         <div>
@@ -198,7 +183,7 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
             </div>
             <MultipleChoiceAssessmentContext.Provider
                 value={{
-                    submitted,
+                    isLoading,
                     answers,
                     setAnswers,
                     assesmentData,
@@ -249,26 +234,28 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                     )}
 
                     {assesmentData && (
-                        <div
-                            className={`${
-                                submitted ? "pointer-events-none" : ""
-                            }`}
-                        >
+                        <div className={``}>
                             <QuestionList />
                         </div>
                     )}
-                    {displayTest &&
-                        data.status ===
-                            ApplicantAssessmentDetailStatus.IN_PROGRESS && (
-                            <div className="flex justify-center items-center">
-                                <ButtonOutline onClick={handleSubmitTest}>
-                                    {isLoading && (
-                                        <SpinLoading className="mr-2" />
-                                    )}
-                                    Submit
-                                </ButtonOutline>
-                            </div>
-                        )}
+                    {displayTest && (
+                        <div className="flex justify-center items-center">
+                            <ButtonOutline
+                                isLoading={isLoading}
+                                disabled={
+                                    isLoading ||
+                                    ![
+                                        ApplicantAssessmentDetailStatus.IN_PROGRESS,
+                                        ApplicantAssessmentDetailStatus.INVITED,
+                                    ].includes(data.status)
+                                }
+                                onClick={handleSubmitTest}
+                            >
+                                {isLoading && <SpinLoading className="mr-2" />}
+                                Submit
+                            </ButtonOutline>
+                        </div>
+                    )}
                 </main>
             </MultipleChoiceAssessmentContext.Provider>
         </div>

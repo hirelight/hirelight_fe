@@ -40,9 +40,8 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
     };
 
     const handleRedirect = async (orgId: string, subdomain: string) => {
+        setPageLoading(true);
         try {
-            setPageLoading(true);
-
             const res = await authServices.getOrgAccessToken(orgId);
             router.replace(
                 `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend?accessToken=${res.data.accessToken}`
@@ -114,6 +113,7 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
                                     or create your organization!
                                 </p>
                             </div>
+
                             <Button onClick={handleRedirectNewOrg}>
                                 Create new organization
                             </Button>

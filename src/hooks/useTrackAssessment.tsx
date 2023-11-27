@@ -7,6 +7,7 @@ const useTrackAssessment = (
     const intervalRef = useRef<NodeJS.Timer | null>(null);
 
     const startAutoTask = () => {
+        console.log("start task");
         // Start the interval
         intervalRef.current = setInterval(() => {
             taskFunction();
@@ -14,6 +15,7 @@ const useTrackAssessment = (
     };
 
     const stopAutoTask = () => {
+        console.log("auto task");
         // Stop the interval
         if (intervalRef.current !== null) {
             clearInterval(intervalRef.current);

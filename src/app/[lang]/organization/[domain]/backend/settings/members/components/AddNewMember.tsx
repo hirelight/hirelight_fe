@@ -94,7 +94,10 @@ const AddNewMember = () => {
         try {
             const res =
                 await employerOrgServices.inviteEmployerAsync(formState);
-
+            setFormState({
+                ...formState,
+                employerEmail: "",
+            });
             toast.success(res.message);
             setIsLoading(false);
         } catch (error) {
@@ -201,8 +204,9 @@ const AddNewMember = () => {
                     <Button
                         type="submit"
                         className="mr-2 inline-flex items-center justify-center"
+                        disabled={isLoading}
+                        isLoading={isLoading}
                     >
-                        {isLoading && <SpinLoading className="mr-3" />}
                         Invite member
                     </Button>
 

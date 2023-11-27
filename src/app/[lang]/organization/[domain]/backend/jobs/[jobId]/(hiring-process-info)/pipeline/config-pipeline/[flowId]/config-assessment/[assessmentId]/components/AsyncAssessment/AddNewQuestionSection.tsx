@@ -4,7 +4,7 @@ import {
     TrashIcon,
     XMarkIcon,
 } from "@heroicons/react/24/solid";
-import React, { FormEvent } from "react";
+import React, { FormEvent, useState } from "react";
 import { AnimatePresence, Reorder } from "framer-motion";
 import { v4 as uuid } from "uuid";
 import dynamic from "next/dynamic";
@@ -57,6 +57,8 @@ const AddNewQuestionSection = ({
     const [error, setError] = React.useState({
         nameErr: "",
     });
+    const [progress, setProgress] = useState(0);
+    const [loading, setLoading] = useState(false);
     const [question, setQuestion] = React.useState<AsyncQuestionType>(
         data
             ? data
@@ -83,11 +85,11 @@ const AddNewQuestionSection = ({
     );
 
     const handleAddNewSection = async () => {
-        if (!extractTextFromHtml(question.content.name).length) {
-            setError({ ...error, nameErr: "Name is required to create" });
+        if (extractTextFromHtml(question.content.name).length < 20) {
+            setError({ ...error, nameErr: "Name is at least 20 letters!" });
             return toast.error("Invalid input!");
         }
-
+        setLoading(true);
         try {
             if (!question.status) {
                 const res = await questionAnswerServices.createAsync({
@@ -120,6 +122,7 @@ const AddNewQuestionSection = ({
         } catch (error) {
             console.error(error);
         }
+        setLoading(false);
         onFinish();
     };
 
@@ -133,7 +136,11 @@ const AddNewQuestionSection = ({
             const formData = new FormData();
             formData.append("formFile", fileList[0]);
             try {
-                const res = await fileServices.uploadFile(formData);
+                const res = await fileServices.uploadFile(formData, event => {
+                    setProgress(
+                        Math.round(100 * event.loaded) / (event.total ?? 1)
+                    );
+                });
 
                 toast.success(res.message);
                 setQuestion(prev =>
@@ -174,13 +181,8 @@ const AddNewQuestionSection = ({
                             }}
                             value={question.content.name}
                             className="min-h-[144px] h-full bg-white"
+                            errorText={error.nameErr}
                         />
-                        {error.nameErr && (
-                            <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                                <span className="font-medium"></span>{" "}
-                                {error.nameErr}
-                            </p>
-                        )}
                     </div>
                     <button
                         type="button"
@@ -199,6 +201,16 @@ const AddNewQuestionSection = ({
                             <p className="text-gray-500 text-sm mt-1">
                                 (File size maximum 200MB)
                             </p>
+                            {progress > 0 && (
+                                <div className="mt-1 w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+                                    <div
+                                        className="bg-blue-600 h-1.5 rounded-full"
+                                        style={{
+                                            width: `${progress}%`,
+                                        }}
+                                    ></div>
+                                </div>
+                            )}
                         </h3>
                         <input
                             id={`question-file-${question.id}`}
@@ -220,7 +232,7 @@ const AddNewQuestionSection = ({
                                 </video>
                                 <div
                                     role="button"
-                                    className="absolute top-0 right-0 z-20 w-6 h-6 p-1 bg-white border border-gray-300 translate-x-1/2 -translate-y-1/2"
+                                    className="absolute top-0 right-0 z-20 w-6 h-6 p-1 bg-white border border-gray-300 rounded-full translate-x-1/2 -translate-y-1/2"
                                     onClick={() => {
                                         const inputTag =
                                             document.getElementById(
@@ -234,6 +246,7 @@ const AddNewQuestionSection = ({
                                                         undefined;
                                                 })
                                             );
+                                            setProgress(0);
                                         }
                                     }}
                                 >
@@ -322,8 +335,13 @@ const AddNewQuestionSection = ({
                 </div>
             </div>
             <div className="border-t border-gray-300 px-4 py-6 flex items-center justify-between">
-                <div className="inline-flex items-center gap-2">
-                    <Button type="button" onClick={handleAddNewSection}>
+                <div className="inline-flex items-center gap-4">
+                    <Button
+                        type="button"
+                        disabled={loading}
+                        isLoading={loading}
+                        onClick={handleAddNewSection}
+                    >
                         Save topic
                     </Button>
                     <button
@@ -334,14 +352,6 @@ const AddNewQuestionSection = ({
                         Cancel
                     </button>
                 </div>
-
-                <button
-                    type="button"
-                    className="group"
-                    onClick={() => onFinish()}
-                >
-                    <TrashIcon className="w-6 h-6 text-red-400 group-hover:text-red-600" />
-                </button>
             </div>
         </div>
     );

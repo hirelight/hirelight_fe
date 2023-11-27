@@ -105,6 +105,8 @@ const CreateAssessment = () => {
 
         let error = formErr;
 
+        if (!name) error.nameErr = "Assessment name must not be blank";
+
         if (duration < 60)
             error.durationErr = "Duration must at least 1 minute";
 
@@ -149,8 +151,10 @@ const CreateAssessment = () => {
             });
             toast.success(res.message);
             setIsLoading(false);
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            toast.error(
+                error.message ? error.message : "Something went wrong!"
+            );
             setIsLoading(false);
         }
     };
@@ -263,14 +267,8 @@ const CreateAssessment = () => {
                                     descriptionErr: "",
                                 });
                             }}
+                            errorText={formErr.descriptionErr}
                         />
-                        {formErr.descriptionErr !== "" && (
-                            <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                                <span className="font-medium">
-                                    {formErr.descriptionErr}
-                                </span>
-                            </p>
-                        )}
                     </div>
                 </section>
 
@@ -558,7 +556,6 @@ const CreateAssessment = () => {
                     </div>
                 </section>
                 <div className="flex items-center justify-end gap-4 p-4 xl:px-6">
-                    <ButtonOutline type="button">Save & continue</ButtonOutline>
                     <Button
                         type="submit"
                         disabled={isLoading}

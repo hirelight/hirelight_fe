@@ -31,8 +31,10 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({ data }) => {
             : ""
     );
     const [showConfig, setShowConfig] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleDeleteIntegration = async (id: string) => {
+        setLoading(true);
         try {
             const getIdRes = await integrationServices.getTokenById(id);
             const res = await integrationServices.deleteById(getIdRes.data.id);
@@ -42,9 +44,11 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({ data }) => {
         } catch (error: any) {
             toast.error(error.message ? error.message : "Something went wrong");
         }
+        setLoading(false);
     };
 
     const handleUpdateIntegration = async (updateDto: IEditIntegrationDto) => {
+        setLoading(true);
         try {
             const res = await integrationServices.edit(updateDto);
 
@@ -53,9 +57,11 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({ data }) => {
         } catch (error: any) {
             toast.error(error.message ? error.message : "Something went wrong");
         }
+        setLoading(false);
     };
 
     const handleCreateIntegration = async (creatDto: ICreateIntegrationDto) => {
+        setLoading(true);
         try {
             const res = await integrationServices.createNew(creatDto);
 
@@ -64,6 +70,7 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({ data }) => {
         } catch (error: any) {
             toast.error(error.message ? error.message : "Something went wrong");
         }
+        setLoading(false);
     };
 
     const handelSaveChange = async () => {
@@ -73,20 +80,12 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({ data }) => {
             handleUpdateIntegration({
                 id: integration.token.id,
                 service: integration.token.service,
-                payload:
-                    integration.service.toUpperCase() ===
-                    supportServices.HACKERRANK
-                        ? integrationToken
-                        : `${integrationOrgName},${integrationToken}`,
+                payload: `${integrationOrgName},${integrationToken}`,
             });
         } else {
             handleCreateIntegration({
                 service: integration.service,
-                payload:
-                    integration.service.toUpperCase() ===
-                    supportServices.HACKERRANK
-                        ? integrationToken
-                        : `${integrationOrgName},${integrationToken}`,
+                payload: `${integrationOrgName},${integrationToken}`,
             });
         }
     };
@@ -184,7 +183,11 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({ data }) => {
                                 }
                                 required
                             />
-                            <ButtonOutline onClick={handelSaveChange}>
+                            <ButtonOutline
+                                disabled={loading}
+                                isLoading={loading}
+                                onClick={handelSaveChange}
+                            >
                                 Update setting
                             </ButtonOutline>
                         </div>

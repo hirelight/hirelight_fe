@@ -97,8 +97,8 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
         minSalary: 0,
         maxSalary: 0,
         currency: "",
-        startTime: new Date(),
-        endTime: new Date(),
+        startTime: moment.utc().toDate(),
+        endTime: moment.utc().add(7, "days").toDate(),
         area: "",
         experience: "",
         workModality: "",
@@ -206,6 +206,8 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
             const res = await jobServices.createAsync({
                 ...formState,
                 content: JSON.stringify(formState.content),
+                startTime: moment.parseZone(formState.startTime).utc().format(),
+                endTime: moment.parseZone(formState.endTime).utc().format(),
                 applicationForm: JSON.stringify({
                     form_structure: parsedAppForm,
                     questions: [],
@@ -218,7 +220,6 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
             queryClient.invalidateQueries({ queryKey: ["jobs"] });
             router.push(`${res.data}/edit`);
         } catch (error: any) {
-            console.error(error);
             toast.error(error.message ? error.message : "Create job failure");
             setLoading(false);
         }
@@ -348,14 +349,18 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                         <DatePicker
                                             value={formState.startTime}
                                             pos={"top"}
-                                            maxDate={
-                                                new Date(formState.endTime)
-                                            }
                                             minDate={new Date()}
                                             onChange={date => {
                                                 setFormState({
                                                     ...formState,
                                                     startTime: date,
+                                                    endTime: moment(
+                                                        date
+                                                    ).isAfter(formState.endTime)
+                                                        ? moment(date)
+                                                              .add(7, "days")
+                                                              .toDate()
+                                                        : formState.endTime,
                                                 });
                                                 setFormErr({
                                                     ...formErr,
@@ -411,8 +416,8 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                 onClick={handleSubmitJobDetail}
                                 className="flex items-center"
                                 disabled={loading}
+                                isLoading={loading}
                             >
-                                {loading && <SpinLoading className="mr-2" />}
                                 Save & continue
                             </Button>
                         </div>

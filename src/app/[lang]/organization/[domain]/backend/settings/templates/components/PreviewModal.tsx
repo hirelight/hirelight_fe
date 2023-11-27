@@ -33,7 +33,7 @@ const PreviewModal: React.FC<IPreviewModal> = ({ isOpen, onClose, data }) => {
                 </h2>
             </div>
             <div
-                className="p-6 ql-editor"
+                className="!p-6 ql-editor text-sm"
                 dangerouslySetInnerHTML={{
                     __html: data.content,
                 }}

@@ -16,6 +16,7 @@ import { IAppFormField, IAppFormSection, ICustomField } from "@/interfaces";
 import interceptor from "@/services/interceptor";
 import { ApplicationFormJSON } from "@/services";
 import { decryptData } from "@/helpers/authHelpers";
+import { SpinLoading } from "@/icons";
 
 type AppFormSectionProps = {
     jobPostId: string;
@@ -29,6 +30,7 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
     onApply,
 }) => {
     const token = decryptData("hirelight_access_token");
+    const [loading, setLoading] = useState(false);
 
     const inputFieldOnType = (field: IAppFormField) => {
         switch (field.type) {
@@ -190,6 +192,7 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
         // });
 
         const name = fieldMap.get("name")!!.value!! as string;
+        setLoading(true);
         try {
             const dto = {
                 firstName: name.split(" ")[0],
@@ -213,9 +216,10 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
             // console.log(JSON.parse(dto.content));
             const res = await interceptor.post("/applicant-profiles", dto);
             toast.success(res.data.message);
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            toast.error(error.message ? error.message : "Something went wrong");
         }
+        setLoading(false);
 
         const formEl = document.getElementById(
             "apply-job-form"
@@ -257,8 +261,10 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
 
                 <button
                     type="submit"
-                    className="text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue_primary_600 dark:hover:bg-blue_primary_700 focus:outline-none dark:focus:ring-blue_prbg-blue_primary_800"
+                    className="text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue_primary_600 dark:hover:bg-blue_primary_700 focus:outline-none dark:focus:ring-blue_primary_800 disabled:cursor-not-allowed disabled:opacity-80"
+                    disabled={loading}
                 >
+                    {loading && <SpinLoading className="mr-2" />}
                     Submit application
                 </button>
             </div>

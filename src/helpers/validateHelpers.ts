@@ -9,7 +9,7 @@ export const isInvalidForm = (errs: any) => {
             if (typeof errors[key as any] === "object") {
                 validateError(errors[key as any]);
             } else {
-                if (errs[key as any] !== "") {
+                if (errors[key as any]) {
                     status = true;
                     break;
                 }

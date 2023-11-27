@@ -8,17 +8,34 @@ import questionAnswerServices from "@/services/questions/questions.service";
 
 import QuestionCard from "./QuestionCard";
 import Pagination from "./Pagination";
+import QuestionSkeleton from "./QuestionSkeleton";
 
 type QuestionListProps = {};
 
 const QuestionList: React.FC<QuestionListProps> = ({}) => {
-    const { data: res, error } = useQuery({
+    const {
+        data: res,
+        error,
+        isLoading,
+    } = useQuery({
         queryKey: ["questions"],
         queryFn: questionAnswerServices.getListAsync,
     });
     if (error) toast.error("Fetch question failure");
+
+    if (isLoading)
+        return (
+            <ul className="flex flex-col gap-2 mb-6">
+                {new Array(4).fill("").map((_, index) => (
+                    <li key={index}>
+                        <QuestionSkeleton />
+                    </li>
+                ))}
+            </ul>
+        );
+
     return (
-        <div>
+        <>
             <ul className="flex flex-col gap-2 mb-6">
                 {res?.data?.map((item, index) => (
                     <li key={item.id}>
@@ -27,7 +44,7 @@ const QuestionList: React.FC<QuestionListProps> = ({}) => {
                 ))}
             </ul>
             {res?.data && res.data.length > 10 && <Pagination />}
-        </div>
+        </>
     );
 };
 

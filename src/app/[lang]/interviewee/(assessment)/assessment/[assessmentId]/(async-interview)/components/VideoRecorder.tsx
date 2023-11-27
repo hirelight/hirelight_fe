@@ -62,6 +62,7 @@ const VideoRecorder: React.FC<VideoRecorderProps> = () => {
         permission,
         stream,
         assessmentData,
+        assessmentLoading,
         handleJoinTest,
     } = useAsyncVideoAssessment();
 
@@ -176,7 +177,11 @@ const VideoRecorder: React.FC<VideoRecorderProps> = () => {
 
                 {!assessmentData && (
                     <div className="flex justify-center">
-                        <ButtonOutline onClick={handleJoinTest}>
+                        <ButtonOutline
+                            disabled={assessmentLoading}
+                            isLoading={assessmentLoading}
+                            onClick={handleJoinTest}
+                        >
                             {applicantDetail.status ===
                             ApplicantAssessmentDetailStatus.IN_PROGRESS
                                 ? "Resume"

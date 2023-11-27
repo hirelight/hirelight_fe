@@ -8,6 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
 import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
 import { DeleteModal, Portal } from "@/components";
+import { useAppSelector } from "@/redux/reduxHooks";
 
 import EditMemberPermission from "./EditMemberPermission";
 
@@ -19,7 +20,9 @@ const CollaboratorCard: React.FC<CollaboratorCardProps> = ({ member }) => {
     const { jobId } = useParams();
     const [showDeleteAlert, setShowDeleteAlert] = React.useState(false);
     const [showEditModal, setShowEditModal] = React.useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+
+    const job = useAppSelector(state => state.job.data);
+    const { authUser } = useAppSelector(state => state.auth);
 
     const deleteMemberMutation = useMutation({
         mutationKey: ["deleteMemberById"],
@@ -27,18 +30,14 @@ const CollaboratorCard: React.FC<CollaboratorCardProps> = ({ member }) => {
             collaboratorsServices.deleteCollaborator(jobId as string, memberId),
         onSuccess: res => {
             toast.success(res.message);
-            setIsLoading(false);
         },
         onError: err => {
-            console.error(err);
-            setIsLoading(false);
+            toast.error(err.message ? err.message : "");
         },
     });
 
     const handleDeleteMember = (memberId: string) => {
-        setIsLoading(true);
         deleteMemberMutation.mutate(memberId);
-        setIsLoading(false);
     };
 
     return (
@@ -48,7 +47,7 @@ const CollaboratorCard: React.FC<CollaboratorCardProps> = ({ member }) => {
                     title="Delete question"
                     description="Are you sure you want to delete this question? All of your data will be permanently removed. This action cannot be undone."
                     show={showDeleteAlert}
-                    loading={isLoading}
+                    loading={deleteMemberMutation.isPending}
                     onClose={() => setShowDeleteAlert(false)}
                     onConfirm={() => handleDeleteMember(member.id)}
                 />
@@ -73,20 +72,25 @@ const CollaboratorCard: React.FC<CollaboratorCardProps> = ({ member }) => {
                     {member.employerDto.status}
                 </td>
                 <td>
-                    <button
-                        type="button"
-                        onClick={() => setShowEditModal(true)}
-                        className="group"
-                    >
-                        <PencilIcon className="text-blue_primary_600 group-hover:text-blue_primary_800 w-6 h-6 mr-2" />
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setShowDeleteAlert(true)}
-                        className="group"
-                    >
-                        <TrashIcon className="text-red-500 group-hover:text-red-700 w-6 h-6" />
-                    </button>
+                    {authUser?.userId !== member.employerDto.id &&
+                        authUser?.userId === job.creatorId && (
+                            <>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowEditModal(true)}
+                                    className="group"
+                                >
+                                    <PencilIcon className="text-blue_primary_600 group-hover:text-blue_primary_800 w-6 h-6 mr-2" />
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowDeleteAlert(true)}
+                                    className="group"
+                                >
+                                    <TrashIcon className="text-red-500 group-hover:text-red-700 w-6 h-6" />
+                                </button>
+                            </>
+                        )}
                 </td>
             </tr>
         </>

@@ -101,7 +101,7 @@ const HeaderBar = () => {
                     className="flex items-center gap-1 text-sm text-blue_primary_700 font-semibold hover:underline hover:text-blue_primary_800"
                 >
                     <PlusCircleIcon className="w-5 g-5" />
-                    <span>Add a new question</span>
+                    <span>Add new question</span>
                 </Link>
             )}
         </nav>

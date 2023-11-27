@@ -37,6 +37,7 @@ const ActionSection: React.FC<ActionSectionProps> = ({
         handleJoinTest,
         setCurPos,
         handleTrackTest,
+        assessmentLoading,
     } = useAsyncVideoAssessment();
     const {
         isBreak,
@@ -379,20 +380,33 @@ const ActionSection: React.FC<ActionSectionProps> = ({
                                 setIsBreak(true);
                             }}
                             onEnd={handleMoveNext}
+                            loading={assessmentLoading}
                         />
                     ) : (
-                        <Button onClick={handleStartRecord} type="button">
+                        <Button
+                            disabled={assessmentLoading}
+                            onClick={handleStartRecord}
+                            type="button"
+                        >
                             Start Recording
                         </Button>
                     ))}
 
                 {recordingStatus === "recording" && (
-                    <ButtonOutline onClick={stopRecording} type="button">
+                    <ButtonOutline
+                        isLoading={assessmentLoading}
+                        onClick={stopRecording}
+                        type="button"
+                    >
                         Stop Recording
                     </ButtonOutline>
                 )}
                 {canMoveNext && !isBreak && recordingStatus === "inactive" && (
-                    <ButtonOutline onClick={handleMoveNext} type="button">
+                    <ButtonOutline
+                        disabled={assessmentLoading}
+                        onClick={handleMoveNext}
+                        type="button"
+                    >
                         Next question
                     </ButtonOutline>
                 )}
@@ -400,7 +414,10 @@ const ActionSection: React.FC<ActionSectionProps> = ({
 
             {canFinishAssessment && (
                 <div className="flex justify-center">
-                    <ButtonOutline onClick={handleGotoReview}>
+                    <ButtonOutline
+                        disabled={assessmentLoading}
+                        onClick={handleGotoReview}
+                    >
                         Finish assessment
                     </ButtonOutline>
                 </div>
@@ -425,9 +442,11 @@ export default ActionSection;
 const RetakeCountDown = ({
     onEnd,
     onClick,
+    loading,
 }: {
     onEnd: () => void;
     onClick: () => void;
+    loading: boolean;
 }) => {
     const [countdown, setCountDown] = useState(15);
 
@@ -448,7 +467,7 @@ const RetakeCountDown = ({
     }, [onEnd, countdown]);
 
     return (
-        <Button type="button" onClick={onClick}>
+        <Button type="button" disabled={loading} onClick={onClick}>
             Retake {countdown}
         </Button>
     );

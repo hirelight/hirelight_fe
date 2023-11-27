@@ -1,3 +1,5 @@
+import { AxiosProgressEvent } from "axios";
+
 import { IResponse } from "@/interfaces/service.interface";
 import { checkResErr } from "@/helpers";
 
@@ -19,7 +21,10 @@ const getFile = async (fileName: string): Promise<IResponse<any>> => {
     }
 };
 
-const uploadFile = async (formData: FormData): Promise<IResponse<any>> => {
+const uploadFile = async (
+    formData: FormData,
+    onUploadProgress?: (event: AxiosProgressEvent) => void
+): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.post<IResponse<any>>(
             "/assessment-flows/files",
@@ -28,6 +33,7 @@ const uploadFile = async (formData: FormData): Promise<IResponse<any>> => {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
+                onUploadProgress,
             }
         );
         checkResErr(res.data);

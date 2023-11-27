@@ -69,7 +69,7 @@ const NewOrganizationForm = () => {
         if (newOrgForm.name === "") {
             setNewOrgFormErr(prev => ({
                 ...prev,
-                nameErr: "Email must not empty!",
+                nameErr: "Org must not empty!",
             }));
             valid = true;
         }
@@ -133,6 +133,7 @@ const NewOrganizationForm = () => {
                                     domainErr: "",
                                 });
                             }}
+                            required
                         />
                     </div>
                     <div className="text-left">
@@ -173,7 +174,7 @@ const NewOrganizationForm = () => {
                     )}
                     <button
                         type="submit"
-                        className="flex items-center gap-1 justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-full px-5 py-2.5 mt-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        className="flex items-center gap-1 justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-full px-5 py-2.5 mt-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
                         disabled={loading}
                     >
                         {loading && <SpinLoading />}

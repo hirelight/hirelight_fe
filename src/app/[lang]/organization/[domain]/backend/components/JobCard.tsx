@@ -15,6 +15,7 @@ import jobServices from "@/services/job/job.service";
 import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import { JobPostStatus } from "@/interfaces/job-post.interface";
+import { useAppSelector } from "@/redux/reduxHooks";
 
 const TooltipNoSSR = dynamic(
     () => import("flowbite-react").then(mod => mod.Tooltip),
@@ -37,6 +38,9 @@ const JobCard: React.FC<JobCardProps> = ({
 }) => {
     const router = useRouter();
     const queryClient = useQueryClient();
+
+    const { authUser } = useAppSelector(state => state.auth);
+
     const [isLoading, setIsLoading] = useState(false);
     const [showActions, setShowActions] = useState(false);
     const actionsDropDown = useOutsideClick<HTMLDivElement>(() =>
@@ -52,7 +56,9 @@ const JobCard: React.FC<JobCardProps> = ({
                 autoClose: 1000,
             });
 
-            queryClient.invalidateQueries({ queryKey: ["jobs"] });
+            queryClient.invalidateQueries({
+                queryKey: ["jobs", authUser!!.organizationId],
+            });
             setIsLoading(false);
         },
         onError: error => {
@@ -87,8 +93,9 @@ const JobCard: React.FC<JobCardProps> = ({
                     {status === JobPostStatus.PENDING_APPROVAL && (
                         <button
                             type="button"
-                            className="focus:outline-none text-white bg-green-500 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-1 dark:bg-green-600 dark:hover:bg-green-800 dark:focus:ring-green-700 hidden md:block"
+                            className="focus:outline-none text-white bg-green-500 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-1 dark:bg-green-600 dark:hover:bg-green-800 dark:focus:ring-green-700 hidden md:block disabled:cursor-not-allowed disabled:opacity-80"
                             onClick={handlePublishJob.bind(null, id)}
+                            disabled={publishJobMutations.isPending}
                         >
                             {publishJobMutations.isPending && (
                                 <SpinLoading className="mr-2" />

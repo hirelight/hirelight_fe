@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import {
     EllipsisHorizontalIcon,
     EnvelopeIcon,
@@ -41,6 +41,7 @@ const CandidateActionTabs = () => {
     const queryClient = useQueryClient();
     const router = useRouter();
     const [showDrawer, setShowDrawer] = React.useState(false);
+    const [loading, setLoading] = useState(false);
     const assessments = useAppSelector(
         state => state.assessmentFlow.data.assessments
     );
@@ -59,25 +60,37 @@ const CandidateActionTabs = () => {
     );
 
     const handleSendAssessment = async () => {
+        setLoading(true);
         try {
-            const res = await applicantAssessmentDetailServices.sendAssessment(
-                applicantAssessmentDetail.id
+            await toast.promise(
+                applicantAssessmentDetailServices.sendAssessment(
+                    applicantAssessmentDetail.id
+                ),
+                {
+                    pending: "Sending assessment to candidate",
+                    success: "Send assessment successfully!",
+                }
             );
-            toast.success(res.message);
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            toast.error(error.message ? error.message : "Something went wrong");
         }
+        setLoading(false);
     };
 
     const handleMoveCandidate = async () => {
+        setLoading(true);
         try {
-            const res =
-                await applicantAssessmentDetailServices.moveCandidateToAssessment(
+            await toast.promise(
+                applicantAssessmentDetailServices.moveCandidateToAssessment(
                     candidateId as string,
                     nextAssesment.id
-                );
+                ),
+                {
+                    pending: `Moving candidate ${nextAssesment.name}`,
+                    success: "Move candidate successfully!",
+                }
+            );
 
-            toast.success(res.message);
             queryClient.invalidateQueries({
                 queryKey: [`job-profiles`, jobId, assessmentId],
             });
@@ -92,6 +105,7 @@ const CandidateActionTabs = () => {
                 error.message ? error.message : "Some thing went wrong"
             );
         }
+        setLoading(false);
     };
 
     return (
@@ -102,22 +116,6 @@ const CandidateActionTabs = () => {
             />
             <div className="sticky -top-4">
                 <div className="bg-white absolute top-6 right-3 py-2 px-4 flex items-center gap-4 rounded-md shadow-md text-neutral-600">
-                    {/* <button
-                        type="button"
-                        className={styles.candidate__action__btn}
-                    >
-                        <EllipsisHorizontalIcon className="w-5 h-5" />
-                    </button>
-                    <div className="w-[1px] h-8 bg-gray-300"></div> */}
-                    {/* <Tooltip content="Send email">
-                        <button
-                            type="button"
-                            className={styles.candidate__action__btn}
-                            onClick={() => setShowDrawer(true)}
-                        >
-                            <EnvelopeIcon className="w-5 h-5" />
-                        </button>
-                    </Tooltip> */}
                     <Tooltip content="Create event">
                         <button
                             type="button"
@@ -130,21 +128,16 @@ const CandidateActionTabs = () => {
                     <Tooltip content="Send assessment">
                         <button
                             type="button"
-                            className={styles.candidate__action__btn}
+                            className={
+                                styles.candidate__action__btn +
+                                " disabled:cursor-not-allowed disabled:opacity-60"
+                            }
+                            disabled={loading}
                             onClick={handleSendAssessment}
                         >
                             <PaperAirplaneIcon className="w-6 h-6" />
                         </button>
                     </Tooltip>
-                    {/* <Tooltip content="Add evaluation">
-                        <button
-                            type="button"
-                            className={styles.candidate__action__btn}
-                            onClick={() => setShowDrawer(true)}
-                        >
-                            <PencilSquareIcon className="w-6 h-6" />
-                        </button>
-                    </Tooltip> */}
                     <div className="w-[1px] h-8 bg-gray-300"></div>
                     <Tooltip content="Disqualified candidate">
                         <button
@@ -157,7 +150,8 @@ const CandidateActionTabs = () => {
                     <div className="flex items-center ">
                         <button
                             type="button"
-                            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm w-auto px-2 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 rounded-tl-md rounded-bl-md border-r border-blue-800 transition-all duration-300 whitespace-nowrap"
+                            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm w-auto px-2 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 rounded-tl-md rounded-bl-md border-r border-blue-800 transition-all duration-300 whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-60"
+                            disabled={loading}
                             onClick={handleMoveCandidate}
                         >
                             Move to {nextAssesment.name}

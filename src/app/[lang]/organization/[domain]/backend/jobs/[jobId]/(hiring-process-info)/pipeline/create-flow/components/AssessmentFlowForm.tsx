@@ -93,6 +93,8 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
         try {
             const res = await assessmentFlowsServices.createAsync({
                 ...formState,
+                startTime: moment.parseZone(formState.startTime).utc().format(),
+                endTime: moment.parseZone(formState.endTime).utc().format(),
                 assessments: formState.assessments
                     .slice(1, -1)
                     .map(assessment => ({
@@ -175,13 +177,13 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                         <DatePicker
                             value={formState.startTime}
                             minDate={new Date()}
-                            maxDate={moment(formState.endTime)
-                                .subtract(7, "days")
-                                .toDate()}
                             onChange={date => {
                                 setFormState(prev => ({
                                     ...prev,
                                     startTime: date,
+                                    endTime: moment(date).isAfter(prev.endTime)
+                                        ? moment(date).add(7, "days").toDate()
+                                        : prev.endTime,
                                 }));
                                 setFormErr({ ...formErr, flowTimelineErr: "" });
                             }}

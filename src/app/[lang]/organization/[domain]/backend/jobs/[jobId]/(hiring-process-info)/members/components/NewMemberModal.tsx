@@ -37,7 +37,7 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
         IPermissionDto[]
     >([]);
     const { authUser }: any = useAppSelector(state => state.auth);
-    const { data: memberRes } = useQuery({
+    const { data: memberRes, isLoading } = useQuery({
         queryKey: ["members"],
         queryFn: employerOrgServices.getListAsync,
         select(data) {
@@ -125,6 +125,7 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
                                 })) ?? []
                             }
                             onChange={value => setSelectEmployer(value)}
+                            isLoading={isLoading}
                         />
                     </div>
 
@@ -137,10 +138,10 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
                 </div>
 
                 <div className="p-6 border-t border-gray-300 text-right">
-                    <Button type="submit">
-                        {sendInvitationMutate.isPending && (
-                            <SpinLoading className="mr-2" />
-                        )}
+                    <Button
+                        type="submit"
+                        isLoading={sendInvitationMutate.isPending}
+                    >
                         Send invitation
                     </Button>
                 </div>

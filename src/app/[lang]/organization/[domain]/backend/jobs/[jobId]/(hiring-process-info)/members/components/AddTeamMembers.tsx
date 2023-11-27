@@ -6,7 +6,7 @@ import { UsersIcon } from "@heroicons/react/24/outline";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
-import { Button, ButtonOutline, Portal, Selection } from "@/components";
+import { Button, Portal } from "@/components";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
 import { IUserDto } from "@/services";
 import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
@@ -52,7 +52,7 @@ const AddTeamMebers = () => {
             </Portal>
             {res && res.data.length > 0 ? (
                 <div className={styles.table__wrapper}>
-                    <CollaboratorList datas={res.data} />
+                    <CollaboratorList datas={res.data} isLoading={isLoading} />
                 </div>
             ) : (
                 <div className="w-full flex flex-col items-center py-6">
@@ -69,12 +69,14 @@ const AddTeamMebers = () => {
             <div className="py-4 px-6 border-t border-gray-300">
                 <div className="w-full flex items-center justify-between gap-4 flex-wrap">
                     <div className="flex-1"></div>
-                    <ButtonOutline
-                        className="whitespace-nowrap w-full md:w-fit"
+                    <Button
+                        className="whitespace-nowrap w-full md:w-fit disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={isLoading}
+                        isLoading={isLoading}
                         onClick={() => setShowModal(true)}
                     >
                         Invite a new member
-                    </ButtonOutline>
+                    </Button>
                 </div>
             </div>
         </div>

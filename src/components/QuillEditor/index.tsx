@@ -45,6 +45,7 @@ interface IQuillEditor {
         };
     };
     label?: string;
+    errorText?: string;
 }
 
 const QuillEditor = ({
@@ -57,6 +58,7 @@ const QuillEditor = ({
     readOnly = false,
     required = false,
     label,
+    errorText,
     config = {
         toolbar: {
             visibile: true,
@@ -223,6 +225,11 @@ const QuillEditor = ({
                         ].join(" ")}
                     ></div>
                 </div>
+                {errorText && (
+                    <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                        <span className="font-medium">{errorText}</span>
+                    </p>
+                )}
                 <input id={id} className="sr-only" readOnly />
             </div>
         </>

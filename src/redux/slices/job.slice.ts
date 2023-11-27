@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
+import moment from "moment";
 
 import {
     ApplicationFormJSON,
@@ -212,6 +213,8 @@ const jobSlice = createSlice({
                 const { data, message } = action.payload;
                 state.data = {
                     ...data,
+                    startTime: moment.utc(data.startTime).local().toDate(),
+                    endTime: moment.utc(data.endTime).local().toDate(),
                     content: JSON.parse(data.content),
                     applicationForm: JSON.parse(data.applicationForm),
                 } as typeof state.data;
@@ -230,8 +233,17 @@ const jobSlice = createSlice({
                 state.loading = true;
             })
             .addCase(getJobById.fulfilled, (state, action) => {
+                console.log(moment.utc(action.payload.startTime).toDate());
                 state.data = {
                     ...action.payload,
+                    startTime: moment
+                        .utc(action.payload.startTime)
+                        .local()
+                        .toDate(),
+                    endTime: moment
+                        .utc(action.payload.endTime)
+                        .local()
+                        .toDate(),
                     content: JSON.parse(action.payload.content),
                     applicationForm: JSON.parse(action.payload.applicationForm),
                 };

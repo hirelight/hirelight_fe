@@ -3,6 +3,7 @@
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import moment from "moment";
 
 import LoadingIndicator from "@/components/LoadingIndicator";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
@@ -54,6 +55,8 @@ const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
                 setJob({
                     ...queryRes,
                     content: JSON.parse(queryRes.content),
+                    startTime: moment.utc(queryRes.startTime).toDate(),
+                    endTime: moment.utc(queryRes.endTime).toDate(),
                     applicationForm: JSON.parse(queryRes.applicationForm),
                 })
             );

@@ -44,7 +44,7 @@ const IntegrationForm = () => {
     const assessment = useAppSelector(state => state.assessment.data);
 
     const queryClient = useQueryClient();
-    const { data: thirdPartyRes } = useQuery({
+    const { data: thirdPartyRes, isLoading: thirpartyLoading } = useQuery({
         queryKey: ["third-parties"],
         queryFn: integrationServices.getList,
     });
@@ -79,8 +79,6 @@ const IntegrationForm = () => {
         assessmentId: string;
         assessmentName: string;
     }>(assessment.content ? JSON.parse(assessment.content) : undefined);
-
-    console.log(formState);
 
     const validation = (): boolean => {
         let error = formErr;
@@ -126,8 +124,8 @@ const IntegrationForm = () => {
             });
             toast.success(res.message);
             setIsLoading(false);
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            toast.error(error.message ? error.message : "Something went wrong");
             setIsLoading(false);
         }
     };
@@ -184,14 +182,8 @@ const IntegrationForm = () => {
                                 descriptionErr: "",
                             });
                         }}
+                        errorText={formErr.descriptionErr}
                     />
-                    {formErr.descriptionErr !== "" && (
-                        <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                            <span className="font-medium">
-                                {formErr.descriptionErr}
-                            </span>
-                        </p>
-                    )}
                 </div>
             </section>
 
@@ -200,22 +192,25 @@ const IntegrationForm = () => {
                     <Logo className="w-6 h-6 text-blue_primary_300" />
                     Third party assessment providers
                 </h3>
-                <ul>
-                    {thirdPartyRes?.data.map(thirdParty => (
-                        <li key={thirdParty.service}>
-                            <IntegrationCard
-                                data={thirdParty}
-                                selected={selectedAssessment}
-                                onSelect={selected =>
-                                    setSelectedAssessment(selected)
-                                }
-                            />
-                        </li>
-                    ))}
-                </ul>
+                {!thirpartyLoading ? (
+                    <ul>
+                        {thirdPartyRes?.data.map(thirdParty => (
+                            <li key={thirdParty.service}>
+                                <IntegrationCard
+                                    data={thirdParty}
+                                    selected={selectedAssessment}
+                                    onSelect={selected =>
+                                        setSelectedAssessment(selected)
+                                    }
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <ThirdpartySkeleton />
+                )}
             </section>
             <div className="flex items-center justify-end gap-4 p-4 xl:px-6">
-                <ButtonOutline type="button">Save & continue</ButtonOutline>
                 <Button
                     type="submit"
                     disabled={isLoading}
@@ -229,3 +224,22 @@ const IntegrationForm = () => {
 };
 
 export default IntegrationForm;
+
+const ThirdpartySkeleton = () => {
+    return (
+        <div className="animate-pulse">
+            {new Array(3).fill("").map((_, index) => (
+                <div key={index} className={`p-4 flex items-start`}>
+                    <div className="w-14 h-14 rounded-full bg-slate-300"></div>
+                    <div className="flex-1 ml-4">
+                        <h3 className="mb-2 h-6 w-16 bg-slate-300"></h3>
+                        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
+                        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-2.5"></div>
+                        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-2.5"></div>
+                        <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+};

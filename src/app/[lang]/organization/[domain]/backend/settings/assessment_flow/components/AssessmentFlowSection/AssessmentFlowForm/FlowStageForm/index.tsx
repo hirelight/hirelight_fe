@@ -26,11 +26,20 @@ const FlowStageForm: React.FC<FlowStageFormProps> = ({
     data = initialData,
 }) => {
     const [formState, setFormState] = useState<IAssessmentFlow>(data);
+    const [formErr, setFormErr] = useState({
+        nameErr: "",
+    });
 
     return (
         <form
             onSubmit={e => {
                 e.preventDefault();
+                if (!formState.name) {
+                    setFormErr({
+                        nameErr: "Name is required!",
+                    });
+                    return;
+                }
                 onSave(formState);
             }}
             className="border border-gray-300 bg-slate-100 rounded-md"
@@ -42,12 +51,16 @@ const FlowStageForm: React.FC<FlowStageFormProps> = ({
                 <CustomInput
                     title="Assessment name"
                     value={formState.name}
-                    onChange={e =>
+                    onChange={e => {
                         setFormState(prev => ({
                             ...prev,
                             name: e.target.value,
-                        }))
-                    }
+                        }));
+                        setFormErr({
+                            nameErr: "",
+                        });
+                    }}
+                    errorText={formErr.nameErr}
                     required
                 />
                 <Selection

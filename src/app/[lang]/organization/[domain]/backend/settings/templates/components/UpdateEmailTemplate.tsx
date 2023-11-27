@@ -124,7 +124,12 @@ const UpdateEmailTemplate: React.FC<IUpdateEmailTemplate> = ({
                 />
             </div>
             <div className="flex">
-                <Button onClick={handleSaveChanges} className="mr-4">
+                <Button
+                    disabled={updateMutation.isPending}
+                    isLoading={updateMutation.isPending}
+                    onClick={handleSaveChanges}
+                    className="mr-4"
+                >
                     {t.form.btn.save_changes}
                 </Button>
 

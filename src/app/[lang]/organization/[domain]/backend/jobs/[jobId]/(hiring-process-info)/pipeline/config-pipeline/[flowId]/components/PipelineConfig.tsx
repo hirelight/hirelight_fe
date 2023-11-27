@@ -21,10 +21,6 @@ const PipelineConfig: React.FC<PipelineConfigProps> = ({}) => {
     const [selectedStage, setSelectedStage] = React.useState<
         IAssessmentDto | undefined
     >();
-    console.log(
-        "🚀 ~ file: PipelineConfig.tsx:22 ~ selectedStage:",
-        selectedStage
-    );
 
     const handleSelectStage = (stage: IAssessmentDto) => {
         setSelectedStage(stage);

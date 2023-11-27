@@ -3,6 +3,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+
+import assessmentFlowTemplatesServices from "@/services/assessment-flow-templates/assessment-flow-templates.service";
+import { IAssessmentFlow } from "@/services";
 
 import data from "../mock-data.json";
 
@@ -21,6 +25,21 @@ const AssessmentsSlider = () => {
     });
     const [stagesVisible, setStagesVisible] = useState(9999);
     const [hoverVisible, setHoverVisible] = useState(9999);
+
+    const {
+        data: res,
+        isLoading,
+        error,
+    } = useQuery({
+        queryKey: ["assessment-flow-template-default"],
+        queryFn: assessmentFlowTemplatesServices.getListAsync,
+        select(data) {
+            return {
+                ...data,
+                data: data.data.filter(item => !item.organizationId),
+            };
+        },
+    });
 
     const handleSlideLeft = () => {
         if (sliderWrapperRef.current) {
@@ -101,24 +120,17 @@ const AssessmentsSlider = () => {
                 </motion.button>
             )}
             <div ref={sliderWrapperRef} className={`${styles.slider__wrapper}`}>
-                {data.stages.map((item, index) => {
-                    return (
-                        <AssessmentSliderCard
-                            key={item.id}
-                            data={item}
-                            stageVisibility={index >= stagesVisible}
-                            toggleStageVisibility={() =>
-                                index === stagesVisible
-                                    ? setStagesVisible(9999)
-                                    : setStagesVisible(index)
-                            }
-                            hoverVisibility={index >= hoverVisible}
-                            toggleHovervisiblity={(pos = index) =>
-                                setHoverVisible(pos)
-                            }
-                        />
-                    );
-                })}
+                {res &&
+                    (JSON.parse(res?.data[0].content) as IAssessmentFlow[]).map(
+                        (item, index) => {
+                            return (
+                                <AssessmentSliderCard
+                                    key={item.name}
+                                    data={item}
+                                />
+                            );
+                        }
+                    )}
             </div>
             {swipeVisible.swipeRight && (
                 <motion.button

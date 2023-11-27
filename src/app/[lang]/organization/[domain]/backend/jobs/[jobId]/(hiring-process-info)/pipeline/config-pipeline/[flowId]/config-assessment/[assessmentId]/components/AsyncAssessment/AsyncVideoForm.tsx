@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { useParams } from "next/navigation";
@@ -24,6 +24,7 @@ import {
 import assessmentsServices from "@/services/assessments/assessments.service";
 import { useAppSelector } from "@/redux/reduxHooks";
 import { QuestionAnswerContentJson } from "@/interfaces/questions.interface";
+import { extractTextFromHtml, isInvalidForm } from "@/helpers";
 
 import QuestionSection from "./QuestionSection";
 
@@ -57,6 +58,14 @@ const AsyncVideoForm = () => {
             ? JSON.parse(assessment.assessmentQuestionAnswerSetContent)
             : []
     );
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [formErr, setFormErr] = useState({
+        nameErr: "",
+        questionsErr: "",
+        descriptionErr: "",
+    });
     const [formState, setFormState] = React.useState<AsyncVideoForm>({
         id: assessment.id,
         name: assessment.name,
@@ -73,9 +82,41 @@ const AsyncVideoForm = () => {
             assessment.assessmentQuestionAnswerSetContent ?? "",
     });
 
+    const inValidInput = (): boolean => {
+        const { name, duration, description } = formState;
+
+        let error = formErr;
+
+        if (!name) error.nameErr = "Assessment name must not be blank";
+
+        if (questions.length < 1)
+            error.questionsErr = "Please select at least 1 question";
+
+        if (extractTextFromHtml(description).length < 100)
+            error.descriptionErr = "Description must at least 100 characters";
+
+        if (isInvalidForm(error)) {
+            setFormErr({ ...error });
+            toast.error(
+                <div>
+                    <p>Invalid input</p>
+                    <p>Check issue in red!</p>
+                </div>,
+                {
+                    position: "top-center",
+                    autoClose: 1500,
+                }
+            );
+            return true;
+        }
+        return false;
+    };
+
     const handleCreateOneWay = async (e: FormEvent) => {
         e.preventDefault();
+        if (inValidInput()) return;
 
+        setIsLoading(true);
         try {
             const sumOfDuration =
                 questions.reduce((prev, cur) => {
@@ -102,6 +143,8 @@ const AsyncVideoForm = () => {
         } catch (error: any) {
             toast.error(error.message ? error.message : "Something went wrong");
         }
+
+        setIsLoading(false);
     };
 
     return (
@@ -157,28 +200,19 @@ const AsyncVideoForm = () => {
                             type="text"
                             placeholder="One-way interview - UX researcher at 123"
                             value={formState.name}
-                            onChange={e =>
+                            onChange={e => {
                                 setFormState({
                                     ...formState,
                                     name: e.target.value,
-                                })
-                            }
+                                });
+                                setFormErr({
+                                    ...formErr,
+                                    nameErr: "",
+                                });
+                            }}
+                            errorText={formErr.nameErr}
                             required
                         />
-
-                        {/* <div>
-                        <Timer
-                            title="Duration"
-                            data={formState.duration}
-                            onChange={second =>
-                                setFormState(prev => ({
-                                    ...prev,
-                                    duration: second,
-                                }))
-                            }
-                            required
-                        />
-                    </div> */}
                     </div>
 
                     <div className="flex flex-col gap-4 mb-6 px-4 xl:px-6">
@@ -198,13 +232,23 @@ const AsyncVideoForm = () => {
                             }
                             className="min-h-[250px]"
                             theme="snow"
+                            errorText={formErr.descriptionErr}
                         />
                     </div>
                 </section>
 
                 <section>
-                    <h3 className="text-neutral-700 font-medium mb-4 p-4 flex items-center justify-between xl:px-6 bg-slate-100">
-                        Questions
+                    <div className="text-neutral-700 font-medium mb-4 p-4 flex items-center justify-between xl:px-6 bg-slate-100">
+                        <h3 className="flex items-center gap-4">
+                            Questions{" "}
+                            {formErr.questionsErr !== "" && (
+                                <p className="ml-auto text-sm text-red-600 dark:text-red-500">
+                                    <span className="font-medium">
+                                        {formErr.questionsErr}
+                                    </span>
+                                </p>
+                            )}
+                        </h3>
                         <button
                             type="button"
                             className="text-sm font-semibold text-blue_primary_700 hover:text-blue_primary_800 hover:underline"
@@ -212,7 +256,7 @@ const AsyncVideoForm = () => {
                         >
                             Import questions
                         </button>
-                    </h3>
+                    </div>
 
                     {questions.length > 0 && (
                         <div className="px-4 xl:px-6 mb-6">
@@ -276,118 +320,14 @@ const AsyncVideoForm = () => {
                     </div>
                 </section>
 
-                {/* <section>
-                <h3 className="text-lg text-neutral-700 font-semibold bg-slate-100 p-4 xl:px-6 mb-6">
-                    Configuration
-                </h3>
-
-                <div className="flex gap-6 mb-6 px-4 xl:px-6">
-                    <CustomInput
-                        title="Title"
-                        type="text"
-                        placeholder="Thanks for sharing this video with 123"
-                        required
-                    />
-
-                    <div className="w-1/3"></div>
-                </div>
-
-                <div className="flex flex-col gap-4 mb-6 px-4 xl:px-6">
-                    <h3 className="text-neutral-700 font-medium">
-                        Outro note{" "}
-                        <span className="text-neutral-500 font-normal text-sm">
-                            (Optional)
-                        </span>
-                    </h3>
-                    <QuillEditorNoSSR
-                        placeholder="We'll be watching your interview soon and will contact you about the next steps"
-                        onChange={(value: string) => {}}
-                        className="min-h-[240px]"
-                        theme="snow"
-                    />
-                </div>
-            </section>
-
-            <section>
-                <h3 className="text-lg text-neutral-700 font-semibold bg-slate-100 p-4 xl:px-6 mb-6">
-                    Settings
-                </h3>
-                <div className="flex justify-between gap-4 p-4 xl:px-6">
-                    <div className="flex items-center gap-2 p-4 border border-gray-300 rounded-md">
-                        <input
-                            id="tops-and-questions"
-                            type="radio"
-                            value=""
-                            name="assessment-visibility"
-                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        />
-                        <label
-                            htmlFor="tops-and-questions"
-                            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer"
-                        >
-                            <div>
-                                <h4 className="text-neutral-700 text-base font-semibold">
-                                    Topics & questions
-                                </h4>
-                                <p className="text-neutral-500 text-sm">
-                                    Allow candidates to preview both topics &
-                                    questions, before starting the interview.
-                                </p>
-                            </div>
-                        </label>
-                    </div>
-                    <div className="flex items-center gap-2 p-4 border border-gray-300 rounded-md">
-                        <input
-                            id="topics-only"
-                            type="radio"
-                            value=""
-                            name="assessment-visibility"
-                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        />
-                        <label
-                            htmlFor="topics-only"
-                            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer"
-                        >
-                            <div>
-                                <h4 className="text-neutral-700 text-base font-semibold">
-                                    Topics only
-                                </h4>
-                                <p className="text-neutral-500 text-sm">
-                                    Allow candidates to preview topics only,
-                                    before starting the interview.
-                                </p>
-                            </div>
-                        </label>
-                    </div>
-                    <div className="flex items-center gap-2 p-4 border border-gray-300 rounded-md">
-                        <input
-                            id="assessment-hidden"
-                            type="radio"
-                            value=""
-                            name="assessment-visibility"
-                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        />
-                        <label
-                            htmlFor="assessment-hidden"
-                            className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer"
-                        >
-                            <div>
-                                <h4 className="text-neutral-700 text-base font-semibold">
-                                    No visibility
-                                </h4>
-                                <p className="text-neutral-500 text-sm">
-                                    Don&apos;t allow candidates to preview the
-                                    content of the interview
-                                </p>
-                            </div>
-                        </label>
-                    </div>
-                </div>
-            </section> */}
-
                 <div className="flex items-center justify-end gap-4 p-4 xl:px-6">
-                    <ButtonOutline>Save & continue</ButtonOutline>
-                    <Button type="submit">Save all changes</Button>
+                    <Button
+                        type="submit"
+                        disabled={isLoading}
+                        isLoading={isLoading}
+                    >
+                        Save all changes
+                    </Button>
                 </div>
             </form>
         </React.Fragment>

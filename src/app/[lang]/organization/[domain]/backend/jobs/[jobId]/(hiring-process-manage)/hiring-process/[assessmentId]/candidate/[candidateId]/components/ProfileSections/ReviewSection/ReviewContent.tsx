@@ -35,14 +35,14 @@ const ReviewContent = () => {
     const [selectedDetailId, setSelectedDetailId] = useState(
         applicantAssessmentDetail.id as string
     );
-    const { data: querRes } = useQuery({
+    const { data: querRes, isLoading: otherLoading } = useQuery({
         queryKey: ["profile-evaluations", candidateId],
         queryFn: () =>
             evaluationServices.getListByProfileId(
                 applicantAssessmentDetail.applicantProfileId as string
             ),
     });
-    const { data: curDetailEvaluate } = useQuery({
+    const { data: curDetailEvaluate, isLoading: curLoading } = useQuery({
         queryKey: ["assessment-evaluations", candidateId],
         queryFn: () =>
             evaluationServices.getListByApplicantAssessmentDetailId(
@@ -54,6 +54,13 @@ const ReviewContent = () => {
         setSelectedDetailId(id);
         setShowAdd(true);
     };
+
+    if (curLoading || otherLoading)
+        return (
+            <div className="mt-4">
+                <EvaluationSkeleton />
+            </div>
+        );
 
     return (
         <div className="mt-4">
@@ -258,3 +265,37 @@ const ReviewContent = () => {
 };
 
 export default ReviewContent;
+
+const EvaluationSkeleton = () => {
+    return (
+        <ul>
+            {new Array(2).fill("").map((_, index) => (
+                <section key={index} className="animate-pulse">
+                    <div className="pb-6 pt-4 border-b border-gray-300 flex gap-4">
+                        <h4 className="text-base font-semibold h-6 w-20 bg-slate-300"></h4>
+
+                        <div className="h-5 w-14"></div>
+                    </div>
+
+                    <ul>
+                        {new Array(4).fill("").map((x, xIndex) => (
+                            <li
+                                key={xIndex}
+                                className="py-6 border-b border-gray-300"
+                            >
+                                <div className="flex items-center gap-4 mb-4">
+                                    <div className="w-10 h-10 rounded-full bg-slate-300"></div>
+                                    <div className="flex-1">
+                                        <div className="h-5 w-14 bg-slate-200"></div>
+                                        <div className="h-5 w-10 bg-slate-200"></div>
+                                    </div>
+                                </div>
+                                <p className="h-5 w-[330px] bg-slate-200"></p>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            ))}
+        </ul>
+    );
+};

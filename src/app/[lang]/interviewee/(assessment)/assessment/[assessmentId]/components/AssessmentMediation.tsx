@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
 import LoadingIndicator from "@/components/LoadingIndicator";
@@ -22,6 +22,18 @@ const AssessmentMediation = () => {
                 assessmentId as string
             ),
     });
+
+    useEffect(() => {
+        if (
+            assessmentRes &&
+            [
+                ApplicantAssessmentDetailStatus.PENDING_EVALUATION,
+                ApplicantAssessmentDetailStatus.EVALUATED,
+            ].includes(assessmentRes.data.status)
+        ) {
+            router.push(`${assessmentId}/review`);
+        }
+    }, [assessmentId, assessmentRes, router]);
 
     if (isLoading || !assessmentRes)
         return (

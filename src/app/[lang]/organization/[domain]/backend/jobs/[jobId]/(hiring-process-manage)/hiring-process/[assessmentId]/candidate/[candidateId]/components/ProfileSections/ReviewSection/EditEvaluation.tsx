@@ -16,6 +16,7 @@ import {
 } from "@/services/evaluation/evaluation.interface";
 import evaluationServices from "@/services/evaluation/evaluation.service";
 import { useAppSelector } from "@/redux/reduxHooks";
+import { isInvalidForm } from "@/helpers";
 
 import styles from "./AddEvaluation.module.scss";
 
@@ -29,21 +30,33 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
 
     const queryClient = useQueryClient();
 
+    const [loading, setLoading] = useState(false);
     const [editState, setEditState] = useState<IEvaluationDto>(data);
     const [editErr, setEditErr] = useState({
         evaluationErr: "",
         ratingErr: "",
     });
 
-    const validateAddInput = () => {
+    const inValidAddInput = (): boolean => {
+        const errors = { ...editErr };
         if (!editState.evaluation)
-            setEditErr({
-                ...editErr,
-                evaluationErr: "Evaluation comment required!",
-            });
+            errors.evaluationErr = "Evaluation comment required!";
+        if (editState.rating < 0)
+            errors.ratingErr = "Please select at least one rating!";
+
+        if (isInvalidForm(errors)) {
+            toast.error("Invalid input");
+            setEditErr(errors);
+            return true;
+        }
+
+        return false;
     };
 
     const handleEditEvaluation = async () => {
+        if (inValidAddInput()) return;
+
+        setLoading(true);
         try {
             const res = await evaluationServices.editEvaluation(editState);
             toast.success(res.message);
@@ -51,11 +64,11 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
                 queryKey: ["assessment-evaluations", candidateId],
             });
         } catch (error: any) {
-            console.error(error);
             toast.error(
                 error.message ? error.message : "Something went wrong!"
             );
         }
+        setLoading(false);
         close();
     };
 
@@ -136,6 +149,12 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
                         </button>
                     </div>
                 </div>
+                {(editErr.ratingErr || editErr.evaluationErr) && (
+                    <p className="mt-2 text-sm text-red-600 dark:text-red-500 space-y-1">
+                        <p className="font-medium">{editErr.evaluationErr} </p>
+                        <p className="font-medium">{editErr.ratingErr} </p>
+                    </p>
+                )}
             </section>
             <div className="border-t border-gray-300 py-4 px-6 flex justify-end">
                 <button
@@ -145,7 +164,13 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
                 >
                     Cancel
                 </button>
-                <Button onClick={handleEditEvaluation}>Save evaluation</Button>
+                <Button
+                    disabled={loading}
+                    isLoading={loading}
+                    onClick={handleEditEvaluation}
+                >
+                    Save evaluation
+                </Button>
             </div>
         </m.div>
     );

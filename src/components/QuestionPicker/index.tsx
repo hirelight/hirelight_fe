@@ -29,7 +29,11 @@ const QuestionPicker: React.FC<QuestionPickerProps> = ({
     pickedQuestions,
     onPickedChange,
 }) => {
-    const { data: questionsRes, error } = useQuery({
+    const {
+        data: questionsRes,
+        error,
+        isLoading,
+    } = useQuery({
         queryKey: ["questions"],
         queryFn: questionAnswerServices.getListAsync,
         select(data) {
@@ -114,20 +118,26 @@ const QuestionPicker: React.FC<QuestionPickerProps> = ({
                     </label>
                 </div>
             </div>
-            <ul className={styles.set__list__wrapper}>
-                {questionsRes
-                    ?.filter(item => filterOnSearch(item))
-                    .map((item, index) => (
-                        <li key={item.id}>
-                            <QuestionPickerCard
-                                data={item}
-                                questionNo={index}
-                                pickedQuestions={curPicks}
-                                onChange={questions => setCurPicks(questions)}
-                            />
-                        </li>
-                    ))}
-            </ul>
+            {!isLoading ? (
+                <ul className={styles.set__list__wrapper}>
+                    {questionsRes
+                        ?.filter(item => filterOnSearch(item))
+                        .map((item, index) => (
+                            <li key={item.id}>
+                                <QuestionPickerCard
+                                    data={item}
+                                    questionNo={index}
+                                    pickedQuestions={curPicks}
+                                    onChange={questions =>
+                                        setCurPicks(questions)
+                                    }
+                                />
+                            </li>
+                        ))}
+                </ul>
+            ) : (
+                <LoadingSkeleton />
+            )}
             <div>
                 <Button
                     className="mr-4"
@@ -144,3 +154,16 @@ const QuestionPicker: React.FC<QuestionPickerProps> = ({
 };
 
 export default QuestionPicker;
+
+const LoadingSkeleton = () => {
+    return (
+        <div className="animate-pulse space-y-3 my-4">
+            {new Array(8).fill("").map((_, index) => (
+                <div key={index} className="flex gap-4">
+                    <div className="h-7 w-96 bg-slate-200"></div>
+                    <div className="h-7 w-14 bg-slate-200"></div>
+                </div>
+            ))}
+        </div>
+    );
+};

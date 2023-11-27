@@ -38,9 +38,15 @@ const CustomFileInput = (props: ICustomFileInput) => {
 
             if (fileSize / 1024 / 1024 >= 200)
                 return toast.error("Maximum file size is 200MB!");
+
             const formData = new FormData();
             formData.append("formFile", fileList[0]);
-            const res = await fileServices.uploadFile(formData);
+            const res = await fileServices.uploadFile(formData, event => {
+                setProgressPer(
+                    Math.round(100 * event.loaded) / (event.total ?? 1)
+                );
+            });
+
             toast.success(res.message);
             (
                 document.getElementById(
@@ -49,24 +55,13 @@ const CustomFileInput = (props: ICustomFileInput) => {
             ).value = fileList[0].name;
             inputRef.current.value = res.data;
             setFile(fileList[0]);
-            reader.onloadstart = () => {
-                setLoading(true);
-            };
-            reader.onload = () => {};
-
-            reader.onprogress = ev => {
-                setProgressPer(Math.round((ev.loaded / ev.total) * 100));
-            };
-
-            reader.onloadend = () => setLoading(false);
-
-            reader.readAsText(fileList[0]);
         }
     };
 
     const handleResetFile = () => {
         if (inputRef.current) inputRef.current.value = "";
         setFile(undefined);
+        setProgressPer(0);
     };
 
     const handleDropFile = (ev: any) => {
@@ -172,18 +167,30 @@ const CustomFileInput = (props: ICustomFileInput) => {
                             </button>
                         </React.Fragment>
                     ) : (
-                        <React.Fragment>
-                            <button
-                                type="button"
-                                className="inline-block text-blue_primary_800 font-medium hover:underline"
-                                onClick={handleUploadFile}
-                            >
-                                Upload a file
-                            </button>{" "}
-                            <span className="text-ellipsis overflow-hidden">
-                                or drag and drop here
-                            </span>
-                        </React.Fragment>
+                        <div className="flex flex-col gap-1">
+                            <p>
+                                <button
+                                    type="button"
+                                    className="inline-block text-blue_primary_800 font-medium hover:underline"
+                                    onClick={handleUploadFile}
+                                >
+                                    Upload a file
+                                </button>{" "}
+                                <span className="text-ellipsis overflow-hidden">
+                                    or drag and drop here
+                                </span>
+                            </p>
+                            {progressPer > 0 && (
+                                <div className="mt-1 w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+                                    <div
+                                        className="bg-blue-600 h-1.5 rounded-full"
+                                        style={{
+                                            width: `${progressPer}%`,
+                                        }}
+                                    ></div>
+                                </div>
+                            )}
+                        </div>
                     )}
                     <input
                         required={props.required}

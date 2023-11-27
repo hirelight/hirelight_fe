@@ -17,7 +17,7 @@ const MemberList = () => {
     const {
         data: res,
         error,
-        isFetched,
+        isLoading,
     } = useQuery({
         queryKey: ["employers-organization"],
         queryFn: employerOrgServices.getListAsync,
@@ -41,11 +41,7 @@ const MemberList = () => {
                                 Email
                             </div>
                         </th>
-                        <th scope="col" className="hidden md:table-cell">
-                            <div className={styles.table__th__Wrppaer}>
-                                Position
-                            </div>
-                        </th>
+
                         <th scope="col" className="hidden lg:table-cell">
                             <div className={styles.table__th__wrapper}>
                                 Role
@@ -57,13 +53,17 @@ const MemberList = () => {
                     </tr>
                 </thead>
                 <tbody className="bg-slate-100 bg-opacity-75">
-                    {res?.data?.map((employer, index) => (
-                        <MemberCard
-                            key={employer.id}
-                            index={index}
-                            employer={employer}
-                        />
-                    ))}
+                    {isLoading ? (
+                        <MemberSkeleton />
+                    ) : (
+                        res?.data?.map((employer, index) => (
+                            <MemberCard
+                                key={employer.id}
+                                index={index}
+                                employer={employer}
+                            />
+                        ))
+                    )}
                 </tbody>
             </table>
             {/* <Pagination numOfPages={10} /> */}
@@ -72,3 +72,23 @@ const MemberList = () => {
 };
 
 export default MemberList;
+
+const MemberSkeleton = () => {
+    return new Array(4).fill("").map((_, index) => (
+        <tr key={index} className="">
+            <td scope="col" className="animate-pulse p-4 hidden md:table-cell">
+                <div className="w-6 h-6 bg-slate-200 rounded-md"></div>
+            </td>
+            <td scope="col" className="animate-pulse p-4 hidden md:table-cell">
+                <div className="w-full h-6 bg-slate-200 rounded-md"></div>
+            </td>
+
+            <td scope="col" className="animate-pulse p-4 hidden lg:table-cell">
+                <div className="w-full h-6 bg-slate-200 rounded-md"></div>
+            </td>
+            <td scope="col" className="animate-pulse p-4 hidden lg:table-cell">
+                <div className="w-full h-6 bg-slate-200 rounded-md"></div>
+            </td>
+        </tr>
+    ));
+};

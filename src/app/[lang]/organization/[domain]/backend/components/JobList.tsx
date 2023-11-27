@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import moment from "moment";
 
 import jobServices from "@/services/job/job.service";
 import { JobPostStatus } from "@/interfaces/job-post.interface";
@@ -49,7 +50,12 @@ const JobList: React.FC<JobListProps> = ({ initialData }) => {
             {isSuccess && (
                 <ul className="space-y-6">
                     {jobsRes?.data
-                        ?.filter(job => job.status === selectedStatus)
+                        ?.filter(job =>
+                            selectedStatus === JobPostStatus.INACTIVE
+                                ? job.status === selectedStatus &&
+                                  moment.utc(job.startTime).isAfter(moment())
+                                : job.status === selectedStatus
+                        )
                         .map(job => (
                             <li key={job.id}>
                                 <JobCard data={job} />

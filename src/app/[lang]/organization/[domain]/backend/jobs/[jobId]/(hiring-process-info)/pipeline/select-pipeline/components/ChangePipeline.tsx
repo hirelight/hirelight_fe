@@ -81,10 +81,12 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
 
         if (!selectedTemplate) errors.flowErr = "Select at least one template!";
 
-        const isInvalid = isInvalidForm(errors);
-        if (isInvalid) setFormErr({ ...errors });
+        if (isInvalidForm(errors)) {
+            setFormErr({ ...errors });
+            return true;
+        }
 
-        return isInvalid;
+        return false;
     };
 
     const handleCreateFlow = async () => {
@@ -99,6 +101,8 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
         try {
             const res = await assessmentFlowsServices.createAsync({
                 ...formState,
+                startTime: moment.parseZone(formState.startTime).utc().format(),
+                endTime: moment.parseZone(formState.endTime).utc().format(),
                 assessments: selectedTemplate!!.slice(1, -1).map(item => ({
                     name: item.name,
                     assessmentType: item.assessmentTypeName,
@@ -114,28 +118,6 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
             setIsLoading(false);
         }
     };
-
-    // const handleUpdateFlow = async () => {
-    //     if (!assessmentFlow.id) return toast.error("Id requried");
-    //     if(!selectedTemplate) return;
-
-    //     try {
-    //         const res = await assessmentFlowsServices.editAsync({
-    //             ...assessmentFlow,
-    //             id: assessmentFlow.id,
-    //             assessments: assessmentFlow.assessments.map(item => ({
-    //                 name: item.name,
-    //                 id: item.id,
-    //                 assessmentType: item.assessmentTypeName,
-    //             })),
-    //         });
-
-    //         toast.success(res.message);
-    //         router.push(`config-pipeline/${assessmentFlow.id}`);
-    //     } catch (error) {
-    //         toast.error("Create flow error");
-    //     }
-    // };
 
     return (
         <div>
@@ -166,13 +148,13 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                     <DatePicker
                         value={formState.startTime}
                         minDate={new Date()}
-                        maxDate={moment(formState.endTime)
-                            .subtract(7, "days")
-                            .toDate()}
                         onChange={date => {
                             setFormState({
                                 ...formState,
                                 startTime: date,
+                                endTime: moment(date).isAfter(formState.endTime)
+                                    ? moment(date).add(7, "days").toDate()
+                                    : formState.endTime,
                             });
                             setFormErr({
                                 ...formErr,
@@ -214,34 +196,6 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                 )}
             </div>
 
-            {/* {assessmentFlow.id && (
-                <>
-                    <h3 className="ml-2 text-xl font-semibold text-neutral-900 dark:text-gray-300 mb-4">
-                        {assessmentFlow.name}
-                    </h3>
-                    <ul className="flex gap-2 mb-8">
-                        {assessmentFlow.assessments.map(stage => (
-                            <li
-                                key={stage.name}
-                                className="flex-1 flex-shrink-0 w-0 min-w-0 text-center py-3 px-4 rounded-md flex flex-col items-center justify-between bg-white shadow-lg border border-gray-200"
-                            >
-                                <div className="w-8 h-8 text-neutral-700 mb-2">
-                                    {getIconBaseOnAssessmentType(
-                                        stage.assessmentTypeName
-                                    )}
-                                </div>
-                                <span className="text-sm text-neutral-700 font-medium max-w-full whitespace-nowrap text-ellipsis overflow-hidden ">
-                                    {stage.name}
-                                </span>
-                            </li>
-                        ))}
-                    </ul>
-                    <h4 className="text-sm font-semibold text-neutral-900 dark:text-gray-300 mb-8">
-                        Select another flow
-                    </h4>
-                </>
-            )} */}
-
             <React.Fragment>
                 {datas?.map((flow, index) => {
                     return (
@@ -257,19 +211,6 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                                         checked={index === 0}
                                         onChange={e => {
                                             if (e.currentTarget.checked) {
-                                                // dispatch(
-                                                //     setAssessmentFlow({
-                                                //         ...assessmentFlow,
-                                                //         assessments:
-                                                //             flow.assessments.map(
-                                                //                 item => ({
-                                                //                     name: item.name,
-                                                //                     assessmentTypeName:
-                                                //                         item.assessmentType,
-                                                //                 })
-                                                //             ),
-                                                //     })
-                                                // );
                                                 setSelectedTemplate(
                                                     flow.assessments.map(
                                                         item => ({

@@ -35,7 +35,7 @@ type QuestionCardProps = {
 };
 
 const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
-    const { content, tagList, difficulty, id } = data;
+    const { content, tagList, difficulty, id, organizationId } = data;
     const parsedContent = useMemo(
         () => JSON.parse(content),
         [content]
@@ -49,8 +49,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
             queryClient.invalidateQueries({ queryKey: ["questions"] });
         },
         onError: err => {
-            console.error(err);
-            toast.error("Delete question failure");
+            toast.error(err.message ? err.message : "Delete question failure");
         },
     });
 
@@ -67,6 +66,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                     title="Delete question"
                     description="Are you sure you want to delete this question? All of your data will be permanently removed. This action cannot be undone."
                     show={showDeleteAlert}
+                    loading={deleteMutation.isPending}
                     onClose={() => setShowDeleteAlert(false)}
                     onConfirm={() => handleDeleteQuestion(id)}
                 />
@@ -86,7 +86,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                     {parsedContent.type !== "essay" && (
                         <div
                             className={`grid grid-cols-1 md:grid-cols-${
-                                answers.length > 4 ? 1 : 2
+                                parsedContent.answers.length > 4 ? 1 : 2
                             } gap-6`}
                         >
                             {parsedContent.answers?.map((answer, index) => (
@@ -161,22 +161,31 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                         </div>
                     </div>
                     <div className="flex gap-4 mt-10">
-                        <Link
-                            href={`questions-bank/${id}/edit`}
-                            className="group"
-                        >
-                            <PencilIcon className="w-5 h-5 text-blue_primary_700 group-hover:hidden" />
+                        {organizationId ? (
+                            <>
+                                <Link
+                                    href={`questions-bank/${id}/edit`}
+                                    className="group"
+                                >
+                                    <PencilIcon className="w-5 h-5 text-blue_primary_700 group-hover:hidden" />
 
-                            <PencilSolid className="w-5 h-5 hidden text-blue_primary_700 group-hover:block" />
-                        </Link>
-                        <button
-                            type="button"
-                            onClick={() => setShowDeleteAlert(true)}
-                            className="group"
-                        >
-                            <TrashIcon className="w-5 h-5 text-red-500 group-hover:hidden" />
-                            <TrashSolid className="w-5 h-5 text-red-500 hidden group-hover:block" />
-                        </button>
+                                    <PencilSolid className="w-5 h-5 hidden text-blue_primary_700 group-hover:block" />
+                                </Link>
+
+                                <button
+                                    type="button"
+                                    onClick={() => setShowDeleteAlert(true)}
+                                    className="group"
+                                >
+                                    <TrashIcon className="w-5 h-5 text-red-500 group-hover:hidden" />
+                                    <TrashSolid className="w-5 h-5 text-red-500 hidden group-hover:block" />
+                                </button>
+                            </>
+                        ) : (
+                            <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
+                                Default
+                            </span>
+                        )}
                     </div>
                 </div>
             </div>

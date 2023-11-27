@@ -42,7 +42,7 @@ const SelectAttendeeList: React.FC<SelectAttendeeListProps> = ({
         };
 
         getCollaborators(jobId as string);
-    }, [jobId]);
+    }, [authUser, jobId, onSelect]);
 
     return (
         <Listbox value={selected} onChange={onSelect} multiple>

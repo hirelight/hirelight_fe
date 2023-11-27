@@ -53,9 +53,10 @@ const InvitationDropDown = () => {
     });
 
     const handleAcceptInvitation = async (orgId: string, subdomain: string) => {
-        acceptInvitationMutation.mutate(orgId);
+        await acceptInvitationMutation.mutateAsync(orgId);
         if (acceptInvitationMutation.isSuccess)
             handleRedirectOnAccept(orgId, subdomain);
+        setShowDropdown(false);
     };
 
     const handleRedirectOnAccept = async (orgId: string, subdomain: string) => {
@@ -90,10 +91,7 @@ const InvitationDropDown = () => {
             >
                 {invitationList?.data?.map(invitation => (
                     <li key={invitation.id}>
-                        <div
-                            className={styles.dropdown__item}
-                            onClick={() => setShowDropdown(false)}
-                        >
+                        <div className={styles.dropdown__item}>
                             <div>
                                 <InboxIcon className="w-6 h-6" />
                             </div>

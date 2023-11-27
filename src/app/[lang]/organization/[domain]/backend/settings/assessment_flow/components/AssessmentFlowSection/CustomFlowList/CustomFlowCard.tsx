@@ -11,6 +11,7 @@ import {
 } from "@/services/assessment-flow-templates/assessment-flow-templates.interface";
 import { IAssessmentFlow } from "@/services/assessment-flows/assessment-flows.interface";
 import assessmentFlowTemplatesServices from "@/services/assessment-flow-templates/assessment-flow-templates.service";
+import { DeleteModal, Portal } from "@/components";
 
 import AssessmentFlowForm from "../AssessmentFlowForm";
 
@@ -22,6 +23,7 @@ type CustomFlowCardProps = {
 
 const CustomFlowCard: React.FC<CustomFlowCardProps> = ({ data }) => {
     const [showEditing, setShowEditing] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
 
     const queryClient = useQueryClient();
     const updateTemplateMutation = useMutation({
@@ -34,7 +36,19 @@ const CustomFlowCard: React.FC<CustomFlowCardProps> = ({ data }) => {
             });
         },
         onError: err => {
-            console.warn(err);
+            toast.error(err.message);
+        },
+    });
+    const deleteTemplateMutation = useMutation({
+        mutationFn: (id: string) =>
+            assessmentFlowTemplatesServices.deleteByIdAsync(id),
+        onSuccess: res => {
+            toast.success(res.message);
+            queryClient.invalidateQueries({
+                queryKey: ["assessment-flow-templates"],
+            });
+        },
+        onError: err => {
             toast.error(err.message);
         },
     });
@@ -51,8 +65,22 @@ const CustomFlowCard: React.FC<CustomFlowCardProps> = ({ data }) => {
         setShowEditing(false);
     };
 
+    const handleDeleteTemplate = async () => {
+        await deleteTemplateMutation.mutateAsync(data.id!!);
+    };
+
     return (
         <>
+            <Portal>
+                <DeleteModal
+                    title="Delete template"
+                    description="Are you sure you want to delete this assessment flow template? All of your data will be permanently removed. This action cannot be undone."
+                    show={showDelete}
+                    loading={deleteTemplateMutation.isPending}
+                    onClose={() => setShowDelete(false)}
+                    onConfirm={handleDeleteTemplate}
+                />
+            </Portal>
             <div className="px-4 py-6 bg-gray-100 flex items-center justify-between text-sm group">
                 <div className="flex items-center gap-2 text-neutral-700">
                     <strong>{data.name}</strong>
@@ -81,7 +109,7 @@ const CustomFlowCard: React.FC<CustomFlowCardProps> = ({ data }) => {
                         type="button"
                         tabIndex={-1}
                         className="text-sm text-red-600 font-semibold hover:text-red-700 hover:underline"
-                        onClick={() => {}}
+                        onClick={() => setShowDelete(true)}
                     >
                         Delete
                     </button>

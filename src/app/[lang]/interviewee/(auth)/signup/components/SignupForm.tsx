@@ -36,6 +36,7 @@ const SignupForm = () => {
         password: "",
         confirmPassword: "",
     });
+    const [formErr, setFormErr] = useState({});
     const [formError, setFormError] = useState(initialErr);
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -228,8 +229,12 @@ const SignupForm = () => {
                 )}
             </div>
 
-            <Button type="submit" className="!w-full">
-                {loading && <SpinLoading className="mr-2" />}
+            <Button
+                type="submit"
+                className="!w-full"
+                disabled={loading}
+                isLoading={loading}
+            >
                 Submit
             </Button>
         </form>

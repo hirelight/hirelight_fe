@@ -7,6 +7,7 @@ import {
     setJob,
     setJobError,
 } from "@/redux/slices/job.slice";
+import { extractTextFromHtml } from "@/helpers";
 
 import styles from "./EditJobDetailForm.module.scss";
 
@@ -44,7 +45,9 @@ const DescriptionSection = () => {
                                     dispatch(
                                         setContentLength({
                                             ...contentLength,
-                                            description: text.length,
+                                            description:
+                                                extractTextFromHtml(value)
+                                                    .length,
                                         })
                                     );
                                     dispatch(
@@ -67,15 +70,9 @@ const DescriptionSection = () => {
                                         })
                                     );
                                 }}
+                                errorText={jobErr.contentErr.descriptionErr}
                                 className="flex-1"
                             />
-                            {jobErr.contentErr.descriptionErr !== "" && (
-                                <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                                    <span className="font-medium">
-                                        {jobErr.contentErr.descriptionErr}
-                                    </span>
-                                </p>
-                            )}
                         </div>
                         <div className="mb-6 flex flex-col min-h-[220px]">
                             <QuillEditorNoSSR
@@ -89,7 +86,9 @@ const DescriptionSection = () => {
                                     dispatch(
                                         setContentLength({
                                             ...contentLength,
-                                            requirements: text.length,
+                                            requirements:
+                                                extractTextFromHtml(value)
+                                                    .length,
                                         })
                                     );
                                     dispatch(
@@ -113,14 +112,8 @@ const DescriptionSection = () => {
                                     );
                                 }}
                                 className="flex-1"
+                                errorText={jobErr.contentErr.requirementsErr}
                             />
-                            {jobErr.contentErr.requirementsErr && (
-                                <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                                    <span className="font-medium">
-                                        {jobErr.contentErr.requirementsErr}{" "}
-                                    </span>
-                                </p>
-                            )}
                         </div>
                         <div className="mb-6 flex flex-col min-h-[220px]">
                             <QuillEditorNoSSR
@@ -134,7 +127,9 @@ const DescriptionSection = () => {
                                     dispatch(
                                         setContentLength({
                                             ...contentLength,
-                                            benefits: text.length,
+                                            benefits:
+                                                extractTextFromHtml(value)
+                                                    .length,
                                         })
                                     );
                                     dispatch(

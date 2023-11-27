@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import { Transition } from "@headlessui/react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { IIntegrationDto, ThirdPartyAssessment } from "@/services";
+import { IIntegrationDto } from "@/services";
 import { supportServices } from "@/utils/constants/integrations";
 import { HackerrankIcon, TestlifyLogo } from "@/icons";
-import assessmentsServices from "@/services/assessments/assessments.service";
-import { handleError } from "@/helpers";
+
+import ThirpatyAssessments from "./ThirpatyAssessments";
 
 type IntegrationCardProps = {
     data: IIntegrationDto;
@@ -36,10 +33,9 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({
     const router = useRouter();
 
     const [showList, setShowList] = useState(false);
-    const [assessments, setAssessments] = useState<ThirdPartyAssessment[]>([]);
 
     const handleShowAssessment = () => {
-        if (assessments && assessments?.length > 0) {
+        if (data.token) {
             setShowList(!showList);
         } else {
             router.push(
@@ -47,21 +43,6 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({
             );
         }
     };
-
-    useEffect(() => {
-        const getIntegrationAssessment = async (service: string) => {
-            try {
-                const res =
-                    await assessmentsServices.getListThirdParty(service);
-
-                setAssessments(res.data);
-            } catch (error: any) {
-                handleError(error);
-            }
-        };
-
-        if (data.token) getIntegrationAssessment(data.service);
-    }, [data.service, data.token]);
 
     return (
         <div>
@@ -136,48 +117,12 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({
                             },
                         }}
                     >
-                        <ul className="p-6 space-y-4">
-                            {assessments?.map(assessment => (
-                                <li key={assessment.id}>
-                                    <div className="flex items-center">
-                                        <input
-                                            id={assessment.id}
-                                            type="radio"
-                                            name={
-                                                "selected-thirdparty-assessment"
-                                            }
-                                            defaultChecked={
-                                                selected &&
-                                                selected.assessmentId ===
-                                                    assessment.id
-                                            }
-                                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                            onChange={e => {
-                                                if (e.currentTarget.checked) {
-                                                    onSelect({
-                                                        service: data.service,
-                                                        orgName:
-                                                            data.token!!.payload.split(
-                                                                ","
-                                                            )[0],
-                                                        assessmentId:
-                                                            assessment.id,
-                                                        assessmentName:
-                                                            assessment.name,
-                                                    });
-                                                }
-                                            }}
-                                        />
-                                        <label
-                                            htmlFor={assessment.id}
-                                            className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                                        >
-                                            {assessment.name}
-                                        </label>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
+                        <ThirpatyAssessments
+                            service={data.service}
+                            token={data.token}
+                            selected={selected}
+                            onSelect={onSelect}
+                        />
                     </motion.div>
                 )}
             </AnimatePresence>

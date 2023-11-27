@@ -35,13 +35,12 @@ const AssessmentFlowSection = () => {
             });
         },
         onError: err => {
-            console.warn(err);
             toast.error(err.message);
         },
     });
 
-    const handleCreateFlow = (createDto: IAssessmentFlTempDto) => {
-        createTemplateMutation.mutate({
+    const handleCreateFlow = async (createDto: IAssessmentFlTempDto) => {
+        await createTemplateMutation.mutateAsync({
             name: createDto.name,
             content: createDto.content,
         });
@@ -59,7 +58,7 @@ const AssessmentFlowSection = () => {
                             className={`${pageStyles.content__h4} flex items-center gap-2`}
                         >
                             <Logo className="text-blue_primary_300 h-5 w-5" />
-                            <span>Reporting pipeline</span>
+                            <span>Default assessment flow tempalte</span>
                             <button
                                 type="button"
                                 className="inline-flex items-center gap-1 text-blue_primary_700 font-semibold text-sm hover:text-blue_primary_800 hover:underline"
@@ -69,9 +68,9 @@ const AssessmentFlowSection = () => {
                             </button>
                         </h4>
                         <p className={pageStyles.content__subheading}>
-                            This pipeline includes common recruiting stages. You
-                            can move, edit and rename the stages to suit your
-                            hiring needs.
+                            This flow includes common assessments. You can move,
+                            edit and rename the assessments to suit your hiring
+                            needs.
                         </p>
                     </div>
 
@@ -83,12 +82,12 @@ const AssessmentFlowSection = () => {
                             className={`${pageStyles.content__h4} flex items-center gap-2`}
                         >
                             <Logo className="text-blue_primary_300 h-5 w-5" />
-                            <span>Recruiting pipeline</span>
+                            <span>Custom flow template</span>
                         </h4>
                         <div className="flex justify-between mb-6">
                             <p className={pageStyles.content__subheading}>
-                                New pipelines can be created for jobs,
-                                departments or locations.
+                                New flows can be created for jobs, departments
+                                or locations.
                             </p>
                             <button
                                 type="button"
@@ -106,6 +105,9 @@ const AssessmentFlowSection = () => {
                             <AnimatePresence>
                                 {showAdding && (
                                     <AssessmentFlowForm
+                                        isLoading={
+                                            createTemplateMutation.isPending
+                                        }
                                         onSave={handleCreateFlow}
                                         onClose={() => setShowAdding(false)}
                                     />

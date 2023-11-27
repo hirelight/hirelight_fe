@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import React, { FormEvent, createContext, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -11,7 +11,6 @@ import { useTranslation } from "@/components/InternationalizationProvider";
 import { ICreateEmailTemplatesDto } from "@/services/email-template/email-template.interface";
 import emailTemplateServices from "@/services/email-template/email-template.service";
 import { useAppSelector } from "@/redux/reduxHooks";
-import getQueryClient from "@/utils/react-query/getQueryClient";
 
 import { Locale } from "../../../../../../../../../i18n.config";
 
@@ -48,13 +47,15 @@ const AddEmailTemplate: React.FC<IAddEmailTemplate> = ({
         mutationFn: (newEmailTemplate: ICreateEmailTemplatesDto) =>
             emailTemplateServices.createAsync({
                 ...newEmailTemplate,
-                subject: `<p>${newEmailTemplate.subject}</p>`,
+                subject: `${newEmailTemplate.subject}`,
             }),
         onSuccess: res => {
             toast.success(res.message);
             queryClient.invalidateQueries({ queryKey: ["email-templates"] });
         },
-        onError: error => console.error(error),
+        onError: error => {
+            toast.error(error.message);
+        },
     });
 
     const { emailTemplateTypes } = useAppSelector(
@@ -71,7 +72,7 @@ const AddEmailTemplate: React.FC<IAddEmailTemplate> = ({
 
     const handleCreateNewTemplate = async (e: FormEvent) => {
         e.preventDefault();
-        mutation.mutate(form);
+        await mutation.mutateAsync(form);
         onSaveTemplate();
     };
 
@@ -143,7 +144,12 @@ const AddEmailTemplate: React.FC<IAddEmailTemplate> = ({
                 />
             </div>
             <div className="flex">
-                <Button type="submit" className="mr-4">
+                <Button
+                    type="submit"
+                    disabled={mutation.isPending}
+                    isLoading={mutation.isPending}
+                    className="mr-4"
+                >
                     {t.form.btn.save_template}
                 </Button>
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
@@ -25,16 +25,22 @@ const MoveCandidateDialog = () => {
     const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
 
     const [showDialog, setShowDialog] = React.useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleMoveCandidate = async (stageId: string, profileId: string) => {
+        setLoading(true);
         try {
-            const res =
-                await applicantAssessmentDetailServices.moveCandidateToAssessment(
+            await toast.promise(
+                applicantAssessmentDetailServices.moveCandidateToAssessment(
                     profileId,
                     stageId
-                );
+                ),
+                {
+                    pending: "Moving candidate",
+                    success: "Move candidate successfully!",
+                }
+            );
 
-            toast.success(res.message);
             queryClient.invalidateQueries({
                 queryKey: [`job-profiles`, jobId, assessmentId],
             });
@@ -49,6 +55,7 @@ const MoveCandidateDialog = () => {
                 error.message ? error.message : "Some thing went wrong"
             );
         }
+        setLoading(false);
         setShowDialog(false);
     };
 
@@ -87,12 +94,10 @@ const MoveCandidateDialog = () => {
                         <li key={assessment.id}>
                             <button
                                 type="button"
-                                className={`group w-full text-left text-sm ${
-                                    assessmentId === assessment.id
-                                        ? "cursor-not-allowed"
-                                        : ""
-                                }`}
-                                disabled={assessmentId === assessment.id}
+                                className={`group w-full text-left text-sm disabled:cursor-not-allowed`}
+                                disabled={
+                                    assessmentId === assessment.id || loading
+                                }
                                 onClick={handleMoveCandidate.bind(
                                     null,
                                     assessment.id,
