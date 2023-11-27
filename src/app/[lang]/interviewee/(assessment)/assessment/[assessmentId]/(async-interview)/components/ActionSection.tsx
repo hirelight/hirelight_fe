@@ -370,8 +370,6 @@ const ActionSection: React.FC<ActionSectionProps> = ({
             <div className={styles.video_controls}>
                 {canRecord &&
                     !isBreak &&
-                    remainThinkTime &&
-                    remainThinkTime > 0 &&
                     recordingStatus === "inactive" &&
                     (selectedAnswer.content.files &&
                     selectedAnswer.content.files!!.length > 0 ? (

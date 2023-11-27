@@ -3,7 +3,7 @@
 import Link from "next/link";
 import React, { FormEvent, useState } from "react";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 import { Button } from "@/components";
@@ -12,10 +12,12 @@ import { LoginCandidateDto } from "@/services/auth/auth.interface";
 import authServices from "@/services/auth/auth.service";
 import { useAppDispatch } from "@/redux/reduxHooks";
 import { setToken } from "@/redux/slices/auth.slice";
+import { fetchAccessToken } from "@/redux/thunks/auth.thunk";
 
 const LoginForm = () => {
     const router = useRouter();
-
+    const loginStatus = useSearchParams().get("status");
+    const loginId = useSearchParams().get("loginId");
     const dispatch = useAppDispatch();
 
     const [formState, setFormState] = useState<LoginCandidateDto>({
@@ -45,6 +47,25 @@ const LoginForm = () => {
         }
         setLoading(false);
     };
+
+    const getToken = React.useCallback(
+        async (loginId: string) => {
+            try {
+                await dispatch(fetchAccessToken(loginId));
+
+                router.push(`/`);
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        [dispatch, router]
+    );
+
+    React.useEffect(() => {
+        if (loginStatus && loginId) {
+            getToken(loginId);
+        }
+    }, [getToken, loginId, loginStatus, router]);
 
     return (
         <form className="space-y-6" onSubmit={handleSubmitLogin}>

@@ -9,6 +9,7 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 import { ButtonOutline, CustomInput } from "@/components";
 import { handleError } from "@/helpers";
 import meetingServices from "@/services/meeting/meeting.service";
+import { useAppSelector } from "@/redux/reduxHooks";
 
 type RescheduleModalProps = {
     meetingId: string;
@@ -21,6 +22,7 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
     show,
     close,
 }) => {
+    const token = useAppSelector(state => state.auth.token);
     const [sections, setSections] = useState<
         {
             from: string;
@@ -31,6 +33,8 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
         from: new Date(),
         to: new Date(),
     });
+
+    console.log(token);
 
     const handleSaveSection = () => {
         const { from, to } = formState;
@@ -50,7 +54,7 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
         try {
             const res = await meetingServices.employerReScheduleMeeting(
                 meetingId,
-                sections.map(item => JSON.stringify(item)).join(",")
+                JSON.stringify(sections)
             );
 
             toast.success(res.message);

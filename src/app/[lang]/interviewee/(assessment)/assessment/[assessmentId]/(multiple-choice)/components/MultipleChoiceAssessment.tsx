@@ -96,10 +96,10 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
             );
             setIsLoading(false);
             queryClient.invalidateQueries({
-                queryKey: [`my-assessment`, assesmentData!!.id],
+                queryKey: [`my-assessment`, data.id],
             });
         } catch (error: any) {
-            console.error(error);
+            console.error("Joib", error);
             toast.error(
                 error.message ? error.message : "Some thing went wrong"
             );
@@ -140,16 +140,8 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
 
             toast.success(res.message);
         } catch (error: any) {
-            console.error(error);
-            if (
-                error.statusCode &&
-                error.statusCode === 400 &&
-                error.message &&
-                error.message ===
-                    "Assessment id not valid or assessment not available for tracking." &&
-                timerId
-            )
-                clearInterval(timerId);
+            console.error("Track", error);
+
             toast.error(
                 error.message ? error.message : "Some thing went wrong"
             );
