@@ -19,13 +19,14 @@ import evaluationServices from "@/services/evaluation/evaluation.service";
 import { Button } from "@/components";
 import { ICreateEvaluationDto } from "@/services/evaluation/evaluation.interface";
 import { useAppSelector } from "@/redux/reduxHooks";
+import collaboratorsServices from "@/services/collaborators/collaborators.service";
 
 import styles from "./styles.module.scss";
 import AddEvaluationSection from "./AddEvaluationSection";
 import EvaluationCard, { getRating } from "./EvaluationCard";
 
 const ReviewContent = () => {
-    const { candidateId } = useParams();
+    const { candidateId, jobId } = useParams();
     const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
 
     const [showAdd, setShowAdd] = useState(false);
@@ -50,7 +51,7 @@ const ReviewContent = () => {
             ),
     });
 
-    const handleShowAddEvaluation = (id: string) => {
+    const handleShowAddEvaluation = async (id: string) => {
         setSelectedDetailId(id);
         setShowAdd(true);
     };
@@ -69,8 +70,7 @@ const ReviewContent = () => {
                     <BookmarkSlashIcon className="w-16 h-16 text-neutral-700" />
                     <div className="ml-6 p-2">
                         <h3 className="mb-2 text-lg font-semibold">
-                            You don’t have any evaluations for current
-                            assessment yet
+                            There is no evaluations for current assessment yet
                         </h3>
                         <p className="mb-6 text-sm">
                             Evaluations you or other team members add will
@@ -204,7 +204,18 @@ const ReviewContent = () => {
                     ))}
             </ul>
 
-            <Menu as="div" className="relative inline-block text-left py-6">
+            <button
+                type="button"
+                className="text-sm text-blue_primary_600 font-semibold hover:underline hover:text-blue_primary_800 my-6"
+                onClick={handleShowAddEvaluation.bind(
+                    null,
+                    applicantAssessmentDetail.id
+                )}
+            >
+                Add evaluation for this candidate
+            </button>
+
+            {/* <Menu as="div" className="relative inline-block text-left py-6">
                 <div>
                     <Menu.Button className="text-sm text-blue_primary_600 font-semibold hover:underline hover:text-blue_primary_800">
                         Add evaluation for this candidate
@@ -248,7 +259,7 @@ const ReviewContent = () => {
                         </div>
                     </Menu.Items>
                 </Transition>
-            </Menu>
+            </Menu> */}
 
             <LazyMotion features={domAnimation}>
                 <AnimatePresence>

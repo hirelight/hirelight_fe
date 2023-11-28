@@ -22,6 +22,7 @@ import { ButtonOutline, CountdownTimer } from "@/components";
 import { SpinLoading } from "@/icons";
 import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
 import useTrackAssessment from "@/hooks/useTrackAssessment";
+import { handleError } from "@/helpers";
 
 import styles from "./MultipleChoiceAssessment.module.scss";
 
@@ -71,9 +72,23 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
         useState<IMCAppliAssessmentDto | null>(null);
     const [displayTest, setDisplayTest] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
+    const handleTrackTest = useCallback(async () => {
+        try {
+            const res = await mcAssessmentServices.trackMCAssessment({
+                applicantAssessmentDetailId: data.id,
+                answers: answers,
+            });
+
+            toast.success(res.message);
+        } catch (error: any) {
+            console.error(error);
+        }
+    }, [answers, data.id]);
+
     const [startAutoTask, stopAutoTask] = useTrackAssessment(
         handleTrackTest,
-        30
+        5
     );
 
     const handleJoinTest = async () => {
@@ -87,16 +102,12 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
             setAnswers(
                 JSON.parse(res.data.questionAnswerSet!!) as ICandidateMCDto[]
             );
-
             setIsLoading(false);
             queryClient.invalidateQueries({
                 queryKey: [`my-assessment`, data.id],
             });
         } catch (error: any) {
-            console.error("Joib", error);
-            toast.error(
-                error.message ? error.message : "Some thing went wrong"
-            );
+            handleError(error);
             setIsLoading(false);
         }
     };
@@ -117,30 +128,10 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                 queryKey: [`my-assessment`, assesmentData!!.id],
             });
         } catch (error: any) {
-            console.error(error);
-            toast.error(
-                error.message ? error.message : "Some thing went wrong"
-            );
+            handleError(error);
             setIsLoading(false);
         }
     }, [answers, assesmentData, data.id, queryClient, stopAutoTask]);
-
-    async function handleTrackTest() {
-        try {
-            const res = await mcAssessmentServices.trackMCAssessment({
-                applicantAssessmentDetailId: data.id,
-                answers: answers,
-            });
-
-            toast.success(res.message);
-        } catch (error: any) {
-            console.error("Track", error);
-
-            toast.error(
-                error.message ? error.message : "Some thing went wrong"
-            );
-        }
-    }
 
     useEffect(() => {
         if (

@@ -57,12 +57,14 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
     const [showEdit, setShowEdit] = useState(false);
 
     const handleInviteCandidate = async () => {
+        if (!applicantAssessmentDetail!!.applicantProfile.candidateId)
+            toast.error("Please select a candidate");
         try {
             const res = await meetingServices.editMeeting({
                 id: data.id,
+                assessmentId: data.assessmentId,
                 candidateId:
-                    applicantAssessmentDetail?.applicantProfile.candidateId ??
-                    "",
+                    applicantAssessmentDetail!!.applicantProfile.candidateId,
                 startTime: data.startTime,
                 endTime: data.endTime,
                 name: data.name,
@@ -162,24 +164,21 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
 
             <div className={styles.content__wrapper}>
                 {/* ************************************Meeting date section**************************************** */}
-                <div>Date</div>
+                <div>From</div>
                 <div>
                     {moment
                         .utc(data.startTime)
                         .local()
-                        .format("dddd, MMMM Do, YYYY")}
+                        .format("dddd, MMMM Do, YYYY HH:mm A")}
                 </div>
 
                 {/* ************************************Meeting slot section**************************************** */}
-                <div>Time</div>
+                <div>To</div>
                 <div>
-                    {`${moment
-                        .utc(data.startTime)
-                        .local()
-                        .format("HH:mm A")} - ${moment
+                    {moment
                         .utc(data.endTime)
                         .local()
-                        .format("HH:mm A")}`}
+                        .format("dddd, MMMM Do, YYYY HH:mm A")}
                 </div>
 
                 {/* ************************************Attendees Section**************************************** */}

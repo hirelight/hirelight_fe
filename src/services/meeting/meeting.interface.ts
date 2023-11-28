@@ -64,7 +64,8 @@ export interface ICreateMeetings {
 
 export interface IEditMeetingDto {
     id: string;
-    candidateId: string;
+    assessmentId: string;
+    candidateId: string | null;
     startTime: Date | string;
     endTime: Date | string;
     name: string;

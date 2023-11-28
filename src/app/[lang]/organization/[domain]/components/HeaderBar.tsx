@@ -7,11 +7,12 @@ import logo from "/public/images/logo.svg";
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 
 import { Bell } from "@/icons";
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import { LocaleSwitcher } from "@/components";
-import { useAppDispatch } from "@/redux/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { logout } from "@/redux/slices/auth.slice";
 
 import styles from "./HeaderBar.module.scss";
@@ -26,6 +27,7 @@ const HeaderBar = () => {
 
     const [showAvatarDropdown, setShowAvatarDropdown] = useState(false);
 
+    const { authUser } = useAppSelector(state => state.auth);
     const avatarDropdownRef = useOutsideClick<HTMLDivElement>(() =>
         setShowAvatarDropdown(false)
     );
@@ -120,14 +122,15 @@ const HeaderBar = () => {
                                 setShowAvatarDropdown(!showAvatarDropdown)
                             }
                         >
-                            <Image
-                                alt="Avatar"
-                                src={
-                                    process.env.NEXT_PUBLIC_AVATAR_URL as string
-                                }
-                                width={40}
-                                height={40}
-                            />
+                            {authUser?.avatarUrl ? (
+                                <img
+                                    alt="Logo"
+                                    src={authUser?.avatarUrl}
+                                    className="w-10 aspect-square object-contain"
+                                />
+                            ) : (
+                                <UserCircleIcon className="w-10 aspect-square text-neutral-700" />
+                            )}
                         </button>
                         <div
                             className={`${styles.avatar__dropdown__wrapper} ${

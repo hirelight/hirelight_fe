@@ -25,45 +25,33 @@ import { ICollaboratorDto } from "@/services/collaborators/collaborators.interfa
 import meetingServices from "@/services/meeting/meeting.service";
 import { isInvalidForm } from "@/helpers";
 
-import SelectAttendeeList from "../../CandidateActionTab/ActionDrawer/SelectAttendeeList";
+import SelectAttendeeList from "./SelectAttendeeList";
 
-const backdropVariants = {
-    backdropOpen: { opacity: 1 },
-    backdropClose: { opacity: 0 },
-};
-
-const drawerVariants = {
-    drawerEnter: { translateX: 0 },
-    drawerLeave: { translateX: "100%" },
-};
-
-interface IActionDrawer {
-    title?: string;
-    description?: string;
-    onCancel?: () => void;
-    onConfirm?: () => void;
+interface IEditMeeting {
+    data: IMeetingDto;
     show?: boolean;
     onClose: () => void;
-    loading?: boolean;
-    data: IMeetingDto;
 }
 
-const people = [
-    { name: "Wade Cooper" },
-    { name: "Arlene Mccoy" },
-    { name: "Devon Webb" },
-    { name: "Tom Cook" },
-    { name: "Tanya Fox" },
-    { name: "Hellen Schmidt" },
-];
-
-const EditMeeting = ({ onClose, show, data }: IActionDrawer) => {
-    const { jobId, assessmentId, candidateId } = useParams();
+const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
+    const { assessmentId, candidateId } = useParams();
 
     const authUser = useAppSelector(state => state.auth.authUser);
     const { data: applicantAssessmentDetail } = useAppSelector(
         state => state.applicantAssessmentDetail
     );
+    const avaterDetail = useRef<IAppFormField | undefined>(
+        (
+            JSON.parse(
+                applicantAssessmentDetail!!.applicantProfile.content
+            ) as ApplicationFormJSON
+        ).form_structure
+            .find(
+                item => item.id === AppFormDefaultSection.PERSONAL_INFORMATION
+            )!!
+            .fields.find(field => field.id === "avatar")
+    );
+
     const queryClient = useQueryClient();
 
     const [formErr, setFormErr] = useState({
@@ -79,9 +67,16 @@ const EditMeeting = ({ onClose, show, data }: IActionDrawer) => {
         endTime: moment.utc(data.endTime).toDate(),
     });
     const [meetingTime, setMeetingTime] = useState({
-        startTime: moment.utc(data.startTime).toDate(),
-        endTime: moment.utc(data.endTime).toDate(),
+        startTime: moment()
+            .hours(moment.utc(data.startTime).local().hours())
+            .minutes(moment.utc(data.startTime).local().minutes())
+            .toDate(),
+        endTime: moment()
+            .hours(moment.utc(data.endTime).local().hours())
+            .minutes(moment.utc(data.endTime).local().minutes())
+            .toDate(),
     });
+    const [loading, setLoading] = useState(false);
 
     const [selected, setSelected] = useState<ICollaboratorDto[]>([]);
 
@@ -98,40 +93,48 @@ const EditMeeting = ({ onClose, show, data }: IActionDrawer) => {
             errors.meetingLinkErr = "Meeting link is required";
         }
         if (
-            moment(
-                moment(meetingTime.startTime).format("HH:mm"),
-                "HH:mm"
-            ).isAfter(
-                moment(moment(meetingTime.endTime).format("HH:mm"), "HH:mm")
-            )
+            (moment(meetingTime.startTime).isAfter(meetingTime.endTime) &&
+                moment(formState.startTime).isSameOrBefore(
+                    formState.endTime,
+                    "year"
+                )) ||
+            moment(formState.startTime).isAfter(formState.endTime, "year")
         ) {
             errors.timeErr = "Start time must not greator than end time";
+        } else if (
+            moment(meetingTime.endTime).diff(
+                moment(meetingTime.startTime),
+                "minute"
+            ) < 10
+        ) {
+            errors.timeErr = "Meeting duration must at least 10 minutes";
         }
 
-        const statusErr = isInvalidForm(errors);
-
-        if (statusErr) {
+        if (isInvalidForm(errors)) {
             setFormErr({ ...errors });
-            toast.error(
-                <div>
-                    <p>Invalid input</p>
-                    <p>Check issue in red!</p>
-                </div>,
-                {
-                    position: "top-center",
-                    autoClose: 1500,
-                }
-            );
+            return true;
         }
 
-        return statusErr;
+        return false;
     };
 
-    const handleEditMeeting = async () => {
+    const handleResetErr = (key: string) => {
+        setFormErr({
+            ...formErr,
+            [key]: "",
+        });
+    };
+
+    const handleCreateMeeting = async () => {
+        console.log(moment(meetingTime.startTime).isAfter(meetingTime.endTime));
+
         if (isInvalidFormInput()) return;
+
+        setLoading(true);
         try {
             const res = await meetingServices.editMeeting({
                 id: formState.id,
+                assessmentId: formState.assessmentId,
                 candidateId: formState.candidateId,
                 description: formState.description,
                 recordLink: formState.recordLinks,
@@ -158,20 +161,17 @@ const EditMeeting = ({ onClose, show, data }: IActionDrawer) => {
                     .format(),
             });
 
-            toast.success(res.message);
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
                 queryKey: ["meeting-list", assessmentId, candidateId],
             });
+            toast.success(res.message);
+
+            onClose();
         } catch (error: any) {
             toast.error(error.message ? error.message : "Something went wrong");
         }
-    };
 
-    const handleResetErr = (key: string) => {
-        setFormErr(prev => ({
-            ...prev,
-            [key]: "",
-        }));
+        setLoading(false);
     };
 
     const handleRemoveAttendee = (id: string) => {
@@ -238,24 +238,6 @@ const EditMeeting = ({ onClose, show, data }: IActionDrawer) => {
                                             required
                                         />
                                     </div>
-                                    <div className="mb-6">
-                                        <DatePicker
-                                            title="Date"
-                                            value={formState.startTime}
-                                            minDate={new Date()}
-                                            onChange={date => {
-                                                setFormState(prev =>
-                                                    produce(prev, draft => {
-                                                        draft.startTime = date;
-                                                        draft.endTime = date;
-                                                    })
-                                                );
-                                                handleResetErr("dateErr");
-                                            }}
-                                            required
-                                            errorText={formErr.dateErr}
-                                        />
-                                    </div>
 
                                     <div className="mb-6">
                                         <CustomInput
@@ -284,36 +266,99 @@ const EditMeeting = ({ onClose, show, data }: IActionDrawer) => {
                                         Schedule
                                     </h4>
                                     <div>
-                                        <div className="w-full flex items-center gap-2 mb-6">
-                                            <TimerPicker
-                                                value={moment(
-                                                    meetingTime.startTime
-                                                )}
-                                                onChange={value => {
-                                                    setMeetingTime(prev =>
-                                                        produce(prev, draft => {
-                                                            draft.startTime =
-                                                                value.toDate();
-                                                        })
-                                                    );
-                                                    handleResetErr("timeErr");
-                                                }}
-                                            />
-                                            <span>-</span>
-                                            <TimerPicker
-                                                value={moment(
-                                                    meetingTime.endTime
-                                                )}
-                                                onChange={value => {
-                                                    setMeetingTime(prev =>
-                                                        produce(prev, draft => {
-                                                            draft.endTime =
-                                                                value.toDate();
-                                                        })
-                                                    );
-                                                    handleResetErr("timeErr");
-                                                }}
-                                            />
+                                        <div className="w-full flex flex-col gap-2 mb-6">
+                                            <div className="flex items-end gap-2">
+                                                <DatePicker
+                                                    title="From"
+                                                    value={formState.startTime}
+                                                    minDate={new Date()}
+                                                    onChange={date => {
+                                                        setFormState(prev =>
+                                                            produce(
+                                                                prev,
+                                                                draft => {
+                                                                    draft.startTime =
+                                                                        date;
+                                                                    draft.endTime =
+                                                                        moment(
+                                                                            date
+                                                                        ).isAfter(
+                                                                            draft.endTime
+                                                                        )
+                                                                            ? date
+                                                                            : draft.endTime;
+                                                                }
+                                                            )
+                                                        );
+                                                        handleResetErr(
+                                                            "timeErr"
+                                                        );
+                                                    }}
+                                                    required
+                                                    errorText={formErr.dateErr}
+                                                />
+                                                <TimerPicker
+                                                    value={moment(
+                                                        meetingTime.startTime
+                                                    )}
+                                                    onChange={value => {
+                                                        setMeetingTime(prev =>
+                                                            produce(
+                                                                prev,
+                                                                draft => {
+                                                                    draft.startTime =
+                                                                        value.toDate();
+                                                                }
+                                                            )
+                                                        );
+                                                        handleResetErr(
+                                                            "timeErr"
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className="flex items-end gap-2">
+                                                <DatePicker
+                                                    title="To"
+                                                    value={formState.endTime}
+                                                    minDate={
+                                                        formState.startTime
+                                                    }
+                                                    maxDate={moment()
+                                                        .add(2, "months")
+                                                        .toDate()}
+                                                    onChange={date => {
+                                                        setFormState({
+                                                            ...formState,
+                                                            endTime: date,
+                                                        });
+                                                        handleResetErr(
+                                                            "timeErr"
+                                                        );
+                                                    }}
+                                                    required
+                                                    errorText={formErr.dateErr}
+                                                />
+                                                <TimerPicker
+                                                    value={moment(
+                                                        meetingTime.endTime
+                                                    )}
+                                                    onChange={value => {
+                                                        setMeetingTime(prev =>
+                                                            produce(
+                                                                prev,
+                                                                draft => {
+                                                                    draft.endTime =
+                                                                        value.toDate();
+                                                                }
+                                                            )
+                                                        );
+                                                        handleResetErr(
+                                                            "timeErr"
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
                                         </div>
                                         {formErr.timeErr && (
                                             <p className="mt-2 text-sm text-red-600 dark:text-red-500">
@@ -325,41 +370,45 @@ const EditMeeting = ({ onClose, show, data }: IActionDrawer) => {
                                     </div>
 
                                     <ul className="space-y-4">
-                                        {/* <li>
-                                            <div className="flex items-center gap-2">
-                                                {avaterDetail.current &&
-                                                avaterDetail.current.value ? (
-                                                    <Image
-                                                        src={
-                                                            avaterDetail.current
-                                                                .value.value
-                                                        }
-                                                        alt="Collaborator avatar"
-                                                        width={30}
-                                                        height={30}
-                                                        className="w-8 h-8 rounded-full object-cover"
-                                                    />
-                                                ) : (
-                                                    <div className="w-10 h-10 rounded-full text-neutral-600">
-                                                        <UserCircleIcon />
-                                                    </div>
-                                                )}
-                                                <div className="flex-1 text-sm">
-                                                    <h3 className="font-semibold">
-                                                        {applicantAssessmentDetail
-                                                            ?.applicantProfile
-                                                            .firstName +
-                                                            " " +
-                                                            applicantAssessmentDetail
+                                        {formState.candidate && (
+                                            <li>
+                                                <div className="flex items-center gap-2">
+                                                    {avaterDetail.current &&
+                                                    avaterDetail.current
+                                                        .value ? (
+                                                        <Image
+                                                            src={
+                                                                avaterDetail
+                                                                    .current
+                                                                    .value.value
+                                                            }
+                                                            alt="Collaborator avatar"
+                                                            width={30}
+                                                            height={30}
+                                                            className="w-8 h-8 rounded-full object-cover"
+                                                        />
+                                                    ) : (
+                                                        <div className="w-10 h-10 rounded-full text-neutral-600">
+                                                            <UserCircleIcon />
+                                                        </div>
+                                                    )}
+                                                    <div className="flex-1 text-sm">
+                                                        <h3 className="font-semibold">
+                                                            {applicantAssessmentDetail
                                                                 ?.applicantProfile
-                                                                .lastName}
-                                                    </h3>
-                                                    <p className="text-gray-500">
-                                                        Candidate
-                                                    </p>
+                                                                .firstName +
+                                                                " " +
+                                                                applicantAssessmentDetail
+                                                                    ?.applicantProfile
+                                                                    .lastName}
+                                                        </h3>
+                                                        <p className="text-gray-500">
+                                                            Candidate
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </li> */}
+                                            </li>
+                                        )}
                                         {selected.map(selectAttendee => (
                                             <li key={selectAttendee.id}>
                                                 <div className="flex items-center gap-2">
@@ -402,6 +451,7 @@ const EditMeeting = ({ onClose, show, data }: IActionDrawer) => {
                                             </li>
                                         ))}
                                     </ul>
+
                                     <SelectAttendeeList
                                         selected={selected}
                                         onSelect={value => setSelected(value)}
@@ -426,8 +476,12 @@ const EditMeeting = ({ onClose, show, data }: IActionDrawer) => {
                                     />
                                 </div>
                                 <div className="p-6 border-t border-gray-300 flex-shrink-0 flex justify-end">
-                                    <Button onClick={handleEditMeeting}>
-                                        Create meeting
+                                    <Button
+                                        disabled={loading}
+                                        isLoading={loading}
+                                        onClick={handleCreateMeeting}
+                                    >
+                                        Save meeting
                                     </Button>
                                 </div>
                             </Dialog.Panel>

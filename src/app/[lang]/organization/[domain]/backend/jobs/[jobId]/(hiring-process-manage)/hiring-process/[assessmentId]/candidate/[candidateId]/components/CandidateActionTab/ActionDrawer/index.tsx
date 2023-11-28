@@ -103,7 +103,8 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
     const [selected, setSelected] = useState<ICollaboratorDto[]>([]);
 
     const isInvalidFormInput = (): boolean => {
-        const { name, meetingLink, description, startTime } = formState;
+        const { name, meetingLink, description, startTime, endTime } =
+            formState;
 
         let errors = formErr;
 
@@ -115,27 +116,34 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
             errors.meetingLinkErr = "Meeting link is required";
         }
 
-        if (moment(meetingTime.startTime).isAfter(meetingTime.endTime)) {
+        if (
+            (moment(meetingTime.startTime).isAfter(meetingTime.endTime) &&
+                moment(startTime).isSameOrBefore(moment(endTime), "date")) ||
+            moment(startTime).isAfter(moment(endTime))
+        ) {
             errors.timeErr = "Start time must not greator than end time";
+        } else if (
+            moment(meetingTime.endTime).diff(
+                moment(meetingTime.startTime),
+                "minute"
+            ) < 10
+        ) {
+            errors.timeErr = "Meeting duration must at least 10 minutes";
         }
 
-        const statusErr = isInvalidForm(errors);
-
-        if (statusErr) {
+        if (isInvalidForm(errors)) {
             setFormErr({ ...errors });
-            toast.error(
-                <div>
-                    <p>Invalid input</p>
-                    <p>Check issue in red!</p>
-                </div>,
-                {
-                    position: "top-center",
-                    autoClose: 1500,
-                }
-            );
+            return true;
         }
 
-        return statusErr;
+        return false;
+    };
+
+    const handleResetErr = (key: string) => {
+        setFormErr({
+            ...formErr,
+            [key]: "",
+        });
     };
 
     const handleCreateMeeting = async () => {
@@ -170,22 +178,17 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                 },
             ]);
 
-            toast.success(res.message);
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
                 queryKey: ["meeting-list", assessmentId, candidateId],
             });
+            toast.success(res.message);
+
+            onClose();
         } catch (error: any) {
             toast.error(error.message ? error.message : "Something went wrong");
         }
 
         setLoading(false);
-    };
-
-    const handleResetErr = (key: string) => {
-        setFormErr(prev => ({
-            ...prev,
-            [key]: "",
-        }));
     };
 
     const handleRemoveAttendee = (id: string) => {
@@ -252,24 +255,6 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                             required
                                         />
                                     </div>
-                                    <div className="mb-6">
-                                        <DatePicker
-                                            title="Date"
-                                            value={formState.startTime}
-                                            minDate={new Date()}
-                                            onChange={date => {
-                                                setFormState(prev =>
-                                                    produce(prev, draft => {
-                                                        draft.startTime = date;
-                                                        draft.endTime = date;
-                                                    })
-                                                );
-                                                handleResetErr("dateErr");
-                                            }}
-                                            required
-                                            errorText={formErr.dateErr}
-                                        />
-                                    </div>
 
                                     <div className="mb-6">
                                         <CustomInput
@@ -298,36 +283,99 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                         Schedule
                                     </h4>
                                     <div>
-                                        <div className="w-full flex items-center gap-2 mb-6">
-                                            <TimerPicker
-                                                value={moment(
-                                                    meetingTime.startTime
-                                                )}
-                                                onChange={value => {
-                                                    setMeetingTime(prev =>
-                                                        produce(prev, draft => {
-                                                            draft.startTime =
-                                                                value.toDate();
-                                                        })
-                                                    );
-                                                    handleResetErr("timeErr");
-                                                }}
-                                            />
-                                            <span>-</span>
-                                            <TimerPicker
-                                                value={moment(
-                                                    meetingTime.endTime
-                                                )}
-                                                onChange={value => {
-                                                    setMeetingTime(prev =>
-                                                        produce(prev, draft => {
-                                                            draft.endTime =
-                                                                value.toDate();
-                                                        })
-                                                    );
-                                                    handleResetErr("timeErr");
-                                                }}
-                                            />
+                                        <div className="w-full flex flex-col gap-2 mb-6">
+                                            <div className="flex items-end gap-2">
+                                                <DatePicker
+                                                    title="From"
+                                                    value={formState.startTime}
+                                                    minDate={new Date()}
+                                                    onChange={date => {
+                                                        setFormState(prev =>
+                                                            produce(
+                                                                prev,
+                                                                draft => {
+                                                                    draft.startTime =
+                                                                        date;
+                                                                    draft.endTime =
+                                                                        moment(
+                                                                            date
+                                                                        ).isAfter(
+                                                                            draft.endTime
+                                                                        )
+                                                                            ? date
+                                                                            : draft.endTime;
+                                                                }
+                                                            )
+                                                        );
+                                                        handleResetErr(
+                                                            "timeErr"
+                                                        );
+                                                    }}
+                                                    required
+                                                    errorText={formErr.dateErr}
+                                                />
+                                                <TimerPicker
+                                                    value={moment(
+                                                        meetingTime.startTime
+                                                    )}
+                                                    onChange={value => {
+                                                        setMeetingTime(prev =>
+                                                            produce(
+                                                                prev,
+                                                                draft => {
+                                                                    draft.startTime =
+                                                                        value.toDate();
+                                                                }
+                                                            )
+                                                        );
+                                                        handleResetErr(
+                                                            "timeErr"
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className="flex items-end gap-2">
+                                                <DatePicker
+                                                    title="To"
+                                                    value={formState.endTime}
+                                                    minDate={moment(
+                                                        formState.startTime
+                                                    ).toDate()}
+                                                    maxDate={moment()
+                                                        .add(2, "months")
+                                                        .toDate()}
+                                                    onChange={date => {
+                                                        setFormState({
+                                                            ...formState,
+                                                            endTime: date,
+                                                        });
+                                                        handleResetErr(
+                                                            "timeErr"
+                                                        );
+                                                    }}
+                                                    required
+                                                    errorText={formErr.dateErr}
+                                                />
+                                                <TimerPicker
+                                                    value={moment(
+                                                        meetingTime.endTime
+                                                    )}
+                                                    onChange={value => {
+                                                        setMeetingTime(prev =>
+                                                            produce(
+                                                                prev,
+                                                                draft => {
+                                                                    draft.endTime =
+                                                                        value.toDate();
+                                                                }
+                                                            )
+                                                        );
+                                                        handleResetErr(
+                                                            "timeErr"
+                                                        );
+                                                    }}
+                                                />
+                                            </div>
                                         </div>
                                         {formErr.timeErr && (
                                             <p className="mt-2 text-sm text-red-600 dark:text-red-500">

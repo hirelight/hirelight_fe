@@ -285,9 +285,17 @@ const ActionSection: React.FC<ActionSectionProps> = ({
                 });
             }
         }
-        window.addEventListener("beforeunload", saveCurAnswerState);
+        window.addEventListener("beforeunload", function (e) {
+            e.preventDefault();
+            return `You have unsaved changes! Do you really want to leave?`;
+        });
+        window.addEventListener("unload", saveCurAnswerState);
         return () => {
-            window.removeEventListener("beforeunload", saveCurAnswerState);
+            window.removeEventListener("beforeunload", function (e) {
+                e.preventDefault();
+                return `You have unsaved changes! Do you really want to leave?`;
+            });
+            window.removeEventListener("unload", saveCurAnswerState);
         };
     }, [
         curPos,
@@ -372,6 +380,7 @@ const ActionSection: React.FC<ActionSectionProps> = ({
                 {canRecord &&
                     !isBreak &&
                     recordingStatus === "inactive" &&
+                    !isUploading &&
                     (selectedAnswer.content.files &&
                     selectedAnswer.content.files!!.length > 0 ? (
                         <RetakeCountDown

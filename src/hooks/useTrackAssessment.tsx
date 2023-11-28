@@ -27,7 +27,7 @@ const useTrackAssessment = (
         return () => {
             stopAutoTask();
         };
-    }, [taskFunction, intervalInSeconds]);
+    }, [taskFunction]);
 
     return [startAutoTask, stopAutoTask];
 };

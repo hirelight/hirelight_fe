@@ -14,8 +14,6 @@ const IntervieweeAuthWrapper = ({
     const { lang } = useParams();
     const token = decryptData("hirelight_access_token");
 
-    if (!token) router.push(`/${lang}/login`);
-
     useEffect(() => {
         if (!token) router.push(`/${lang}/login`);
     }, [lang, router, token]);

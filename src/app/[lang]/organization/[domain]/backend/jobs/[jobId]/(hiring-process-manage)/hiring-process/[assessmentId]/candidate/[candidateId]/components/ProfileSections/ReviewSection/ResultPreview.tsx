@@ -165,15 +165,16 @@ const ResultPreview: React.FC<ResultPreviewProps> = ({
 
                                 <div className="mt-4">
                                     {data.assessment.assessmentTypeName ===
-                                        "MULTIPLE_CHOICE_QUESTION_ASSESSMENT" && (
-                                        <button
-                                            type="button"
-                                            className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                                            onClick={close}
-                                        >
-                                            Result: {data.result}%
-                                        </button>
-                                    )}
+                                        "MULTIPLE_CHOICE_QUESTION_ASSESSMENT" &&
+                                        data.result !== null && (
+                                            <button
+                                                type="button"
+                                                className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                                onClick={close}
+                                            >
+                                                Result: {data.result}%
+                                            </button>
+                                        )}
                                 </div>
                             </Dialog.Panel>
                         </Transition.Child>

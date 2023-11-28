@@ -66,10 +66,11 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
         setLoading(true);
         try {
             const res = await evaluationServices.createEvaluation(addState);
-            toast.success(res.message);
-            queryClient.invalidateQueries({
+
+            await queryClient.invalidateQueries({
                 queryKey: ["assessment-evaluations", candidateId],
             });
+            toast.success(res.message);
         } catch (error: any) {
             toast.error(
                 error.message ? error.message : "Something went wrong!"
@@ -159,20 +160,21 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
                         </button>
                     </div>
                     {(addErr.ratingErr || addErr.evaluationErr) && (
-                        <p className="mt-2 text-sm text-red-600 dark:text-red-500 space-y-1">
+                        <div className="mt-2 text-sm text-red-600 dark:text-red-500 space-y-1">
                             <p className="font-medium">
                                 {addErr.evaluationErr}{" "}
                             </p>
                             <p className="font-medium">{addErr.ratingErr} </p>
-                        </p>
+                        </div>
                     )}
                 </div>
             </section>
             <div className="border-t border-gray-300 py-4 px-6 flex justify-end">
                 <button
                     type="button"
-                    className="text-neutral-600 font-semibold text-sm mr-4 hover:underline"
+                    className="text-neutral-600 font-semibold text-sm mr-4 hover:underline disabled:cursor-not-allowed"
                     onClick={close}
+                    disabled={loading}
                 >
                     Cancel
                 </button>

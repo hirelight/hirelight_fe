@@ -15,12 +15,13 @@ import {
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
 import { useAppSelector } from "@/redux/reduxHooks";
 import meetingServices from "@/services/meeting/meeting.service";
+import { handleError } from "@/helpers";
 
 import MoveCandidateDialog from "./MoveCandidateDialog";
 import styles from "./CandidateActionTabs.module.scss";
@@ -37,10 +38,13 @@ const Tooltip = dynamic(
 );
 const CandidateActionTabs = () => {
     const { assessmentId, jobId, lang, candidateId } = useParams();
+    const router = useRouter();
 
     const queryClient = useQueryClient();
-    const router = useRouter();
+
     const [showDrawer, setShowDrawer] = React.useState(false);
+
+    const [sendLoading, setSendLoading] = useState(false);
     const [loading, setLoading] = useState(false);
     const assessments = useAppSelector(
         state => state.assessmentFlow.data.assessments
@@ -60,7 +64,7 @@ const CandidateActionTabs = () => {
     );
 
     const handleSendAssessment = async () => {
-        setLoading(true);
+        setSendLoading(true);
         try {
             await toast.promise(
                 applicantAssessmentDetailServices.sendAssessment(
@@ -72,9 +76,9 @@ const CandidateActionTabs = () => {
                 }
             );
         } catch (error: any) {
-            toast.error(error.message ? error.message : "Something went wrong");
+            handleError(error);
         }
-        setLoading(false);
+        setSendLoading(false);
     };
 
     const handleMoveCandidate = async () => {
@@ -101,9 +105,7 @@ const CandidateActionTabs = () => {
                 `/${lang}/backend/jobs/${jobId}/hiring-process/${assessmentId}`
             );
         } catch (error: any) {
-            toast.error(
-                error.message ? error.message : "Some thing went wrong"
-            );
+            handleError(error);
         }
         setLoading(false);
     };
@@ -116,15 +118,18 @@ const CandidateActionTabs = () => {
             />
             <div className="sticky -top-4">
                 <div className="bg-white absolute top-6 right-3 py-2 px-4 flex items-center gap-4 rounded-md shadow-md text-neutral-600">
-                    <Tooltip content="Create event">
-                        <button
-                            type="button"
-                            className={styles.candidate__action__btn}
-                            onClick={() => setShowDrawer(true)}
-                        >
-                            <CalendarDaysIcon className="w-6 h-6" />
-                        </button>
-                    </Tooltip>
+                    {applicantAssessmentDetail.assessment.assessmentTypeName ===
+                        "LIVE_VIDEO_INTERVIEW_ASSESSMENT" && (
+                        <Tooltip content="Create event">
+                            <button
+                                type="button"
+                                className={styles.candidate__action__btn}
+                                onClick={() => setShowDrawer(true)}
+                            >
+                                <CalendarDaysIcon className="w-6 h-6" />
+                            </button>
+                        </Tooltip>
+                    )}
                     <Tooltip content="Send assessment">
                         <button
                             type="button"
@@ -132,7 +137,7 @@ const CandidateActionTabs = () => {
                                 styles.candidate__action__btn +
                                 " disabled:cursor-not-allowed disabled:opacity-60"
                             }
-                            disabled={loading}
+                            disabled={sendLoading}
                             onClick={handleSendAssessment}
                         >
                             <PaperAirplaneIcon className="w-6 h-6" />

@@ -19,6 +19,7 @@ import employerOrgServices from "@/services/employer-organization/employer-organ
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
 import { DeleteModal, Portal } from "@/components";
 import evaluationServices from "@/services/evaluation/evaluation.service";
+import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
 
 import AddEvaluationSection from "./AddEvaluationSection";
 import EditEvaluation from "./EditEvaluation";
@@ -135,15 +136,17 @@ const EvaluationCard: React.FC<EvaluationCardProps> = ({ data }) => {
                 </div>
 
                 {userInfo &&
-                    userInfo.userId === collabRes?.data.employerDto.id && (
+                    userInfo.userId === collabRes?.data.employerDto.id &&
+                    data.applicantAssessmentDetail.status !==
+                        ApplicantAssessmentDetailStatus.MOVED && (
                         <div className="flex items-center gap-2 text-neutral-700">
-                            <button
+                            {/* <button
                                 type="button"
                                 className="block p-1 hover:bg-slate-200 bg-opacity-70 rounded"
                                 onClick={() => setShowDelete(true)}
                             >
                                 <TrashIcon className="w-5 h-5" />
-                            </button>
+                            </button> */}
                             <button
                                 type="button"
                                 className="block p-1 hover:bg-slate-200 bg-opacity-70 rounded"
