@@ -80,12 +80,18 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({ data }) => {
             handleUpdateIntegration({
                 id: integration.token.id,
                 service: integration.token.service,
-                payload: `${integrationOrgName},${integrationToken}`,
+                payload:
+                    data.service === "HACKERRANK"
+                        ? integrationToken
+                        : `${integrationOrgName},${integrationToken}`,
             });
         } else {
             handleCreateIntegration({
                 service: integration.service,
-                payload: `${integrationOrgName},${integrationToken}`,
+                payload:
+                    data.service === "HACKERRANK"
+                        ? integrationToken
+                        : `${integrationOrgName},${integrationToken}`,
             });
         }
     };
