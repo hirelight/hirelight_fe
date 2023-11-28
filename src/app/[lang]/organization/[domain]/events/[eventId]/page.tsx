@@ -1,8 +1,8 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import moment from "moment";
 import Link from "next/link";
 import Image from "next/image";
@@ -14,6 +14,8 @@ import meetingServices from "@/services/meeting/meeting.service";
 import LoadingIndicator from "@/components/LoadingIndicator";
 import { Button, ButtonOutline, CustomInput } from "@/components";
 import { useAppSelector } from "@/redux/reduxHooks";
+import { handleError } from "@/helpers";
+import { SpinLoading } from "@/icons";
 
 import styles from "./styles.module.scss";
 import RescheduleModal from "./components/RescheduleModal";
@@ -46,16 +48,45 @@ const EventInfoPage = () => {
         queryKey: ["meeting", eventId],
         queryFn: () => meetingServices.getMeetingById(eventId as string),
     });
-    const [selected, setSelected] = useState(
-        plans.find(
-            item =>
-                item.value ===
-                meeting?.data.employerMeetingRefs.find(
-                    employer => employer.employerId === (authUser?.userId ?? "")
-                )?.status
-        )
-    );
+
+    const employerData = useMemo(() => {
+        if (meeting)
+            return meeting.data.employerMeetingRefs.find(
+                employer => employer.employerId === authUser!!.userId
+            );
+        else return;
+    }, [authUser, meeting]);
+
     const [showReschedule, setShowSchedule] = useState(false);
+
+    const queryClient = useQueryClient();
+    const acceptMeetingMutate = useMutation({
+        mutationKey: ["accept-meeting", eventId],
+        mutationFn: (id: string) => meetingServices.employerAcceptMeeting(id),
+        onSuccess: async res => {
+            await queryClient.invalidateQueries({
+                queryKey: ["meeting", eventId],
+            });
+            toast.success(res.message);
+        },
+        onError: err => {
+            handleError(err);
+        },
+    });
+
+    const declineMeetingMutate = useMutation({
+        mutationKey: ["accept-meeting", eventId],
+        mutationFn: (id: string) => meetingServices.employerDeclineMeeting(id),
+        onSuccess: async res => {
+            await queryClient.invalidateQueries({
+                queryKey: ["meeting", eventId],
+            });
+            toast.success(res.message);
+        },
+        onError: err => {
+            handleError(err);
+        },
+    });
 
     const getImageNode = (url?: string) => {
         if (url)
@@ -76,32 +107,12 @@ const EventInfoPage = () => {
             );
     };
 
-    const handleResponse = async (val: string) => {
-        try {
-            switch (val) {
-                case "MEETING_ACCEPTED": {
-                    const res = await meetingServices.employerAcceptMeeting(
-                        meeting?.data.id ?? ""
-                    );
-                    toast.success(res.message);
-                    break;
-                }
+    const handleAccept = () => {
+        acceptMeetingMutate.mutate(eventId as string);
+    };
 
-                case "MEETING_DECLINED": {
-                    const res = await meetingServices.employerDeclineMeeting(
-                        meeting?.data.id ?? ""
-                    );
-                    toast.success(res.message);
-                    break;
-                }
-                case "MEETING_RESCHEDULE": {
-                    setShowSchedule(true);
-                    break;
-                }
-            }
-        } catch (error: any) {
-            toast.error(error.message ? error.message : "");
-        }
+    const handleDecline = () => {
+        declineMeetingMutate.mutate(eventId as string);
     };
 
     if (isLoading || !isSuccess)
@@ -111,17 +122,22 @@ const EventInfoPage = () => {
             </div>
         );
 
-    console.log(
-        meeting.data.endTime,
-        moment.utc(meeting.data.endTime).local().format()
-    );
-
     return (
         <main className="bg-slate-100">
             <RescheduleModal
                 meetingId={meeting.data.id}
                 show={showReschedule}
                 close={() => setShowSchedule(false)}
+                scheduleTime={
+                    employerData && employerData.scheduleTime
+                        ? JSON.parse(employerData.scheduleTime).map(
+                              (item: any) => ({
+                                  from: moment.utc(item.from).local().format(),
+                                  to: moment.utc(item.to).local().format(),
+                              })
+                          )
+                        : null
+                }
             />
             <header className="bg-white flex flex-col items-center justify-center p-6 mb-8 drop-shadow-lg">
                 <h1 className="uppercase text-2xl text-blue_primary_700">
@@ -202,61 +218,59 @@ const EventInfoPage = () => {
                     </div>
                     <div>
                         <h3 className={styles.subsection_title}>Response</h3>
-                        <div className="w-full mb-6">
-                            <RadioGroup
-                                defaultValue={selected}
-                                onChange={val => {
-                                    setSelected(val);
-                                    if (val) handleResponse(val.value);
-                                }}
+                        <div className="w-full mb-6 flex gap-4">
+                            <button
+                                type="button"
+                                disabled={
+                                    acceptMeetingMutate.isPending ||
+                                    declineMeetingMutate.isPending
+                                }
+                                className={`border-2 border-blue-800 hover:bg-blue-800 hover:text-white focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 disabled:cursor-not-allowed disabled:opacity-80 ${
+                                    meeting.data &&
+                                    meeting.data.status === "MEETING_ACCEPTED"
+                                        ? "bg-blue-600 text-white"
+                                        : "bg-white text-neutral-900"
+                                }`}
+                                onClick={handleAccept}
                             >
-                                <RadioGroup.Label className="sr-only">
-                                    meeting response
-                                </RadioGroup.Label>
-                                <div className="flex gap-4">
-                                    {plans.map(plan => (
-                                        <RadioGroup.Option
-                                            key={plan.value}
-                                            value={plan}
-                                            className={({ active, checked }) =>
-                                                `${
-                                                    active
-                                                        ? "ring-2 ring-white/60 ring-offset-2 ring-offset-sky-300"
-                                                        : ""
-                                                }
-                  ${checked ? "bg-blue_primary_700 text-white" : "bg-white"}
-                    relative flex cursor-pointer rounded-lg px-4 py-2 border border-gray-300 shadow-md focus:outline-none`
-                                            }
-                                            onClick={() => {
-                                                if (
-                                                    plan.value ===
-                                                    "MEETING_RESCHEDULE"
-                                                )
-                                                    handleResponse(plan.value);
-                                            }}
-                                        >
-                                            {({ active, checked }) => (
-                                                <div className="flex w-full items-center justify-between">
-                                                    <div className="flex items-center">
-                                                        <div className="text-sm">
-                                                            <RadioGroup.Label
-                                                                as="p"
-                                                                className={`font-medium  ${
-                                                                    checked
-                                                                        ? "text-white"
-                                                                        : "text-gray-900"
-                                                                }`}
-                                                            >
-                                                                {plan.name}
-                                                            </RadioGroup.Label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </RadioGroup.Option>
-                                    ))}
-                                </div>
-                            </RadioGroup>
+                                Accept
+                                {acceptMeetingMutate.isPending && (
+                                    <SpinLoading className="ml-2" />
+                                )}
+                            </button>
+
+                            <button
+                                type="button"
+                                disabled={
+                                    declineMeetingMutate.isPending ||
+                                    acceptMeetingMutate.isPending
+                                }
+                                className={`border-2 border-red-700 focus:outline-none hover:bg-red-700 hover:text-white focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 disabled:cursor-not-allowed disabled:opacity-80 ${
+                                    meeting.data &&
+                                    meeting.data.status === "MEETING_DECLINED"
+                                        ? "bg-red-500 text-white"
+                                        : "bg-white text-neutral-900"
+                                }`}
+                                onClick={handleDecline}
+                            >
+                                Decline
+                                {declineMeetingMutate.isPending && (
+                                    <SpinLoading className="ml-2" />
+                                )}
+                            </button>
+
+                            <button
+                                type="button"
+                                className={`border-2 border-yellow-500 focus:outline-none hover:bg-yellow-500 hover:text-white focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900 ${
+                                    meeting.data &&
+                                    meeting.data.status === "MEETING_SCHEDULING"
+                                        ? "bg-yellow-400 text-white"
+                                        : "bg-white text-neutral-900"
+                                }`}
+                                onClick={() => setShowSchedule(true)}
+                            >
+                                Reschedule
+                            </button>
                         </div>
                     </div>
                 </div>

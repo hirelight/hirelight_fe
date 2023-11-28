@@ -3,6 +3,7 @@ import Image from "next/image";
 import {
     ArrowTopRightOnSquareIcon,
     CheckIcon,
+    MinusIcon,
     PaperAirplaneIcon,
     QuestionMarkCircleIcon,
     TrashIcon,
@@ -298,8 +299,8 @@ const MeetingStatusBadge = ({ status }: { status: MeetingStatus }) => {
             );
         case "MEETING_SCHEDULING":
             return (
-                <div className="bg-white rounded-full border border-white absolute bottom-0 right-0 shadow-lg p-[0.5px]">
-                    <QuestionMarkCircleIcon className="w-3 h-3 text-blue-500" />
+                <div className="bg-amber-500 rounded-full border border-white absolute bottom-0 right-0 shadow-lg p-[0.5px]">
+                    <MinusIcon className="w-3 h-3 text-white" />
                 </div>
             );
         default:

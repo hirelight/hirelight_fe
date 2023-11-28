@@ -169,12 +169,7 @@ const employerReScheduleMeeting = async (
     try {
         const res = await interceptor.put<IResponse<any>>(
             endpoints.MEETINGS + `/reschedule-employer/${meetingId}`,
-            scheduleTime,
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            }
+            { scheduleTime }
         );
 
         checkResErr(res.data);
@@ -221,7 +216,7 @@ const candidateReScheduleMeeting = async (
     try {
         const res = await interceptor.put<IResponse<any>>(
             endpoints.MEETINGS + `/reschedule-candidate/${meetingId}`,
-            scheduleTime
+            { scheduleTime }
         );
 
         checkResErr(res.data);
