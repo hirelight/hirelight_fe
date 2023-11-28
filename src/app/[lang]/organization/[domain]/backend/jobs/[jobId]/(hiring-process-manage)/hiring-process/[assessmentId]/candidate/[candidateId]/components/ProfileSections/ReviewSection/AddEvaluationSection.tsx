@@ -82,6 +82,11 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
     const handleRating = (value: number) => {
         if (value === addState.rating) setAddState({ ...addState, rating: -1 });
         else setAddState({ ...addState, rating: value });
+
+        setAddErr({
+            ...addErr,
+            ratingErr: "",
+        });
     };
 
     return (
@@ -116,6 +121,10 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
                             setAddState({
                                 ...addState,
                                 evaluation: e.currentTarget.value,
+                            });
+                            setAddErr({
+                                ...addErr,
+                                evaluationErr: "",
                             });
                         }}
                     />

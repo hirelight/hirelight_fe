@@ -76,6 +76,11 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
         if (value === editState.rating)
             setEditState({ ...editState, rating: -1 });
         else setEditState({ ...editState, rating: value });
+
+        setEditErr({
+            ...editErr,
+            ratingErr: "",
+        });
     };
 
     useEffect(() => {
@@ -115,6 +120,11 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
                             setEditState({
                                 ...editState,
                                 evaluation: e.currentTarget.value,
+                            });
+
+                            setEditErr({
+                                ...editErr,
+                                evaluationErr: "",
                             });
                         }}
                     />

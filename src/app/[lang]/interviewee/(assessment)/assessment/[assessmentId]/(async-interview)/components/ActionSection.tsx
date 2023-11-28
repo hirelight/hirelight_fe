@@ -160,8 +160,8 @@ const ActionSection: React.FC<ActionSectionProps> = ({
 
         mediaRecorder.stop();
         mediaRecorder.onstop = async () => {
+            setIsUploading(true);
             try {
-                setIsUploading(true);
                 const videoBlob = new Blob(videoChunks, { type: mimeType });
                 const myFile = new File([videoBlob], `takes-${uuid()}`, {
                     type: mimeType,
@@ -380,11 +380,11 @@ const ActionSection: React.FC<ActionSectionProps> = ({
                                 setIsBreak(true);
                             }}
                             onEnd={handleMoveNext}
-                            loading={assessmentLoading}
+                            loading={isUploading}
                         />
                     ) : (
                         <Button
-                            disabled={assessmentLoading}
+                            disabled={isUploading}
                             onClick={handleStartRecord}
                             type="button"
                         >
@@ -394,7 +394,7 @@ const ActionSection: React.FC<ActionSectionProps> = ({
 
                 {recordingStatus === "recording" && (
                     <ButtonOutline
-                        isLoading={assessmentLoading}
+                        isLoading={isUploading}
                         onClick={stopRecording}
                         type="button"
                     >
@@ -403,7 +403,7 @@ const ActionSection: React.FC<ActionSectionProps> = ({
                 )}
                 {canMoveNext && !isBreak && recordingStatus === "inactive" && (
                     <ButtonOutline
-                        disabled={assessmentLoading}
+                        disabled={isUploading}
                         onClick={handleMoveNext}
                         type="button"
                     >
@@ -415,7 +415,7 @@ const ActionSection: React.FC<ActionSectionProps> = ({
             {canFinishAssessment && (
                 <div className="flex justify-center">
                     <ButtonOutline
-                        disabled={assessmentLoading}
+                        disabled={isUploading}
                         onClick={handleGotoReview}
                     >
                         Finish assessment

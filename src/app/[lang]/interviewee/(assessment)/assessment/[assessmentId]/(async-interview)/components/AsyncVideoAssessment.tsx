@@ -112,7 +112,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
 
     const handleSetupOnJoin = (): number => {
         const curStateString = localStorage.getItem(data.id);
-        if (curStateString && answers.length) {
+        if (curStateString) {
             let parsedCurState = JSON.parse(curStateString) as AnswerState;
 
             if (!parsedCurState.startQuestionTime) {
@@ -130,6 +130,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
             localStorage.setItem(
                 data.id,
                 JSON.stringify({
+                    answerPos: 0,
                     startQuestionTime: new Date(),
                 })
             );

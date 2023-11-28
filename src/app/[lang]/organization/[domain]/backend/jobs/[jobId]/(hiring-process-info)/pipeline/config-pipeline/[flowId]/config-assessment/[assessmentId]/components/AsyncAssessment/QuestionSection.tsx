@@ -122,10 +122,10 @@ const QuestionSection = ({
                 key={data.id}
                 className="border-b last:border-b-0 border-slate-200 text-neutral-700 flex items-stretch"
             >
-                <div className="flex-1 flex items-center justify-between gap-8 p-4">
-                    <div className="w-3/5 flex gap-1">
+                <div className="max-w-full flex-1 flex items-center justify-between gap-8 p-4">
+                    <div className="w-3/5 overflow-hidden flex gap-1">
                         <div
-                            className="inline-block"
+                            className="inline-block text-ellipsis ql-editor !p-0"
                             dangerouslySetInnerHTML={{
                                 __html: data.content.name,
                             }}

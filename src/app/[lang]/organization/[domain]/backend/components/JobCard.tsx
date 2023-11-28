@@ -16,6 +16,7 @@ import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import { JobPostStatus } from "@/interfaces/job-post.interface";
 import { useAppSelector } from "@/redux/reduxHooks";
+import { Roles } from "@/services";
 
 const TooltipNoSSR = dynamic(
     () => import("flowbite-react").then(mod => mod.Tooltip),
@@ -90,19 +91,21 @@ const JobCard: React.FC<JobCardProps> = ({
                     </span>
                 </div>
                 <div className="flex gap-4 items-center">
-                    {status === JobPostStatus.PENDING_APPROVAL && (
-                        <button
-                            type="button"
-                            className="focus:outline-none text-white bg-green-500 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-1 dark:bg-green-600 dark:hover:bg-green-800 dark:focus:ring-green-700 hidden md:block disabled:cursor-not-allowed disabled:opacity-80"
-                            onClick={handlePublishJob.bind(null, id)}
-                            disabled={publishJobMutations.isPending}
-                        >
-                            {publishJobMutations.isPending && (
-                                <SpinLoading className="mr-2" />
-                            )}
-                            Publish
-                        </button>
-                    )}
+                    {status === JobPostStatus.PENDING_APPROVAL &&
+                        authUser &&
+                        authUser.role === Roles.ORGANIZATION_ADMIN && (
+                            <button
+                                type="button"
+                                className="focus:outline-none text-white bg-green-500 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-4 py-1 dark:bg-green-600 dark:hover:bg-green-800 dark:focus:ring-green-700 hidden md:block disabled:cursor-not-allowed disabled:opacity-80"
+                                onClick={handlePublishJob.bind(null, id)}
+                                disabled={publishJobMutations.isPending}
+                            >
+                                {publishJobMutations.isPending && (
+                                    <SpinLoading className="mr-2" />
+                                )}
+                                Publish
+                            </button>
+                        )}
                     <div ref={actionsDropDown} className="relative">
                         <TooltipNoSSR
                             content={

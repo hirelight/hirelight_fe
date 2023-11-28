@@ -29,7 +29,7 @@ const JobCard: React.FC<JobCardProps> = ({ data }) => {
                 />
             </div>
 
-            <div className="flex-1">
+            <div className="flex-1 overflow-hidden">
                 <h4 className="text-neutral-700 font-medium text-sm sm:text-base">
                     Hirelight Company
                 </h4>

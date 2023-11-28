@@ -72,7 +72,7 @@ const JobsCenter = () => {
                     </div>
                 </div>
             </div>
-            <div className="max-w-screen-xl mx-auto  px-4 md:px-10 flex flex-col lg:flex-row gap-6 py-6 relative">
+            <div className="max-w-screen-xl mx-auto overflow-hidden  px-4 md:px-10 flex flex-col lg:flex-row gap-6 py-6 relative">
                 <JobList />
             </div>
         </main>

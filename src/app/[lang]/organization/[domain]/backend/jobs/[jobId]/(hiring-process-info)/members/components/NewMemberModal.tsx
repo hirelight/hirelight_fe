@@ -141,6 +141,7 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
                     <Button
                         type="submit"
                         isLoading={sendInvitationMutate.isPending}
+                        disabled={sendInvitationMutate.isPending}
                     >
                         Send invitation
                     </Button>

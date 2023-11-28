@@ -67,19 +67,16 @@ const AsyncVideoForm = () => {
         descriptionErr: "",
     });
     const [formState, setFormState] = React.useState<AsyncVideoForm>({
-        id: assessment.id,
-        name: assessment.name,
-        description: assessment.description ?? "",
-        content: assessment.content
-            ? JSON.parse(assessment.content)
-            : {
-                  welcomeNote: "",
-              },
-        query: assessment.query ?? "",
-        duration: assessment.duration ?? 0,
-        index: assessment.index,
-        assessmentQuestionAnswerSetContent:
-            assessment.assessmentQuestionAnswerSetContent ?? "",
+        id: "",
+        name: "",
+        description: "",
+        content: {
+            welcomeNote: "",
+        },
+        query: "",
+        duration: 0,
+        index: 0,
+        assessmentQuestionAnswerSetContent: "",
     });
 
     const inValidInput = (): boolean => {
@@ -147,6 +144,31 @@ const AsyncVideoForm = () => {
         setIsLoading(false);
     };
 
+    useEffect(() => {
+        if (assessment.id) {
+            setQuestions(
+                assessment.assessmentQuestionAnswerSetContent
+                    ? JSON.parse(assessment.assessmentQuestionAnswerSetContent)
+                    : []
+            );
+            setFormState({
+                id: assessment.id,
+                name: assessment.name,
+                description: assessment.description ?? "",
+                content: assessment.content
+                    ? JSON.parse(assessment.content)
+                    : {
+                          welcomeNote: "",
+                      },
+                query: assessment.query ?? "",
+                duration: assessment.duration ?? 0,
+                index: assessment.index,
+                assessmentQuestionAnswerSetContent:
+                    assessment.assessmentQuestionAnswerSetContent ?? "",
+            });
+        }
+    }, [assessment]);
+
     return (
         <React.Fragment>
             <Portal>
@@ -181,6 +203,10 @@ const AsyncVideoForm = () => {
                                     )
                                 )
                             );
+                            setFormErr({
+                                ...formErr,
+                                questionsErr: "",
+                            });
                             setShowPicker(false);
                         }}
                     />
@@ -224,12 +250,16 @@ const AsyncVideoForm = () => {
         responsibility and what the candidate might do on a typical
         day."
                             value={formState.description}
-                            onChange={(value: string) =>
+                            onChange={(value: string) => {
                                 setFormState({
                                     ...formState,
                                     description: value,
-                                })
-                            }
+                                });
+                                setFormErr({
+                                    ...formErr,
+                                    descriptionErr: "",
+                                });
+                            }}
                             className="min-h-[250px]"
                             theme="snow"
                             errorText={formErr.descriptionErr}
@@ -299,11 +329,17 @@ const AsyncVideoForm = () => {
                         {showCreate ? (
                             <AddNewQuestionSection
                                 onFinish={() => setShowCreate(false)}
-                                onSaveTopic={(newQuestion: AsyncQuestionType) =>
+                                onSaveTopic={(
+                                    newQuestion: AsyncQuestionType
+                                ) => {
                                     setQuestions(prev =>
                                         prev.concat([newQuestion])
-                                    )
-                                }
+                                    );
+                                    setFormErr({
+                                        ...formErr,
+                                        questionsErr: "",
+                                    });
+                                }}
                             />
                         ) : (
                             <button

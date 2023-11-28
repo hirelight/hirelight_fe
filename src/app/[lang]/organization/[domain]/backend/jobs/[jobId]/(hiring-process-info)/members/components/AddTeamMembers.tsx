@@ -72,7 +72,6 @@ const AddTeamMebers = () => {
                     <Button
                         className="whitespace-nowrap w-full md:w-fit disabled:opacity-50 disabled:cursor-not-allowed"
                         disabled={isLoading}
-                        isLoading={isLoading}
                         onClick={() => setShowModal(true)}
                     >
                         Invite a new member

@@ -23,9 +23,9 @@ const JobList = () => {
     return (
         <>
             {/* <JobsCenterCategory /> */}
-            <div className="flex-1 md:px-8 md:py-6 bg-white rounded-lg shadow-lg border border-slate-200">
-                <div className="flex justify-between relative">
-                    <div className="w-full">
+            <div className="flex-1 md:px-8 md:py-6 max-w-full bg-white rounded-lg shadow-lg border border-slate-200">
+                <div className="flex w-full items-start">
+                    <div className="w-full max-w-full overflow-hidden">
                         <div className="w-full flex justify-between">
                             <h3 className="text-neutral-700 font-semibold text-xl mb-6">
                                 {jobsRes?.data.length} jobs associated
@@ -75,7 +75,7 @@ const JobList = () => {
                                         duration: 0.4,
                                     },
                                 }}
-                                className="absolute md:sticky md:max-w-[45%] w-full max-h-screen h-fit top-0 md:right-0 overflow-hidden overflow-y-auto"
+                                className="flex-shrink-0 absolute md:sticky lg:max-w-[45%] w-full max-h-screen h-fit top-0 md:right-0 overflow-hidden overflow-y-auto"
                             >
                                 <JobDescriptionBeside
                                     data={{

@@ -251,7 +251,6 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                                 }
                                 onClick={handleSubmitTest}
                             >
-                                {isLoading && <SpinLoading className="mr-2" />}
                                 Submit
                             </ButtonOutline>
                         </div>

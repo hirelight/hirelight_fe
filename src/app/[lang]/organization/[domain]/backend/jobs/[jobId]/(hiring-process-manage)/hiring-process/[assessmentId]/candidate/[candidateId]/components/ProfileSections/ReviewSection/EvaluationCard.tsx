@@ -80,10 +80,10 @@ const EvaluationCard: React.FC<EvaluationCardProps> = ({ data }) => {
         try {
             const res = await evaluationServices.deleteById(data.id);
 
-            toast.success(res.message);
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
                 queryKey: ["evaluations", candidateId],
             });
+            toast.success(res.message);
         } catch (error: any) {
             toast.error(error.message ? error.message : "Something went wrong");
         }
@@ -134,25 +134,25 @@ const EvaluationCard: React.FC<EvaluationCardProps> = ({ data }) => {
                     </p>
                 </div>
 
-                {/* {userInfo &&
-                    userInfo.userId === collabRes?.data.employerDto.id && ( */}
-                <div className="flex items-center gap-2 text-neutral-700">
-                    <button
-                        type="button"
-                        className="block p-1 hover:bg-slate-200 bg-opacity-70 rounded"
-                        onClick={() => setShowDelete(true)}
-                    >
-                        <TrashIcon className="w-5 h-5" />
-                    </button>
-                    <button
-                        type="button"
-                        className="block p-1 hover:bg-slate-200 bg-opacity-70 rounded"
-                        onClick={() => setShowEdit(true)}
-                    >
-                        <PencilIcon className="w-5 h-5" />
-                    </button>
-                </div>
-                {/* )} */}
+                {userInfo &&
+                    userInfo.userId === collabRes?.data.employerDto.id && (
+                        <div className="flex items-center gap-2 text-neutral-700">
+                            <button
+                                type="button"
+                                className="block p-1 hover:bg-slate-200 bg-opacity-70 rounded"
+                                onClick={() => setShowDelete(true)}
+                            >
+                                <TrashIcon className="w-5 h-5" />
+                            </button>
+                            <button
+                                type="button"
+                                className="block p-1 hover:bg-slate-200 bg-opacity-70 rounded"
+                                onClick={() => setShowEdit(true)}
+                            >
+                                <PencilIcon className="w-5 h-5" />
+                            </button>
+                        </div>
+                    )}
             </div>
             <p>{data.evaluation}</p>
         </React.Fragment>
