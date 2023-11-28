@@ -149,9 +149,9 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
 
                 <button
                     type="button"
-                    className="p-1 rounded hover:bg-slate-200/80 text-neutral-700"
+                    className="p-1 rounded hover:bg-slate-200/80 text-neutral-700 transition-all"
                 >
-                    <TrashIcon className="w-5 h-5" />
+                    <TrashIcon className="w-5 h-5 text-red-400 group-hover:text-red-600" />
                 </button>
 
                 <button
