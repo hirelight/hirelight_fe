@@ -40,6 +40,14 @@ const AddTeamMebers = () => {
         if (existingMember) return toast.error("Member already added");
     };
 
+    if (isLoading) {
+        return (
+            <div className="relative rounded-md border border-slate-200">
+                <CollaboratorListLoading />
+            </div>
+        );
+    }
+
     return (
         <div className="relative rounded-md border border-slate-200">
             <Portal>
@@ -52,7 +60,7 @@ const AddTeamMebers = () => {
             </Portal>
             {res && res.data.length > 0 ? (
                 <div className={styles.table__wrapper}>
-                    <CollaboratorList datas={res.data} isLoading={isLoading} />
+                    <CollaboratorList datas={res.data} />
                 </div>
             ) : (
                 <div className="w-full flex flex-col items-center py-6">
@@ -83,3 +91,46 @@ const AddTeamMebers = () => {
 };
 
 export default AddTeamMebers;
+
+const CollaboratorListLoading = () => {
+    return (
+        <table className="w-full text-sm text-left text-gray-500  dark:text-gray-400 overflow-hidden">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b dark:border-gray-700 relative shadow-md">
+                <tr>
+                    <th scope="col" className="p-6 hidden md:table-cell">
+                        Member name
+                    </th>
+                    <th scope="col" className="p-6">
+                        Email
+                    </th>
+                    <th scope="col" className="p-6 hidden lg:table-cell">
+                        Status
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {new Array(4).fill("").map((_, index) => (
+                    <tr key={index} className="">
+                        <td
+                            scope="col"
+                            className="animate-pulse p-4 hidden md:table-cell"
+                        >
+                            <div className="w-full h-6 bg-slate-200 rounded-md"></div>
+                        </td>
+                        <td scope="col" className="animate-pulse p-4">
+                            <div className="w-full h-6 bg-slate-200 rounded-md"></div>
+                        </td>
+                        <td
+                            scope="col"
+                            className="animate-pulse p-4 hidden lg:table-cell"
+                        >
+                            <div className="w-full h-6 bg-slate-200 rounded-md"></div>
+                        </td>
+                        <th></th>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    );
+};
