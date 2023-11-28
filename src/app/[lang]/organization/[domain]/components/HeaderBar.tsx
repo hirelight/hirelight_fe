@@ -157,10 +157,12 @@ const HeaderBar = () => {
                                 </span>
                                 <div>
                                     <h4 className="text-neutral-700 font-semibold">
-                                        {"Nguyen Kien"}
+                                        {authUser?.firstName +
+                                            " " +
+                                            (authUser?.lastName ?? "")}
                                     </h4>
                                     <p className="text-sm text-neutral-500">
-                                        Hirelight
+                                        {authUser?.emailAddress}
                                     </p>
                                 </div>
                             </div>

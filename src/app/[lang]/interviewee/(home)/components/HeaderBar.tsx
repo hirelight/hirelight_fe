@@ -73,10 +73,7 @@ const HeaderBar = () => {
                             >
                                 <Image
                                     alt="Avatar"
-                                    src={
-                                        process.env
-                                            .NEXT_PUBLIC_AVATAR_URL as string
-                                    }
+                                    src={authUser.avatarUrl ?? ""}
                                     width={40}
                                     height={40}
                                 />
