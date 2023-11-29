@@ -17,7 +17,7 @@ type SelectAttendeeListProps = {
         firstName: string;
         lastName: string | null;
         status: string;
-        avatarUrl: string;
+        avatarUrl: string | null;
     }[];
     onSelect: (
         selected: {
@@ -26,7 +26,7 @@ type SelectAttendeeListProps = {
             firstName: string;
             lastName: string | null;
             status: string;
-            avatarUrl: string;
+            avatarUrl: string | null;
         }[]
     ) => void;
 };

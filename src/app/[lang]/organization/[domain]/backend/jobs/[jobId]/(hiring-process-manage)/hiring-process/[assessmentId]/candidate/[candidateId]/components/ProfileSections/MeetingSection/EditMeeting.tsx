@@ -91,7 +91,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
             firstName: string;
             lastName: string | null;
             status: string;
-            avatarUrl: string;
+            avatarUrl: string | null;
         }[]
     >(data.employerMeetingRefs.map(item => item.employer) as any);
 

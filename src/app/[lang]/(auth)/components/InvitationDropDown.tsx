@@ -37,14 +37,14 @@ const InvitationDropDown = () => {
     const acceptInvitationMutation = useMutation({
         mutationFn: (orgId: string) =>
             employerOrgServices.acceptEmployerInvitationListAsync(orgId),
-        onSuccess: res => {
-            toast.success(res.message);
-            queryClient.invalidateQueries({
+        onSuccess: async res => {
+            await queryClient.invalidateQueries({
                 queryKey: [
                     "joined-owned-organizations",
                     token ? (jwtDecode(token) as any).userId : "",
                 ],
             });
+            toast.success(res.message);
         },
         onError: error => {
             console.error(error);
@@ -54,8 +54,7 @@ const InvitationDropDown = () => {
 
     const handleAcceptInvitation = async (orgId: string, subdomain: string) => {
         await acceptInvitationMutation.mutateAsync(orgId);
-        if (acceptInvitationMutation.isSuccess)
-            handleRedirectOnAccept(orgId, subdomain);
+        handleRedirectOnAccept(orgId, subdomain);
         setShowDropdown(false);
     };
 

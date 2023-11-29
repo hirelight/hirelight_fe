@@ -153,7 +153,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
             </Portal>
             <div className="flex items-center gap-2">
                 <div className="w-8 h-8">
-                    {getImageNode(data.creator.avatarUrl)}
+                    {getImageNode(data.creator.avatarUrl ?? "")}
                 </div>
                 <div className="flex-1">
                     <p>
@@ -232,7 +232,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                     {data.candidate && (
                         <div className="flex items-center gap-2 basis-56">
                             <div className="relative w-8 h-8">
-                                {getImageNode(data.candidate.avatarUrl)}
+                                {getImageNode(data.candidate.avatarUrl ?? "")}
 
                                 <MeetingStatusBadge status={data.status} />
                             </div>

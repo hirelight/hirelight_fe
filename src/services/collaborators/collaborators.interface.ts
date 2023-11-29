@@ -27,7 +27,7 @@ export interface ICollaboratorDto {
         firstName: string;
         lastName: string | null;
         status: string;
-        avatarUrl: string;
+        avatarUrl: string | null;
     };
     jobPostId: string;
     status: string;

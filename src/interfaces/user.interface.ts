@@ -9,6 +9,6 @@ export interface IUserInfo {
     lastName: string;
     organizationId?: string;
     organizationSubdomain?: string;
-    avatarUrl: string;
+    avatarUrl: string | null;
     exp: number;
 }

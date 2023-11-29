@@ -128,7 +128,7 @@ const EvaluationCard: React.FC<EvaluationCardProps> = ({ data }) => {
                 </div>
                 <div className="flex-1">
                     <h3 className="font-semibold mb-2 flex items-center gap-2">
-                        Nguyen Kien <span>{getRating(data.rating)}</span>
+                        collaborator name <span>{getRating(data.rating)}</span>
                     </h3>
                     <p className="text-gray-500">
                         {moment(data.updatedTime).fromNow()}

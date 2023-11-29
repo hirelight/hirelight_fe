@@ -20,7 +20,7 @@ export interface IMeetingDto {
         email: string;
         firstName: string;
         lastName: string;
-        avatarUrl: string;
+        avatarUrl: string | null;
         timeZone: 0;
         certificates: string;
         educations: string;
@@ -34,7 +34,7 @@ export interface IMeetingDto {
         firstName: string;
         lastName: string;
         status: string;
-        avatarUrl: string;
+        avatarUrl: string | null;
     };
     employerMeetingRefs: MeetingEmployer[];
     jobPost?: IJobDto & {
@@ -54,7 +54,7 @@ export interface MeetingEmployer {
         firstName: string;
         lastName: string | null;
         status: string;
-        avatarUrl: string;
+        avatarUrl: string | null;
     };
 }
 

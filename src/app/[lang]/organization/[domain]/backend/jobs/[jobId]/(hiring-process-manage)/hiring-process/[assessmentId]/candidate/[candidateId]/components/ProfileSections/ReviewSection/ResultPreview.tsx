@@ -210,7 +210,7 @@ const MCQResult = ({
                                 className={`flex items-center font-medium gap-2  ${
                                     ans.isChosen && ans.isChosen !== ans.correct
                                         ? "text-red-600"
-                                        : ans.correct
+                                        : ans.correct === ans.isChosen
                                         ? "text-green-600"
                                         : ""
                                 }`}
