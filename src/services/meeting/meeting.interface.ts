@@ -35,7 +35,7 @@ export interface IMeetingDto {
         lastName: string;
         status: string;
         avatarUrl: string | null;
-    };
+    } | null;
     employerMeetingRefs: MeetingEmployer[];
     jobPost?: IJobDto & {
         organization: IOrganizationDto;

@@ -26,9 +26,9 @@ const InvitationDropDown = () => {
     const acceptInvitationMutation = useMutation({
         mutationFn: (jobPostId: string) =>
             collaboratorsServices.acceptJobCollabInvitation(jobPostId),
-        onSuccess: res => {
-            queryClient.invalidateQueries({
-                queryKey: ["invitations", authUser ? authUser.userId : ""],
+        onSuccess: async res => {
+            await queryClient.invalidateQueries({
+                queryKey: ["invitations"],
             });
             toast.success(res.message, {
                 position: "bottom-right",

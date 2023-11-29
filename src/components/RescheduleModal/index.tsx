@@ -12,6 +12,8 @@ import { PencilIcon } from "@heroicons/react/24/solid";
 import { Button, ButtonOutline, CustomInput } from "@/components";
 import { handleError, isInvalidForm } from "@/helpers";
 import meetingServices from "@/services/meeting/meeting.service";
+import { useAppSelector } from "@/redux/reduxHooks";
+import { Roles } from "@/services";
 
 type RescheduleModalProps = {
     meetingId: string;
@@ -33,6 +35,7 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
 }) => {
     const { eventId } = useParams();
 
+    const { authUser } = useAppSelector(state => state.auth);
     const queryClient = useQueryClient();
 
     const [sections, setSections] = useState<
@@ -90,10 +93,18 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
     const handleSendReschedule = async () => {
         setLoading(true);
         try {
-            const res = await meetingServices.candidateReScheduleMeeting(
-                meetingId,
-                JSON.stringify(sections)
-            );
+            let res;
+            if (authUser!!.role === Roles.CANDIDATE) {
+                res = await meetingServices.candidateReScheduleMeeting(
+                    meetingId,
+                    JSON.stringify(sections)
+                );
+            } else {
+                res = await meetingServices.employerReScheduleMeeting(
+                    meetingId,
+                    JSON.stringify(sections)
+                );
+            }
 
             await queryClient.invalidateQueries({
                 queryKey: ["meeting", eventId],

@@ -100,11 +100,18 @@ const ResultPreview: React.FC<ResultPreviewProps> = ({
                         ...isExist,
                         content: {
                             ...isExist.content,
-                            answers: isExist.content.answers.map(
-                                (ans, index) => ({
-                                    ...ans,
-                                    ...JSON.parse(item.content).answers[index],
-                                })
+                            answers: JSON.parse(item.content).answers.map(
+                                (ans: any) => {
+                                    const exactAns =
+                                        isExist.content.answers.find(
+                                            item => item.name === ans.name
+                                        )!!;
+
+                                    return {
+                                        ...ans,
+                                        isChosen: exactAns.isChosen,
+                                    };
+                                }
                             ),
                         },
                     });
@@ -204,36 +211,38 @@ const MCQResult = ({
                     ></p>
 
                     <ul className="space-y-2 pl-2">
-                        {item.content.answers.map((ans, index) => (
-                            <li
-                                key={index}
-                                className={`flex items-center font-medium gap-2  ${
-                                    ans.isChosen && ans.isChosen !== ans.correct
-                                        ? "text-red-600"
-                                        : ans.correct === ans.isChosen
-                                        ? "text-green-600"
-                                        : ""
-                                }`}
-                            >
-                                <input
-                                    type={
-                                        item.content.type === "one-answer"
-                                            ? "radio"
-                                            : "checkbox"
-                                    }
-                                    defaultChecked={ans.isChosen}
-                                    className={`w-4 h-4 text-inherit bg-gray-100 border-gray-300 pointer-events-none`}
-                                    readOnly={true}
-                                />
+                        {item.content.answers.map((ans, index) => {
+                            return (
+                                <li
+                                    key={index}
+                                    className={`flex items-center font-medium gap-2  ${
+                                        ans.isChosen
+                                            ? ans.isChosen && ans.correct
+                                                ? "text-green-600"
+                                                : "text-red-600"
+                                            : ""
+                                    }`}
+                                >
+                                    <input
+                                        type={
+                                            item.content.type === "one-answer"
+                                                ? "radio"
+                                                : "checkbox"
+                                        }
+                                        defaultChecked={ans.isChosen}
+                                        className={`w-4 h-4 text-inherit bg-gray-100 border-gray-300 pointer-events-none`}
+                                        readOnly={true}
+                                    />
 
-                                <div
-                                    className="ql-editor !p-0"
-                                    dangerouslySetInnerHTML={{
-                                        __html: ans.name,
-                                    }}
-                                ></div>
-                            </li>
-                        ))}
+                                    <div
+                                        className="ql-editor !p-0"
+                                        dangerouslySetInnerHTML={{
+                                            __html: ans.name,
+                                        }}
+                                    ></div>
+                                </li>
+                            );
+                        })}
                     </ul>
                 </section>
             ))}
@@ -242,7 +251,6 @@ const MCQResult = ({
 };
 
 const AsyncResult = ({ results }: { results: IAsyncAnswer[] }) => {
-    console.log(results);
     return (
         <div className="space-y-8 text-sm mb-4">
             {results?.map((item, quesNo) => (

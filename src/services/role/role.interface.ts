@@ -3,6 +3,7 @@ export enum Roles {
     ASSESSOR = "ASSESSOR",
     RECRUITER = "RECRUITER",
     ORGANIZATION_ADMIN = "ORGANIZATION_ADMIN",
+    CANDIDATE = "CANDIDATE",
 }
 
 export interface IRoleDto {

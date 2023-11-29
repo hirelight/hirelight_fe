@@ -82,24 +82,30 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
         if (!applicantAssessmentDetail!!.applicantProfile.candidateId)
             toast.error("Please select a candidate");
         try {
-            const res = await meetingServices.editMeeting({
-                id: data.id,
-                assessmentId: data.assessmentId,
-                candidateId:
-                    applicantAssessmentDetail!!.applicantProfile.candidateId,
-                startTime: data.startTime,
-                endTime: data.endTime,
-                name: data.name,
-                description: data.description,
-                meetingLink: data.meetingLink,
-                recordLink: data.recordLinks,
-                location: data.location,
-            });
+            const res = await toast.promise(
+                meetingServices.editMeeting({
+                    id: data.id,
+                    assessmentId: data.assessmentId,
+                    candidateId:
+                        applicantAssessmentDetail!!.applicantProfile
+                            .candidateId,
+                    startTime: data.startTime,
+                    endTime: data.endTime,
+                    name: data.name,
+                    description: data.description,
+                    meetingLink: data.meetingLink,
+                    recordLink: data.recordLinks,
+                    location: data.location,
+                }),
+                {
+                    pending: "Sending meeting to candidate",
+                    success: "Meeting sent!",
+                }
+            );
 
             await queryClient.invalidateQueries({
                 queryKey: ["meeting-list", assessmentId, candidateId],
             });
-            toast.success(res.message);
         } catch (error) {
             // handleError(error);
             await queryClient.invalidateQueries({
@@ -112,7 +118,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
         deleteMeetingMutate.mutate(data.id);
     };
 
-    const getImageNode = (url?: string) => {
+    const getImageNode = (url?: string | null) => {
         if (url)
             return (
                 <Image
@@ -131,6 +137,8 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                 </div>
             );
     };
+
+    console.log(data);
 
     return (
         <>
@@ -153,14 +161,16 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
             </Portal>
             <div className="flex items-center gap-2">
                 <div className="w-8 h-8">
-                    {getImageNode(data.creator.avatarUrl ?? "")}
+                    {getImageNode(data.creator ? data.creator.avatarUrl : "")}
                 </div>
                 <div className="flex-1">
                     <p>
                         <strong>
-                            {data.creator.firstName +
-                                " " +
-                                (data.creator.lastName ?? "")}
+                            {data.creator
+                                ? data.creator.firstName +
+                                  " " +
+                                  (data.creator.lastName ?? "")
+                                : "Recruiter"}
                         </strong>{" "}
                         schedule a{" "}
                         <Link
@@ -309,9 +319,11 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
 
                 <div>Organizer</div>
                 <div className="ql-editor !p-0">
-                    {data.creator.firstName +
-                        " " +
-                        (data.creator.lastName ?? "")}
+                    {data.creator
+                        ? data.creator.firstName +
+                          " " +
+                          (data.creator.lastName ?? "")
+                        : "Recruiter"}
                 </div>
             </div>
         </>
