@@ -15,19 +15,13 @@ import {
 import ResultPreview from "./ResultPreview";
 
 const AssessmentContent = () => {
-    const { candidateId, assessmentId, jobId } = useParams();
+    const { candidateId, jobId } = useParams();
 
     const applicantDetail = useAppSelector(
         state => state.applicantAssessmentDetail.data!!
     );
-    const assessment = useAppSelector(
-        state =>
-            state.assessmentFlow.data.assessments.find(
-                assessment => assessment.id === assessmentId
-            )!!
-    );
 
-    const { data: profileResults } = useQuery({
+    const { data: profileResults, isLoading } = useQuery({
         queryKey: ["profile-results", candidateId],
         queryFn: () =>
             applicantAssessmentDetailServices.employeeGetApplicantAssessDetailsList(
@@ -35,6 +29,8 @@ const AssessmentContent = () => {
                 jobId as string
             ),
     });
+
+    if (isLoading) return <AssessmentSkeleton />;
 
     return (
         <div className="mt-8 space-y-4">
@@ -101,5 +97,21 @@ const AssessmentCard = ({ data }: { data: IJobPostAppAssDetailDto }) => {
                 </div>
             </div>
         </>
+    );
+};
+
+const AssessmentSkeleton = () => {
+    return (
+        <div className="mt-8 space-y-4">
+            {new Array(3).fill("").map((_, index) => (
+                <div
+                    key={index}
+                    className="py-4 animate-pulse flex justify-between"
+                >
+                    <h4 className="h-8 w-80 bg-slate-300"></h4>
+                    <div className="h-6 w-16 bg-slate-200"></div>
+                </div>
+            ))}
+        </div>
     );
 };

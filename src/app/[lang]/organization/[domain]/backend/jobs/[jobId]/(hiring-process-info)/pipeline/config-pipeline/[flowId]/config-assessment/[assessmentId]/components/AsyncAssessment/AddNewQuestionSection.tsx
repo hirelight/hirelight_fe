@@ -342,7 +342,7 @@ const AddNewQuestionSection = ({
                         isLoading={loading}
                         onClick={handleAddNewSection}
                     >
-                        Save topic
+                        Save question
                     </Button>
                     <button
                         type="button"

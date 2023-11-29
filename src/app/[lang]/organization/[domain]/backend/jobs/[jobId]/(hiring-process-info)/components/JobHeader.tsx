@@ -19,7 +19,7 @@ interface IJobHeader {}
 
 const JobHeader = ({}: IJobHeader) => {
     const pathname = usePathname();
-    const { lang } = useParams();
+    const { lang, jobId } = useParams();
 
     const dispatch = useAppDispatch();
 
@@ -32,9 +32,13 @@ const JobHeader = ({}: IJobHeader) => {
     const requestPublishMutation = useMutation({
         mutationKey: [`publish-job-${job.id}`],
         mutationFn: (id: string) => jobServices.requestPublishJob(id),
-        onSuccess: res => {
-            queryClient.invalidateQueries({
+        onSuccess: async res => {
+            await queryClient.invalidateQueries({
                 queryKey: ["jobs", authUser!!.organizationId],
+            });
+
+            await queryClient.invalidateQueries({
+                queryKey: ["job", jobId],
             });
             toast.success(res.message, {
                 position: "bottom-right",
@@ -43,7 +47,6 @@ const JobHeader = ({}: IJobHeader) => {
             setIsLoading(false);
         },
         onError: error => {
-            console.error(error);
             toast.error(error.message ? error.message : "Publish failure", {
                 position: "bottom-right",
                 autoClose: 1000,

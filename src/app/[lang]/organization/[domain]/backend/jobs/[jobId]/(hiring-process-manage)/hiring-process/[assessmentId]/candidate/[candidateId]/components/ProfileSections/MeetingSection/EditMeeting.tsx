@@ -19,7 +19,12 @@ import {
 } from "@/components";
 import { CloseIcon } from "@/icons";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { ApplicationFormJSON, ICreateMeetings, IMeetingDto } from "@/services";
+import {
+    ApplicationFormJSON,
+    ICreateMeetings,
+    IMeetingDto,
+    IOrgEmployerDto,
+} from "@/services";
 import { AppFormDefaultSection, IAppFormField } from "@/interfaces";
 import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
 import meetingServices from "@/services/meeting/meeting.service";
@@ -60,6 +65,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
         locationErr: "",
         timeErr: "",
         dateErr: "",
+        attendeeErr: "",
     });
     const [formState, setFormState] = useState<IMeetingDto>({
         ...data,
@@ -78,7 +84,16 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
     });
     const [loading, setLoading] = useState(false);
 
-    const [selected, setSelected] = useState<ICollaboratorDto[]>([]);
+    const [selected, setSelected] = useState<
+        {
+            id: string;
+            email: string;
+            firstName: string;
+            lastName: string | null;
+            status: string;
+            avatarUrl: string;
+        }[]
+    >(data.employerMeetingRefs.map(item => item.employer) as any);
 
     const isInvalidFormInput = (): boolean => {
         const { name, meetingLink, description, startTime } = formState;
@@ -94,11 +109,11 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
         }
         if (
             (moment(meetingTime.startTime).isAfter(meetingTime.endTime) &&
-                moment(formState.startTime).isSameOrBefore(
+                moment(formState.startTime).isSame(
                     formState.endTime,
-                    "year"
+                    "dates"
                 )) ||
-            moment(formState.startTime).isAfter(formState.endTime, "year")
+            moment(formState.startTime).isAfter(formState.endTime, "dates")
         ) {
             errors.timeErr = "Start time must not greator than end time";
         } else if (
@@ -109,6 +124,10 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
         ) {
             errors.timeErr = "Meeting duration must at least 10 minutes";
         }
+
+        if (!selected.length)
+            errors.attendeeErr =
+                "Select at least one employer to attend meeting";
 
         if (isInvalidForm(errors)) {
             setFormErr({ ...errors });
@@ -175,9 +194,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
     };
 
     const handleRemoveAttendee = (id: string) => {
-        setSelected(prev =>
-            prev.filter(person => person.employerDto.id !== id)
-        );
+        setSelected(prev => prev.filter(person => person.id !== id));
     };
 
     return (
@@ -383,9 +400,10 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                                                     .value.value
                                                             }
                                                             alt="Collaborator avatar"
-                                                            width={30}
-                                                            height={30}
+                                                            width={300}
+                                                            height={300}
                                                             className="w-8 h-8 rounded-full object-cover"
+                                                            unoptimized
                                                         />
                                                     ) : (
                                                         <div className="w-10 h-10 rounded-full text-neutral-600">
@@ -412,24 +430,31 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                         {selected.map(selectAttendee => (
                                             <li key={selectAttendee.id}>
                                                 <div className="flex items-center gap-2">
-                                                    <div className="w-10 h-10 rounded-full text-neutral-600">
-                                                        <UserCircleIcon />
-                                                    </div>
+                                                    {selectAttendee.avatarUrl ? (
+                                                        <Image
+                                                            src={
+                                                                selectAttendee.avatarUrl
+                                                            }
+                                                            alt="Collaborator avatar"
+                                                            width={300}
+                                                            height={300}
+                                                            className="w-8 h-8 rounded-full object-cover"
+                                                            unoptimized
+                                                        />
+                                                    ) : (
+                                                        <div className="w-10 h-10 rounded-full text-neutral-600">
+                                                            <UserCircleIcon />
+                                                        </div>
+                                                    )}
                                                     <div className="flex-1 text-sm">
                                                         <h3 className="font-semibold">
-                                                            {selectAttendee
-                                                                .employerDto
-                                                                .firstName +
+                                                            {selectAttendee.firstName +
                                                                 " " +
-                                                                (selectAttendee
-                                                                    .employerDto
-                                                                    .lastName ??
+                                                                (selectAttendee.lastName ??
                                                                     "")}
                                                         </h3>
                                                         {authUser &&
-                                                            selectAttendee
-                                                                .employerDto
-                                                                .id ===
+                                                            selectAttendee.id ===
                                                                 authUser.userId && (
                                                                 <p className="text-gray-500">
                                                                     Organizer
@@ -441,8 +466,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                                         className="p-1 rounded hover:bg-slate-300/80 transition-all duration-500"
                                                         onClick={handleRemoveAttendee.bind(
                                                             null,
-                                                            selectAttendee
-                                                                .employerDto.id
+                                                            selectAttendee.id
                                                         )}
                                                     >
                                                         <XMarkIcon className="w-5 h-5" />
@@ -454,8 +478,21 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
 
                                     <SelectAttendeeList
                                         selected={selected}
-                                        onSelect={value => setSelected(value)}
+                                        onSelect={value => {
+                                            setSelected(value);
+                                            setFormErr({
+                                                ...formErr,
+                                                attendeeErr: "",
+                                            });
+                                        }}
                                     />
+                                    {formErr.attendeeErr && (
+                                        <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                                            <span className="font-medium">
+                                                {formErr.attendeeErr}
+                                            </span>
+                                        </p>
+                                    )}
 
                                     <hr className="h-[1px] w-full my-8 bg-gray-300" />
 

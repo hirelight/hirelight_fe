@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 
 const useTrackAssessment = (
     taskFunction: () => void,
@@ -7,18 +7,20 @@ const useTrackAssessment = (
     const intervalRef = useRef<NodeJS.Timer | null>(null);
 
     const startAutoTask = () => {
-        console.log("start task");
-        // Start the interval
-        intervalRef.current = setInterval(() => {
-            taskFunction();
-        }, intervalInSeconds * 1000); // Convert seconds to milliseconds
+        if (intervalRef.current !== null) {
+            // Start the interval
+            intervalRef.current = setInterval(() => {
+                taskFunction();
+            }, intervalInSeconds * 1000); // Convert seconds to milliseconds
+        }
     };
 
     const stopAutoTask = () => {
-        console.log("auto task");
         // Stop the interval
         if (intervalRef.current !== null) {
+            console.log("Stop tracking");
             clearInterval(intervalRef.current);
+            intervalRef.current = null;
         }
     };
 

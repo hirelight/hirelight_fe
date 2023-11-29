@@ -24,6 +24,7 @@ import VideoWrapper from "./VideoWrapper";
 import DoubleRingLoading from "./DoubleRingLoading";
 import EmployeePrivateWrapper from "./EmployeePrivateWrapper";
 import TimerPicker from "./TimerPicker";
+import RescheduleModal from "./RescheduleModal";
 
 export {
     Modal,
@@ -52,4 +53,5 @@ export {
     DoubleRingLoading,
     EmployeePrivateWrapper,
     TimerPicker,
+    RescheduleModal,
 };

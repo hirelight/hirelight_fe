@@ -2,7 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import { useParams } from "next/navigation";
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog, Switch, Transition } from "@headlessui/react";
 import { UserCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { toast } from "react-toastify";
@@ -27,15 +27,7 @@ import { isInvalidForm } from "@/helpers";
 
 import SelectAttendeeList from "./SelectAttendeeList";
 
-const backdropVariants = {
-    backdropOpen: { opacity: 1 },
-    backdropClose: { opacity: 0 },
-};
-
-const drawerVariants = {
-    drawerEnter: { translateX: 0 },
-    drawerLeave: { translateX: "100%" },
-};
+import zoomLogo from "/public/images/zoom-logo.svg";
 
 interface IActionDrawer {
     title?: string;
@@ -82,6 +74,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
         locationErr: "",
         timeErr: "",
         dateErr: "",
+        attendeeErr: "",
     });
     const [formState, setFormState] = useState<ICreateMeetings>({
         assessmentId: assessmentId as string,
@@ -93,6 +86,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
         meetingLink: "",
         location: "",
         employerIds: [],
+        isZoomCreated: false,
     });
     const [meetingTime, setMeetingTime] = useState({
         startTime: moment.utc().toDate(),
@@ -103,8 +97,14 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
     const [selected, setSelected] = useState<ICollaboratorDto[]>([]);
 
     const isInvalidFormInput = (): boolean => {
-        const { name, meetingLink, description, startTime, endTime } =
-            formState;
+        const {
+            name,
+            meetingLink,
+            description,
+            startTime,
+            endTime,
+            isZoomCreated,
+        } = formState;
 
         let errors = formErr;
 
@@ -112,24 +112,29 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
             errors.nameErr = "Subject is required";
         }
 
-        if (meetingLink.length === 0) {
+        if (meetingLink.length === 0 && !isZoomCreated) {
             errors.meetingLinkErr = "Meeting link is required";
         }
 
         if (
             (moment(meetingTime.startTime).isAfter(meetingTime.endTime) &&
-                moment(startTime).isSameOrBefore(moment(endTime), "date")) ||
-            moment(startTime).isAfter(moment(endTime))
+                moment(startTime).isSame(endTime, "dates")) ||
+            moment(startTime).isAfter(endTime, "dates")
         ) {
             errors.timeErr = "Start time must not greator than end time";
         } else if (
             moment(meetingTime.endTime).diff(
                 moment(meetingTime.startTime),
                 "minute"
-            ) < 10
+            ) < 10 &&
+            moment(startTime).isSame(endTime, "dates")
         ) {
             errors.timeErr = "Meeting duration must at least 10 minutes";
         }
+
+        if (selected.length === 0)
+            errors.attendeeErr =
+                "Select at least one employer to attend meeting";
 
         if (isInvalidForm(errors)) {
             setFormErr({ ...errors });
@@ -139,6 +144,24 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
         return false;
     };
 
+    const handleResetForm = () => {
+        setFormState({
+            assessmentId: assessmentId as string,
+            candidateId: null,
+            startTime: moment.utc().toDate(),
+            endTime: moment.utc().toDate(),
+            name: "",
+            description: "",
+            meetingLink: "",
+            location: "",
+            employerIds: [],
+        });
+
+        setMeetingTime({
+            startTime: moment.utc().toDate(),
+            endTime: moment.utc().add(1, "hours").toDate(),
+        });
+    };
     const handleResetErr = (key: string) => {
         setFormErr({
             ...formErr,
@@ -182,10 +205,10 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                 queryKey: ["meeting-list", assessmentId, candidateId],
             });
             toast.success(res.message);
-
+            handleResetForm();
             onClose();
         } catch (error: any) {
-            toast.error(error.message ? error.message : "Something went wrong");
+            // toast.error(error.message ? error.message : "Something went wrong");
         }
 
         setLoading(false);
@@ -257,25 +280,66 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                     </div>
 
                                     <div className="mb-6">
-                                        <CustomInput
-                                            title="Meeting link"
-                                            placeholder="Example: meet.google.com"
-                                            value={formState.meetingLink}
-                                            onChange={e => {
-                                                setFormState(prev =>
-                                                    produce(prev, draft => {
-                                                        draft.meetingLink =
-                                                            e.target.value;
-                                                    })
-                                                );
-                                                handleResetErr(
-                                                    "meetingLinkErr"
-                                                );
-                                            }}
-                                            errorText={formErr.meetingLinkErr}
-                                            required
-                                        />
+                                        <h3 className="text-sm font-semibold text-neutral-700 mb-2">
+                                            Zoom enable
+                                        </h3>
+                                        <div className="flex items-center">
+                                            <Image
+                                                alt="Zoom logo"
+                                                src={zoomLogo}
+                                                width={500}
+                                                height={300}
+                                                className="w-40 h-auto object-contain mr-3"
+                                            />
+                                            <div>
+                                                <label className="relative inline-flex items-center cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        value=""
+                                                        className="sr-only peer"
+                                                        defaultChecked={
+                                                            formState.isZoomCreated
+                                                        }
+                                                        onChange={e =>
+                                                            setFormState({
+                                                                ...formState,
+                                                                isZoomCreated:
+                                                                    e
+                                                                        .currentTarget
+                                                                        .checked,
+                                                            })
+                                                        }
+                                                    />
+                                                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
+
+                                    {!formState.isZoomCreated && (
+                                        <div className="mb-6">
+                                            <CustomInput
+                                                title="Meeting link"
+                                                placeholder="Example: meet.google.com"
+                                                value={formState.meetingLink}
+                                                onChange={e => {
+                                                    setFormState(prev =>
+                                                        produce(prev, draft => {
+                                                            draft.meetingLink =
+                                                                e.target.value;
+                                                        })
+                                                    );
+                                                    handleResetErr(
+                                                        "meetingLinkErr"
+                                                    );
+                                                }}
+                                                errorText={
+                                                    formErr.meetingLinkErr
+                                                }
+                                                required
+                                            />
+                                        </div>
+                                    )}
 
                                     <hr className="h-[1px] w-full my-8 bg-gray-300" />
 
@@ -466,8 +530,21 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                     </ul>
                                     <SelectAttendeeList
                                         selected={selected}
-                                        onSelect={value => setSelected(value)}
+                                        onSelect={value => {
+                                            setSelected(value);
+                                            setFormErr({
+                                                ...formErr,
+                                                attendeeErr: "",
+                                            });
+                                        }}
                                     />
+                                    {formErr.attendeeErr && (
+                                        <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                                            <span className="font-medium">
+                                                {formErr.attendeeErr}
+                                            </span>
+                                        </p>
+                                    )}
 
                                     <hr className="h-[1px] w-full my-8 bg-gray-300" />
 
@@ -484,7 +561,6 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                                 })
                                             )
                                         }
-                                        required
                                     />
                                 </div>
                                 <div className="p-6 border-t border-gray-300 flex-shrink-0 flex justify-end">

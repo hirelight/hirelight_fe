@@ -26,7 +26,7 @@ const ReviewSection = () => {
                     <Tab
                         className={({ selected }) =>
                             classNames(
-                                "rounded-lg py-2.5 px-4 text-sm font-semibold leading-5 relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:w-0 after:h-0.5 after:bg-gray-500 after:translate-y-1/2 after:transition-all",
+                                "rounded-lg py-2.5 px-4 text-sm font-semibold leading-5 relative after:content-[''] after:absolute after:bottom-0 after:right-0 after:w-0 after:h-0.5 after:bg-blue-800 after:translate-y-1/2 after:transition-all",
                                 selected
                                     ? "bg-white text-blue_primary_800 after:w-full"
                                     : "hover:bg-white/[0.12]"
@@ -38,7 +38,7 @@ const ReviewSection = () => {
                     <Tab
                         className={({ selected }) =>
                             classNames(
-                                "rounded-lg py-2.5 px-4 text-sm font-semibold leading-5 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-gray-500 after:translate-y-1/2 after:transition-all",
+                                "rounded-lg py-2.5 px-4 text-sm font-semibold leading-5 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-blue-800 after:translate-y-1/2 after:transition-all",
                                 selected
                                     ? "bg-white text-blue_primary_800 after:w-full"
                                     : "hover:bg-white/[0.12]"

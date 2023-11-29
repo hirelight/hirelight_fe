@@ -80,8 +80,11 @@ const ActionSection: React.FC<ActionSectionProps> = ({
                 ans => ans.content.files && ans.content.files.length > 0
             ) &&
             recordingStatus === "inactive" &&
-            !isBreak,
-        [answers, assessmentData, isBreak, recordingStatus]
+            !isBreak &&
+            !isUploading &&
+            assessmentData.status ===
+                ApplicantAssessmentDetailStatus.IN_PROGRESS,
+        [answers, assessmentData, isBreak, isUploading, recordingStatus]
     );
 
     const handleGotoReview = useCallback(() => {

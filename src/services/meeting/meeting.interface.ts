@@ -1,3 +1,5 @@
+import { IAssessmentDto, IJobDto, IOrganizationDto } from "..";
+
 export interface IMeetingDto {
     id: string;
     creatorId: string;
@@ -32,8 +34,13 @@ export interface IMeetingDto {
         firstName: string;
         lastName: string;
         status: string;
+        avatarUrl: string;
     };
     employerMeetingRefs: MeetingEmployer[];
+    jobPost?: IJobDto & {
+        organization: IOrganizationDto;
+    };
+    assessment?: IAssessmentDto;
 }
 
 export interface MeetingEmployer {
@@ -45,8 +52,9 @@ export interface MeetingEmployer {
         id: string;
         email: string;
         firstName: string;
-        lastName: string;
+        lastName: string | null;
         status: string;
+        avatarUrl: string;
     };
 }
 
@@ -60,6 +68,7 @@ export interface ICreateMeetings {
     meetingLink: string;
     location: string;
     employerIds: string[];
+    isZoomCreated?: boolean;
 }
 
 export interface IEditMeetingDto {

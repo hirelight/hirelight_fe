@@ -13,10 +13,13 @@ import {
 import moment from "moment";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import {
+    InformationCircleIcon,
+    PencilSquareIcon,
+} from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
 import { Tooltip } from "flowbite-react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import {
     ApplicationFormJSON,
@@ -28,9 +31,11 @@ import { AppFormDefaultSection, IAppFormField } from "@/interfaces";
 import { useAppSelector } from "@/redux/reduxHooks";
 import meetingServices from "@/services/meeting/meeting.service";
 import { handleError } from "@/helpers";
+import { DeleteModal, Portal } from "@/components";
 
 import styles from "./MeetingCard.module.scss";
 import EditMeeting from "./EditMeeting";
+import ScheduleTimeModal from "./ScheduleTimeModal";
 
 type MeetingCardProps = {
     data: IMeetingDto;
@@ -56,6 +61,22 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
             .fields.find(field => field.id === "avatar")
     );
     const [showEdit, setShowEdit] = useState(false);
+    const [showDelete, setShowDelete] = useState(false);
+    const [showCandidateTime, setShowCandidateTime] = useState(false);
+
+    const deleteMeetingMutate = useMutation({
+        mutationKey: ["delete-meeting"],
+        mutationFn: (id: string) => meetingServices.deleteMeeting(id),
+        onSuccess: async res => {
+            await queryClient.invalidateQueries({
+                queryKey: ["meeting-list", assessmentId, candidateId],
+            });
+            toast.success(res.message);
+        },
+        onError: err => {
+            // handleError(err);
+        },
+    });
 
     const handleInviteCandidate = async () => {
         if (!applicantAssessmentDetail!!.applicantProfile.candidateId)
@@ -75,13 +96,20 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                 location: data.location,
             });
 
-            toast.success(res.message);
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
                 queryKey: ["meeting-list", assessmentId, candidateId],
             });
+            toast.success(res.message);
         } catch (error) {
-            handleError(error);
+            // handleError(error);
+            await queryClient.invalidateQueries({
+                queryKey: ["meeting-list", assessmentId, candidateId],
+            });
         }
+    };
+
+    const handleDeleteMeeting = () => {
+        deleteMeetingMutate.mutate(data.id);
     };
 
     const getImageNode = (url?: string) => {
@@ -90,9 +118,10 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                 <Image
                     src={url}
                     alt="Collaborator avatar"
-                    width={30}
-                    height={30}
+                    width={300}
+                    height={300}
                     className="w-full h-full rounded-full object-cover"
+                    unoptimized
                 />
             );
         else
@@ -110,8 +139,22 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                 show={showEdit}
                 onClose={() => setShowEdit(false)}
             />
+            <Portal>
+                <DeleteModal
+                    title="Delete meeting"
+                    show={showDelete}
+                    description="Are you sure you want to delete
+                    this meeting? This action
+                    cannot be undone."
+                    onClose={() => setShowDelete(false)}
+                    loading={deleteMeetingMutate.isPending}
+                    onConfirm={handleDeleteMeeting}
+                />
+            </Portal>
             <div className="flex items-center gap-2">
-                <div className="w-8 h-8">{getImageNode()}</div>
+                <div className="w-8 h-8">
+                    {getImageNode(data.creator.avatarUrl)}
+                </div>
                 <div className="flex-1">
                     <p>
                         <strong>
@@ -123,7 +166,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                         <Link
                             target="_blank"
                             href={`/${lang}/events/${data.id}`}
-                            className="inline-flex items-center gap-1 text-blue_primary_800 group"
+                            className="inline-flex items-center gap-1 text-blue_primary_800 group mr-3"
                         >
                             <strong className="group-hover:underline">
                                 meeting
@@ -150,8 +193,9 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                 <button
                     type="button"
                     className="p-1 rounded hover:bg-slate-200/80 text-neutral-700 transition-all"
+                    onClick={() => setShowDelete(true)}
                 >
-                    <TrashIcon className="w-5 h-5 text-red-400 group-hover:text-red-600" />
+                    <TrashIcon className="w-5 h-5 text-red-500 group-hover:text-red-700" />
                 </button>
 
                 <button
@@ -188,13 +232,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                     {data.candidate && (
                         <div className="flex items-center gap-2 basis-56">
                             <div className="relative w-8 h-8">
-                                {getImageNode(
-                                    avaterDetail.current
-                                        ? avaterDetail.current.value
-                                            ? avaterDetail.current.value.value
-                                            : undefined
-                                        : undefined
-                                )}
+                                {getImageNode(data.candidate.avatarUrl)}
 
                                 <MeetingStatusBadge status={data.status} />
                             </div>
@@ -209,6 +247,30 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
 
                                 <span>Candidate</span>
                             </div>
+
+                            {data.scheduleTime &&
+                                data.status === "MEETING_SCHEDULING" && (
+                                    <>
+                                        <button
+                                            type="button"
+                                            className="w-5 h-5 self-start"
+                                            onClick={() =>
+                                                setShowCandidateTime(true)
+                                            }
+                                        >
+                                            <InformationCircleIcon />
+                                        </button>
+                                        <ScheduleTimeModal
+                                            show={showCandidateTime}
+                                            close={() =>
+                                                setShowCandidateTime(false)
+                                            }
+                                            scheduleTime={JSON.parse(
+                                                data.scheduleTime
+                                            )}
+                                        />
+                                    </>
+                                )}
                         </div>
                     )}
                     {data.employerMeetingRefs?.map((employer, refIdex) => (
@@ -224,8 +286,13 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                 <div>Meeting link</div>
                 <div>
                     <Link
-                        href={data.meetingLink}
+                        href={
+                            data.meetingLink.toLowerCase().includes("zoom")
+                                ? data.meetingLink.replace("Zoom meeting: ", "")
+                                : data.meetingLink
+                        }
                         target="_blank"
+                        rel="noreferrer noopener"
                         className="text-blue_primary_800 font-semibold"
                     >
                         Link
@@ -260,12 +327,26 @@ const EmployerAttendeeCard = ({
     creatorId: string;
     data: MeetingEmployer;
 }) => {
+    const [showInfo, setShowInfo] = useState(false);
+
     return (
         <div className="flex items-center gap-2 basis-56">
             <div className="w-8 h-8 relative">
-                <div className="w-full h-full rounded-full text-neutral-600">
-                    <UserCircleIcon />
+                <div className="w-full h-full rounded-full text-neutral-600 overflow-hidden">
+                    {data.employer.avatarUrl ? (
+                        <Image
+                            src={data.employer.avatarUrl}
+                            alt="Collaborator avatar"
+                            width={300}
+                            height={300}
+                            className="w-full h-full object-cover"
+                            unoptimized
+                        />
+                    ) : (
+                        <UserCircleIcon />
+                    )}
                 </div>
+
                 <MeetingStatusBadge status={data.status} />
             </div>
             <div className="flex-1">
@@ -279,6 +360,23 @@ const EmployerAttendeeCard = ({
 
                 {creatorId === data.employerId && <span>Organizer</span>}
             </div>
+
+            {data.scheduleTime && data.status === "MEETING_SCHEDULING" && (
+                <>
+                    <button
+                        type="button"
+                        className="w-5 h-5 self-start"
+                        onClick={() => setShowInfo(true)}
+                    >
+                        <InformationCircleIcon />
+                    </button>
+                    <ScheduleTimeModal
+                        show={showInfo}
+                        close={() => setShowInfo(false)}
+                        scheduleTime={JSON.parse(data.scheduleTime)}
+                    />
+                </>
+            )}
         </div>
     );
 };

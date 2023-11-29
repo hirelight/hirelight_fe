@@ -76,6 +76,7 @@ const HeaderBar = () => {
                                     src={authUser.avatarUrl ?? ""}
                                     width={40}
                                     height={40}
+                                    unoptimized={true}
                                 />
                             </button>
                             <div

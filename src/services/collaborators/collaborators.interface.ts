@@ -24,10 +24,10 @@ export interface ICollaboratorDto {
     employerDto: {
         id: string;
         email: string;
-        username: string | null;
         firstName: string;
         lastName: string | null;
         status: string;
+        avatarUrl: string;
     };
     jobPostId: string;
     status: string;

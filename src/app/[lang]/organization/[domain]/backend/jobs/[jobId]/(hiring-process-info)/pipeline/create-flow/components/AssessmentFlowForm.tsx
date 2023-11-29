@@ -103,7 +103,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
             });
 
             toast.success(res.message);
-            queryClient.invalidateQueries({ queryKey: [`job-${jobId}`] });
+            queryClient.invalidateQueries({ queryKey: ["job", jobId] });
             router.push(`config-pipeline/${res.data.id}`);
             setIsLoading(false);
         } catch (error) {

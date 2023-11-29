@@ -1,35 +1,49 @@
+"use client";
+
 import React from "react";
+import { Tab } from "@headlessui/react";
 
 import ApplicantList from "./components/ApplicationList";
+import MeetingList from "./components/MeetingList";
 
-const MyApplications = async () => {
+function classNames(...classes: any[]) {
+    return classes.filter(Boolean).join(" ");
+}
+
+const tabs = {
+    Assessments: <ApplicantList />,
+    Meetings: <MeetingList />,
+};
+
+const MyApplications = () => {
     return (
         <div className="w-full">
-            <div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm flex justify-center items-center pt-4 pb-6 mb-10">
-                <div className="flex items-center gap-16">
-                    <button
-                        type="button"
-                        className={`relative font-medium text-lg transition-all after:content-[""] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:h-1 after:w-0 after:bg-blue_primary_800 after:mt-2 after:rounded-full after:transition-all`}
-                    >
-                        Wait for response
-                    </button>
-                    <button
-                        type="button"
-                        className={`relative font-medium text-lg transition-all after:content-[""] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:h-1 after:w-0 after:bg-blue_primary_800 after:mt-2 after:rounded-full after:transition-all`}
-                    >
-                        In interview progress
-                    </button>
-                    <button
-                        type="button"
-                        className={`relative font-medium text-lg transition-all after:content-[""] after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:h-1 after:w-0 after:bg-blue_primary_800 after:mt-2 after:rounded-full after:transition-all`}
-                    >
-                        Finished
-                    </button>
-                </div>
-            </div>
-            <div>
-                <ApplicantList />
-            </div>
+            <Tab.Group>
+                <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
+                    {Object.keys(tabs).map(tab => (
+                        <Tab
+                            key={tab}
+                            className={({ selected }) =>
+                                classNames(
+                                    "w-full rounded-lg py-2.5 text-sm font-medium leading-5",
+                                    "ring-white/60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2",
+                                    selected
+                                        ? "bg-white text-blue-700 shadow"
+                                        : "text-white hover:bg-white/[0.12]"
+                                )
+                            }
+                        >
+                            {tab}
+                        </Tab>
+                    ))}
+                </Tab.List>
+                <Tab.Panels className="mt-2">
+                    {Object.values(tabs).map((val, idx) => (
+                        <Tab.Panel key={idx}>{val}</Tab.Panel>
+                    ))}
+                </Tab.Panels>
+            </Tab.Group>
+            {/* <ApplicantList /> */}
         </div>
     );
 };

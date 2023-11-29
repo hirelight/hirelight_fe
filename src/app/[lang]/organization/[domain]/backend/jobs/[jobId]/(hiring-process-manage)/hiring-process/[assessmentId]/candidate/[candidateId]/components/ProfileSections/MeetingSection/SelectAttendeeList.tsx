@@ -8,10 +8,27 @@ import { useQuery } from "@tanstack/react-query";
 import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
 import { useAppSelector } from "@/redux/reduxHooks";
+import { IOrgEmployerDto, MeetingEmployer } from "@/services";
 
 type SelectAttendeeListProps = {
-    selected: ICollaboratorDto[];
-    onSelect: (selected: ICollaboratorDto[]) => void;
+    selected: {
+        id: string;
+        email: string;
+        firstName: string;
+        lastName: string | null;
+        status: string;
+        avatarUrl: string;
+    }[];
+    onSelect: (
+        selected: {
+            id: string;
+            email: string;
+            firstName: string;
+            lastName: string | null;
+            status: string;
+            avatarUrl: string;
+        }[]
+    ) => void;
 };
 
 const SelectAttendeeList: React.FC<SelectAttendeeListProps> = ({
@@ -49,7 +66,7 @@ const SelectAttendeeList: React.FC<SelectAttendeeListProps> = ({
                                             : "text-gray-900"
                                     }`
                                 }
-                                value={person}
+                                value={person.employerDto}
                             >
                                 {({ selected }) => (
                                     <>

@@ -247,12 +247,13 @@ const AsyncResult = ({ results }: { results: IAsyncAnswer[] }) => {
         <div className="space-y-8 text-sm mb-4">
             {results?.map((item, quesNo) => (
                 <section key={item.id}>
-                    <div className="flex items-start gap-2 ql-editor !p-0 mb-4">
+                    <div className="flex items-start gap-2 mb-4">
                         <span>{quesNo + 1}.</span>
                         <div
                             dangerouslySetInnerHTML={{
                                 __html: item.content.name,
                             }}
+                            className="ql-editor !p-0"
                         ></div>
                     </div>
 

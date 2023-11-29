@@ -6,7 +6,7 @@ import { ICreateMeetings, IEditMeetingDto, IMeetingDto } from "..";
 import interceptor from "../interceptor";
 
 const getListByAssessmentId = async (
-    assessmentId: string,
+    assessmentId?: string,
     candidateId?: string
 ): Promise<IResponse<IMeetingDto[]>> => {
     try {

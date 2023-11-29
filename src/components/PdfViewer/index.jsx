@@ -87,7 +87,6 @@ export default function PDFViewer({ src = defaultUrl, fileName }) {
 
             setLoaded(true);
         } catch (error) {
-            toast.error("Load pdf failure!");
             console.error(error);
             setLoaded(false);
         }

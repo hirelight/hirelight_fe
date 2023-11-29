@@ -39,7 +39,7 @@ const ChatSection = () => {
                     styles.chat_container + " flex justify-center !pt-[10%]"
                 }
             >
-                <section>
+                <section className="w-full">
                     <h3 className="text-xl font-semibold mb-4">
                         {applicantDetail.assessment.name}
                     </h3>
@@ -49,6 +49,7 @@ const ChatSection = () => {
                             __html:
                                 applicantDetail.assessment.description ?? "",
                         }}
+                        className="ql-editor h-fit !p-0"
                     ></div>
 
                     <div className="h-[1px] w-full bg-gray-300 my-6"></div>
@@ -64,6 +65,11 @@ const ChatSection = () => {
                             <li>
                                 Each question will have different time settings:
                                 think time, answer time and amount of retakes
+                            </li>
+                            <li>
+                                After the assessment you can review your takes.
+                                You can choose your best takes to send to the
+                                recruitment team.
                             </li>
                         </ul>
                     </section>
@@ -84,6 +90,7 @@ const ChatSection = () => {
                                 dangerouslySetInnerHTML={{
                                     __html: answers[curPos].content.name,
                                 }}
+                                className="ql-editor !p-0"
                             ></div>
                         }
                     </div>

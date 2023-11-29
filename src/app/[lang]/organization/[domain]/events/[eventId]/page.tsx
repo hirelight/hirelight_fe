@@ -6,34 +6,25 @@ import React, { useMemo, useState } from "react";
 import moment from "moment";
 import Link from "next/link";
 import Image from "next/image";
-import { CheckIcon, UserCircleIcon } from "@heroicons/react/24/solid";
 import { RadioGroup } from "@headlessui/react";
 import { toast } from "react-toastify";
+import {
+    CheckIcon,
+    MinusIcon,
+    QuestionMarkCircleIcon,
+    UserCircleIcon,
+    XMarkIcon,
+} from "@heroicons/react/24/solid";
 
 import meetingServices from "@/services/meeting/meeting.service";
 import LoadingIndicator from "@/components/LoadingIndicator";
-import { Button, ButtonOutline, CustomInput } from "@/components";
 import { useAppSelector } from "@/redux/reduxHooks";
 import { handleError } from "@/helpers";
 import { SpinLoading } from "@/icons";
+import { RescheduleModal } from "@/components";
+import { MeetingStatus } from "@/services";
 
 import styles from "./styles.module.scss";
-import RescheduleModal from "./components/RescheduleModal";
-
-const plans = [
-    {
-        name: "Accept",
-        value: "MEETING_ACCEPTED",
-    },
-    {
-        name: "Decline",
-        value: "MEETING_DECLINED",
-    },
-    {
-        name: "Reschedule",
-        value: "MEETING_RESCHEDULE",
-    },
-];
 
 const EventInfoPage = () => {
     const { eventId } = useParams();
@@ -97,6 +88,7 @@ const EventInfoPage = () => {
                     width={30}
                     height={30}
                     className="w-full h-full rounded-full object-cover"
+                    unoptimized
                 />
             );
         else
@@ -117,7 +109,7 @@ const EventInfoPage = () => {
 
     if (isLoading || !isSuccess)
         return (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center py-52">
                 <LoadingIndicator />
             </div>
         );
@@ -141,14 +133,16 @@ const EventInfoPage = () => {
             />
             <header className="bg-white flex flex-col items-center justify-center p-6 mb-8 drop-shadow-lg">
                 <h1 className="uppercase text-2xl text-blue_primary_700">
-                    FPT Uni
+                    {meeting.data.jobPost &&
+                        meeting.data.jobPost.organization.name}
                 </h1>
 
                 <h3 className="font-semibold text-xl text-neutral-700 mt-4 mb-2">
-                    Frontend Developer
+                    {meeting.data.jobPost && meeting.data.jobPost.title}
                 </h3>
                 <p className="text-sm text-gray-500">
-                    Ho Chi Minh City, Vietnam · Temporary
+                    {meeting.data.jobPost && meeting.data.jobPost.area} ·{" "}
+                    {meeting.data.jobPost && meeting.data.jobPost.workModality}
                 </p>
             </header>
 
@@ -159,35 +153,68 @@ const EventInfoPage = () => {
                     </h3>
                     <div className={styles.subsection}>
                         <p className="py-3 px-4 mb-6">
-                            Scheduled on{" "}
+                            Scheduled from{" "}
                             <strong>
                                 {moment
                                     .utc(meeting.data.startTime)
                                     .local()
-                                    .format("dddd MMMM Do")}{" "}
-                                at{" "}
+                                    .format("dddd MMMM Do HH:mm A")}
+                            </strong>
+                            <span> to </span>
+                            <strong>
                                 {`${moment
-                                    .utc(meeting.data.startTime)
-                                    .local()
-                                    .format("HH:mm A")} - ${moment
                                     .utc(meeting.data.endTime)
                                     .local()
-                                    .format("HH:mm A")}`}
+                                    .format("dddd MMMM Do HH:mm A")}`}
                             </strong>
                         </p>
 
                         <h3 className="uppercase">Meeting link</h3>
 
                         <Link
-                            href={meeting.data.meetingLink}
-                            className="text-blue_primary_800 font-semibold hover:underline"
+                            href={
+                                meeting.data.meetingLink
+                                    .toLowerCase()
+                                    .includes("zoom")
+                                    ? meeting.data.meetingLink.replace(
+                                          "Zoom meeting: ",
+                                          ""
+                                      )
+                                    : meeting.data.meetingLink
+                            }
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            className="text-blue_primary_800 font-semibold"
                         >
-                            {meeting.data.meetingLink}
+                            {meeting.data.meetingLink
+                                .toLowerCase()
+                                .includes("zoom")
+                                ? meeting.data.meetingLink.replace(
+                                      "Zoom meeting: ",
+                                      ""
+                                  )
+                                : meeting.data.meetingLink}
                         </Link>
                     </div>
 
                     {meeting.data.candidate && (
-                        <div className={styles.subsection}></div>
+                        <div className={styles.subsection}>
+                            <div className="flex items-center gap-3">
+                                <div className="relative w-20 h-20">
+                                    {getImageNode(
+                                        meeting.data.candidate.avatarUrl ?? ""
+                                    )}
+                                    <MeetingStatusBadge
+                                        status={meeting.data.status}
+                                    />
+                                </div>
+                                <span>
+                                    {meeting.data.candidate.firstName +
+                                        " " +
+                                        (meeting.data.candidate.lastName ?? "")}
+                                </span>
+                            </div>
+                        </div>
                     )}
 
                     <div className={styles.subsection}>
@@ -203,7 +230,13 @@ const EventInfoPage = () => {
                                         className="flex items-center gap-3"
                                     >
                                         <div className="relative w-20 h-20">
-                                            {getImageNode()}
+                                            {getImageNode(
+                                                employer.employer.avatarUrl ??
+                                                    ""
+                                            )}
+                                            <MeetingStatusBadge
+                                                status={employer.status}
+                                            />
                                         </div>
                                         <span>
                                             {employer.employer.firstName +
@@ -225,9 +258,9 @@ const EventInfoPage = () => {
                                     acceptMeetingMutate.isPending ||
                                     declineMeetingMutate.isPending
                                 }
-                                className={`border-2 border-blue-800 hover:bg-blue-800 hover:text-white focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 disabled:cursor-not-allowed disabled:opacity-80 ${
-                                    meeting.data &&
-                                    meeting.data.status === "MEETING_ACCEPTED"
+                                className={`border-2 border-blue-600 hover:bg-blue-800 hover:border-blue-800 hover:text-white focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 disabled:cursor-not-allowed disabled:opacity-80 ${
+                                    employerData &&
+                                    employerData.status === "MEETING_ACCEPTED"
                                         ? "bg-blue-600 text-white"
                                         : "bg-white text-neutral-900"
                                 }`}
@@ -245,9 +278,9 @@ const EventInfoPage = () => {
                                     declineMeetingMutate.isPending ||
                                     acceptMeetingMutate.isPending
                                 }
-                                className={`border-2 border-red-700 focus:outline-none hover:bg-red-700 hover:text-white focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 disabled:cursor-not-allowed disabled:opacity-80 ${
-                                    meeting.data &&
-                                    meeting.data.status === "MEETING_DECLINED"
+                                className={`border-2 border-red-500 focus:outline-none hover:bg-red-700 hover:border-red-700 hover:text-white focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 disabled:cursor-not-allowed disabled:opacity-80 ${
+                                    employerData &&
+                                    employerData.status === "MEETING_DECLINED"
                                         ? "bg-red-500 text-white"
                                         : "bg-white text-neutral-900"
                                 }`}
@@ -261,9 +294,9 @@ const EventInfoPage = () => {
 
                             <button
                                 type="button"
-                                className={`border-2 border-yellow-500 focus:outline-none hover:bg-yellow-500 hover:text-white focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900 ${
-                                    meeting.data &&
-                                    meeting.data.status === "MEETING_SCHEDULING"
+                                className={`border-2 border-yellow-400 focus:outline-none hover:bg-yellow-500 hover:border-yellow-500 hover:text-white focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-yellow-900 ${
+                                    employerData &&
+                                    employerData.status === "MEETING_SCHEDULING"
                                         ? "bg-yellow-400 text-white"
                                         : "bg-white text-neutral-900"
                                 }`}
@@ -280,3 +313,32 @@ const EventInfoPage = () => {
 };
 
 export default EventInfoPage;
+
+const MeetingStatusBadge = ({ status }: { status: MeetingStatus }) => {
+    switch (status) {
+        case "MEETING_ACCEPTED":
+            return (
+                <div className="bg-green-500 rounded-full border border-white absolute bottom-1 right-1 shadow-lg p-[0.5px]">
+                    <CheckIcon className="w-3 h-3 text-white" />
+                </div>
+            );
+        case "MEETING_DECLINED":
+            return (
+                <div className="bg-red-500 rounded-full border border-white absolute bottom-1 right-1 shadow-lg p-[0.5px]">
+                    <XMarkIcon className="w-3 h-3 text-white" />
+                </div>
+            );
+        case "MEETING_SCHEDULING":
+            return (
+                <div className="bg-amber-500 rounded-full border border-white absolute bottom-1 right-1 shadow-lg p-[0.5px]">
+                    <MinusIcon className="w-3 h-3 text-white" />
+                </div>
+            );
+        default:
+            return (
+                <div className="absolute bottom-1 right-1 shadow-lg">
+                    <QuestionMarkCircleIcon className="w-4 h-4 rounded-full bg-white text-blue-500" />
+                </div>
+            );
+    }
+};

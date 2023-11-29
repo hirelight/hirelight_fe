@@ -123,10 +123,13 @@ const HeaderBar = () => {
                             }
                         >
                             {authUser?.avatarUrl ? (
-                                <img
+                                <Image
                                     alt="Logo"
                                     src={authUser?.avatarUrl}
+                                    width={100}
+                                    height={100}
                                     className="w-10 aspect-square object-contain"
+                                    unoptimized
                                 />
                             ) : (
                                 <UserCircleIcon className="w-10 aspect-square text-neutral-700" />
@@ -144,16 +147,19 @@ const HeaderBar = () => {
                             tabIndex={-1}
                         >
                             <div className="p-4 border-b border-gray-300 flex items-center gap-2">
-                                <span className="inline-block rounded-full overflow-hidden">
-                                    <Image
-                                        alt="Avatar"
-                                        src={
-                                            process.env
-                                                .NEXT_PUBLIC_AVATAR_URL as string
-                                        }
-                                        width={50}
-                                        height={50}
-                                    />
+                                <span className="flex-shrink-0 inline-block rounded-full overflow-hidden">
+                                    {authUser?.avatarUrl ? (
+                                        <Image
+                                            alt="Logo"
+                                            width={100}
+                                            height={100}
+                                            src={authUser?.avatarUrl}
+                                            className="w-10 aspect-square object-contain"
+                                            unoptimized
+                                        />
+                                    ) : (
+                                        <UserCircleIcon className="w-10 aspect-square text-neutral-700" />
+                                    )}
                                 </span>
                                 <div>
                                     <h4 className="text-neutral-700 font-semibold">
@@ -167,7 +173,6 @@ const HeaderBar = () => {
                                 </div>
                             </div>
                             <div className="py-1" role="none">
-                                {/* <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" --> */}
                                 <Link
                                     href="/backend/settings/templates"
                                     className={styles.avatar__dropdown__btn}

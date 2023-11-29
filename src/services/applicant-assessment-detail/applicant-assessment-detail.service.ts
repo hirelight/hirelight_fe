@@ -34,6 +34,23 @@ const moveCandidateToAssessment = async (
     }
 };
 
+const disqualifyCandidate = async (
+    applicantProfileId: string
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.put<IResponse<any>>(
+            endpoints.APPLICANT_ASSESSMENT_DETAILS +
+                `/disqualify/${applicantProfileId}`
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const employeeGetApplicantAssessDetailsList = async (
     candidateId: string | null,
     jobpostId?: string
@@ -319,6 +336,7 @@ const applicantAssessmentDetailServices = {
     employeeApplicantDetailByAssessmentId,
     employeeGetByDetailId,
     getAppAssDetailByProfileId,
+    disqualifyCandidate,
 };
 
 export const mcAssessmentServices = {

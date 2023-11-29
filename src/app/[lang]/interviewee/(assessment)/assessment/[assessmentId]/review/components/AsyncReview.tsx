@@ -107,12 +107,13 @@ const AsyncReviewPage: React.FC<ReviewPageProps> = ({ data }) => {
                             key={answer.id}
                             className={styles.content_container}
                         >
-                            <div className="flex items-start gap-2 ql-editor !p-0 mb-4">
+                            <div className="flex items-start gap-2 mb-4 max-w-[50%]">
                                 <span>{ansIndx + 1}.</span>
                                 <div
                                     dangerouslySetInnerHTML={{
                                         __html: answer.content.name,
                                     }}
+                                    className="ql-editor !p-0"
                                 ></div>
                             </div>
 

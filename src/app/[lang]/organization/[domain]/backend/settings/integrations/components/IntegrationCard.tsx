@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
@@ -73,7 +73,9 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({ data }) => {
         setLoading(false);
     };
 
-    const handelSaveChange = async () => {
+    const handleSaveChange = async (e: FormEvent) => {
+        e.preventDefault();
+
         if (!integrationToken && !integrationOrgName)
             handleDeleteIntegration(integration.token?.id!!);
         else if (integration.token) {
@@ -170,7 +172,10 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({ data }) => {
                             },
                         }}
                     >
-                        <div className="p-6 space-y-4">
+                        <form
+                            onSubmit={handleSaveChange}
+                            className="p-6 space-y-4"
+                        >
                             {data.service !== "HACKERRANK" && (
                                 <CustomInput
                                     title="Integration organization name"
@@ -190,13 +195,13 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({ data }) => {
                                 required
                             />
                             <ButtonOutline
+                                type="submit"
                                 disabled={loading}
                                 isLoading={loading}
-                                onClick={handelSaveChange}
                             >
                                 Update setting
                             </ButtonOutline>
-                        </div>
+                        </form>
                     </motion.div>
                 )}
             </AnimatePresence>

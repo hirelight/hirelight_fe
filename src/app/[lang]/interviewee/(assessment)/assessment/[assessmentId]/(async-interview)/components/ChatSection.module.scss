@@ -1,6 +1,6 @@
 .chat_container {
     flex: 1 1 0%;
-    padding: 1rem;
+    padding: 1.5rem;
     display: flex;
     overflow: auto;
 }
@@ -8,11 +8,13 @@
 .content_container {
     flex: 1 1 0%;
     padding-left: 1rem;
+    max-width: 100%;
 }
 
 .message_card {
     padding: 1.5rem;
     margin-bottom: 1rem;
+    max-width: 100%;
     @apply bg-slate-100 rounded-lg w-1/2;
 
     &_title {

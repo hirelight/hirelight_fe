@@ -7,6 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useParams } from "next/navigation";
 import { ChevronDownIcon, MinusIcon } from "@heroicons/react/24/solid";
+import { Tab } from "@headlessui/react";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setSelectAllCandidates } from "@/redux/slices/candidates.slice";
@@ -15,6 +16,10 @@ import { MinusBigIcon } from "@/icons";
 import styles from "./styles.module.scss";
 import CandidateList from "./CandidateList/CandidateList";
 
+function classNames(...classes: any[]) {
+    return classes.filter(Boolean).join(" ");
+}
+
 const Sidebar = () => {
     const dispatch = useAppDispatch();
     const selectedCandidates = useAppSelector(
@@ -22,27 +27,40 @@ const Sidebar = () => {
     );
 
     const [search, setSearch] = useState("");
+    const [disqualify, setDisqualify] = useState(false);
 
     return (
         <aside className={styles.sidebar__wrapper}>
-            <div className="border-b border-gray-300">
-                <div role="tablist" className="px-6 mt-6 h-9 flex">
-                    <button
-                        type="button"
-                        role="tab"
-                        className={`${styles.sidebar__tab}`}
+            <Tab.Group>
+                <Tab.List
+                    as="div"
+                    className="px-6 mt-6 h-9 flex border-b border-gray-300"
+                >
+                    <Tab
+                        className={({ selected }) =>
+                            classNames(
+                                `${styles.sidebar__tab}`,
+                                selected ? styles.active : ""
+                            )
+                        }
+                        onClick={() => setDisqualify(false)}
                     >
                         <span>Qualified</span>
-                    </button>
-                    <button
-                        type="button"
-                        role="tab"
-                        className={`${styles.sidebar__tab} `}
+                    </Tab>
+                    <Tab
+                        className={({ selected }) =>
+                            classNames(
+                                `${styles.sidebar__tab}`,
+                                selected ? styles.active : ""
+                            )
+                        }
+                        onClick={() => setDisqualify(true)}
                     >
                         <span>Disqualified</span>
-                    </button>
-                </div>
-            </div>
+                    </Tab>
+                </Tab.List>
+            </Tab.Group>
+
             <div className="p-4 xl:px-6 border-b border-gray-300">
                 <div className="relative mb-4">
                     <div className="pointer-events-none absolute inset-y-0 left-2 flex items-center">
@@ -96,7 +114,7 @@ const Sidebar = () => {
                     </div>
                 </div>
             </div>
-            <CandidateList />
+            <CandidateList disqualify={disqualify} />
         </aside>
     );
 };

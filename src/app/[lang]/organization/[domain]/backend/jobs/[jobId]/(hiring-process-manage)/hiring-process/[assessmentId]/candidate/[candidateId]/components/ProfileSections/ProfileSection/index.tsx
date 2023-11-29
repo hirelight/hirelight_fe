@@ -37,12 +37,12 @@ const ProfileSection = () => {
             : "";
 
         if (field.id === "resume")
-            return (
+            return field.value ? (
                 <PDFViewer
                     src={field.value!!.value as string}
                     fileName={field.value!!.name}
                 />
-            );
+            ) : null;
         else
             return (
                 <div className="flex flex-col lg:flex-row">

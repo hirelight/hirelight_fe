@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import {
     EllipsisHorizontalIcon,
     EnvelopeIcon,
     HandRaisedIcon,
     ChatBubbleOvalLeftIcon,
     PencilSquareIcon,
+    ArrowPathIcon,
 } from "@heroicons/react/24/solid";
 import {
     CalendarDaysIcon,
@@ -62,6 +63,29 @@ const CandidateActionTabs = () => {
     const applicantAssessmentDetail = useAppSelector(
         state => state.applicantAssessmentDetail.data!!
     );
+    const isDisqualified = useMemo(
+        () =>
+            applicantAssessmentDetail.applicantProfile.status ===
+            "DISQUALIFIED",
+        [applicantAssessmentDetail]
+    );
+
+    const disqualifyMutate = useMutation({
+        mutationKey: [
+            "disqualify",
+            applicantAssessmentDetail.applicantProfileId,
+        ],
+        mutationFn: (id: string) =>
+            applicantAssessmentDetailServices.disqualifyCandidate(id),
+        onSuccess: async res => {
+            await queryClient.invalidateQueries({
+                queryKey: [`job-profiles`, jobId, assessmentId],
+            });
+        },
+        onError: err => {
+            toast.error(err.message);
+        },
+    });
 
     const handleSendAssessment = async () => {
         setSendLoading(true);
@@ -110,6 +134,20 @@ const CandidateActionTabs = () => {
         setLoading(false);
     };
 
+    const handleDisqualifyCandidate = async () => {
+        await toast.promise(
+            disqualifyMutate.mutateAsync(
+                applicantAssessmentDetail.applicantProfileId
+            ),
+            {
+                pending: "Disqualifying candidate",
+                success: "Disqualify candidate success!",
+            }
+        );
+    };
+
+    const handleRestoreCandidate = () => {};
+
     return (
         <>
             <ActionDrawer
@@ -123,8 +161,12 @@ const CandidateActionTabs = () => {
                         <Tooltip content="Create event">
                             <button
                                 type="button"
-                                className={styles.candidate__action__btn}
+                                className={
+                                    styles.candidate__action__btn +
+                                    " disabled:cursor-not-allowed disabled:opacity-80"
+                                }
                                 onClick={() => setShowDrawer(true)}
+                                disabled={isDisqualified}
                             >
                                 <CalendarDaysIcon className="w-6 h-6" />
                             </button>
@@ -135,34 +177,57 @@ const CandidateActionTabs = () => {
                             type="button"
                             className={
                                 styles.candidate__action__btn +
-                                " disabled:cursor-not-allowed disabled:opacity-60"
+                                " disabled:cursor-not-allowed disabled:opacity-80"
                             }
-                            disabled={sendLoading}
+                            disabled={sendLoading || isDisqualified}
                             onClick={handleSendAssessment}
                         >
                             <PaperAirplaneIcon className="w-6 h-6" />
                         </button>
                     </Tooltip>
                     <div className="w-[1px] h-8 bg-gray-300"></div>
-                    <Tooltip content="Disqualified candidate">
-                        <button
-                            type="button"
-                            className={styles.candidate__action__btn}
-                        >
-                            <HandRaisedIcon className="w-6 h-6 text-red-600" />
-                        </button>
-                    </Tooltip>
-                    <div className="flex items-center ">
-                        <button
-                            type="button"
-                            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm w-auto px-2 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 rounded-tl-md rounded-bl-md border-r border-blue-800 transition-all duration-300 whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-60"
-                            disabled={loading}
-                            onClick={handleMoveCandidate}
-                        >
-                            Move to {nextAssesment.name}
-                        </button>
-                        <MoveCandidateDialog />
-                    </div>
+                    {!isDisqualified ? (
+                        <Tooltip content="Disqualified candidate">
+                            <button
+                                type="button"
+                                className={
+                                    styles.candidate__action__btn +
+                                    " disabled:cursor-not-allowed disabled:opacity-80"
+                                }
+                                disabled={disqualifyMutate.isPending}
+                                onClick={handleDisqualifyCandidate}
+                            >
+                                <HandRaisedIcon className="w-6 h-6 text-red-600" />
+                            </button>
+                        </Tooltip>
+                    ) : (
+                        <Tooltip content="Restore candidate">
+                            <button
+                                type="button"
+                                className={
+                                    styles.candidate__action__btn +
+                                    " disabled:cursor-not-allowed disabled:opacity-80"
+                                }
+                                disabled={disqualifyMutate.isPending}
+                                onClick={handleRestoreCandidate}
+                            >
+                                <ArrowPathIcon className="w-6 h-6 text-green-500" />
+                            </button>
+                        </Tooltip>
+                    )}
+                    {!isDisqualified && (
+                        <div className="flex items-center ">
+                            <button
+                                type="button"
+                                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm w-auto px-2 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 rounded-tl-md rounded-bl-md border-r border-blue-800 transition-all duration-300 whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-60"
+                                disabled={loading}
+                                onClick={handleMoveCandidate}
+                            >
+                                Move to {nextAssesment.name}
+                            </button>
+                            <MoveCandidateDialog />
+                        </div>
+                    )}
                 </div>
             </div>
         </>

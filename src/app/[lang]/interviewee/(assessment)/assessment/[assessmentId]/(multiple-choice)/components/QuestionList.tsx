@@ -17,7 +17,7 @@ import QuestionCard from "./QuestionCard";
 import { useMultipleChoiceAssessment } from "./MultipleChoiceAssessment";
 
 const QuestionList = () => {
-    const { assesmentData, answers, handleSubmitTest, stopAutoTask } =
+    const { assesmentData, answers, handleSubmitTest } =
         useMultipleChoiceAssessment();
 
     const targetDate = useRef<Date>(
@@ -28,9 +28,8 @@ const QuestionList = () => {
     );
 
     const onEnd = useCallback(() => {
-        stopAutoTask();
         handleSubmitTest();
-    }, [handleSubmitTest, stopAutoTask]);
+    }, [handleSubmitTest]);
 
     return (
         <div className="flex gap-6 relative">

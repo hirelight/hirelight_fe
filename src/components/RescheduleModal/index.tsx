@@ -1,39 +1,80 @@
 "use client";
 
 import { Dialog, Disclosure, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import moment from "moment";
 import { toast } from "react-toastify";
 import { TrashIcon } from "@heroicons/react/24/outline";
+import { useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
+import { PencilIcon } from "@heroicons/react/24/solid";
 
-import { ButtonOutline, CustomInput } from "@/components";
-import { handleError } from "@/helpers";
+import { Button, ButtonOutline, CustomInput } from "@/components";
+import { handleError, isInvalidForm } from "@/helpers";
 import meetingServices from "@/services/meeting/meeting.service";
 
 type RescheduleModalProps = {
     meetingId: string;
     show: boolean;
     close: () => void;
+    scheduleTime:
+        | {
+              from: string;
+              to: string;
+          }[]
+        | null;
 };
 
 const RescheduleModal: React.FC<RescheduleModalProps> = ({
     meetingId,
     show,
     close,
+    scheduleTime,
 }) => {
+    const { eventId } = useParams();
+
+    const queryClient = useQueryClient();
+
     const [sections, setSections] = useState<
         {
             from: string;
             to: string;
         }[]
     >([]);
+    const [loading, setLoading] = useState(false);
     const [formState, setFormState] = useState({
         from: new Date(),
         to: new Date(),
     });
+    const [formErr, setFormErr] = useState({
+        fromErr: "",
+        toErr: "",
+    });
+
+    const inValidInput = (): boolean => {
+        const errors = { ...formErr };
+        const { from, to } = formState;
+
+        if (moment(to).isBefore(from))
+            errors.toErr = "The from time must greator than to time";
+
+        if (moment(from).isBefore(moment()))
+            errors.fromErr = "Free time must be in future";
+
+        if (isInvalidForm(errors)) {
+            toast.error("Invalid input");
+            setFormErr(errors);
+            return true;
+        }
+
+        return false;
+    };
 
     const handleSaveSection = () => {
+        if (inValidInput()) return;
+
         const { from, to } = formState;
+
         const utcFrom = moment.parseZone(from).utc().format();
         const utcTo = moment.parseZone(to).utc().format();
         setSections(prev =>
@@ -47,17 +88,31 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
     };
 
     const handleSendReschedule = async () => {
+        setLoading(true);
         try {
             const res = await meetingServices.candidateReScheduleMeeting(
                 meetingId,
                 JSON.stringify(sections)
             );
 
+            await queryClient.invalidateQueries({
+                queryKey: ["meeting", eventId],
+            });
+
             toast.success(res.message);
+            close();
         } catch (error: any) {
             handleError(error);
         }
+
+        setLoading(false);
     };
+
+    useEffect(() => {
+        if (scheduleTime) {
+            setSections(scheduleTime);
+        }
+    }, [scheduleTime]);
 
     return (
         <Transition appear show={show} as={Fragment}>
@@ -93,14 +148,17 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
                                     Reschedule
                                 </Dialog.Title>
                                 <div className="mt-2">
-                                    <ul className="space-y-4">
+                                    <ul>
                                         {sections.map((item, index) => (
-                                            <li key={index} className="text-sm">
+                                            <li
+                                                key={index}
+                                                className="text-sm py-4 border-t border-gray-300 first:border-t-0"
+                                            >
                                                 <h3 className="text-neutral-700 font-semibold mb-2">
                                                     Slot:
                                                 </h3>
                                                 <div className="flex gap-4">
-                                                    <p className="flex flex-1 gap-4">
+                                                    <p className="flex flex-1 gap-4 font-medium">
                                                         <span>
                                                             {moment
                                                                 .utc(item.from)
@@ -119,6 +177,27 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
                                                                 )}
                                                         </span>
                                                     </p>
+
+                                                    {/* <button
+                                                        type="button"
+                                                        className="p-1 rounded hover:bg-slate-200/80"
+                                                        onClick={() =>
+                                                            setFormState({
+                                                                from: moment
+                                                                    .utc(
+                                                                        item.from
+                                                                    )
+                                                                    .toDate(),
+                                                                to: moment
+                                                                    .utc(
+                                                                        item.to
+                                                                    )
+                                                                    .toDate(),
+                                                            })
+                                                        }
+                                                    >
+                                                        <PencilIcon className="text-neutral-700 w-5 h-5" />
+                                                    </button> */}
 
                                                     <button
                                                         type="button"
@@ -174,7 +253,15 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
                                                                         ),
                                                                     })
                                                                 );
+                                                                setFormErr({
+                                                                    ...formErr,
+                                                                    fromErr: "",
+                                                                });
                                                             }}
+                                                            required
+                                                            errorText={
+                                                                formErr.fromErr
+                                                            }
                                                         />
                                                         <CustomInput
                                                             title="To"
@@ -193,7 +280,15 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
                                                                         ),
                                                                     })
                                                                 );
+                                                                setFormErr({
+                                                                    ...formErr,
+                                                                    toErr: "",
+                                                                });
                                                             }}
+                                                            required
+                                                            errorText={
+                                                                formErr.toErr
+                                                            }
                                                         />
 
                                                         <div>
@@ -218,13 +313,14 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
                                     </Disclosure>
 
                                     <div className="mt-4">
-                                        <button
+                                        <Button
                                             type="button"
-                                            className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                            disabled={loading}
+                                            isLoading={loading}
                                             onClick={handleSendReschedule}
                                         >
                                             Send request
-                                        </button>
+                                        </Button>
                                     </div>
                                 </div>
                             </Dialog.Panel>

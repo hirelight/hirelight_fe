@@ -25,7 +25,7 @@ const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
         isSuccess,
         isLoading,
     } = useQuery({
-        queryKey: [`job-${jobId}`],
+        queryKey: ["job", jobId],
         queryFn: async () => {
             const [jobAppFormRes, appFormTemplateRes] = await Promise.all([
                 jobServices.getByIdAsync(jobId as string),

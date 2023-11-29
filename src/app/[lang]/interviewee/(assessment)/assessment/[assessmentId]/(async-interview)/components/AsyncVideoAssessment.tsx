@@ -202,21 +202,18 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                     return item;
                 });
 
-                const res = await asyncAssessmentServices.trackAsyncAssessment({
+                await asyncAssessmentServices.trackAsyncAssessment({
                     applicantAssessmentDetailId: assessmentData.id,
                     assessmentSubmissions: JSON.stringify(updatedAnswers),
                 });
                 handleRemoveRecordTime();
-                queryClient.invalidateQueries({
+                await queryClient.invalidateQueries({
                     queryKey: [`my-assessment`, assessmentData.id],
                 });
 
-                toast.success(res.message);
                 setAnswers(updatedAnswers);
             } catch (error: any) {
-                toast.error(
-                    error.message ? error.message : "Some thing went wrong"
-                );
+                console.log(error);
             }
             setAssessmentLoading(false);
         },
@@ -234,11 +231,11 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                 applicantAssessmentDetailId: data.id,
                 assessmentSubmissions,
             });
-            toast.success(res.message);
 
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
                 queryKey: [`my-assessment`, assessmentData!!.id],
             });
+            toast.success(res.message);
             localStorage.removeItem(data.id);
         } catch (error: any) {
             toast.error(

@@ -1,13 +1,13 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import moment from "moment";
 
 import LoadingIndicator from "@/components/LoadingIndicator";
-import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
-import { getJobById, mergeAppFormFields } from "@/redux/thunks/job.thunk";
+import { useAppDispatch } from "@/redux/reduxHooks";
+import { mergeAppFormFields } from "@/redux/thunks/job.thunk";
 import jobServices from "@/services/job/job.service";
 import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
 import { setJob } from "@/redux/slices/job.slice";
@@ -22,7 +22,7 @@ const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
         isSuccess,
         isLoading,
     } = useQuery({
-        queryKey: [`job-${jobId}`],
+        queryKey: ["job", jobId],
         queryFn: async () => {
             const [jobAppFormRes, appFormTemplateRes] = await Promise.all([
                 jobServices.getByIdAsync(jobId as string),

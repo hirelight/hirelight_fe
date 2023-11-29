@@ -26,15 +26,11 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data }) => {
             [
                 ApplicantAssessmentDetailStatus.PENDING_EVALUATION,
                 ApplicantAssessmentDetailStatus.EVALUATED,
-                ApplicantAssessmentDetailStatus.IN_PROGRESS,
             ].includes(data.status)
         )
             router.push(`/assessment/${data.id}/review`);
         else if (
-            [
-                ApplicantAssessmentDetailStatus.MOVED,
-                ApplicantAssessmentDetailStatus.EVALUATED,
-            ].includes(data.status) &&
+            [ApplicantAssessmentDetailStatus.MOVED].includes(data.status) &&
             data.result !== null
         )
             router.push(`/assessment/${data.id}/review`);

@@ -111,7 +111,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
             });
 
             toast.success(res.message);
-            queryClient.invalidateQueries({ queryKey: [`job-${jobId}`] });
+            queryClient.invalidateQueries({ queryKey: ["job", jobId] });
             router.push(`config-pipeline/${res.data.id}`);
         } catch (error) {
             toast.error("Create flow error");

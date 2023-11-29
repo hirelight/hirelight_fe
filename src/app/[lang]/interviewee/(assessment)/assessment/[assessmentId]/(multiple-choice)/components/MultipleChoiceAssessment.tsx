@@ -40,7 +40,6 @@ type MultipleChoiceAssessmentState = {
     answers: ICandidateMCDto[];
     setAnswers: React.Dispatch<React.SetStateAction<ICandidateMCDto[]>>;
     handleSubmitTest: () => void;
-    stopAutoTask: () => void;
 };
 
 const MultipleChoiceAssessmentContext =
@@ -62,10 +61,14 @@ type MultipleChoiceAssessmentProps = {
     data: ICandidateAssessmentDetailDto;
 };
 
+let timer: NodeJS.Timer;
+
 const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
     data,
 }) => {
     const queryClient = useQueryClient();
+
+    const { assessmentId } = useParams();
 
     const [answers, setAnswers] = useState<ICandidateMCDto[]>([]);
     const [assesmentData, setAssessmentData] =
@@ -73,23 +76,24 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
     const [displayTest, setDisplayTest] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleTrackTest = useCallback(async () => {
-        try {
-            const res = await mcAssessmentServices.trackMCAssessment({
-                applicantAssessmentDetailId: data.id,
-                answers: answers,
-            });
-
-            toast.success(res.message);
-        } catch (error: any) {
-            console.error(error);
-        }
-    }, [answers, data.id]);
-
-    const [startAutoTask, stopAutoTask] = useTrackAssessment(
-        handleTrackTest,
-        5
+    const handleTrackTest = useCallback(
+        async function () {
+            try {
+                const res = await mcAssessmentServices.trackMCAssessment({
+                    applicantAssessmentDetailId: data.id,
+                    answers: answers,
+                });
+            } catch (error: any) {
+                console.error(error);
+            }
+        },
+        [answers, data.id]
     );
+
+    // const [startAutoTask, stopAutoTask] = useTrackAssessment(
+    //     handleTrackTest,
+    //     10
+    // );
 
     const handleJoinTest = async () => {
         setIsLoading(true);
@@ -98,14 +102,14 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
 
             toast.success(res.message);
             setAssessmentData(res.data);
-            setDisplayTest(true);
             setAnswers(
                 JSON.parse(res.data.questionAnswerSet!!) as ICandidateMCDto[]
             );
-            setIsLoading(false);
-            queryClient.invalidateQueries({
-                queryKey: [`my-assessment`, data.id],
+            await queryClient.invalidateQueries({
+                queryKey: [`my-assessment`, assessmentId],
             });
+            setDisplayTest(true);
+            setIsLoading(false);
         } catch (error: any) {
             handleError(error);
             setIsLoading(false);
@@ -121,7 +125,7 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                 answers: answers,
             });
             toast.success(res.message);
-            stopAutoTask();
+            // stopAutoTask();
             // router.push(`/${lang}/profile/applications`);
             setIsLoading(false);
             queryClient.invalidateQueries({
@@ -131,20 +135,7 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
             handleError(error);
             setIsLoading(false);
         }
-    }, [answers, assesmentData, data.id, queryClient, stopAutoTask]);
-
-    useEffect(() => {
-        if (
-            assesmentData &&
-            answers.length &&
-            [
-                ApplicantAssessmentDetailStatus.INVITED,
-                ApplicantAssessmentDetailStatus.IN_PROGRESS,
-            ].includes(assesmentData.status)
-        ) {
-            startAutoTask();
-        }
-    }, [assesmentData, answers, startAutoTask, stopAutoTask]);
+    }, [answers, assesmentData, data.id, queryClient]);
 
     useEffect(() => {
         if (
@@ -158,6 +149,19 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
             setAssessmentData(data as IMCAppliAssessmentDto);
         }
     }, [data]);
+
+    useEffect(() => {
+        const trackBeforeUnload = (e: BeforeUnloadEvent) => {
+            e.preventDefault();
+            handleTrackTest();
+        };
+        if (displayTest)
+            window.addEventListener("beforeunload", trackBeforeUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", trackBeforeUnload);
+        };
+    }, [displayTest, handleTrackTest]);
 
     return (
         <div>
@@ -180,7 +184,6 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                     assesmentData,
                     setAssessmentData,
                     handleSubmitTest,
-                    stopAutoTask,
                 }}
             >
                 <main className="max-w-screen-xl mx-auto p-4 xl:px-6">
@@ -196,7 +199,7 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                                 dangerouslySetInnerHTML={{
                                     __html: data.assessment.description,
                                 }}
-                                className="max-w-[40%]"
+                                className="ql-editor !max-w-[40%]"
                             ></div>
                         )}
                     </div>
@@ -229,23 +232,25 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                             <QuestionList />
                         </div>
                     )}
-                    {displayTest && (
-                        <div className="flex justify-center items-center">
-                            <ButtonOutline
-                                isLoading={isLoading}
-                                disabled={
-                                    isLoading ||
-                                    ![
-                                        ApplicantAssessmentDetailStatus.IN_PROGRESS,
-                                        ApplicantAssessmentDetailStatus.INVITED,
-                                    ].includes(data.status)
-                                }
-                                onClick={handleSubmitTest}
-                            >
-                                Submit
-                            </ButtonOutline>
-                        </div>
-                    )}
+                    {displayTest &&
+                        data.status ===
+                            ApplicantAssessmentDetailStatus.IN_PROGRESS && (
+                            <div className="flex justify-center items-center">
+                                <ButtonOutline
+                                    isLoading={isLoading}
+                                    disabled={
+                                        isLoading ||
+                                        ![
+                                            ApplicantAssessmentDetailStatus.IN_PROGRESS,
+                                            ApplicantAssessmentDetailStatus.INVITED,
+                                        ].includes(data.status)
+                                    }
+                                    onClick={handleSubmitTest}
+                                >
+                                    Submit
+                                </ButtonOutline>
+                            </div>
+                        )}
                 </main>
             </MultipleChoiceAssessmentContext.Provider>
         </div>

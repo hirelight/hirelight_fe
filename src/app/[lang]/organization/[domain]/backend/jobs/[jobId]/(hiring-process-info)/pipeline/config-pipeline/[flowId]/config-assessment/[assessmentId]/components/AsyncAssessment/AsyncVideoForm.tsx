@@ -349,7 +349,7 @@ const AsyncVideoForm = () => {
                             >
                                 <span className="relative py-4 px-5 flex items-center">
                                     <PlusCircleIcon className="w-5 h-5 mr-1" />
-                                    Create new topic
+                                    Create new question
                                 </span>
                             </button>
                         )}
