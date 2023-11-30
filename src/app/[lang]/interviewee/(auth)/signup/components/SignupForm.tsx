@@ -9,6 +9,7 @@ import { RegisterCandidateDto } from "@/services/auth/auth.interface";
 import authServices from "@/services/auth/auth.service";
 import { SpinLoading } from "@/icons";
 import { Button } from "@/components";
+import { handleError } from "@/helpers";
 
 const initialErr = {
     firstName: "",
@@ -73,7 +74,7 @@ const SignupForm = () => {
             router.push("login");
         } catch (error) {
             setLoading(false);
-            console.error(error);
+            handleError(error);
         }
     };
 

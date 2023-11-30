@@ -6,13 +6,14 @@ import { Calendar, Clock, DollarCurrency, MapPin } from "@/icons";
 
 import logo from "/public/images/logo.svg";
 
-import { IJobDto, JobContentJson } from "@/services";
+import { IJobDto, IOrganizationDto, JobContentJson } from "@/services";
 import { IAppFormSection } from "@/interfaces";
 
 interface JobCardProps {
     data: Omit<IJobDto, "content" | "applicationForm"> & {
         content: JobContentJson;
         applicationForm: IAppFormSection[];
+        organization: IOrganizationDto;
     };
 }
 
@@ -31,7 +32,7 @@ const JobCard: React.FC<JobCardProps> = ({ data }) => {
 
             <div className="flex-1 overflow-hidden">
                 <h4 className="text-neutral-700 font-medium text-sm sm:text-base">
-                    Hirelight Company
+                    {data.organization.name}
                 </h4>
                 <h3 className="text-neutral-700 text-lg sm:text-2xl font-semibold mt-1 mb-2">
                     {data.title}
@@ -53,7 +54,9 @@ const JobCard: React.FC<JobCardProps> = ({ data }) => {
                     <div className="flex items-center">
                         <DollarCurrency className="w-4 h-4 inline-block mr-1" />
                         <span className="text-xs sm:text-sm whitespace-nowrap">
-                            {data.minSalary + "-" + data.maxSalary}
+                            {!data.maxSalary && !data.maxSalary
+                                ? "Negotiate"
+                                : data.minSalary + "-" + data.maxSalary}
                         </span>
                     </div>
                     <div className="hidden xl:flex items-center">

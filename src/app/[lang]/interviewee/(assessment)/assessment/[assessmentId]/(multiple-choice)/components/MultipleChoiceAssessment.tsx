@@ -100,6 +100,10 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
         try {
             const res = await mcAssessmentServices.joinMCAssessment(data.id);
 
+            await queryClient.invalidateQueries({
+                queryKey: [`my-assessment`, assessmentId],
+            });
+
             toast.success(res.message);
             setAssessmentData(res.data);
             setAnswers(
@@ -114,6 +118,7 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
             handleError(error);
             setIsLoading(false);
         }
+        setIsLoading(false);
     };
 
     const handleSubmitTest = useCallback(async () => {
@@ -124,31 +129,29 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                 applicantAssessmentDetailId: data.id,
                 answers: answers,
             });
-            toast.success(res.message);
-            // stopAutoTask();
-            // router.push(`/${lang}/profile/applications`);
-            setIsLoading(false);
-            queryClient.invalidateQueries({
+
+            await queryClient.invalidateQueries({
                 queryKey: [`my-assessment`, assesmentData!!.id],
             });
+            toast.success(res.message);
         } catch (error: any) {
             handleError(error);
-            setIsLoading(false);
         }
+        setIsLoading(false);
     }, [answers, assesmentData, data.id, queryClient]);
 
-    useEffect(() => {
-        if (
-            [
-                ApplicantAssessmentDetailStatus.EVALUATED,
-                ApplicantAssessmentDetailStatus.PENDING_EVALUATION,
-            ].includes(data.status)
-        ) {
-            setDisplayTest(true);
-            setAnswers(JSON.parse(data.questionAnswerSet as string));
-            setAssessmentData(data as IMCAppliAssessmentDto);
-        }
-    }, [data]);
+    // useEffect(() => {
+    //     if (
+    //         [
+    //             ApplicantAssessmentDetailStatus.EVALUATED,
+    //             ApplicantAssessmentDetailStatus.PENDING_EVALUATION,
+    //         ].includes(data.status)
+    //     ) {
+    //         setDisplayTest(true);
+    //         setAnswers(JSON.parse(data.questionAnswerSet as string));
+    //         setAssessmentData(data as IMCAppliAssessmentDto);
+    //     }
+    // }, [data]);
 
     useEffect(() => {
         const trackBeforeUnload = (e: BeforeUnloadEvent) => {

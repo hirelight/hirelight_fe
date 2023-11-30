@@ -18,7 +18,7 @@ const JobList = () => {
 
     const { data: jobsRes } = useQuery({
         queryKey: ["jobs-candidate"],
-        queryFn: () => jobServices.getListAsync(),
+        queryFn: jobServices.getListAsync,
     });
     return (
         <>
@@ -43,15 +43,17 @@ const JobList = () => {
                                         }}
                                     >
                                         <JobCard
-                                            data={{
-                                                ...job,
-                                                content: JSON.parse(
-                                                    job.content
-                                                ),
-                                                applicationForm: JSON.parse(
-                                                    job.applicationForm
-                                                ),
-                                            }}
+                                            data={
+                                                {
+                                                    ...job,
+                                                    content: JSON.parse(
+                                                        job.content
+                                                    ),
+                                                    applicationForm: JSON.parse(
+                                                        job.applicationForm
+                                                    ),
+                                                } as any
+                                            }
                                         />
                                     </li>
                                 ))}
@@ -78,15 +80,17 @@ const JobList = () => {
                                 className="flex-shrink-0 absolute md:sticky lg:max-w-[45%] w-full max-h-screen h-fit top-0 md:right-0 overflow-hidden overflow-y-auto"
                             >
                                 <JobDescriptionBeside
-                                    data={{
-                                        ...selectedJob,
-                                        content: JSON.parse(
-                                            selectedJob.content
-                                        ),
-                                        applicationForm: JSON.parse(
-                                            selectedJob.applicationForm
-                                        ),
-                                    }}
+                                    data={
+                                        {
+                                            ...selectedJob,
+                                            content: JSON.parse(
+                                                selectedJob.content
+                                            ),
+                                            applicationForm: JSON.parse(
+                                                selectedJob.applicationForm
+                                            ),
+                                        } as any
+                                    }
                                     close={() => setShowJD(false)}
                                 />
                             </motion.div>

@@ -31,30 +31,32 @@ const CustomFileInput = (props: ICustomFileInput) => {
     }
 
     const handleFileChange = async (fileList: File[]) => {
-        const reader = new FileReader();
+        try {
+            if (fileList.length > 0 && inputRef.current) {
+                const fileSize = fileList[0].size;
 
-        if (fileList.length > 0 && inputRef.current) {
-            const fileSize = fileList[0].size;
+                if (fileSize / 1024 / 1024 >= 200)
+                    return toast.error("Maximum file size is 200MB!");
 
-            if (fileSize / 1024 / 1024 >= 200)
-                return toast.error("Maximum file size is 200MB!");
+                const formData = new FormData();
+                formData.append("formFile", fileList[0]);
+                const res = await fileServices.uploadFile(formData, event => {
+                    setProgressPer(
+                        Math.round(100 * event.loaded) / (event.total ?? 1)
+                    );
+                });
 
-            const formData = new FormData();
-            formData.append("formFile", fileList[0]);
-            const res = await fileServices.uploadFile(formData, event => {
-                setProgressPer(
-                    Math.round(100 * event.loaded) / (event.total ?? 1)
-                );
-            });
-
-            toast.success(res.message);
-            (
-                document.getElementById(
-                    props.id + "_fileName"
-                )!! as HTMLInputElement
-            ).value = fileList[0].name;
-            inputRef.current.value = res.data;
-            setFile(fileList[0]);
+                toast.success(res.message);
+                (
+                    document.getElementById(
+                        props.id + "_fileName"
+                    )!! as HTMLInputElement
+                ).value = fileList[0].name;
+                inputRef.current.value = res.data;
+                setFile(fileList[0]);
+            }
+        } catch (error: any) {
+            toast.error(error.message ? error.message : "Upload file failure!");
         }
     };
 

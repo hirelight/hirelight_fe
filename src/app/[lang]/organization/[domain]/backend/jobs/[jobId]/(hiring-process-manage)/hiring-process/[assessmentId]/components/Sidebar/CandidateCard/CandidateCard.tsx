@@ -29,6 +29,11 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
             item => item.id === "avatar"
         )!!.value
     );
+    const headline = useRef<any | undefined>(
+        parsedContent.form_structure[0].fields.find(
+            item => item.id === "headline"
+        )
+    );
 
     return (
         <Link
@@ -42,23 +47,17 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
                         onClick={e => e.stopPropagation()}
                     >
                         <input
-                            id={`select-candidate-${profile.applicantProfile.candidateId}`}
+                            id={profile.id}
                             type="checkbox"
                             value="all"
                             className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 cursor-pointer"
                             checked={
                                 selectedCandidates.find(
-                                    item =>
-                                        item ===
-                                        profile.applicantProfile.candidateId
+                                    item => item === profile.id
                                 ) !== undefined
                             }
                             onChange={e =>
-                                dispatch(
-                                    setSelectCandidate(
-                                        profile.applicantProfile.candidateId
-                                    )
-                                )
+                                dispatch(setSelectCandidate(profile.id))
                             }
                         />
                     </label>
@@ -79,11 +78,9 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
                         <div className="grid">
                             <h3 className="text-lg font-semibold">{`${profile.applicantProfile.firstName} ${profile.applicantProfile.lastName}`}</h3>
                             <p>
-                                {JSON.parse(
-                                    profile.applicantProfile.content
-                                ).form_structure[0].fields.find(
-                                    (item: any) => item.id === "headline"
-                                )?.value ?? ""}
+                                {headline.current && headline.current.value && (
+                                    <p>{headline.current.value}</p>
+                                )}
                             </p>
                         </div>
                         <div>

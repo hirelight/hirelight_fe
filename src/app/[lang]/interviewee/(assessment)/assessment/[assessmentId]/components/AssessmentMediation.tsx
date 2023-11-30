@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
 import LoadingIndicator from "@/components/LoadingIndicator";
@@ -10,7 +10,6 @@ import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interfa
 
 import AsyncVideoAssessment from "../(async-interview)/components/AsyncVideoAssessment";
 import MultipleChoiceAssessment from "../(multiple-choice)/components/MultipleChoiceAssessment";
-import ReviewPage from "../(async-interview)/components/ReviewPage";
 
 const AssessmentMediation = () => {
     const { assessmentId, lang } = useParams();
@@ -22,20 +21,22 @@ const AssessmentMediation = () => {
                 assessmentId as string
             ),
     });
+    const [pageLoading, setPageLoading] = useState(true);
 
     useEffect(() => {
-        if (
-            assessmentRes &&
-            [
-                ApplicantAssessmentDetailStatus.PENDING_EVALUATION,
-                ApplicantAssessmentDetailStatus.EVALUATED,
-            ].includes(assessmentRes.data.status)
-        ) {
-            router.push(`${assessmentId}/review`);
+        if (assessmentRes) {
+            if (
+                [
+                    ApplicantAssessmentDetailStatus.PENDING_EVALUATION,
+                    ApplicantAssessmentDetailStatus.EVALUATED,
+                ].includes(assessmentRes.data.status)
+            )
+                router.push(`${assessmentId}/review`);
+            else setPageLoading(false);
         }
     }, [assessmentId, assessmentRes, router]);
 
-    if (isLoading || !assessmentRes)
+    if (isLoading || !assessmentRes || !pageLoading)
         return (
             <div className="p-14 flex justify-center">
                 <LoadingIndicator />

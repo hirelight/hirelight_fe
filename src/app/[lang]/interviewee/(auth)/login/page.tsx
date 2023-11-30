@@ -68,12 +68,12 @@ const IntervieweeLogin = async () => {
                         </Link>
 
                         <div className="mt-10 text-center text-sm text-gray-500">
-                            <p>Don&apos;t have a Workable account?</p>
+                            <p>Don&apos;t have a Hirelight account?</p>
                             <Link
                                 href="/signup"
                                 className="font-semibold leading-6 text-blue_primary_700 hover:text-blue_primary_800"
                             >
-                                Start a 14 day free trial
+                                Register now
                             </Link>
                         </div>
                     </div>

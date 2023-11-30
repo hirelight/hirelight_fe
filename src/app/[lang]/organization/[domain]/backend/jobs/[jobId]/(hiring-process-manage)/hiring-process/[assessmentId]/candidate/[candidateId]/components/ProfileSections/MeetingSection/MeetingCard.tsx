@@ -30,8 +30,8 @@ import {
 import { AppFormDefaultSection, IAppFormField } from "@/interfaces";
 import { useAppSelector } from "@/redux/reduxHooks";
 import meetingServices from "@/services/meeting/meeting.service";
-import { handleError } from "@/helpers";
 import { DeleteModal, Portal } from "@/components";
+import { LinkIcon } from "@/icons";
 
 import styles from "./MeetingCard.module.scss";
 import EditMeeting from "./EditMeeting";
@@ -114,8 +114,8 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
         }
     };
 
-    const handleDeleteMeeting = () => {
-        deleteMeetingMutate.mutate(data.id);
+    const handleDeleteMeeting = async () => {
+        await deleteMeetingMutate.mutateAsync(data.id);
     };
 
     const getImageNode = (url?: string | null) => {
@@ -138,8 +138,6 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
             );
     };
 
-    console.log(data);
-
     return (
         <>
             <EditMeeting
@@ -159,171 +157,181 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                     onConfirm={handleDeleteMeeting}
                 />
             </Portal>
-            <div className="flex items-center gap-2">
-                <div className="w-8 h-8">
-                    {getImageNode(data.creator ? data.creator.avatarUrl : "")}
-                </div>
-                <div className="flex-1">
-                    <p>
-                        <strong>
-                            {data.creator
-                                ? data.creator.firstName +
-                                  " " +
-                                  (data.creator.lastName ?? "")
-                                : "Recruiter"}
-                        </strong>{" "}
-                        schedule a{" "}
-                        <Link
-                            target="_blank"
-                            href={`/${lang}/events/${data.id}`}
-                            className="inline-flex items-center gap-1 text-blue_primary_800 group mr-3"
-                        >
-                            <strong className="group-hover:underline">
-                                meeting
-                            </strong>
-                            <ArrowTopRightOnSquareIcon className="w-5 h-5" />
-                        </Link>
-                    </p>
+            <div>
+                <div className="flex items-center gap-2">
+                    <div className="w-8 h-8">
+                        {getImageNode(
+                            data.creator ? data.creator.avatarUrl : ""
+                        )}
+                    </div>
+                    <div className="flex-1">
+                        <p>
+                            <strong>
+                                {data.creator
+                                    ? data.creator.firstName +
+                                      " " +
+                                      (data.creator.lastName ?? "")
+                                    : "Recruiter"}
+                            </strong>{" "}
+                            schedule a{" "}
+                            <Link
+                                target="_blank"
+                                href={`/${lang}/events/${data.id}`}
+                                className="inline-flex items-center gap-1 text-blue_primary_800 group mr-3"
+                            >
+                                <strong className="group-hover:underline">
+                                    meeting
+                                </strong>
+                                <ArrowTopRightOnSquareIcon className="w-5 h-5" />
+                            </Link>
+                        </p>
 
-                    <span>{moment.utc(data.createdTime).fromNow()}</span>
-                </div>
+                        <span>{moment.utc(data.createdTime).fromNow()}</span>
+                    </div>
 
-                {!data.candidate && (
-                    <Tooltip content="Invite candidate">
-                        <button
-                            type="button"
-                            className="p-1 rounded hover:bg-slate-200/80 text-neutral-700"
-                            onClick={handleInviteCandidate}
-                        >
-                            <PaperAirplaneIcon className="w-5 h-5" />
-                        </button>
-                    </Tooltip>
-                )}
-
-                <button
-                    type="button"
-                    className="p-1 rounded hover:bg-slate-200/80 text-neutral-700 transition-all"
-                    onClick={() => setShowDelete(true)}
-                >
-                    <TrashIcon className="w-5 h-5 text-red-500 group-hover:text-red-700" />
-                </button>
-
-                <button
-                    type="button"
-                    className="p-1 rounded hover:bg-slate-200/80 text-neutral-700"
-                    onClick={() => setShowEdit(true)}
-                >
-                    <PencilSquareIcon className="w-5 h-5" />
-                </button>
-            </div>
-
-            <div className={styles.content__wrapper}>
-                {/* ************************************Meeting date section**************************************** */}
-                <div>From</div>
-                <div>
-                    {moment
-                        .utc(data.startTime)
-                        .local()
-                        .format("dddd, MMMM Do, YYYY HH:mm A")}
-                </div>
-
-                {/* ************************************Meeting slot section**************************************** */}
-                <div>To</div>
-                <div>
-                    {moment
-                        .utc(data.endTime)
-                        .local()
-                        .format("dddd, MMMM Do, YYYY HH:mm A")}
-                </div>
-
-                {/* ************************************Attendees Section**************************************** */}
-                <div>Attendees</div>
-                <div className="flex gap-4 flex-wrap">
-                    {data.candidate && (
-                        <div className="flex items-center gap-2 basis-56">
-                            <div className="relative w-8 h-8">
-                                {getImageNode(data.candidate.avatarUrl ?? "")}
-
-                                <MeetingStatusBadge status={data.status} />
-                            </div>
-                            <div className="flex-1">
-                                <p className="whitespace-nowrap">
-                                    <span>
-                                        {data.candidate.firstName +
-                                            " " +
-                                            (data.candidate.lastName ?? "")}
-                                    </span>
-                                </p>
-
-                                <span>Candidate</span>
-                            </div>
-
-                            {data.scheduleTime &&
-                                data.status === "MEETING_SCHEDULING" && (
-                                    <>
-                                        <button
-                                            type="button"
-                                            className="w-5 h-5 self-start"
-                                            onClick={() =>
-                                                setShowCandidateTime(true)
-                                            }
-                                        >
-                                            <InformationCircleIcon />
-                                        </button>
-                                        <ScheduleTimeModal
-                                            show={showCandidateTime}
-                                            close={() =>
-                                                setShowCandidateTime(false)
-                                            }
-                                            scheduleTime={JSON.parse(
-                                                data.scheduleTime
-                                            )}
-                                        />
-                                    </>
-                                )}
-                        </div>
+                    {!data.candidate && (
+                        <Tooltip content="Invite candidate">
+                            <button
+                                type="button"
+                                className="p-1 rounded hover:bg-slate-200/80 text-neutral-700"
+                                onClick={handleInviteCandidate}
+                            >
+                                <PaperAirplaneIcon className="w-5 h-5" />
+                            </button>
+                        </Tooltip>
                     )}
-                    {data.employerMeetingRefs?.map((employer, refIdex) => (
-                        <EmployerAttendeeCard
-                            key={refIdex}
-                            data={employer}
-                            creatorId={data.creatorId}
-                        />
-                    ))}
-                </div>
 
-                {/* ************************************Meeting link section**************************************** */}
-                <div>Meeting link</div>
-                <div>
-                    <Link
-                        href={
-                            data.meetingLink.toLowerCase().includes("zoom")
-                                ? data.meetingLink.replace("Zoom meeting: ", "")
-                                : data.meetingLink
-                        }
-                        target="_blank"
-                        rel="noreferrer noopener"
-                        className="text-blue_primary_800 font-semibold"
+                    <button
+                        type="button"
+                        className="p-1 rounded hover:bg-slate-200/80 text-neutral-700 transition-all"
+                        onClick={() => setShowDelete(true)}
                     >
-                        Link
-                    </Link>
+                        <TrashIcon className="w-5 h-5 text-red-500 group-hover:text-red-700" />
+                    </button>
+
+                    <button
+                        type="button"
+                        className="p-1 rounded hover:bg-slate-200/80 text-neutral-700"
+                        onClick={() => setShowEdit(true)}
+                    >
+                        <PencilSquareIcon className="w-5 h-5" />
+                    </button>
                 </div>
 
-                {/* ************************************Meeting title section**************************************** */}
-                <div>Title</div>
-                <div className="ql-editor !p-0">{data.name}</div>
+                <div className={styles.content__wrapper}>
+                    {/* ************************************Meeting date section**************************************** */}
+                    <div>From</div>
+                    <div>
+                        {moment
+                            .utc(data.startTime)
+                            .local()
+                            .format("dddd, MMMM Do, YYYY HH:mm A")}
+                    </div>
 
-                {/* ************************************Meeting description section**************************************** */}
-                <div>Description</div>
-                <div className="ql-editor !p-0">{data.description}</div>
+                    {/* ************************************Meeting slot section**************************************** */}
+                    <div>To</div>
+                    <div>
+                        {moment
+                            .utc(data.endTime)
+                            .local()
+                            .format("dddd, MMMM Do, YYYY HH:mm A")}
+                    </div>
 
-                <div>Organizer</div>
-                <div className="ql-editor !p-0">
-                    {data.creator
-                        ? data.creator.firstName +
-                          " " +
-                          (data.creator.lastName ?? "")
-                        : "Recruiter"}
+                    {/* ************************************Attendees Section**************************************** */}
+                    <div>Attendees</div>
+                    <div className="flex gap-4 flex-wrap">
+                        {data.candidate && (
+                            <div className="flex items-center gap-2 basis-56">
+                                <div className="relative w-8 h-8">
+                                    {getImageNode(
+                                        data.candidate.avatarUrl ?? ""
+                                    )}
+
+                                    <MeetingStatusBadge status={data.status} />
+                                </div>
+                                <div className="flex-1">
+                                    <p className="whitespace-nowrap">
+                                        <span>
+                                            {data.candidate.firstName +
+                                                " " +
+                                                (data.candidate.lastName ?? "")}
+                                        </span>
+                                    </p>
+
+                                    <span>Candidate</span>
+                                </div>
+
+                                {data.scheduleTime &&
+                                    data.status === "MEETING_SCHEDULING" && (
+                                        <>
+                                            <button
+                                                type="button"
+                                                className="w-5 h-5 self-start"
+                                                onClick={() =>
+                                                    setShowCandidateTime(true)
+                                                }
+                                            >
+                                                <InformationCircleIcon />
+                                            </button>
+                                            <ScheduleTimeModal
+                                                show={showCandidateTime}
+                                                close={() =>
+                                                    setShowCandidateTime(false)
+                                                }
+                                                scheduleTime={JSON.parse(
+                                                    data.scheduleTime
+                                                )}
+                                            />
+                                        </>
+                                    )}
+                            </div>
+                        )}
+                        {data.employerMeetingRefs?.map((employer, refIdex) => (
+                            <EmployerAttendeeCard
+                                key={refIdex}
+                                data={employer}
+                                creatorId={data.creatorId}
+                            />
+                        ))}
+                    </div>
+
+                    {/* ************************************Meeting link section**************************************** */}
+                    <div>Meeting link</div>
+                    <div>
+                        <Link
+                            href={
+                                data.meetingLink.toLowerCase().includes("zoom")
+                                    ? data.meetingLink.replace(
+                                          "Zoom meeting: ",
+                                          ""
+                                      )
+                                    : data.meetingLink
+                            }
+                            target="_blank"
+                            rel="noreferrer noopener"
+                            className="text-blue_primary_700 font-semibold hover:underline hover:text-blue_primary_800"
+                        >
+                            Link
+                            <LinkIcon className="inline-block ml-1 h-5 w-5" />
+                        </Link>
+                    </div>
+
+                    {/* ************************************Meeting title section**************************************** */}
+                    <div>Title</div>
+                    <div className="ql-editor !p-0">{data.name}</div>
+
+                    {/* ************************************Meeting description section**************************************** */}
+                    <div>Description</div>
+                    <div className="ql-editor !p-0">{data.description}</div>
+
+                    <div>Organizer</div>
+                    <div className="ql-editor !p-0">
+                        {data.creator
+                            ? data.creator.firstName +
+                              " " +
+                              (data.creator.lastName ?? "")
+                            : "Recruiter"}
+                    </div>
                 </div>
             </div>
         </>

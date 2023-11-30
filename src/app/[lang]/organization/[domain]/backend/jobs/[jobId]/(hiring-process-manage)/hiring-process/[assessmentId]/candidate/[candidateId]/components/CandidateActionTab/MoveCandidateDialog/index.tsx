@@ -9,7 +9,6 @@ import { useRouter } from "next/navigation";
 import { ChevronDown } from "@/icons";
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { AssessmentTypes } from "@/interfaces/assessment.interface";
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
 
 import styles from "./styles.module.scss";
@@ -41,10 +40,7 @@ const MoveCandidateDialog = () => {
                 }
             );
 
-            queryClient.invalidateQueries({
-                queryKey: [`job-profiles`, jobId, assessmentId],
-            });
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
                 queryKey: ["job-profiles", jobId],
             });
             router.push(

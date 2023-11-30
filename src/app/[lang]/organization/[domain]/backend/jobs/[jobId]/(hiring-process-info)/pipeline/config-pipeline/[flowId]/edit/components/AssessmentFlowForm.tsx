@@ -83,8 +83,8 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                 queryKey: ["assessmentFlow", flowId],
             });
             router.back();
-        } catch (error) {
-            toast.error("Create flow error");
+        } catch (error: any) {
+            toast.error(error.message ? error.message : "Update flow failure!");
             setIsLoading(false);
         }
     };

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { FormEvent, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import { Dialog, Transition } from "@headlessui/react";
 import { UserCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
@@ -19,14 +19,8 @@ import {
 } from "@/components";
 import { CloseIcon } from "@/icons";
 import { useAppSelector } from "@/redux/reduxHooks";
-import {
-    ApplicationFormJSON,
-    ICreateMeetings,
-    IMeetingDto,
-    IOrgEmployerDto,
-} from "@/services";
+import { ApplicationFormJSON, IMeetingDto } from "@/services";
 import { AppFormDefaultSection, IAppFormField } from "@/interfaces";
-import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
 import meetingServices from "@/services/meeting/meeting.service";
 import { isInvalidForm } from "@/helpers";
 
@@ -96,7 +90,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
     >(data.employerMeetingRefs.map(item => item.employer) as any);
 
     const isInvalidFormInput = (): boolean => {
-        const { name, meetingLink, description, startTime } = formState;
+        const { name, meetingLink, endTime, startTime } = formState;
 
         let errors = formErr;
 
@@ -109,11 +103,8 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
         }
         if (
             (moment(meetingTime.startTime).isAfter(meetingTime.endTime) &&
-                moment(formState.startTime).isSame(
-                    formState.endTime,
-                    "dates"
-                )) ||
-            moment(formState.startTime).isAfter(formState.endTime, "dates")
+                moment(startTime).isSame(endTime, "dates")) ||
+            moment(startTime).isAfter(endTime, "dates")
         ) {
             errors.timeErr = "Start time must not greator than end time";
         } else if (
@@ -144,8 +135,8 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
         });
     };
 
-    const handleCreateMeeting = async () => {
-        console.log(moment(meetingTime.startTime).isAfter(meetingTime.endTime));
+    const handleEditMeeting = async (e: FormEvent) => {
+        e.preventDefault();
 
         if (isInvalidFormInput()) return;
 
@@ -212,7 +203,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                     <div className="fixed inset-0 bg-black/25" />
                 </Transition.Child>
                 <div className="fixed inset-0 overflow-y-auto">
-                    <div>
+                    <form onSubmit={handleEditMeeting}>
                         <Transition.Child
                             as={React.Fragment}
                             enter="ease-out duration-300"
@@ -259,8 +250,18 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                     <div className="mb-6">
                                         <CustomInput
                                             title="Meeting link"
+                                            type="url"
                                             placeholder="Example: meet.google.com"
-                                            value={formState.meetingLink}
+                                            value={
+                                                formState.meetingLink
+                                                    .toLowerCase()
+                                                    .includes("zoom")
+                                                    ? formState.meetingLink.replace(
+                                                          "Zoom meeting: ",
+                                                          ""
+                                                      )
+                                                    : formState.meetingLink
+                                            }
                                             onChange={e => {
                                                 setFormState(prev =>
                                                     produce(prev, draft => {
@@ -514,16 +515,16 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                 </div>
                                 <div className="p-6 border-t border-gray-300 flex-shrink-0 flex justify-end">
                                     <Button
+                                        type="submit"
                                         disabled={loading}
                                         isLoading={loading}
-                                        onClick={handleCreateMeeting}
                                     >
                                         Save meeting
                                     </Button>
                                 </div>
                             </Dialog.Panel>
                         </Transition.Child>
-                    </div>
+                    </form>
                 </div>
             </Dialog>
         </Transition>

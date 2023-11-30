@@ -315,13 +315,13 @@ const CreateAssessment = () => {
                     </h3>
                     <div className="flex flex-col gap-8 mb-4 px-4 xl:px-6">
                         <div className="flex justify-between items-start">
-                            <strong>Accuracy</strong>
+                            <strong>Auto evaluate</strong>
                             <div className="max-w-[400px] w-1/2">
                                 <Selection
                                     title=""
                                     items={[
                                         {
-                                            label: "Disable evaluated",
+                                            label: "Disable evaluate",
                                             value: 0,
                                         },
                                     ].concat(
@@ -357,7 +357,7 @@ const CreateAssessment = () => {
                             </div>
                         </div>
                         <div className="flex justify-between items-start">
-                            <strong>Number of questions</strong>
+                            <strong>Random questions configuration</strong>
                             <div className="max-w-[400px] w-1/2 flex flex-col gap-6">
                                 <div className="relative">
                                     <span className={styles.selection__label}>

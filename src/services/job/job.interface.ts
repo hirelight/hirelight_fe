@@ -19,6 +19,8 @@ export interface ICreateJobDto {
     area: string;
     experience: string;
     workModality: string;
+    keywords?: string;
+    scanKeywords?: string;
 }
 
 export interface JobContentJson {
@@ -86,4 +88,6 @@ export interface IEditJobDto {
     area: string;
     experience: string;
     workModality: string;
+    keywords?: string;
+    scanKeywords?: string;
 }

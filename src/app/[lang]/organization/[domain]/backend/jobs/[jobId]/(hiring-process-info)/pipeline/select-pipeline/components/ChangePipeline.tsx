@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
 
@@ -14,8 +14,6 @@ import {
 } from "@/services/assessment-flows/assessment-flows.interface";
 import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
-import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
-import { setAssessmentFlow } from "@/redux/slices/assessment-flow.slice";
 import { isInvalidForm } from "@/helpers";
 
 const initialData: ICreateAssessmentFlowDto = {
@@ -208,7 +206,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                                         value=""
                                         name="recruiting-pipeline"
                                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                        checked={index === 0}
+                                        defaultChecked={index === 0}
                                         onChange={e => {
                                             if (e.currentTarget.checked) {
                                                 setSelectedTemplate(

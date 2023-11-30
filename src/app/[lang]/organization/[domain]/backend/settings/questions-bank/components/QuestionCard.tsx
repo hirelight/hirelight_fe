@@ -9,7 +9,6 @@ import {
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { AnimatePresence, motion } from "framer-motion";
 
 import { IQuestionAnswerDto } from "@/services/questions/questions.interface";
 import {
@@ -21,13 +20,6 @@ import questionAnswerServices from "@/services/questions/questions.service";
 import { DeleteModal, Portal } from "@/components";
 
 import styles from "./QuestionCard.module.scss";
-
-const answers = [
-    "Hyper Text Markup Language",
-    "High Tech Modern Language",
-    "Hyperlink and Text Markup Language",
-    "Hyperlink Text Mode Language",
-];
 
 type QuestionCardProps = {
     data: IQuestionAnswerDto;
@@ -100,7 +92,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                                                 ? "radio"
                                                 : "checkbox"
                                         }
-                                        defaultChecked={answer.correct}
+                                        checked={answer.correct}
                                         name={
                                             parsedContent.type === "one-answer"
                                                 ? id

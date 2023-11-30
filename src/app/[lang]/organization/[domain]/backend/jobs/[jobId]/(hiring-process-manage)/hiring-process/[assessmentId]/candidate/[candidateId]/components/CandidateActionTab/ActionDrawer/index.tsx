@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { FormEvent, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import { Dialog, Switch, Transition } from "@headlessui/react";
 import { UserCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
@@ -49,22 +49,11 @@ const people = [
 ];
 
 const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
-    const { jobId, assessmentId, candidateId } = useParams();
+    const { assessmentId, candidateId } = useParams();
 
     const authUser = useAppSelector(state => state.auth.authUser);
     const { data: applicantAssessmentDetail } = useAppSelector(
         state => state.applicantAssessmentDetail
-    );
-    const avaterDetail = useRef<IAppFormField | undefined>(
-        (
-            JSON.parse(
-                applicantAssessmentDetail!!.applicantProfile.content
-            ) as ApplicationFormJSON
-        ).form_structure
-            .find(
-                item => item.id === AppFormDefaultSection.PERSONAL_INFORMATION
-            )!!
-            .fields.find(field => field.id === "avatar")
     );
     const queryClient = useQueryClient();
 
@@ -97,14 +86,8 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
     const [selected, setSelected] = useState<ICollaboratorDto[]>([]);
 
     const isInvalidFormInput = (): boolean => {
-        const {
-            name,
-            meetingLink,
-            description,
-            startTime,
-            endTime,
-            isZoomCreated,
-        } = formState;
+        const { name, meetingLink, startTime, endTime, isZoomCreated } =
+            formState;
 
         let errors = formErr;
 
@@ -169,7 +152,9 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
         });
     };
 
-    const handleCreateMeeting = async () => {
+    const handleCreateMeeting = async (e: FormEvent) => {
+        e.preventDefault();
+
         if (isInvalidFormInput()) return;
 
         setLoading(true);
@@ -235,7 +220,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                     <div className="fixed inset-0 bg-black/25" />
                 </Transition.Child>
                 <div className="fixed inset-0 overflow-y-auto">
-                    <div>
+                    <form onSubmit={handleCreateMeeting}>
                         <Transition.Child
                             as={React.Fragment}
                             enter="ease-out duration-300"
@@ -320,6 +305,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                         <div className="mb-6">
                                             <CustomInput
                                                 title="Meeting link"
+                                                type="url"
                                                 placeholder="Example: meet.google.com"
                                                 value={formState.meetingLink}
                                                 onChange={e => {
@@ -565,16 +551,16 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                 </div>
                                 <div className="p-6 border-t border-gray-300 flex-shrink-0 flex justify-end">
                                     <Button
+                                        type="submit"
                                         disabled={loading}
                                         isLoading={loading}
-                                        onClick={handleCreateMeeting}
                                     >
                                         Create meeting
                                     </Button>
                                 </div>
                             </Dialog.Panel>
                         </Transition.Child>
-                    </div>
+                    </form>
                 </div>
             </Dialog>
         </Transition>
