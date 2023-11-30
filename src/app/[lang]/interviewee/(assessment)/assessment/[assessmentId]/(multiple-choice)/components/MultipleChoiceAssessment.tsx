@@ -109,14 +109,9 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
             setAnswers(
                 JSON.parse(res.data.questionAnswerSet!!) as ICandidateMCDto[]
             );
-            await queryClient.invalidateQueries({
-                queryKey: [`my-assessment`, assessmentId],
-            });
             setDisplayTest(true);
-            setIsLoading(false);
         } catch (error: any) {
             handleError(error);
-            setIsLoading(false);
         }
         setIsLoading(false);
     };
@@ -129,8 +124,7 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                 applicantAssessmentDetailId: data.id,
                 answers: answers,
             });
-
-            await queryClient.invalidateQueries({
+            queryClient.invalidateQueries({
                 queryKey: [`my-assessment`, assesmentData!!.id],
             });
             toast.success(res.message);

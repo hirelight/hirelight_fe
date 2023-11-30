@@ -231,6 +231,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                     <div className="mb-6">
                                         <CustomInput
                                             title="Subject"
+                                            type="text"
                                             placeholder="Interview with candidate - Position"
                                             value={formState.name}
                                             onChange={e => {
@@ -510,7 +511,6 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                                 })
                                             )
                                         }
-                                        required
                                     />
                                 </div>
                                 <div className="p-6 border-t border-gray-300 flex-shrink-0 flex justify-end">

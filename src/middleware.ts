@@ -78,6 +78,20 @@ export default async function middleware(req: NextRequest) {
         );
     }
 
+    if (
+        hostname === "admin.localhost:3000" ||
+        hostname === `admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`
+    ) {
+        return NextResponse.rewrite(
+            new URL(
+                `${curLocale}/admin${pathname.replace(`/${curLocale}`, "")}${
+                    url.search
+                }`,
+                req.url
+            )
+        );
+    }
+
     return NextResponse.rewrite(
         new URL(
             `/${curLocale}/organization/${

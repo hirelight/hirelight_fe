@@ -6,13 +6,19 @@ import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
+import { PlusCircleIcon } from "@heroicons/react/24/solid";
+import { produce } from "immer";
 
 import { Button, CustomInput, DatePicker } from "@/components";
-import { IEditAssessmentFlowDto } from "@/services/assessment-flows/assessment-flows.interface";
+import {
+    IAssessmentFlow,
+    IEditAssessmentFlowDto,
+} from "@/services/assessment-flows/assessment-flows.interface";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
 import { isInvalidForm } from "@/helpers";
 
 import AssessmentFlowCard from "./AssessmentFlowCard";
+import FlowStageForm from "./FlowStageForm";
 
 type AssessmentFlowFormProps = {
     data: IEditAssessmentFlowDto;
@@ -25,6 +31,8 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
     const queryClient = useQueryClient();
 
     const [isLoading, setIsLoading] = useState(false);
+
+    const [showAddStage, setShowAddStage] = useState(false);
     const [formState, setFormState] = useState<IEditAssessmentFlowDto>({
         ...data,
         startTime: moment.utc(data.startTime).toDate(),
@@ -78,10 +86,10 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                 assessments: formState.assessments.slice(1, -1),
             });
 
-            toast.success(res.message);
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
                 queryKey: ["assessmentFlow", flowId],
             });
+            toast.success(res.message);
             router.back();
         } catch (error: any) {
             toast.error(error.message ? error.message : "Update flow failure!");
@@ -105,6 +113,15 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                 assessmentPos === pos ? updateStage : assessment
             ),
         }));
+    };
+
+    const handleAddNewStage = (newStage: IAssessmentFlow) => {
+        // setFormState(prev =>
+        //     produce(prev, draft => {
+        //         draft.assessments.push(newStage);
+        //     })
+        // );
+        setShowAddStage(false);
     };
 
     return (

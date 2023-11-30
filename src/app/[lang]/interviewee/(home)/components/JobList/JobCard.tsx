@@ -23,7 +23,7 @@ const JobCard: React.FC<JobCardProps> = ({ data }) => {
             <div className="hidden md:block rounded-full w-20 h-20 border border-slate-200 overflow-hidden">
                 <Image
                     alt="Company Logo"
-                    src={logo}
+                    src={data.organization.logoUrl ?? logo}
                     width={80}
                     height={80}
                     className="w-full h-auto object-contain"

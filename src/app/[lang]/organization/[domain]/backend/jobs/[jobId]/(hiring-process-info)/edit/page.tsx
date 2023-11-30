@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     title: "Hirelight - Backend | Edit Job Detail",
 };
 
-const JobDetailEdit = () => {
+const JobDetailEdit = async () => {
     return <EditJobDetailForm />;
 };
 

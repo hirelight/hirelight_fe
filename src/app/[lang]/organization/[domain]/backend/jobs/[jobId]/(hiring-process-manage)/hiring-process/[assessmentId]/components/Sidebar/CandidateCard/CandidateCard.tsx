@@ -77,11 +77,9 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
                     <div className="flex-1 flex flex-col items-start text-sm text-neutral-700">
                         <div className="grid">
                             <h3 className="text-lg font-semibold">{`${profile.applicantProfile.firstName} ${profile.applicantProfile.lastName}`}</h3>
-                            <p>
-                                {headline.current && headline.current.value && (
-                                    <p>{headline.current.value}</p>
-                                )}
-                            </p>
+                            {headline.current && headline.current.value && (
+                                <p>{headline.current.value}</p>
+                            )}
                         </div>
                         <div>
                             <span>

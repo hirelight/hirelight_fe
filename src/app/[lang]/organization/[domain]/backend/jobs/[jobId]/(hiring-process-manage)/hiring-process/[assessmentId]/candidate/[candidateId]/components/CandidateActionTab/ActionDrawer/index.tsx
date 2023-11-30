@@ -139,6 +139,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
             location: "",
             employerIds: [],
         });
+        setSelected([]);
 
         setMeetingTime({
             startTime: moment.utc().toDate(),

@@ -74,6 +74,9 @@ const JobDescriptionBeside: React.FC<JobDescriptionBesideProps> = ({
                         </p>
                     </div>
                     <div className="mb-6">
+                        <span className="mr-2 after:content-['\2022'] after:ml-2">
+                            {data.area}
+                        </span>
                         {data.organization.industry && (
                             <span className="mr-2 after:content-['\2022'] after:ml-2">
                                 {data.organization.industry}

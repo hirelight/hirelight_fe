@@ -24,8 +24,7 @@ const Button = (props: IButton) => {
                 className,
             ].join(" ")}
         >
-            <span>{children}</span>
-            {isLoading && <SpinLoading />}
+            <span>{children}</span> {isLoading && <SpinLoading />}
         </button>
     );
 };

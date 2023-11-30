@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import PipelineList from "./components/PipelineList";
 
 export const metadata: Metadata = {
-    title: "Hirelight - Backend | Apply Flow Template",
+    title: "Hirelight - Backend | Select Flow Template",
 };
 
 const SelectPipeline = async () => {

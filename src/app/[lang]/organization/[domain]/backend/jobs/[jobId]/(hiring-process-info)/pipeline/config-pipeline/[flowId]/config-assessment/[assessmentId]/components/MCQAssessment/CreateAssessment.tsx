@@ -321,7 +321,7 @@ const CreateAssessment = () => {
                                     title=""
                                     items={[
                                         {
-                                            label: "Disable evaluate",
+                                            label: "Disable",
                                             value: 0,
                                         },
                                     ].concat(

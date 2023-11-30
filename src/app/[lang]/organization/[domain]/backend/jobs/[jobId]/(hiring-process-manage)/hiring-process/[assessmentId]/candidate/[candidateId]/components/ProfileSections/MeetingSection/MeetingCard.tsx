@@ -3,6 +3,7 @@ import Image from "next/image";
 import {
     ArrowTopRightOnSquareIcon,
     CheckIcon,
+    LinkIcon,
     MinusIcon,
     PaperAirplaneIcon,
     QuestionMarkCircleIcon,
@@ -31,7 +32,6 @@ import { AppFormDefaultSection, IAppFormField } from "@/interfaces";
 import { useAppSelector } from "@/redux/reduxHooks";
 import meetingServices from "@/services/meeting/meeting.service";
 import { DeleteModal, Portal } from "@/components";
-import { LinkIcon } from "@/icons";
 
 import styles from "./MeetingCard.module.scss";
 import EditMeeting from "./EditMeeting";
@@ -157,7 +157,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                     onConfirm={handleDeleteMeeting}
                 />
             </Portal>
-            <div>
+            <div className="max-w-full">
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8">
                         {getImageNode(
