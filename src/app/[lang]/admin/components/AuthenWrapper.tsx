@@ -22,25 +22,11 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
         if (!token) {
             if (accessToken) {
                 dispatch(setToken(accessToken));
-                router.push(`/${lang}/backend`);
+                router.push(`/${lang}`);
             } else {
                 router.replace(
-                    `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`
+                    `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/login?authEnd=true`
                 );
-            }
-        } else {
-            const decoded = jwtDecode(token) as IUserDto;
-            if (
-                typeof window !== "undefined" &&
-                decoded.organizationSubdomain !==
-                    window.location.hostname.split(".")[0]
-            ) {
-                router.replace(
-                    `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/select-org`
-                );
-            } else if (accessToken) {
-                dispatch(setToken(accessToken));
-                router.push(`/${lang}/backend`);
             }
         }
     }, [accessToken, dispatch, lang, router]);

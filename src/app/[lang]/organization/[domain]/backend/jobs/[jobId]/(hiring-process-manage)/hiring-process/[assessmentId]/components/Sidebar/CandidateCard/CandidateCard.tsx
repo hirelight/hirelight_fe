@@ -16,7 +16,7 @@ type CandidateCardProps = {
 };
 
 const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
-    const { jobId, assessmentId } = useParams();
+    const { jobId, assessmentId, lang } = useParams();
     const dispatch = useAppDispatch();
     const selectedCandidates = useAppSelector(
         state => state.candidates.selectedCandidates
@@ -83,7 +83,10 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
                         </div>
                         <div>
                             <span>
-                                {moment.utc(profile.createdTime).fromNow()}
+                                {moment
+                                    .utc(profile.createdTime)
+                                    .locale(lang)
+                                    .fromNow()}
                             </span>
                         </div>
                     </div>

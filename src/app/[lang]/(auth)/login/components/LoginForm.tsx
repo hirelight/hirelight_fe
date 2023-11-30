@@ -3,14 +3,18 @@
 import React, { useCallback } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import jwtDecode from "jwt-decode";
+import { toast } from "react-toastify";
 
 import { GoogleIcon, LinkedInIcon, SpinLoading } from "@/icons";
 import { LoginEmployerDto } from "@/services/auth/auth.interface";
 import { fetchAccessToken, loginEmailPwd } from "@/redux/thunks/auth.thunk";
 import { useAppDispatch } from "@/redux/reduxHooks";
 import { decryptData } from "@/helpers/authHelpers";
+import { handleError } from "@/helpers";
+import authServices from "@/services/auth/auth.service";
+import { setToken } from "@/redux/slices/auth.slice";
 
 import styles from "./LoginForm.module.scss";
 
@@ -21,6 +25,8 @@ interface ILoginForm {
 const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
     const router = useRouter();
     const dispatch = useAppDispatch();
+
+    const { lang } = useParams();
 
     const loginStatus = useSearchParams().get("status");
     const loginId = useSearchParams().get("loginId");
@@ -50,11 +56,14 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
         setLoading(true);
 
         try {
-            const res: any = await dispatch(loginEmailPwd(loginForm));
-            setLoading(false);
+            const res = await authServices.loginEmployer(loginForm);
+            dispatch(setToken(res.data.accessToken));
+            toast.success(res.message);
 
-            if (isAdmin(res.payload.data.accessToken))
-                return router.push("/admin");
+            if (isAdmin(res.data.accessToken))
+                return router.replace(
+                    `${window.location.protocol}//admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}?accessToken=${res.data.accessToken}`
+                );
 
             router.push(
                 `/select-org?isOrgOwner=${isOrgOwner}&isOrgMember=${isOrgMember}`
@@ -62,7 +71,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
             // handleRedirectOrgBased(res.data.accessToken);
         } catch (error) {
             setLoading(false);
-            console.error(error);
+            handleError(error);
         }
     };
 
@@ -88,10 +97,13 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                 getToken(loginId);
             }
         } else {
-            if (isAdmin(accessToken)) router.push("/admin");
+            if (isAdmin(accessToken))
+                router.replace(
+                    `${window.location.protocol}//admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}?accessToken=${accessToken}`
+                );
             else router.push("select-org");
         }
-    }, [getToken, isAdmin, loginId, loginStatus, router]);
+    }, [getToken, isAdmin, lang, loginId, loginStatus, router]);
 
     return (
         <form onSubmit={handleLogin}>

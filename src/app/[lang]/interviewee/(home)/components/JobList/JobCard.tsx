@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import React from "react";
 import moment from "moment";
+import { useParams } from "next/navigation";
 
 import { Calendar, Clock, DollarCurrency, MapPin } from "@/icons";
 
@@ -18,6 +21,8 @@ interface JobCardProps {
 }
 
 const JobCard: React.FC<JobCardProps> = ({ data }) => {
+    const { lang } = useParams();
+
     return (
         <div className="flex gap-4 p-4 sm:p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 hover:cursor-pointer dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 ">
             <div className="hidden md:block rounded-full w-20 h-20 border border-slate-200 overflow-hidden">
@@ -62,7 +67,7 @@ const JobCard: React.FC<JobCardProps> = ({ data }) => {
                     <div className="hidden xl:flex items-center">
                         <Calendar className="w-4 h-4 inline-block mr-1" />
                         <span className="text-xs sm:text-sm whitespace-nowrap">
-                            {moment(data.updatedTime).fromNow()}
+                            {moment(data.updatedTime).locale(lang).fromNow()}
                         </span>
                     </div>
                 </div>

@@ -7,6 +7,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { AnimatePresence, motion } from "framer-motion";
 import moment from "moment";
+import { useParams } from "next/navigation";
 
 import { useOutsideClick } from "@/hooks/useClickOutside";
 
@@ -52,6 +53,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
     title,
     errorText,
 }) => {
+    const { lang } = useParams();
+
     const wrapperRef = useOutsideClick<HTMLDivElement>(() =>
         setShowDatepicker(false)
     );
@@ -369,22 +372,16 @@ const DatePicker: React.FC<DatePickerProps> = ({
                                                 className="days"
                                             >
                                                 <div className="grid grid-cols-7 mb-1">
-                                                    {[
-                                                        "Su",
-                                                        "Mo",
-                                                        "Tu",
-                                                        "We",
-                                                        "Th",
-                                                        "Fr",
-                                                        "Sa",
-                                                    ].map(dayOfWeek => (
-                                                        <span
-                                                            key={dayOfWeek}
-                                                            className="text-center h-6 leading-6 text-sm font-medium text-gray-500 dark:text-gray-400"
-                                                        >
-                                                            {dayOfWeek}
-                                                        </span>
-                                                    ))}
+                                                    {moment
+                                                        .weekdaysMin()
+                                                        .map(dayOfWeek => (
+                                                            <span
+                                                                key={dayOfWeek}
+                                                                className="text-center h-6 leading-6 text-sm font-medium text-gray-500 dark:text-gray-400"
+                                                            >
+                                                                {dayOfWeek}
+                                                            </span>
+                                                        ))}
                                                 </div>
                                                 <div className="w-64 grid grid-cols-7">
                                                     {drawDaysInMonth(

@@ -186,7 +186,12 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                             </Link>
                         </p>
 
-                        <span>{moment.utc(data.createdTime).fromNow()}</span>
+                        <span>
+                            {moment
+                                .utc(data.createdTime)
+                                .locale(lang)
+                                .fromNow()}
+                        </span>
                     </div>
 
                     {!data.candidate && (

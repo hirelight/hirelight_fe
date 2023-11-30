@@ -16,6 +16,8 @@ export interface IOrganizationDto {
     address: string | null;
     location: string | null;
     ownerId: string;
+    createdTime: Date | string;
+    updatedTime: Date | string;
 }
 
 export interface IEditOrganizationDto {

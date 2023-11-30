@@ -84,7 +84,7 @@ export default async function middleware(req: NextRequest) {
     ) {
         return NextResponse.rewrite(
             new URL(
-                `${curLocale}/admin${pathname.replace(`/${curLocale}`, "")}${
+                `/${curLocale}/admin${pathname.replace(`/${curLocale}`, "")}${
                     url.search
                 }`,
                 req.url

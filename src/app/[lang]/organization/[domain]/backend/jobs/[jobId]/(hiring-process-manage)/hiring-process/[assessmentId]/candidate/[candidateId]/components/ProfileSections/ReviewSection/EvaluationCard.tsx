@@ -60,7 +60,7 @@ type EvaluationCardProps = {
 };
 
 const EvaluationCard: React.FC<EvaluationCardProps> = ({ data }) => {
-    const { jobId, candidateId } = useParams();
+    const { jobId, candidateId, lang } = useParams();
 
     const userInfo = useAppSelector(state => state.auth.authUser);
 
@@ -131,7 +131,7 @@ const EvaluationCard: React.FC<EvaluationCardProps> = ({ data }) => {
                         collaborator name <span>{getRating(data.rating)}</span>
                     </h3>
                     <p className="text-gray-500">
-                        {moment(data.updatedTime).fromNow()}
+                        {moment(data.updatedTime).locale(lang).fromNow()}
                     </p>
                 </div>
 

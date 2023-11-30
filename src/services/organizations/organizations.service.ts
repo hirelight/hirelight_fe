@@ -51,9 +51,11 @@ const editOrgProfile = async (editDto: IEditOrganizationDto) => {
     }
 };
 
-const getListOrganizations = async () => {
+const getListOrganizations = async (): Promise<
+    IResponse<IOrganizationDto[]>
+> => {
     try {
-        const res = await interceptor.get<IResponse<any>>(
+        const res = await interceptor.get<IResponse<IOrganizationDto[]>>(
             endpoints.ORGANIZATIONS
         );
 

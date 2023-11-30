@@ -145,7 +145,12 @@ const AssessmentInfoHeader = () => {
                         </div>
                         <div className="flex items-center gap-1">
                             <ArrowPathIcon className="w-4 h-4" />
-                            <span>{moment.utc(job.updatedTime).fromNow()}</span>
+                            <span>
+                                {moment
+                                    .utc(job.updatedTime)
+                                    .locale(lang as string)
+                                    .fromNow()}
+                            </span>
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,12 @@
+.content_wrapper{
+    display: grid;
+    grid-template-columns: minmax(160px, 240px) 1fr;
+
+    gap: 1rem;
+    margin-top: 1.5rem;
+    @apply text-neutral-700 text-sm;
+}
+
+.content_label{
+    @apply text-gray-500;
+}

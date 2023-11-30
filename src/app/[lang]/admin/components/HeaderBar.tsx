@@ -16,7 +16,7 @@ const HeaderBar = () => {
     const { lang } = useParams();
     return (
         <header className="bg-white shadow-md relative z-10">
-            <div className="max-w-screen-xl mx-auto px-4 xl:px-6 flex items-center justify-between py-4">
+            <div className="p-6 flex items-center justify-between py-4">
                 <div className="flex gap-6">
                     <Link href={`/${lang}`} className="flex gap-2 items-center">
                         <Image
