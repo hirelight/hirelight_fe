@@ -230,7 +230,8 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                         {moment
                             .utc(data.startTime)
                             .local()
-                            .format("dddd, MMMM Do, YYYY HH:mm A")}
+                            .locale(lang)
+                            .format("LLLL")}
                     </div>
 
                     {/* ************************************Meeting slot section**************************************** */}
@@ -239,7 +240,8 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                         {moment
                             .utc(data.endTime)
                             .local()
-                            .format("dddd, MMMM Do, YYYY HH:mm A")}
+                            .locale(lang)
+                            .format("LLLL")}
                     </div>
 
                     {/* ************************************Attendees Section**************************************** */}

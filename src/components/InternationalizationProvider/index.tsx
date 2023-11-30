@@ -35,8 +35,6 @@ export const useTranslation = (lang: Locale, ns: string) => {
     return value;
 };
 
-moment.locale("en");
-
 moment.locale("vi", {
     months: "Tháng Một_Tháng Hai_Tháng Ba_Tháng Tư_Tháng Năm_Tháng Sáu_Tháng Bảy_Tháng Tám_Tháng Chín_Tháng Mười_Tháng Mười Một_Tháng Mười Hai".split(
         "_"
@@ -58,7 +56,7 @@ moment.locale("vi", {
         L: "DD/MM/YYYY",
         LL: "D MMMM YYYY",
         LLL: "D MMMM YYYY HH:mm",
-        LLLL: "dddd D MMMM YYYY HH:mm LT",
+        LLLL: "dddd, D MMMM YYYY, h:mm a",
     },
     calendar: {
         sameDay: "[Hôm nay lúc] LT",
@@ -98,17 +96,8 @@ moment.locale("vi", {
     //     return /* 0-23 hour, given meridiem token and hour 1-12 */ ;
     // },
     meridiem: function (hours, minutes, isLower) {
-        if (hours >= 1 && hours < 11) {
-            return "sáng";
-        } else if (hours >= 11 && hours < 13) {
-            return "trưa";
-        } else if (hours >= 13 && hours < 18) {
-            return "chiều";
-        } else if (hours >= 18 && hours < 22) {
-            return "tối";
-        } else if (hours >= 22 && hours < 24) {
-            return "đêm";
-        } else return "đêm";
+        if (hours >= 1 && hours < 18) return "SA";
+        else return "CH";
     },
     week: {
         dow: 1, // Monday is the first day of the week.

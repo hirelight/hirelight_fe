@@ -8,6 +8,7 @@ import {
 } from "@heroicons/react/24/solid";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
+import { useParams } from "next/navigation";
 
 import { hhmmss } from "@/helpers";
 
@@ -24,6 +25,8 @@ const TimerPicker: React.FC<TimerPickerProps> = ({
     minTime,
     maxTime,
 }) => {
+    const { lang } = useParams();
+
     const [time, setTime] = useState<moment.Moment>(
         value
             ? value.minutes(Math.ceil(value.minutes() / 15) * 15)
@@ -41,7 +44,7 @@ const TimerPicker: React.FC<TimerPickerProps> = ({
             <div className="relative">
                 <Listbox.Button className="relative w-full cursor-default rounded-lg border border-gray-300 bg-white py-2.5 pl-3 pr-10 text-left focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                     <span className="block truncate">
-                        {moment(time).format("HH:mm A")}
+                        {moment(time).locale(lang).format("HH:mm A")}
                     </span>
                     <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                         <ChevronUpDownIcon
@@ -106,6 +109,7 @@ const TimerPicker: React.FC<TimerPickerProps> = ({
                                             {moment()
                                                 .startOf("day")
                                                 .seconds(index * 15 * 60)
+                                                .locale(lang)
                                                 .format("HH:mm")}
                                         </span>
                                     )}
