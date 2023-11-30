@@ -38,26 +38,11 @@ const CandidateList = ({ disqualify }: CandidateListProps) => {
                   ),
     });
 
-    // useEffect(() => {
-    //     if (isSuccess && applicantDetail) {
-    //         dispatch(setCandidates(applicantDetail.data));
-    //         if (!candidateId && applicantDetail.data.length) {
-    //             router.push(
-    //                 `${assessmentId}/candidate/${applicantDetail.data[0].applicantProfileId}`
-    //             );
-    //         }
-    //     }
-    // }, [
-    //     isSuccess,
-    //     dispatch,
-    //     applicantDetail,
-    //     candidateId,
-    //     router,
-    //     assessmentId,
-    //     applicantAssessmentDetail,
-    //     lang,
-    //     jobId,
-    // ]);
+    useEffect(() => {
+        if (isSuccess && applicantDetail) {
+            dispatch(setCandidates(applicantDetail.data));
+        }
+    }, [applicantDetail, dispatch, isSuccess]);
 
     if (isLoading) {
         return (

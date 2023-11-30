@@ -5,7 +5,7 @@ import "react-quill/dist/quill.bubble.css";
 import { Analytics } from "@vercel/analytics/react";
 import { ToastContainer } from "react-toastify";
 import type { Metadata } from "next";
-import { Inter, Public_Sans, Roboto_Mono } from "next/font/google";
+import { Inter, Public_Sans } from "next/font/google";
 import Script from "next/script";
 
 import "react-toastify/dist/ReactToastify.css";
@@ -16,24 +16,16 @@ import ReduxProvider from "@/components/ReduxProvider/ReduxProvider";
 import InternationalizationProvider from "@/components/InternationalizationProvider";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
 
-import { Locale, i18n } from "../../i18n.config";
+import { i18n } from "../../i18n.config";
 
 const inter = Inter({
     subsets: ["latin"],
     display: "swap",
-    variable: "--font-inter",
 });
 
-const roboto_mono = Roboto_Mono({
-    subsets: ["latin"],
-    display: "swap",
-    variable: "--font-roboto-mono",
-});
 const publicSans = Public_Sans({
     subsets: ["latin"],
     display: "swap",
-    variable: "--font-public-sans",
-    weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -53,9 +45,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body
-                className={`${inter.className} ${roboto_mono.className} ${publicSans.className}`}
-            >
+            <body className={`${inter.className} ${publicSans.className}`}>
                 <ReactQueryProvider>
                     <InternationalizationProvider lang={params.lang}>
                         <ReduxProvider>

@@ -1,7 +1,12 @@
 import React from "react";
 import Link from "next/link";
+import { Metadata } from "next";
 
 import AssessmentFlowForm from "./components/AssessmentFlowForm";
+
+export const metadata: Metadata = {
+    title: "Hirelight - Backend | Create New Flow",
+};
 
 type CreateAssessmentFlowProps = {};
 

@@ -1,7 +1,12 @@
 import React from "react";
 import Link from "next/link";
+import { Metadata } from "next";
 
 import PipelineList from "./components/PipelineList";
+
+export const metadata: Metadata = {
+    title: "Hirelight - Backend | Select Flow Template",
+};
 
 const SelectPipeline = async () => {
     return (

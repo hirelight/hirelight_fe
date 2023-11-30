@@ -1,5 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { DocumentMinusIcon } from "@heroicons/react/24/outline";
 
 import { IIntegrationToken } from "@/services";
 import assessmentsServices from "@/services/assessments/assessments.service";
@@ -27,12 +30,18 @@ const ThirpatyAssessments: React.FC<ThirpatyAssessmentsProps> = ({
     selected,
     onSelect,
 }) => {
-    const { data: res, isLoading } = useQuery({
+    const { lang } = useParams();
+    const {
+        data: res,
+        isLoading,
+        isError,
+    } = useQuery({
         queryKey: ["thirdparty-assessments", service],
         queryFn: () => assessmentsServices.getListThirdParty(service),
     });
 
     if (isLoading) return <LoadingSkeleton />;
+    if (isError) return <ErrorAssessment lang={lang} />;
 
     return (
         <ul className="p-6 space-y-4">
@@ -83,6 +92,26 @@ const LoadingSkeleton = () => {
                     className="w-[400px] max-w-full h-6 bg-slate-200"
                 ></div>
             ))}
+        </div>
+    );
+};
+
+const ErrorAssessment = ({ lang }: any) => {
+    return (
+        <div className="p-6 flex flex-col justify-center items-center">
+            <div className="w-16 h-16 text-neutral-700 mb-4">
+                <DocumentMinusIcon />
+            </div>
+            <p>
+                Seem like your provided token is expired or not correct!{" "}
+                <Link
+                    target="_blank"
+                    href={`/${lang}/backend/settings/integrations`}
+                    className="text-blue_primary_600 font-semibold hover:text-blue_primary_800 hover:underline"
+                >
+                    <strong>Set up integration</strong>
+                </Link>{" "}
+            </p>
         </div>
     );
 };

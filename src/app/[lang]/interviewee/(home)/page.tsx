@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title: "Jobs by Hirelight",
 };
 
-const JobsCenter = () => {
+const JobsCenter = async () => {
     return (
         <main className="flex-1 w-full bg-slate-100">
             <div className="w-full pt-4 pb-6 relative shadow-md">

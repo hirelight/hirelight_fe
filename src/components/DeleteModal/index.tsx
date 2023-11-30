@@ -139,14 +139,14 @@ const DeleteModal = ({
                         <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                             <button
                                 type="button"
-                                className="inline-flex w-full items-center justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto disabled:cursor-not-allowed disabled:opacity-70"
+                                className="inline-flex w-full items-center justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto disabled:cursor-not-allowed disabled:opacity-80"
                                 onClick={handleConfirm}
                                 disabled={loading}
                             >
-                                {loading && <SpinLoading className="mr-3" />}
                                 {title?.includes("Delete")
                                     ? "Delete"
                                     : "Deactivate"}
+                                {loading && <SpinLoading className="ml-2" />}
                             </button>
                             <button
                                 type="button"

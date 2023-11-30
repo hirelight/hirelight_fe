@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import LoadingIndicator from "@/components/LoadingIndicator";
 
 export const metadata: Metadata = {
-    title: "Hirelight - Backend | Pipeline Configuration",
+    title: "Hirelight - Backend | Assessment Flow Configuration",
 };
 
 const PipelineConfigurationHome = () => {

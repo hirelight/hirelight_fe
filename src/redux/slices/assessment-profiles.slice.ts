@@ -14,6 +14,7 @@ interface IApplicantProfileState {
     data: {
         assessment: IAssessmentDto;
         applicantProfiles: IJobPostProfileDto[];
+        selectedProfiles: string[];
     };
     loading: boolean;
 }
@@ -39,6 +40,7 @@ const initialState: IApplicantProfileState = {
             status: "ACTIVE",
         },
         applicantProfiles: [],
+        selectedProfiles: [],
     },
     loading: false,
 };

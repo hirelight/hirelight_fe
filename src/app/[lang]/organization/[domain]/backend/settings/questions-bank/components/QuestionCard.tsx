@@ -100,7 +100,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                                                 ? "radio"
                                                 : "checkbox"
                                         }
-                                        defaultChecked={answer.correct}
+                                        checked={answer.correct}
                                         name={
                                             parsedContent.type === "one-answer"
                                                 ? id

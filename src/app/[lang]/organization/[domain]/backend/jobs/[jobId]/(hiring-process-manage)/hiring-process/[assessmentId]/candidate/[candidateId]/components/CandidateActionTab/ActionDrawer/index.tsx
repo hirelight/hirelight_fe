@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { FormEvent, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import { Dialog, Switch, Transition } from "@headlessui/react";
 import { UserCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
@@ -156,6 +156,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
             location: "",
             employerIds: [],
         });
+        setSelected([]);
 
         setMeetingTime({
             startTime: moment.utc().toDate(),
@@ -169,7 +170,9 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
         });
     };
 
-    const handleCreateMeeting = async () => {
+    const handleCreateMeeting = async (e: FormEvent) => {
+        e.preventDefault();
+
         if (isInvalidFormInput()) return;
 
         setLoading(true);
@@ -235,7 +238,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                     <div className="fixed inset-0 bg-black/25" />
                 </Transition.Child>
                 <div className="fixed inset-0 overflow-y-auto">
-                    <div>
+                    <form onSubmit={handleCreateMeeting}>
                         <Transition.Child
                             as={React.Fragment}
                             enter="ease-out duration-300"
@@ -320,6 +323,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                         <div className="mb-6">
                                             <CustomInput
                                                 title="Meeting link"
+                                                type="url"
                                                 placeholder="Example: meet.google.com"
                                                 value={formState.meetingLink}
                                                 onChange={e => {
@@ -565,16 +569,16 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                 </div>
                                 <div className="p-6 border-t border-gray-300 flex-shrink-0 flex justify-end">
                                     <Button
+                                        type="submit"
                                         disabled={loading}
                                         isLoading={loading}
-                                        onClick={handleCreateMeeting}
                                     >
                                         Create meeting
                                     </Button>
                                 </div>
                             </Dialog.Panel>
                         </Transition.Child>
-                    </div>
+                    </form>
                 </div>
             </Dialog>
         </Transition>

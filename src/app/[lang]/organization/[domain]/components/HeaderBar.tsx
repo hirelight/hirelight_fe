@@ -105,7 +105,7 @@ const HeaderBar = () => {
                         </li>
                     </ul>
                 </nav>
-                <div className="flex gap-8 items-center">
+                <div className="flex gap-6 items-center">
                     <Bell className="text-blue_primary_800 w-8 h-8" />
                     <InvitationDropDown />
                     <div className="flex gap-4 text-neutral-700 border-gray-400">

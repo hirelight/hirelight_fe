@@ -9,7 +9,12 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 
 import { Button, ButtonOutline, Portal } from "@/components";
-import { ApplicationFormJSON, IJobDto, JobContentJson } from "@/services";
+import {
+    ApplicationFormJSON,
+    IJobDto,
+    IOrganizationDto,
+    JobContentJson,
+} from "@/services";
 import logo from "@/app/icon.svg";
 import { decryptData } from "@/helpers/authHelpers";
 
@@ -19,6 +24,7 @@ type JobDescriptionBesideProps = {
     data: Omit<IJobDto, "content" | "applicationForm"> & {
         content: JobContentJson;
         applicationForm: ApplicationFormJSON;
+        organization: IOrganizationDto;
     };
     close: () => void;
 };
@@ -46,7 +52,7 @@ const JobDescriptionBeside: React.FC<JobDescriptionBesideProps> = ({
                 <div className="border-b border-gray-300 pb-6">
                     <div className="max-h-20 h-20 w-auto mb-3">
                         <Image
-                            src={logo}
+                            src={data.organization.logoUrl ?? logo}
                             alt="Company logo"
                             width={80}
                             height={80}
@@ -63,7 +69,7 @@ const JobDescriptionBeside: React.FC<JobDescriptionBesideProps> = ({
                                 href="#"
                                 className="text-blue_primary_600 hover:underline hover:text-blue_primary_700 cursor-pointer"
                             >
-                                Company name
+                                {data.organization.name}
                             </Link>
                         </p>
                     </div>
@@ -71,10 +77,12 @@ const JobDescriptionBeside: React.FC<JobDescriptionBesideProps> = ({
                         <span className="mr-2 after:content-['\2022'] after:ml-2">
                             {data.area}
                         </span>
-                        <span className="mr-2 after:content-['\2022'] after:ml-2">
-                            Company Industry
-                        </span>
-                        <span>{data.workModality}</span>
+                        {data.organization.industry && (
+                            <span className="mr-2 after:content-['\2022'] after:ml-2">
+                                {data.organization.industry}
+                            </span>
+                        )}
+                        {data.workModality && <span>{data.workModality}</span>}
                     </div>
 
                     <div className="flex items-center justify-between">

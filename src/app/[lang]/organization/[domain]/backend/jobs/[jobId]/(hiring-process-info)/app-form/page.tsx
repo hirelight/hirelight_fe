@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import AppForm from "./components/AppForm";
 
 export const metadata: Metadata = {
-    title: "Job App Form",
+    title: "Hirelight - Backend | Job Application Form",
 };
 
 const JobApplicationForm = async () => {

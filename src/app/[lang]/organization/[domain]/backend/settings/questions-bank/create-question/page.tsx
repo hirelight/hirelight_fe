@@ -256,7 +256,7 @@ const CreateQuestionPage = () => {
                 className="w-full bg-white rounded-md shadow-md p-4 xl:px-6"
             >
                 <h1 className="text-xl text-blue_primary_800 font-semibold text-center mb-4 relative">
-                    Create multiple choice question
+                    Create new question
                     {/* <button
                         type="button"
                         className="w-6 h-6 absolute top-1/2 right-0 -translate-y-1/2 cursor-pointer target:"
@@ -283,7 +283,7 @@ const CreateQuestionPage = () => {
                                     accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                     onChange={e => {
                                         const files = e.target.files;
-                                        if (files)
+                                        if (files && files.length > 0)
                                             handleUploadQuestions(files[0]);
                                     }}
                                 />
@@ -512,7 +512,7 @@ const CreateQuestionPage = () => {
                     {formErr.contentErr.correctAnswer && (
                         <p className="md:col-span-2 mt-2 text-sm text-red-600 dark:text-red-500">
                             <span className="font-medium">Op, snapp!</span>
-                            {formErr.contentErr.answersErr}
+                            {formErr.contentErr.correctAnswer}
                         </p>
                     )}
                 </div>

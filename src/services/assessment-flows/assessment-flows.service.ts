@@ -11,12 +11,12 @@ import {
 } from "./assessment-flows.interface";
 
 const createAsync = async (
-    createEmailTemplatesDto: ICreateAssessmentFlowDto
+    createAssessmentFlowDo: ICreateAssessmentFlowDto
 ): Promise<IResponse<IAssessmentFlowDto>> => {
     try {
         const res = await interceptor.post<IResponse<IAssessmentFlowDto>>(
             `${endpoints.ASSESSMENT_FLOWS}`,
-            createEmailTemplatesDto
+            createAssessmentFlowDo
         );
         checkResErr(res.data);
         return res.data;
@@ -55,12 +55,12 @@ const getByIdAsync = async (
 };
 
 const editAsync = async (
-    editEmailTemplateDto: IEditAssessmentFlowDto
+    editAssessmentFlowDto: IEditAssessmentFlowDto
 ): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.put<IResponse<any>>(
-            `${endpoints.ASSESSMENT_FLOWS}/${editEmailTemplateDto.id}`,
-            editEmailTemplateDto
+            `${endpoints.ASSESSMENT_FLOWS}/${editAssessmentFlowDto.id}`,
+            editAssessmentFlowDto
         );
 
         checkResErr(res.data);

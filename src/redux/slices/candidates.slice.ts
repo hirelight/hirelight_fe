@@ -46,7 +46,7 @@ const candidatesSlice = createSlice({
         setSelectAllCandidates: state => {
             if (state.selectedCandidates.length === 0)
                 state.selectedCandidates = state.candidates.map(
-                    (item, index) => item.applicantProfileId
+                    item => item.id
                 );
             else state.selectedCandidates = [];
         },

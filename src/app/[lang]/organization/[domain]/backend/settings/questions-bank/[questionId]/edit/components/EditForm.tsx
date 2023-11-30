@@ -51,7 +51,7 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
             questionAnswerServices.editAsync(updateDto),
         onSuccess: async res => {
             toast.success(res.message);
-            queryClient.invalidateQueries({ queryKey: ["questions"] });
+            await queryClient.invalidateQueries({ queryKey: ["questions"] });
             router.replace(`/${lang}/backend/settings/questions-bank`);
         },
         onError: err => {
@@ -207,7 +207,13 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
                                 ...answer,
                                 correct: e.currentTarget.checked,
                             };
-                        return answer;
+                        return {
+                            ...answer,
+                            correct:
+                                formState.content.type === "one-answer"
+                                    ? false
+                                    : answer.correct,
+                        };
                     }
                 ),
             },
@@ -398,7 +404,7 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
                                             value={index}
                                             name={questionId}
                                             className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                            checked={answer.correct}
+                                            defaultChecked={answer.correct}
                                             onChange={e => {
                                                 handleSelectCorrectAnswer(
                                                     e,
