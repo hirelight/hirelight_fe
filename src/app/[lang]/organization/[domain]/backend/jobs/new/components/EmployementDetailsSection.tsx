@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { CustomInput, Selection } from "@/components";
+import { BadgeInput, CustomInput, Selection } from "@/components";
 import { experienceLevels, workModalities } from "@/utils/shared/initialDatas";
 
 import styles from "./AddJobDetailForm.module.scss";
@@ -46,10 +46,38 @@ const EmployementDetailsSection = () => {
                             });
                         }}
                     />
-                    <CustomInput
+                    <BadgeInput
                         title="Keywords"
                         type="text"
-                        onChange={() => {}}
+                        id="search-keywords"
+                        values={
+                            formState.keywords
+                                ? formState.keywords.split(",")
+                                : []
+                        }
+                        onChange={(badges: string[]) =>
+                            setFormState({
+                                ...formState,
+                                keywords: badges.join(","),
+                            })
+                        }
+                    />
+
+                    <BadgeInput
+                        title="CV screening keywords"
+                        type="text"
+                        id="scan-keywords"
+                        values={
+                            formState.scanKeywords
+                                ? formState.scanKeywords.split(",")
+                                : []
+                        }
+                        onChange={(badges: string[]) =>
+                            setFormState({
+                                ...formState,
+                                scanKeywords: badges.join(","),
+                            })
+                        }
                     />
                 </div>
             </div>

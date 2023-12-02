@@ -3,9 +3,8 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
-import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
-import LoadingIndicator from "@/components/LoadingIndicator";
 import { decryptData } from "@/helpers/authHelpers";
+import { DoubleRingLoading } from "@/components";
 
 const SelectOrgWrapper = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
@@ -18,8 +17,8 @@ const SelectOrgWrapper = ({ children }: { children: React.ReactNode }) => {
 
     if (!token)
         return (
-            <div className="p-12 flex justify-center items-center">
-                <LoadingIndicator />
+            <div className="p-8 flex justify-center items-center">
+                <DoubleRingLoading className="w-20 h-20" />
             </div>
         );
 

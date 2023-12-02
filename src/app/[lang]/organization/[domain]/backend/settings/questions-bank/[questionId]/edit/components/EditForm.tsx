@@ -329,6 +329,7 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
                     <button
                         type="button"
                         className="rounded-md h-[42px] aspect-square flex items-center justify-center self-end border-2 border-blue_primary_600 text-blue_primary_600 hover:bg-blue_primary_700 hover:border-blue_primary_700 hover:text-white transition-all"
+                        onClick={() => setShowAddTag(true)}
                     >
                         <PlusIcon className="w-5 h-5" />
                     </button>

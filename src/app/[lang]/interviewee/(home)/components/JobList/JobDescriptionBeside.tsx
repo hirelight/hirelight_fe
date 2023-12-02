@@ -21,6 +21,8 @@ import { decryptData } from "@/helpers/authHelpers";
 
 import ApplyFormModal from "../ApplyFormModal/ApplyFormModal";
 
+import ReportModal from "./ReportModal";
+
 type JobDescriptionBesideProps = {
     data: Omit<IJobDto, "content" | "applicationForm"> & {
         content: JobContentJson;
@@ -39,15 +41,27 @@ const JobDescriptionBeside: React.FC<JobDescriptionBesideProps> = ({
     const token = decryptData("hirelight_access_token");
 
     const [showModal, setShowModal] = useState(false);
+    const [showReport, setShowReport] = useState(false);
+
+    const handleShowReportForm = () => {
+        if (!token) return router.push(`/${lang}/login`);
+
+        setShowReport(true);
+    };
 
     return (
         <>
+            <ReportModal
+                isOpen={showReport}
+                jobPostId={data.id}
+                closeModal={() => setShowReport(false)}
+            />
             <div className="p-4 xl:px-6 transition-none bg-white relative">
                 <div className="absolute top-4 right-4 flex gap-4">
                     <button
                         type="button"
                         className="text-gray-500 hover:text-gray-800"
-                        onClick={close}
+                        onClick={handleShowReportForm}
                     >
                         <FlagIcon className="w-6 h-6" />
                     </button>

@@ -12,3 +12,8 @@ export interface ICreateReportDto {
     jobPostId: string;
     content: string;
 }
+
+export interface IReportContentJson {
+    type: string;
+    content: string;
+}

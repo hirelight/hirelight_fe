@@ -8,6 +8,8 @@ import { Pagination } from "@/components";
 import jobServices from "@/services/job/job.service";
 import { IJobDto } from "@/services";
 
+import { useJobsCenter } from "../../page";
+
 import JobCard from "./JobCard";
 import JobDescriptionBeside from "./JobDescriptionBeside";
 import JobsCenterCategory from "./JobsCenterCategory";
@@ -15,6 +17,7 @@ import JobsCenterCategory from "./JobsCenterCategory";
 const JobList = () => {
     const [showJD, setShowJD] = useState(false);
     const [selectedJob, setSelectedJob] = useState<IJobDto>();
+    const { searchString } = useJobsCenter();
 
     const { data: jobsRes } = useQuery({
         queryKey: ["jobs-candidate"],
@@ -28,35 +31,49 @@ const JobList = () => {
                     <div className="w-full max-w-full overflow-hidden">
                         <div className="w-full flex justify-between">
                             <h3 className="text-neutral-700 font-semibold text-xl mb-6">
-                                {jobsRes?.data.length} jobs associated
+                                {
+                                    jobsRes?.data.filter(job =>
+                                        job.title
+                                            .toLowerCase()
+                                            .includes(searchString)
+                                    ).length
+                                }{" "}
+                                jobs associated
                             </h3>
                         </div>
 
                         <div>
                             <ul className="flex flex-col gap-3">
-                                {jobsRes?.data?.map((job, index) => (
-                                    <li
-                                        key={index}
-                                        onClick={() => {
-                                            setShowJD(true);
-                                            setSelectedJob(job);
-                                        }}
-                                    >
-                                        <JobCard
-                                            data={
-                                                {
-                                                    ...job,
-                                                    content: JSON.parse(
-                                                        job.content
-                                                    ),
-                                                    applicationForm: JSON.parse(
-                                                        job.applicationForm
-                                                    ),
-                                                } as any
-                                            }
-                                        />
-                                    </li>
-                                ))}
+                                {jobsRes?.data
+                                    .filter(job =>
+                                        job.title
+                                            .toLowerCase()
+                                            .includes(searchString)
+                                    )
+                                    .map((job, index) => (
+                                        <li
+                                            key={index}
+                                            onClick={() => {
+                                                setShowJD(true);
+                                                setSelectedJob(job);
+                                            }}
+                                        >
+                                            <JobCard
+                                                data={
+                                                    {
+                                                        ...job,
+                                                        content: JSON.parse(
+                                                            job.content
+                                                        ),
+                                                        applicationForm:
+                                                            JSON.parse(
+                                                                job.applicationForm
+                                                            ),
+                                                    } as any
+                                                }
+                                            />
+                                        </li>
+                                    ))}
                             </ul>
                         </div>
                     </div>

@@ -1,0 +1,43 @@
+@import "/src/utils/colors/baseColor";
+
+.input__label {
+    @apply block mb-2 text-sm font-medium text-neutral-900 dark:text-white;
+
+    &.error {
+        @apply text-red-700 dark:text-red-500;
+    }
+}
+
+.input__box {
+    display: flex;
+    align-items: stretch;
+    max-width: 100%;
+    max-height: 120px;
+    overflow: auto;
+
+     /* width */
+     &::-webkit-scrollbar {
+        height: 8px;
+        width: 8px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: rgb(222, 222, 222);
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: rgb(151, 151, 151);
+        border-radius: 12px;
+    }
+
+    & input {
+        @apply placeholder:text-gray-400 sm:text-sm sm:leading-6 text-neutral-700 text-sm dark:text-white;
+    }
+    @apply w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-gray-300 focus-within:ring-2 focus-within:ring-blue_primary_600 outline-none bg-white focus-within:border-blue_primary_600 p-2.5 dark:bg-gray-700 dark:placeholder-gray-400  dark:focus-within:ring-blue_primary_600 dark:focus-within:border-blue_primary_600;
+
+    &.error {
+        @apply ring-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 dark:bg-gray-700 dark:text-red-500 dark:placeholder-red-500 dark:ring-red-500;
+    }
+}

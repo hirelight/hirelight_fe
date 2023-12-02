@@ -22,7 +22,9 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                 <HeaderBar />
                 <div className="flex flex-1">
                     <Sidebar />
-                    <main className="flex-1 bg-slate-100">{children}</main>
+                    <main className="flex-1 bg-slate-100 pb-12">
+                        {children}
+                    </main>
                 </div>
             </AuthenWrapper>
         </div>

@@ -17,18 +17,20 @@ const CustomTextArea = (props: ICustomTextArea) => {
         props;
     return (
         <div className="w-full">
-            <label
-                htmlFor={id}
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-                {required && <span className="text-red-500 mr-1">*</span>}
-                {title}
-                {!required && (
-                    <span className="text-neutral-500 text-sm ml-1">
-                        (Optional)
-                    </span>
-                )}
-            </label>
+            {title && (
+                <label
+                    htmlFor={id}
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                    {required && <span className="text-red-500 mr-1">*</span>}
+                    {title}
+                    {!required && (
+                        <span className="text-neutral-500 text-sm ml-1">
+                            (Optional)
+                        </span>
+                    )}
+                </label>
+            )}
             <textarea
                 {...rest}
                 id={id}

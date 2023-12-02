@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import moment from "moment";
 import { useParams } from "next/navigation";
+import { EyeIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 import jobServices from "@/services/job/job.service";
 
@@ -40,8 +42,9 @@ const JobList = () => {
                             Reports
                         </th>
                         <th scope="col" className="px-6 py-3">
-                            Reports
+                            Actions
                         </th>
+                        <th scope="col" className="px-6 py-3"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,15 +65,24 @@ const JobList = () => {
                                     .utc(job.createdTime)
                                     .locale(lang)
                                     .local()
-                                    .format()}
+                                    .format("DD/MM/yyyy")}
                             </td>
                             <td className="px-6 py-4">
                                 {(job as any).organization.name}
                             </td>
                             <td className="px-6 py-4">{job.status}</td>
-                            <td className="px-6 py-4">$2999</td>
+                            <td className="px-6 py-4">{0}</td>
                             <td className="px-6 py-4">
                                 <button type="button">Disable</button>
+                            </td>
+                            <td className="px-6 py-4">
+                                <Link
+                                    href={`job-posts/${job.id}`}
+                                    type="button"
+                                    className="w-5 h-5"
+                                >
+                                    <EyeIcon />
+                                </Link>
                             </td>
                         </tr>
                     ))}

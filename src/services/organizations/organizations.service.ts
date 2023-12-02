@@ -51,6 +51,30 @@ const editOrgProfile = async (editDto: IEditOrganizationDto) => {
     }
 };
 
+const suspendOrg = async (id: string) => {
+    try {
+        const res = await interceptor.put<IResponse<any>>(
+            endpoints.ORGANIZATIONS + `/${id}/suspend`
+        );
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const reactivateOrg = async (id: string) => {
+    try {
+        const res = await interceptor.put<IResponse<any>>(
+            endpoints.ORGANIZATIONS + `/${id}/reactivate`
+        );
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const getListOrganizations = async (): Promise<
     IResponse<IOrganizationDto[]>
 > => {
@@ -129,6 +153,8 @@ const organizationsServices = {
     getByIdAsync,
     getOwnedJoinedOrganizations,
     editOrgProfile,
+    suspendOrg,
+    reactivateOrg,
 };
 
 export default organizationsServices;

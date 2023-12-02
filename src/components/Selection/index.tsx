@@ -148,14 +148,42 @@ const Selection = <T extends object | any>(props: ISelection<T>) => {
                     <p className="whitespace-nowrap text-ellipsis overflow-hidden">
                         {selected.length === 0
                             ? placeholder
-                            : selected.map((item, index) => (
-                                  <span
-                                      key={index}
-                                      className="after:content-[','] after:mr-1 last:after:hidden whitespace-nowrap text-ellipsis overflow-hidden"
-                                  >
-                                      {item}
-                                  </span>
-                              ))}
+                            : selected.map((item, index) => {
+                                  if (multiple) {
+                                      return (
+                                          <span
+                                              key={index}
+                                              className="whitespace-nowrap bg-blue-100 text-blue-800 text-sm font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300 inline-flex items-center ml-1 first:ml-0"
+                                          >
+                                              {item}{" "}
+                                              <span
+                                                  role="button"
+                                                  onClick={e => {
+                                                      e.stopPropagation();
+                                                      setSelected(prev =>
+                                                          prev.filter(
+                                                              (_, iIndex) =>
+                                                                  index !==
+                                                                  iIndex
+                                                          )
+                                                      );
+                                                  }}
+                                                  className="ml-1"
+                                              >
+                                                  x
+                                              </span>
+                                          </span>
+                                      );
+                                  }
+                                  return (
+                                      <span
+                                          key={index}
+                                          className="after:content-[','] after:mr-1 last:after:hidden whitespace-nowrap text-ellipsis overflow-hidden"
+                                      >
+                                          {item}
+                                      </span>
+                                  );
+                              })}
                     </p>
                     <div>
                         <ChevronDown className="w-4 h-4" strokeWidth={2} />

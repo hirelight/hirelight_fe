@@ -1,12 +1,26 @@
 import { Metadata } from "next";
 import React from "react";
-import { cookies } from "next/headers";
 import Image from "next/image";
-import { redirect } from "next/navigation";
 
 import logo from "/public/images/logo.svg";
 
+import dynamic from "next/dynamic";
+
+import { DoubleRingLoading } from "@/components";
+
 import JoinedOrgList from "./components/JoinedOrgList";
+
+const SelectOrgWrapper = dynamic(
+    () => import("./components/SelectOrgWrapper"),
+    {
+        ssr: false,
+        loading: () => (
+            <div className="p-8 flex justify-center items-center">
+                <DoubleRingLoading className="w-20 h-20" />
+            </div>
+        ),
+    }
+);
 
 export const metadata: Metadata = {
     title: "Hirelight - Welcome",
@@ -24,7 +38,9 @@ const SelectOrgPage = async ({ params }: any) => {
                     className="w-full h-auto object-cover"
                 />
             </div>
-            <JoinedOrgList />
+            <SelectOrgWrapper>
+                <JoinedOrgList />
+            </SelectOrgWrapper>
             {/* <div className="mt-8 text-sm text-center relative flex flex-col items-center">
             <p className="text-gray-500">{login_page.dont_have_account}</p>
             <Link

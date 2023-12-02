@@ -5,10 +5,11 @@ const DoubleRingLoading = (props: any) => {
         <svg
             {...props}
             xmlns="http://www.w3.org/2000/svg"
-            width="200px"
-            height="200px"
+            width={200}
+            height={200}
             viewBox="0 0 100 100"
             preserveAspectRatio="xMidYMid"
+            className={props.className}
         >
             <circle
                 cx="50"

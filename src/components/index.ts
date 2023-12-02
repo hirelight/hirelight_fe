@@ -27,6 +27,7 @@ import TimerPicker from "./TimerPicker";
 import RescheduleModal from "./RescheduleModal";
 import WarningModal from "./WarningModal";
 import DifficultyBadge from "./DifficultyBadge";
+import BadgeInput from "./BadgeInput";
 
 export {
     Modal,
@@ -58,4 +59,5 @@ export {
     RescheduleModal,
     WarningModal,
     DifficultyBadge,
+    BadgeInput,
 };

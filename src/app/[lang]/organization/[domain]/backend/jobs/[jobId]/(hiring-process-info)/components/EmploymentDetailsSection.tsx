@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { CustomInput, Selection } from "@/components";
+import { BadgeInput, CustomInput, Selection } from "@/components";
 import { experienceLevels, workModalities } from "@/utils/shared/initialDatas";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setJob } from "@/redux/slices/job.slice";
@@ -52,10 +52,36 @@ const EmploymentDetailsSection = () => {
                             );
                         }}
                     />
-                    <CustomInput
+                    <BadgeInput
                         title="Keywords"
                         type="text"
-                        onChange={() => {}}
+                        id="search-keywords"
+                        values={job.keywords ? job.keywords.split(",") : []}
+                        onChange={(badges: string[]) =>
+                            dispatch(
+                                setJob({
+                                    ...job,
+                                    keywords: badges.join(","),
+                                })
+                            )
+                        }
+                    />
+
+                    <BadgeInput
+                        title="CV screening keywords"
+                        type="text"
+                        id="scan-keywords"
+                        values={
+                            job.scanKeywords ? job.scanKeywords.split(",") : []
+                        }
+                        onChange={(badges: string[]) =>
+                            dispatch(
+                                setJob({
+                                    ...job,
+                                    scanKeywords: badges.join(","),
+                                })
+                            )
+                        }
                     />
                 </div>
             </div>
