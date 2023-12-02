@@ -67,6 +67,7 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
     data,
 }) => {
     const queryClient = useQueryClient();
+    const router = useRouter();
 
     const { assessmentId } = useParams();
 
@@ -124,15 +125,16 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                 applicantAssessmentDetailId: data.id,
                 answers: answers,
             });
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
                 queryKey: [`my-assessment`, assesmentData!!.id],
             });
             toast.success(res.message);
+            router.push(`${data.id}/review`);
         } catch (error: any) {
             handleError(error);
         }
         setIsLoading(false);
-    }, [answers, assesmentData, data.id, queryClient]);
+    }, [answers, assesmentData, data.id, queryClient, router]);
 
     // useEffect(() => {
     //     if (

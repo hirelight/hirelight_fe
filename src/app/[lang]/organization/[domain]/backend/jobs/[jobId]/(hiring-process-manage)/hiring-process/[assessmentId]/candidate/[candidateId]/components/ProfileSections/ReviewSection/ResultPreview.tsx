@@ -229,7 +229,12 @@ const MCQResult = ({
                                                 ? "radio"
                                                 : "checkbox"
                                         }
-                                        defaultChecked={ans.isChosen}
+                                        name={
+                                            item.content.type === "one-answer"
+                                                ? item.id
+                                                : `${item.id}-${index}`
+                                        }
+                                        checked={ans.isChosen}
                                         className={`w-4 h-4 text-inherit bg-gray-100 border-gray-300 pointer-events-none`}
                                         readOnly={true}
                                     />
@@ -280,39 +285,6 @@ const AsyncResult = ({ results }: { results: IAsyncAnswer[] }) => {
                             />
                         </div>
                     )}
-
-                    {/* <ul className="space-y-2 pl-2">
-                        {item.content.answers.map((ans, index) => (
-                            <li
-                                key={index}
-                                className={`flex items-center font-medium gap-2  ${
-                                    ans.isChosen && ans.isChosen !== ans.correct
-                                        ? "text-red-600"
-                                        : ans.correct
-                                        ? "text-green-600"
-                                        : ""
-                                }`}
-                            >
-                                <input
-                                    type={
-                                        item.content.type === "one-answer"
-                                            ? "radio"
-                                            : "checkbox"
-                                    }
-                                    defaultChecked={ans.isChosen}
-                                    className={`w-4 h-4 text-inherit bg-gray-100 border-gray-300 pointer-events-none`}
-                                    readOnly={true}
-                                />
-
-                                <div
-                                    className="ql-editor !p-0"
-                                    dangerouslySetInnerHTML={{
-                                        __html: ans.name,
-                                    }}
-                                ></div>
-                            </li>
-                        ))}
-                    </ul> */}
                 </section>
             ))}
         </div>

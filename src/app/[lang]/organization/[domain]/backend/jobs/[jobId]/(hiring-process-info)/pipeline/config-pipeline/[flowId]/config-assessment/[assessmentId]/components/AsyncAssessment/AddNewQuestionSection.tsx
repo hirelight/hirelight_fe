@@ -59,6 +59,7 @@ const AddNewQuestionSection = ({
     });
     const [progress, setProgress] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [uploading, setUploading] = useState(false);
     const [question, setQuestion] = React.useState<AsyncQuestionType>(
         data
             ? data
@@ -135,6 +136,7 @@ const AddNewQuestionSection = ({
             if (fileSize > 200) return toast.error("Maximum file is 200MB");
             const formData = new FormData();
             formData.append("formFile", fileList[0]);
+            setUploading(true);
             try {
                 const res = await fileServices.uploadFile(formData, event => {
                     setProgress(
@@ -156,6 +158,7 @@ const AddNewQuestionSection = ({
                     error.message ? error.message : "Something went error"
                 );
             }
+            setUploading(false);
         }
     };
 
@@ -338,7 +341,7 @@ const AddNewQuestionSection = ({
                 <div className="inline-flex items-center gap-4">
                     <Button
                         type="button"
-                        disabled={loading}
+                        disabled={loading || uploading}
                         isLoading={loading}
                         onClick={handleAddNewSection}
                     >
@@ -346,7 +349,8 @@ const AddNewQuestionSection = ({
                     </Button>
                     <button
                         type="button"
-                        className="text-neutral-500 font-semibold text-sm hover:text-neutral-700"
+                        disabled={uploading || loading}
+                        className="text-neutral-500 font-semibold text-sm hover:text-neutral-700 disabled:cursor-not-allowed disabled:opacity-80"
                         onClick={() => onFinish()}
                     >
                         Cancel

@@ -23,6 +23,8 @@ import applicantAssessmentDetailServices from "@/services/applicant-assessment-d
 import { useAppSelector } from "@/redux/reduxHooks";
 import meetingServices from "@/services/meeting/meeting.service";
 import { handleError } from "@/helpers";
+import { DeleteModal, Portal } from "@/components";
+import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
 
 import MoveCandidateDialog from "./MoveCandidateDialog";
 import styles from "./CandidateActionTabs.module.scss";
@@ -47,6 +49,7 @@ const CandidateActionTabs = () => {
 
     const [sendLoading, setSendLoading] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [showDisqualify, setShowDisqualify] = useState(false);
     const assessments = useAppSelector(
         state => state.assessmentFlow.data.assessments
     );
@@ -88,6 +91,11 @@ const CandidateActionTabs = () => {
     });
 
     const handleSendAssessment = async () => {
+        if (
+            applicantAssessmentDetail.status ===
+            ApplicantAssessmentDetailStatus.INVITED
+        )
+            return toast.info("Assessment has already sent!");
         setSendLoading(true);
         try {
             await toast.promise(
@@ -150,6 +158,16 @@ const CandidateActionTabs = () => {
 
     return (
         <>
+            <Portal>
+                <DeleteModal
+                    title="Disqualify candidate"
+                    description="Are you sure you want to disqualify this candidate? This action cannot be undone."
+                    onConfirm={handleDisqualifyCandidate}
+                    loading={disqualifyMutate.isPending}
+                    show={showDisqualify}
+                    onClose={() => setShowDisqualify(false)}
+                />
+            </Portal>
             <ActionDrawer
                 show={showDrawer}
                 onClose={() => setShowDrawer(false)}
@@ -194,8 +212,7 @@ const CandidateActionTabs = () => {
                                     styles.candidate__action__btn +
                                     " disabled:cursor-not-allowed disabled:opacity-80"
                                 }
-                                disabled={disqualifyMutate.isPending}
-                                onClick={handleDisqualifyCandidate}
+                                onClick={() => setShowDisqualify(true)}
                             >
                                 <HandRaisedIcon className="w-6 h-6 text-red-600" />
                             </button>

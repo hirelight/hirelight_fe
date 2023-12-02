@@ -7,6 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import moment from "moment";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
+import { FlagIcon } from "@heroicons/react/24/outline";
 
 import { Button, ButtonOutline, Portal } from "@/components";
 import {
@@ -42,13 +43,22 @@ const JobDescriptionBeside: React.FC<JobDescriptionBesideProps> = ({
     return (
         <>
             <div className="p-4 xl:px-6 transition-none bg-white relative">
-                <button
-                    type="button"
-                    className="absolute top-4 right-4 text-gray-500"
-                    onClick={close}
-                >
-                    <XMarkIcon className="w-8 h-8" />
-                </button>
+                <div className="absolute top-4 right-4 flex gap-4">
+                    <button
+                        type="button"
+                        className="text-gray-500 hover:text-gray-800"
+                        onClick={close}
+                    >
+                        <FlagIcon className="w-6 h-6" />
+                    </button>
+                    <button
+                        type="button"
+                        className="text-gray-500 hover:text-gray-800"
+                        onClick={close}
+                    >
+                        <XMarkIcon className="w-6 h-6" />
+                    </button>
+                </div>
                 <div className="border-b border-gray-300 pb-6">
                     <div className="max-h-20 h-20 w-auto mb-3">
                         <Image

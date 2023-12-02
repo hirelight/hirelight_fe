@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
 
-import { Button, CustomInput, DatePicker } from "@/components";
+import { Button, CustomInput, DatePicker, WarningModal } from "@/components";
 import { IAssessmentFlTempDto } from "@/services/assessment-flow-templates/assessment-flow-templates.interface";
 import {
     IAssessmentFlow,
@@ -46,6 +46,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
     const queryClient = useQueryClient();
 
     const [isLoading, setIsLoading] = useState(false);
+    const [showWarning, setShowWarning] = useState(false);
     const [formState, setFormState] = useState<ICreateAssessmentFlowDto>({
         ...initialData,
         jobPostId: jobId as string,
@@ -108,8 +109,8 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                 jobPostId: jobId as string,
             });
 
+            await queryClient.invalidateQueries({ queryKey: ["job", jobId] });
             toast.success(res.message);
-            queryClient.invalidateQueries({ queryKey: ["job", jobId] });
             router.push(`config-pipeline/${res.data.id}`);
         } catch (error) {
             toast.error("Create flow error");
@@ -119,6 +120,14 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
 
     return (
         <div>
+            <WarningModal
+                isOpen={showWarning}
+                isLoading={isLoading}
+                closeModal={() => setShowWarning(false)}
+                onConfirm={handleCreateFlow}
+                content="Please review your information. Once you create flow you can only edit flow order or assessment name. This action cannot be undone!"
+                title="Create new assessment flow"
+            />
             <div className="mb-4 grid grid-cols-1 md:grid-cols-2">
                 <CustomInput
                     title="Name"
@@ -259,8 +268,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                 <div className="w-fit mt-6">
                     <Button
                         disabled={isLoading}
-                        isLoading={isLoading}
-                        onClick={handleCreateFlow}
+                        onClick={() => setShowWarning(true)}
                     >
                         Save changes
                     </Button>

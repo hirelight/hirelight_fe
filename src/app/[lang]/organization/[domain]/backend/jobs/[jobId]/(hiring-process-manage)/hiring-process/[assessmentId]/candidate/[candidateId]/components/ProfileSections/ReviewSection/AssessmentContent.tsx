@@ -11,6 +11,7 @@ import {
     ApplicantAssessmentDetailStatus,
     defaultAsessment,
 } from "@/interfaces/assessment.interface";
+import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 
 import ResultPreview from "./ResultPreview";
 
@@ -69,6 +70,11 @@ const AssessmentCard = ({ data }: { data: IJobPostAppAssDetailDto }) => {
             />
 
             <div className="py-4 border-b border-gray-300 flex gap-4 relative">
+                <div className="w-6 h-6">
+                    {getIconBaseOnAssessmentType(
+                        data.assessment.assessmentTypeName
+                    )}
+                </div>
                 <h4 className="text-base font-semibold">
                     {data.assessment.name}
                 </h4>

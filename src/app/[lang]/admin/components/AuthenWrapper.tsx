@@ -7,7 +7,7 @@ import jwtDecode from "jwt-decode";
 
 import { IUserDto } from "@/services";
 import { useAppDispatch } from "@/redux/reduxHooks";
-import { setToken } from "@/redux/slices/auth.slice";
+import { logout, setToken } from "@/redux/slices/auth.slice";
 import { decryptData } from "@/helpers/authHelpers";
 
 const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -27,6 +27,15 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
                 router.replace(
                     `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/login?authEnd=true`
                 );
+            }
+        } else {
+            const decoded = jwtDecode(token) as IUserDto;
+            if (accessToken) {
+                dispatch(setToken(accessToken));
+                router.push(`/${lang}`);
+            } else if (decoded.exp < Date.now() / 1000) {
+                dispatch(logout());
+                window.location.href = `http://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login?authEnd=true`;
             }
         }
     }, [accessToken, dispatch, lang, router]);

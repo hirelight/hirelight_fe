@@ -4,6 +4,7 @@ import {
     PencilSquareIcon,
     ClipboardDocumentListIcon,
     VideoCameraIcon,
+    SquaresPlusIcon,
 } from "@heroicons/react/24/outline";
 import { ListBulletIcon } from "@heroicons/react/24/solid";
 
@@ -12,7 +13,7 @@ import { AssessmentTypeKey } from "@/interfaces/assessment.interface";
 export const getIconBaseOnAssessmentType = (type: AssessmentTypeKey) => {
     switch (type) {
         case "THIRD_PARTY_ASSESSMENT":
-            return <UserIcon />;
+            return <SquaresPlusIcon />;
         case "CV_SCREENING_ASSESSMENT":
             return <ClipboardDocumentListIcon />;
         case "ASYNC_VIDEO_INTERVIEW_ASSESSMENT":

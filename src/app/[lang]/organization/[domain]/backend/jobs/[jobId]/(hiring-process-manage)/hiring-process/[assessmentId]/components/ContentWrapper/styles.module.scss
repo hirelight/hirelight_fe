@@ -23,14 +23,16 @@
 
 .sidebar__toggle__btn {
     position: absolute;
+    z-index: 20;
     top: 2rem;
     right: 0;
     transform: translateX(50%) rotate(180deg);
-    @apply p-2 bg-white hover:bg-slate-200 border border-gray-300 rounded-md text-neutral-700 shadow-md transition-all;
+    @apply block lg:hidden p-2 bg-white hover:bg-slate-200 border border-gray-300 rounded-md text-neutral-700 shadow-md transition-all;
 }
 
 .sidebar__container {
     position: sticky;
+    z-index: 2;
     top: 0.5rem;
     min-height: 800px;
     max-width: 440px;
@@ -41,4 +43,11 @@
 
 .content__wrapper {
     @apply flex-1 mx-6 pl-0 transition-all;
+}
+
+
+@media screen and (max-width: 976px) {
+    .sidebar__container{
+        position: absolute;
+    }
 }

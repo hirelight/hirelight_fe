@@ -52,7 +52,7 @@ const HomeHeader = ({ _t }: IHomeHeader) => {
                     </li>
                     <li className="hover:text-blue_primary_800">
                         <Link
-                            href={`http://jobs.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}`}
+                            href={`http://jobs.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}`}
                         >
                             {_t.nav.career_center}
                         </Link>

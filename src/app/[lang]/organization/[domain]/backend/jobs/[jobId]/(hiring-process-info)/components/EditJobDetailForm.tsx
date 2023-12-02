@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { FormEvent } from "react";
 import { toast } from "react-toastify";
 import moment from "moment";
 
@@ -105,7 +105,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
         return false;
     };
 
-    const handleSubmitJobDetail = async (e: any) => {
+    const handleSubmitJobDetail = async (e: FormEvent) => {
         e.preventDefault();
 
         if (isInvalidInput()) {
@@ -135,7 +135,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
         <>
             <form
                 className="flex"
-                onSubmit={e => handleSubmitJobDetail(e)}
+                onSubmit={handleSubmitJobDetail}
                 onKeyDown={e => {
                     if (e.key === "Enter") e.preventDefault();
                 }}

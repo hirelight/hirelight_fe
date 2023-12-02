@@ -25,6 +25,8 @@ import DoubleRingLoading from "./DoubleRingLoading";
 import EmployeePrivateWrapper from "./EmployeePrivateWrapper";
 import TimerPicker from "./TimerPicker";
 import RescheduleModal from "./RescheduleModal";
+import WarningModal from "./WarningModal";
+import DifficultyBadge from "./DifficultyBadge";
 
 export {
     Modal,
@@ -54,4 +56,6 @@ export {
     EmployeePrivateWrapper,
     TimerPicker,
     RescheduleModal,
+    WarningModal,
+    DifficultyBadge,
 };

@@ -22,11 +22,7 @@ const orgManageItems = [
         url: (lang: string) => `/${lang}/organizations`,
         icon: <BuildingOfficeIcon />,
     },
-    {
-        label: "Account",
-        url: (lang: string) => `/${lang}/org-accounts`,
-        icon: <UserCircleIcon />,
-    },
+
     {
         label: "Job Post",
         url: (lang: string) => `/${lang}/job-posts`,
@@ -40,6 +36,11 @@ const orgManageItems = [
 ];
 
 const hirelight = [
+    {
+        label: "Account",
+        url: (lang: string) => `/${lang}/accounts`,
+        icon: <UserCircleIcon />,
+    },
     {
         label: "Dashboard",
         url: (lang: string) => `/${lang}/dashboard`,

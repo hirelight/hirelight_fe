@@ -45,7 +45,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
 
     const handleChooseAnswer = (
         e: React.ChangeEvent<HTMLInputElement>,
-        pos: number
+        content: string
     ) => {
         setAnswers(
             answers.map(item => {
@@ -55,15 +55,22 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                         content: JSON.stringify({
                             ...parsedContent.current,
                             answers: parsedContent.current.answers.map(
-                                (choice, choiceIndex) => {
-                                    if (choiceIndex === pos) {
+                                choice => {
+                                    if (choice.name === content) {
                                         return {
                                             ...choice,
                                             isChosen: e.target.checked,
                                         };
                                     }
 
-                                    return choice;
+                                    return {
+                                        ...choice,
+                                        isChosen:
+                                            parsedContent.current.type ===
+                                            "one-answer"
+                                                ? false
+                                                : choice.isChosen,
+                                    };
                                 }
                             ),
                         }),
@@ -114,7 +121,10 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                                             defaultChecked={answer.isChosen}
                                             className={`${styles.answer__input}`}
                                             onChange={e =>
-                                                handleChooseAnswer(e, index)
+                                                handleChooseAnswer(
+                                                    e,
+                                                    answer.name
+                                                )
                                             }
                                         />
                                         <label

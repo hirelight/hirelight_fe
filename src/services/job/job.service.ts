@@ -27,7 +27,7 @@ const getListAsync = async (params?: any): Promise<IResponse<IJobDto[]>> => {
         const res = await interceptor.get<IResponse<IJobDto[]>>(
             endpoints.JOBPOSTS + `/search`,
             {
-                params: params ? params : {},
+                params,
             }
         );
 

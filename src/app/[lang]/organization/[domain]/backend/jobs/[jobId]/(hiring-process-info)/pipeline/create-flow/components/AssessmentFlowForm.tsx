@@ -8,7 +8,13 @@ import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
 
-import { Button, CustomInput, DatePicker } from "@/components";
+import {
+    Button,
+    CustomInput,
+    DatePicker,
+    Portal,
+    WarningModal,
+} from "@/components";
 import { ICreateAssessmentFlowDto } from "@/services/assessment-flows/assessment-flows.interface";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
 import { useAppDispatch } from "@/redux/reduxHooks";
@@ -47,6 +53,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
     const queryClient = useQueryClient();
     const [showAddStage, setShowAddStage] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [showWarning, setShowWarning] = useState(false);
     const [formState, setFormState] = useState<ICreateAssessmentFlowDto>({
         ...data,
         jobPostId: jobId as string,
@@ -80,8 +87,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
         return isInvalid;
     };
 
-    const handleCreateFlow = async (e: FormEvent) => {
-        e.preventDefault();
+    const handleCreateFlow = async () => {
         if (inValidInput())
             return toast.error(
                 <div>
@@ -153,6 +159,14 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
 
     return (
         <div>
+            <WarningModal
+                isOpen={showWarning}
+                isLoading={isLoading}
+                closeModal={() => setShowWarning(false)}
+                onConfirm={handleCreateFlow}
+                content="Please review your information. Once you create flow you can only edit flow order or assessment name. This action cannot be undone!"
+                title="Create new assessment flow"
+            />
             <div className="p-4">
                 <div className="mb-4">
                     <CustomInput
@@ -286,9 +300,8 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
             <div className="p-4 flex items-center gap-4 text-sm">
                 <div className="mr-auto"></div>
                 <Button
-                    onClick={handleCreateFlow}
+                    onClick={() => setShowWarning(true)}
                     disabled={isLoading}
-                    isLoading={isLoading}
                 >
                     Save
                 </Button>

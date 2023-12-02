@@ -11,7 +11,7 @@ const JobList = () => {
     const { lang } = useParams();
     const { data: jobRes } = useQuery({
         queryKey: ["jobs"],
-        queryFn: jobServices.getListAsync,
+        queryFn: () => jobServices.getListAsync(),
     });
     return (
         <div>

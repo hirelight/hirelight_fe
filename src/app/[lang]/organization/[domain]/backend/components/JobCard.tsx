@@ -204,12 +204,12 @@ const JobCard: React.FC<JobCardProps> = ({
                     </span>
                 </div>
                 <div className="flex gap-5">
-                    <span className="text-blue_primary_700 text-sm">
+                    {/* <span className="text-blue_primary_700 text-sm">
                         Candidates: 0
                     </span>
                     <span className="text-green-500 text-sm">
                         In progress: 0
-                    </span>
+                    </span> */}
                 </div>
             </div>
         </div>

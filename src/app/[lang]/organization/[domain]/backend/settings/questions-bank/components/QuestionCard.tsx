@@ -17,7 +17,7 @@ import {
     QuestionTypes,
 } from "@/interfaces/questions.interface";
 import questionAnswerServices from "@/services/questions/questions.service";
-import { DeleteModal, Portal } from "@/components";
+import { DeleteModal, DifficultyBadge, Portal } from "@/components";
 
 import styles from "./QuestionCard.module.scss";
 
@@ -135,7 +135,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                     <p className="font-semibold mb-2">
                         Difficulty:{" "}
                         <span className="font-normal">
-                            {QuestionDifficulty[difficulty - 1]}
+                            <DifficultyBadge difficulty={data.difficulty} />
                         </span>
                     </p>
 

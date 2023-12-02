@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useState } from "react";
+import React, { FormEvent, createContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
@@ -191,7 +191,9 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
         return statusErr;
     };
 
-    const handleSubmitJobDetail = async () => {
+    const handleSubmitJobDetail = async (e: FormEvent) => {
+        e.preventDefault();
+
         if (isInvalidFormInput()) return;
 
         setLoading(true);
@@ -237,7 +239,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
             }}
         >
             <NewJobHeader />
-            <div className="flex-1 flex">
+            <form onSubmit={handleSubmitJobDetail} className="flex-1 flex">
                 <div className="flex-1 max-w-screen-xl mx-auto pb-20">
                     <div className={styles.form__container}>
                         {/* ***********************Job Title Section*********************************** */}
@@ -412,8 +414,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                         {/* ****************Bottom Button********************* */}
                         <div className="p-5 border-t border-t-slate-300">
                             <Button
-                                type="button"
-                                onClick={handleSubmitJobDetail}
+                                type="submit"
                                 className="flex items-center"
                                 disabled={loading}
                                 isLoading={loading}
@@ -423,7 +424,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </AddJobDetailFormContext.Provider>
     );
 };

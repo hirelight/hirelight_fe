@@ -26,9 +26,9 @@ const AssessmentMediation = () => {
     useEffect(() => {
         if (assessmentRes) {
             if (
-                [
-                    ApplicantAssessmentDetailStatus.PENDING_EVALUATION,
-                    ApplicantAssessmentDetailStatus.EVALUATED,
+                ![
+                    ApplicantAssessmentDetailStatus.INVITED,
+                    ApplicantAssessmentDetailStatus.IN_PROGRESS,
                 ].includes(assessmentRes.data.status)
             )
                 router.push(`${assessmentId}/review`);
@@ -36,7 +36,7 @@ const AssessmentMediation = () => {
         }
     }, [assessmentId, assessmentRes, router]);
 
-    if (isLoading || !assessmentRes || !pageLoading)
+    if (isLoading || !assessmentRes || pageLoading)
         return (
             <div className="p-14 flex justify-center">
                 <LoadingIndicator />
