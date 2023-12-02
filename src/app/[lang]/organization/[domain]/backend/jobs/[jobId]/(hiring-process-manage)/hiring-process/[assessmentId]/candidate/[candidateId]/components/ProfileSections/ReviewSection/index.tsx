@@ -14,10 +14,6 @@ function classNames(...classes: any) {
 
 const ReviewSection = () => {
     const authUser = useAppSelector(state => state.auth.authUser);
-    console.log(
-        "🚀 ~ file: index.tsx:16 ~ ReviewSection ~ authUser:",
-        authUser
-    );
 
     return (
         <div>

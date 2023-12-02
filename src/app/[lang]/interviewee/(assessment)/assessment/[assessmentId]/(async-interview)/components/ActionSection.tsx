@@ -430,7 +430,7 @@ const ActionSection: React.FC<ActionSectionProps> = ({
                         disabled={isUploading}
                         onClick={handleGotoReview}
                     >
-                        Finish assessment
+                        Review takes
                     </ButtonOutline>
                 </div>
             )}

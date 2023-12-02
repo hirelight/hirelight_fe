@@ -26,8 +26,7 @@ import AddEvaluationSection from "./AddEvaluationSection";
 import EvaluationCard, { getRating } from "./EvaluationCard";
 
 const ReviewContent = () => {
-    const { candidateId, jobId } = useParams();
-    const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
+    const { candidateId } = useParams();
 
     const [showAdd, setShowAdd] = useState(false);
     const applicantAssessmentDetail = useAppSelector(
@@ -39,12 +38,10 @@ const ReviewContent = () => {
     const { data: querRes, isLoading: otherLoading } = useQuery({
         queryKey: ["profile-evaluations", candidateId],
         queryFn: () =>
-            evaluationServices.getListByProfileId(
-                applicantAssessmentDetail.applicantProfileId as string
-            ),
+            evaluationServices.getListByProfileId(candidateId as string),
     });
     const { data: curDetailEvaluate, isLoading: curLoading } = useQuery({
-        queryKey: ["assessment-evaluations", candidateId],
+        queryKey: ["assessment-evaluations", applicantAssessmentDetail.id],
         queryFn: () =>
             evaluationServices.getListByApplicantAssessmentDetailId(
                 applicantAssessmentDetail.id as string
@@ -83,6 +80,9 @@ const ReviewContent = () => {
                 </div>
             ) : (
                 <div>
+                    <h3 className="text-lg text-neutral-700 mb-2 font-semibold">
+                        Current submission
+                    </h3>
                     <section
                         key={applicantAssessmentDetail.id}
                         className="text-sm"
@@ -142,6 +142,16 @@ const ReviewContent = () => {
             )}
 
             <ul>
+                {querRes &&
+                    querRes.data.filter(
+                        item =>
+                            item.assessmentEvaluations.length > 0 &&
+                            item.id !== applicantAssessmentDetail.id
+                    ).length > 0 && (
+                        <h3 className="text-lg text-neutral-700 mb-2 font-semibold">
+                            Previous submissions
+                        </h3>
+                    )}
                 {querRes?.data
                     .filter(
                         item =>

@@ -23,7 +23,7 @@ import applicantAssessmentDetailServices from "@/services/applicant-assessment-d
 import { useAppSelector } from "@/redux/reduxHooks";
 import meetingServices from "@/services/meeting/meeting.service";
 import { handleError } from "@/helpers";
-import { DeleteModal, Portal } from "@/components";
+import { DeleteModal, Portal, WarningModal } from "@/components";
 import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
 
 import MoveCandidateDialog from "./MoveCandidateDialog";
@@ -50,6 +50,7 @@ const CandidateActionTabs = () => {
     const [sendLoading, setSendLoading] = useState(false);
     const [loading, setLoading] = useState(false);
     const [showDisqualify, setShowDisqualify] = useState(false);
+    const [moveWarning, setMoveWarning] = useState(false);
     const assessments = useAppSelector(
         state => state.assessmentFlow.data.assessments
     );
@@ -114,6 +115,11 @@ const CandidateActionTabs = () => {
     };
 
     const handleMoveCandidate = async () => {
+        if (
+            applicantAssessmentDetail.status ===
+            ApplicantAssessmentDetailStatus.IN_PROGRESS
+        )
+            return toast.error("Candidate is taking the assessment");
         setLoading(true);
         try {
             await toast.promise(
@@ -127,10 +133,7 @@ const CandidateActionTabs = () => {
                 }
             );
 
-            queryClient.invalidateQueries({
-                queryKey: [`job-profiles`, jobId, assessmentId],
-            });
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
                 queryKey: ["job-profiles", jobId],
             });
             router.push(
@@ -168,6 +171,14 @@ const CandidateActionTabs = () => {
                     onClose={() => setShowDisqualify(false)}
                 />
             </Portal>
+            <WarningModal
+                isOpen={moveWarning}
+                isLoading={loading}
+                closeModal={() => setMoveWarning(false)}
+                onConfirm={handleMoveCandidate}
+                content="You have invited candidate to take assessment but there is no submission yet! Do you want to continue moving this candidate?"
+                title="Move candidate"
+            />
             <ActionDrawer
                 show={showDrawer}
                 onClose={() => setShowDrawer(false)}
@@ -238,7 +249,12 @@ const CandidateActionTabs = () => {
                                 type="button"
                                 className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm w-auto px-2 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 rounded-tl-md rounded-bl-md border-r border-blue-800 transition-all duration-300 whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-60"
                                 disabled={loading}
-                                onClick={handleMoveCandidate}
+                                onClick={
+                                    applicantAssessmentDetail.status ===
+                                    ApplicantAssessmentDetailStatus.INVITED
+                                        ? () => setMoveWarning(true)
+                                        : handleMoveCandidate
+                                }
                             >
                                 Move to {nextAssesment.name}
                             </button>

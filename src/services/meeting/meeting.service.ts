@@ -2,7 +2,12 @@ import endpoints from "@/utils/constants/service-endpoint";
 import { checkResErr } from "@/helpers";
 import { IResponse } from "@/interfaces/service.interface";
 
-import { ICreateMeetings, IEditMeetingDto, IMeetingDto } from "..";
+import {
+    ICreateMeetings,
+    IEditMeetingDto,
+    IMeetingDto,
+    IUpdateAttendee,
+} from "..";
 import interceptor from "../interceptor";
 
 const getListByAssessmentId = async (
@@ -110,6 +115,27 @@ const editMeeting = async (
         const res = await interceptor.put<IResponse<any>>(
             endpoints.MEETINGS + "/update",
             editDto
+        );
+
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const updateAttendee = async (
+    updateAttendee: IUpdateAttendee
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.put<IResponse<any>>(
+            endpoints.MEETINGS + "/update-employer",
+            updateAttendee.employers,
+            {
+                params: {
+                    meetingId: updateAttendee.meetingId,
+                },
+            }
         );
 
         checkResErr(res.data);
@@ -241,6 +267,7 @@ const meetingServices = {
     candidateReScheduleMeeting,
     getMeetingById,
     getListByJobpostId,
+    updateAttendee,
 };
 
 export default meetingServices;

@@ -84,6 +84,11 @@ export interface IEditMeetingDto {
     location: string;
 }
 
+export interface IUpdateAttendee {
+    meetingId: string;
+    employers: string[];
+}
+
 export enum MeetingStatusEnum {
     MEETING_ACCEPTED = "MEETING_ACCEPTED",
     MEETING_DECLINED = "MEETING_DECLINED",

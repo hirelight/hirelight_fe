@@ -4,6 +4,7 @@ import React, { createContext, useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 import { produce } from "immer";
+import Link from "next/link";
 
 import {
     IParsedAsyncAssess,
@@ -21,7 +22,21 @@ import VideoRecorder from "./VideoRecorder";
 import styles from "./AsyncVideoAssessment.module.scss";
 import ChatSection from "./ChatSection";
 import Sidebar from "./Sidebar";
-import ReviewPage from "./ReviewPage";
+
+const gmdOptions = {
+    video: {
+        displaySurface: "window",
+    },
+    audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        sampleRate: 44100,
+        suppressLocalAudioPlayback: true,
+    },
+    surfaceSwitching: "include",
+    selfBrowserSurface: "exclude",
+    systemAudio: "exclude",
+};
 
 type AsyncErr = {
     deviceErr: {
@@ -248,23 +263,21 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
     useEffect(() => {
         const getPermission = async () => {
             if ("MediaRecorder" in window) {
+                setSetupLoading(true);
                 try {
-                    setSetupLoading(true);
-
                     const videoStream =
                         await navigator.mediaDevices.getUserMedia({
                             video: true,
                             audio: true,
                         });
-
                     setPermission(true);
-                    // //combine both audio and video streams
+
+                    //combine both audio and video streams
                     const combinedStream = new MediaStream([
                         ...videoStream.getVideoTracks(),
                         ...videoStream.getAudioTracks(),
                     ]);
                     setStream(combinedStream);
-                    setSetupLoading(false);
 
                     // Check for any webcam and audio input permission allowed available
                     const devices =
@@ -315,16 +328,24 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
                     const context = new AudioContext();
                     if (!audioContext) setAudioContext(context);
                 } catch (error) {
+                    setAsyncError(prev =>
+                        produce(prev, draft => {
+                            draft.deviceErr.micErr =
+                                "Audio input device not found!";
+                            draft.deviceErr.camErr = "Camera device not found!";
+                        })
+                    );
+                    setPermission(false);
+
                     console.error("Error nef", error);
-                    setSetupLoading(false);
                 }
+                setSetupLoading(false);
             } else {
                 alert(
                     "The MediaRecorder API is not supported in your browser."
                 );
             }
         };
-
         getPermission();
     }, [audioContext]);
 
@@ -361,13 +382,23 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
     if ("MediaRecorder" in window && !permission)
         return (
             <div className="fixed inset-0 z-50">
-                <div className="h-screen w-screen bg-[#333e49] relative flex justify-center items-center">
-                    <div className="absolute w-[1000px] h-[1000px] -top-[500px] -left-[250px] rounded-full bg-[#c4cfde] bg-opacity-40"></div>
+                <div className="h-screen w-screen bg-[#333e49] relative flex flex-col justify-center items-center">
+                    <div className="absolute max-w-[1000px] w-full aspect-square -top-1/2 -left-1/4 rounded-full bg-[#c4cfde] bg-opacity-40"></div>
 
-                    <p className="text-center text-4xl text-white">
+                    <p className="text-center text-2xl md:text-4xl text-white">
                         To perform the interview, we need access <br /> to your
                         microphone and camera.
                     </p>
+
+                    <Link
+                        target="_blank"
+                        href={
+                            "https://support.google.com/chrome/answer/2693767?hl=en&co=GENIE.Platform%3DDesktop&oco=0"
+                        }
+                        className="block text-lg md:text-2xl text-white hover:underline"
+                    >
+                        Need help to turn on devices?
+                    </Link>
                 </div>
             </div>
         );

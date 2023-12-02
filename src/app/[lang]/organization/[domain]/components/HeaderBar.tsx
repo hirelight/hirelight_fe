@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import logo from "/public/images/logo.svg";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 
 import { Bell } from "@/icons";
@@ -21,6 +21,7 @@ import InvitationDropDown from "./InvitationDropDown";
 const HeaderBar = () => {
     const pathname = usePathname();
     const router = useRouter();
+    const { lang } = useParams();
     const cite = pathname.split("/")[1];
 
     const dispatch = useAppDispatch();
@@ -43,7 +44,10 @@ const HeaderBar = () => {
     return (
         <header className="bg-white shadow-md relative z-10">
             <div className="max-w-screen-xl mx-auto px-4 xl:px-6 flex items-center justify-between py-4">
-                <Link href={`/backend`} className="flex gap-2 items-center">
+                <Link
+                    href={`/${lang}/backend`}
+                    className="flex gap-2 items-center"
+                >
                     <Image
                         alt="Logo"
                         src={logo}
@@ -57,7 +61,7 @@ const HeaderBar = () => {
                     <ul className="hidden md:flex gap-6 text-lg">
                         <li>
                             <Link
-                                href={"/backend"}
+                                href={`/${lang}/backend`}
                                 className={`${
                                     cite === "backend"
                                         ? "text-blue-800"
@@ -174,7 +178,7 @@ const HeaderBar = () => {
                             </div>
                             <div className="py-1" role="none">
                                 <Link
-                                    href="/backend/settings/templates"
+                                    href={`/${lang}/backend/settings/assessment_flow`}
                                     className={styles.avatar__dropdown__btn}
                                     role="menuitem"
                                     tabIndex={-1}

@@ -55,7 +55,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
 
             toast.success(res.message);
             setLoading(false);
-            router.push(`/${lang}/login`);
+            router.push(`login`);
         } catch (error) {
             setLoading(false);
             console.error(error);

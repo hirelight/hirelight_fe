@@ -37,7 +37,7 @@ const Login = async ({
             <div className="mt-8 text-sm text-center relative flex flex-col items-center">
                 <p className="text-gray-500">{login_page.dont_have_account}</p>
                 <Link
-                    href={"/signup"}
+                    href={`signup`}
                     className="block max-w-[280px] font-semibold text-blue-600 hover:cursor-pointer hover:underline"
                 >
                     {login_page.btn.signup.replace("{{days}}", "15")}

@@ -92,7 +92,10 @@ const InvitationDropDown = () => {
                                 <div>
                                     <button
                                         type="button"
-                                        className="font-medium text-blue_primary_800 hover:text-blue_primary_600 mr-4"
+                                        className="font-medium text-blue_primary_800 hover:text-blue_primary_600 mr-4 disabled:cursor-not-allowed disabled:opacity-80"
+                                        disabled={
+                                            acceptInvitationMutation.isPending
+                                        }
                                         onClick={handleAcceptInvitation.bind(
                                             null,
                                             invitation.jobPostId
@@ -102,7 +105,10 @@ const InvitationDropDown = () => {
                                     </button>
                                     <button
                                         type="button"
-                                        className="font-medium hover:text-neutral-500"
+                                        className="font-medium hover:text-neutral-500 disabled:cursor-not-allowed disabled:opacity-80"
+                                        disabled={
+                                            acceptInvitationMutation.isPending
+                                        }
                                         onClick={() => setShowDropdown(false)}
                                     >
                                         Dismiss

@@ -2,8 +2,6 @@
 
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import React from "react";
-import videojs from "video.js";
-import Player from "video.js/dist/types/player";
 
 import { VideoWrapper } from "@/components";
 import { videoJsOptions } from "@/components/VideoWrapper";

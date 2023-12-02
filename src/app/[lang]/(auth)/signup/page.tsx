@@ -23,7 +23,7 @@ const Signup = async ({ params }: { params: { lang: Locale } }) => {
                     {signup_page.have_account}
                 </span>
                 <Link
-                    href={"/login"}
+                    href={"login"}
                     className="font-semibold text-blue-600 hover:cursor-pointer hover:underline"
                 >
                     {signup_page.btn.signin}

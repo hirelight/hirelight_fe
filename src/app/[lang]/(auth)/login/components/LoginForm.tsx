@@ -66,7 +66,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                 );
 
             router.push(
-                `/select-org?isOrgOwner=${isOrgOwner}&isOrgMember=${isOrgMember}`
+                `select-org?isOrgOwner=${isOrgOwner}&isOrgMember=${isOrgMember}`
             );
             // handleRedirectOrgBased(res.data.accessToken);
         } catch (error) {
@@ -184,7 +184,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                         <p>{loginFormErr.emailErr}</p>
                     </motion.div>
                 )}
-                <Link href={"/signup"}>
+                <Link href={`${lang}/signup`}>
                     <p className="text-right text-xs text-blue_primary_600 font-semibold underline">
                         {_t.login_form.btn.forgot_password}
                     </p>

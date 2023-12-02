@@ -9,6 +9,7 @@ import collaboratorsServices from "@/services/collaborators/collaborators.servic
 import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
 import { DeleteModal, Portal } from "@/components";
 import { useAppSelector } from "@/redux/reduxHooks";
+import { getImageNode } from "@/helpers/getIconBaseType";
 
 import EditMemberPermission from "./EditMemberPermission";
 
@@ -63,13 +64,16 @@ const CollaboratorCard: React.FC<CollaboratorCardProps> = ({ member }) => {
             >
                 <td className="px-6 py-4 hidden md:table-cell">
                     <div className="flex items-center gap-2">
+                        <div className="h-8 aspect-square">
+                            {getImageNode(member.employerDto.avatarUrl)}
+                        </div>
                         {member.employerDto.firstName +
                             `${member.employerDto.lastName ?? ""}`}
                     </div>
                 </td>
                 <td className="px-6 py-4">{member.employerDto.email}</td>
                 <td className="px-6 py-4 hidden lg:table-cell">
-                    {member.employerDto.status}
+                    {member.status}
                 </td>
                 <td>
                     {authUser?.userId !== member.employerDto.id &&

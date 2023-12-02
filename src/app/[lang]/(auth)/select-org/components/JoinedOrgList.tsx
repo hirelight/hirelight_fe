@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import jwtDecode from "jwt-decode";
 import { toast } from "react-toastify";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
@@ -24,6 +24,8 @@ type JoinedOrgListProps = {};
 
 const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
     const router = useRouter();
+    const { lang } = useParams();
+
     const { authUser } = useAppSelector(state => state.auth);
 
     const { data: res, error } = useQuery({
@@ -35,7 +37,7 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
 
     const handleRedirectNewOrg = () => {
         if (authUser && validWorkEmail(authUser.emailAddress))
-            router.push("/organization/new");
+            router.push("organization/new");
         else toast.error("Only work email can create organization");
     };
 
@@ -44,7 +46,7 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
         try {
             const res = await authServices.getOrgAccessToken(orgId);
             router.replace(
-                `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend?accessToken=${res.data.accessToken}`
+                `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/backend?accessToken=${res.data.accessToken}`
             );
         } catch (error) {
             toast.error("Redirect failure");

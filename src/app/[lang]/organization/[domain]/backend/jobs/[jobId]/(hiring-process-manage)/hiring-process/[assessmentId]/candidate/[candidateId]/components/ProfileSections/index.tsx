@@ -20,12 +20,6 @@ function classNames(...classes: any) {
 }
 
 const ProfileSections = () => {
-    const { assessmentId, candidateId } = useParams();
-
-    const [profileTab, setProfileTab] = React.useState<ProfileTab>(
-        ProfileTab.PROFILE
-    );
-
     return (
         <div className="rounded-md border border-gray-300 bg-white">
             <Tab.Group>
@@ -41,7 +35,6 @@ const ProfileSections = () => {
                                     selected ? styles.active : ""
                                 )
                             }
-                            onClick={() => setProfileTab(ProfileTab[key])}
                         >
                             {ProfileTab[key]}
                         </Tab>

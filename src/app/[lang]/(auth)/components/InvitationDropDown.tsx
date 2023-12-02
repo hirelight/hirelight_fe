@@ -3,7 +3,7 @@
 import { EnvelopeIcon, InboxIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import jwtDecode from "jwt-decode";
 
@@ -19,7 +19,9 @@ import styles from "./InvitationDropDown.module.scss";
 
 const InvitationDropDown = () => {
     const router = useRouter();
-    const token = decryptData("hirelight_access_token");
+    const { lang } = useParams();
+
+    const { authUser } = useAppSelector(state => state.auth);
 
     const [showDropdown, setShowDropdown] = React.useState(false);
     const dropDownRef = useOutsideClick<HTMLDivElement>(() =>
@@ -29,7 +31,7 @@ const InvitationDropDown = () => {
     const { data: invitationList, isLoading } = useQuery({
         queryKey: [
             "joined-owned-organizations",
-            token ? (jwtDecode(token) as any).userId : "",
+            authUser ? authUser.userId : "",
         ],
         queryFn: employerOrgServices.getEmployerInvitationListAsync,
     });
@@ -41,10 +43,9 @@ const InvitationDropDown = () => {
             await queryClient.invalidateQueries({
                 queryKey: [
                     "joined-owned-organizations",
-                    token ? (jwtDecode(token) as any).userId : "",
+                    authUser ? authUser.userId : "",
                 ],
             });
-            toast.success(res.message);
         },
         onError: error => {
             console.error(error);
@@ -53,16 +54,21 @@ const InvitationDropDown = () => {
     });
 
     const handleAcceptInvitation = async (orgId: string, subdomain: string) => {
-        await acceptInvitationMutation.mutateAsync(orgId);
-        handleRedirectOnAccept(orgId, subdomain);
-        setShowDropdown(false);
+        toast.promise(acceptInvitationMutation.mutateAsync(orgId), {
+            pending: "Accepting invitation",
+            success: "Accept invitation successfully!",
+        });
+        if (acceptInvitationMutation.isSuccess) {
+            handleRedirectOnAccept(orgId, subdomain);
+            setShowDropdown(false);
+        }
     };
 
     const handleRedirectOnAccept = async (orgId: string, subdomain: string) => {
         try {
             const res = await authServices.getOrgAccessToken(orgId);
             router.replace(
-                `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend?accessToken=${res.data.accessToken}`
+                `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/backend?accessToken=${res.data.accessToken}`
             );
         } catch (error: any) {
             toast.error(error.message ? error.message : "Redirect failure");
@@ -106,6 +112,9 @@ const InvitationDropDown = () => {
                                     <button
                                         type="button"
                                         className="font-medium text-blue_primary_800 hover:text-blue_primary_600 mr-4"
+                                        disabled={
+                                            acceptInvitationMutation.isPending
+                                        }
                                         onClick={handleAcceptInvitation.bind(
                                             null,
                                             invitation.organizationId,
@@ -117,6 +126,9 @@ const InvitationDropDown = () => {
                                     <button
                                         type="button"
                                         className="font-medium hover:text-neutral-500"
+                                        disabled={
+                                            acceptInvitationMutation.isPending
+                                        }
                                         onClick={() => setShowDropdown(false)}
                                     >
                                         Dismiss

@@ -203,7 +203,20 @@ const AssessmentInfoHeader = () => {
                                                         : ""
                                                 }`}
                                             >
-                                                {assessment.name}
+                                                {assessment.name}{" "}
+                                                <span className="font-bold text-gray-400 ml-1">
+                                                    {!profileList?.data.filter(
+                                                        profile =>
+                                                            profile.assessmentId ===
+                                                            assessment.id
+                                                    ).length
+                                                        ? "-"
+                                                        : profileList?.data.filter(
+                                                              profile =>
+                                                                  profile.assessmentId ===
+                                                                  assessment.id
+                                                          ).length}
+                                                </span>
                                             </span>
                                         </Link>
                                     </div>

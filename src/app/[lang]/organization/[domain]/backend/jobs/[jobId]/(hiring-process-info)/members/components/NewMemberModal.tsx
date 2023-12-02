@@ -41,12 +41,18 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
         queryKey: ["members"],
         queryFn: employerOrgServices.getListAsync,
         select(data) {
-            return data.data.filter(
-                item =>
-                    !collabList.find(
-                        collab => collab.employerDto.id === item.employerDto.id
-                    )
-            );
+            const collabMap = new Map<string, IOrgEmployerDto>();
+            data.data.forEach(item => {
+                if (!collabMap.has(item.employerDto.id))
+                    collabMap.set(item.employerDto.id, item);
+            });
+
+            collabList.forEach(item => {
+                if (collabMap.has(item.employerDto.id)) {
+                    collabMap.delete(item.employerDto.id);
+                }
+            });
+            return Array.from(collabMap.values());
         },
     });
     const sendInvitationMutate = useMutation({
@@ -61,6 +67,7 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
             }),
         onSuccess: res => {
             toast.success(res.message);
+            setSelectEmployer(undefined);
             setCurrentPermissions([]);
             onClose();
         },

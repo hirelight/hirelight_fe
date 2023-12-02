@@ -127,7 +127,10 @@ const JobCard: React.FC<JobCardProps> = ({
                                 {assessmentFlowId && (
                                     <li>
                                         <Link
-                                            href={`backend/jobs/${id}/hiring-process`}
+                                            href={`backend/jobs/${id}/hiring-process/${
+                                                assessmentFlow?.assessments[0]
+                                                    .id ?? ""
+                                            }`}
                                             className="w-full px-4 py-2 block hover:bg-orange-100"
                                             onClick={() =>
                                                 setShowActions(false)

@@ -12,6 +12,7 @@ import {
     IAssessmentDto,
     IAsyncAnswer,
     ICandidateAssessmentDetailDto,
+    VideoFile,
     asyncAssessmentServices,
 } from "@/services";
 import { Button, VideoWrapper } from "@/components";

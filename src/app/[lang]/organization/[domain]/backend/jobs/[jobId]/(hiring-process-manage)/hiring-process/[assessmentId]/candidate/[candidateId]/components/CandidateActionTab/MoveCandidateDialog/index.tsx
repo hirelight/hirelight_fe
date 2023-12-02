@@ -10,6 +10,7 @@ import { ChevronDown } from "@/icons";
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import { useAppSelector } from "@/redux/reduxHooks";
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
+import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
 
 import styles from "./styles.module.scss";
 
@@ -22,11 +23,20 @@ const MoveCandidateDialog = () => {
     );
     const queryClient = useQueryClient();
     const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
+    const applicantAssessmentDetail = useAppSelector(
+        state => state.applicantAssessmentDetail.data!!
+    );
 
     const [showDialog, setShowDialog] = React.useState(false);
     const [loading, setLoading] = useState(false);
 
     const handleMoveCandidate = async (stageId: string, profileId: string) => {
+        if (
+            applicantAssessmentDetail.status ===
+            ApplicantAssessmentDetailStatus.IN_PROGRESS
+        )
+            return toast.error("Candidate is taking the assessment");
+
         setLoading(true);
         try {
             await toast.promise(
@@ -43,6 +53,7 @@ const MoveCandidateDialog = () => {
             await queryClient.invalidateQueries({
                 queryKey: ["job-profiles", jobId],
             });
+
             router.push(
                 `/${lang}/backend/jobs/${jobId}/hiring-process/${assessmentId}`
             );
@@ -69,16 +80,7 @@ const MoveCandidateDialog = () => {
                     }`}
                 />
             </button>
-            {/* <!--
-    Dropdown menu, show/hide based on menu state.
 
-    Entering: "transition ease-out duration-100"
-      From: "transform opacity-0 scale-95"
-      To: "transform opacity-100 scale-100"
-    Leaving: "transition ease-in duration-75"
-      From: "transform opacity-100 scale-100"
-      To: "transform opacity-0 scale-95"
-  --> */}
             <div
                 role="dialog"
                 className={`${styles.move__candidate__dialog} ${

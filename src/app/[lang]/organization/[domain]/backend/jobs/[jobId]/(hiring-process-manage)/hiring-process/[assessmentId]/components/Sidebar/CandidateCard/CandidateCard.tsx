@@ -42,7 +42,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
             <div className="p-4 xl:px-6">
                 <div className="flex items-start gap-3">
                     <label
-                        htmlFor={`select-candidate-${profile.id}`}
+                        htmlFor={profile.id}
                         className="pt-3 mr-4 text-sm font-medium text-gray-900 dark:text-gray-300"
                         onClick={e => e.stopPropagation()}
                     >

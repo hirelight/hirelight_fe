@@ -3,6 +3,7 @@ import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
+import moment from "moment";
 
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
 import { useAppSelector } from "@/redux/reduxHooks";
@@ -34,24 +35,66 @@ const AssessmentContent = () => {
     if (isLoading) return <AssessmentSkeleton />;
 
     return (
-        <div className="mt-8 space-y-4">
-            {profileResults?.data
-                ?.filter(
+        <div className="mt-8">
+            {profileResults &&
+                profileResults.data.find(
                     detail =>
-                        !defaultAsessment.includes(
-                            detail.assessment.assessmentTypeName
-                        ) &&
-                        detail.questionAnswerSet &&
-                        ![
-                            ApplicantAssessmentDetailStatus.INVITED,
-                            ApplicantAssessmentDetailStatus.IN_PROGRESS,
-                        ].includes(detail.status)
-                )
-                .map(detail => (
-                    <div key={detail.id}>
-                        <AssessmentCard data={detail} />
-                    </div>
-                ))}
+                        detail.result !== null &&
+                        detail.id === applicantDetail.id
+                ) && (
+                    <>
+                        <h3 className="text-lg text-neutral-700 mb-2 font-semibold">
+                            Current submission
+                        </h3>
+                        <div>
+                            <AssessmentCard
+                                data={
+                                    profileResults.data.find(
+                                        detail =>
+                                            detail.result !== null &&
+                                            detail.id === applicantDetail.id
+                                    )!!
+                                }
+                            />
+                        </div>
+                    </>
+                )}
+
+            {profileResults &&
+                profileResults.data.filter(
+                    detail =>
+                        detail.result !== null &&
+                        detail.id !== applicantDetail.id
+                ).length > 0 && (
+                    <h3 className="text-lg text-neutral-700 mb-2 mt-6 font-semibold">
+                        Previous submissions
+                    </h3>
+                )}
+            <ul className="space-y-4">
+                {profileResults?.data
+                    ?.filter(
+                        detail =>
+                            detail.result !== null &&
+                            detail.id !== applicantDetail.id
+                        // !defaultAsessment.includes(
+                        //     detail.assessment.assessmentTypeName
+                        // ) &&
+                        // detail.questionAnswerSet &&
+                        // ![
+                        //     ApplicantAssessmentDetailStatus.INVITED,
+                        //     ApplicantAssessmentDetailStatus.IN_PROGRESS,
+                        // ].includes(detail.status)
+                    )
+
+                    .map(detail => (
+                        <li
+                            key={detail.id}
+                            className="border-b border-gray-300 last:border-b-0"
+                        >
+                            <AssessmentCard data={detail} />
+                        </li>
+                    ))}
+            </ul>
         </div>
     );
 };
@@ -69,7 +112,7 @@ const AssessmentCard = ({ data }: { data: IJobPostAppAssDetailDto }) => {
                 close={() => setShowPreview(false)}
             />
 
-            <div className="py-4 border-b border-gray-300 flex gap-4 relative">
+            <div className="py-4 flex gap-4 relative">
                 <div className="w-6 h-6">
                     {getIconBaseOnAssessmentType(
                         data.assessment.assessmentTypeName
@@ -87,19 +130,19 @@ const AssessmentCard = ({ data }: { data: IJobPostAppAssDetailDto }) => {
                         >
                             <EyeIcon className="text-neutral-700 w-6 h-6" />
                         </button>
-                    ) : (
+                    ) : JSON.parse(data.questionAnswerSet).assessmentReport ? (
                         <Link
                             target="_blank"
                             href={
                                 JSON.parse(data.questionAnswerSet)
-                                    .assessmentReport ?? "#"
+                                    .assessmentReport
                             }
                             title="Integration result"
                             className="text-sm font-semibold text-blue_primary_600 hover:text-blue_primary_800 hover:underline"
                         >
                             Report
                         </Link>
-                    )}
+                    ) : null}
                 </div>
             </div>
         </>

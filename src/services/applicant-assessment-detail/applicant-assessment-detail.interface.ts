@@ -143,7 +143,7 @@ export type IAsyncAnswer = Omit<IQuestionAnswerDto, "content"> & {
     };
 };
 
-type VideoFile = {
+export type VideoFile = {
     src: string;
     name: string;
     type: string;
