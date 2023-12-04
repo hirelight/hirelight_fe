@@ -2,20 +2,31 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import React from "react";
+import React, { Fragment, useState } from "react";
+import moment from "moment";
+import { EyeIcon } from "@heroicons/react/24/outline";
+import { Dialog, Transition } from "@headlessui/react";
 
 import reportServices from "@/services/report/report.service";
+import { IReportDto } from "@/services";
 
 const ReportList = () => {
-    const { jobId } = useParams();
+    const { jobId, lang } = useParams();
     const { data: reportRes } = useQuery({
         queryKey: ["reports", jobId],
         queryFn: () => reportServices.getListByJobPost(jobId as string),
     });
+    const [selected, setSelected] = useState<IReportDto>();
+
     return (
         <section className="bg-gray-50 dark:bg-gray-900">
+            <ReportDetail
+                data={selected}
+                isOpen={selected !== undefined}
+                closeModal={() => setSelected(undefined)}
+            />
             <div className="mx-auto max-w-screen-xl">
-                <div className="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+                <div className="relative sm:rounded-lg overflow-hidden">
                     <div className="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                         <div className="w-full md:w-1/2">
                             <form className="flex items-center">
@@ -70,172 +81,7 @@ const ReportList = () => {
                                 </svg>
                                 Add product
                             </button>
-                            <div className="flex items-center space-x-3 w-full md:w-auto">
-                                <button
-                                    id="actionsDropdownButton"
-                                    data-dropdown-toggle="actionsDropdown"
-                                    className="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                                    type="button"
-                                >
-                                    <svg
-                                        className="-ml-1 mr-1.5 w-5 h-5"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        aria-hidden="true"
-                                    >
-                                        <path
-                                            clip-rule="evenodd"
-                                            fill-rule="evenodd"
-                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        />
-                                    </svg>
-                                    Actions
-                                </button>
-                                <div
-                                    id="actionsDropdown"
-                                    className="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
-                                >
-                                    <ul
-                                        className="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                        aria-labelledby="actionsDropdownButton"
-                                    >
-                                        <li>
-                                            <a
-                                                href="#"
-                                                className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                            >
-                                                Mass Edit
-                                            </a>
-                                        </li>
-                                    </ul>
-                                    <div className="py-1">
-                                        <a
-                                            href="#"
-                                            className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                                        >
-                                            Delete all
-                                        </a>
-                                    </div>
-                                </div>
-                                <button
-                                    id="filterDropdownButton"
-                                    data-dropdown-toggle="filterDropdown"
-                                    className="w-full md:w-auto flex items-center justify-center py-2 px-4 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-                                    type="button"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        aria-hidden="true"
-                                        className="h-4 w-4 mr-2 text-gray-400"
-                                        viewBox="0 0 20 20"
-                                        fill="currentColor"
-                                    >
-                                        <path
-                                            fill-rule="evenodd"
-                                            d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z"
-                                            clip-rule="evenodd"
-                                        />
-                                    </svg>
-                                    Filter
-                                    <svg
-                                        className="-mr-1 ml-1.5 w-5 h-5"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 20"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        aria-hidden="true"
-                                    >
-                                        <path
-                                            clip-rule="evenodd"
-                                            fill-rule="evenodd"
-                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        />
-                                    </svg>
-                                </button>
-                                <div
-                                    id="filterDropdown"
-                                    className="z-10 hidden w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700"
-                                >
-                                    <h6 className="mb-3 text-sm font-medium text-gray-900 dark:text-white">
-                                        Choose brand
-                                    </h6>
-                                    <ul
-                                        className="space-y-2 text-sm"
-                                        aria-labelledby="filterDropdownButton"
-                                    >
-                                        <li className="flex items-center">
-                                            <input
-                                                id="apple"
-                                                type="checkbox"
-                                                value=""
-                                                className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                                            />
-                                            <label
-                                                htmlFor="apple"
-                                                className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                                            >
-                                                Apple (56)
-                                            </label>
-                                        </li>
-                                        <li className="flex items-center">
-                                            <input
-                                                id="fitbit"
-                                                type="checkbox"
-                                                value=""
-                                                className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                                            />
-                                            <label
-                                                htmlFor="fitbit"
-                                                className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                                            >
-                                                Microsoft (16)
-                                            </label>
-                                        </li>
-                                        <li className="flex items-center">
-                                            <input
-                                                id="razor"
-                                                type="checkbox"
-                                                value=""
-                                                className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                                            />
-                                            <label
-                                                htmlFor="razor"
-                                                className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                                            >
-                                                Razor (49)
-                                            </label>
-                                        </li>
-                                        <li className="flex items-center">
-                                            <input
-                                                id="nikon"
-                                                type="checkbox"
-                                                value=""
-                                                className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                                            />
-                                            <label
-                                                htmlFor="nikon"
-                                                className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                                            >
-                                                Nikon (12)
-                                            </label>
-                                        </li>
-                                        <li className="flex items-center">
-                                            <input
-                                                id="benq"
-                                                type="checkbox"
-                                                value=""
-                                                className="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                                            />
-                                            <label
-                                                htmlFor="benq"
-                                                className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                                            >
-                                                BenQ (74)
-                                            </label>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
+                            <div className="flex items-center space-x-3 w-full md:w-auto"></div>
                         </div>
                     </div>
                     <div className="overflow-x-auto">
@@ -256,78 +102,61 @@ const ReportList = () => {
                                     </th>
 
                                     <th scope="col" className="px-4 py-3">
-                                        <span className="sr-only">Actions</span>
+                                        Actions
                                     </th>
+                                    <th scope="col" className="px-4 py-3"></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr className="border-b dark:border-gray-700">
-                                    <th
-                                        scope="row"
-                                        className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                {reportRes?.data.map(report => (
+                                    <tr
+                                        key={report.id}
+                                        className="border-b dark:border-gray-700"
                                     >
-                                        Apple iMac 27&#34;
-                                    </th>
-                                    <td className="px-4 py-3">PC</td>
-                                    <td className="px-4 py-3">Apple</td>
-                                    <td className="px-4 py-3">300</td>
-                                    <td className="px-4 py-3 flex items-center justify-end">
-                                        <button
-                                            id="apple-imac-27-dropdown-button"
-                                            data-dropdown-toggle="apple-imac-27-dropdown"
-                                            className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                            type="button"
+                                        <th
+                                            scope="row"
+                                            className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                                         >
-                                            <svg
-                                                className="w-5 h-5"
-                                                aria-hidden="true"
-                                                fill="currentColor"
-                                                viewBox="0 0 20 20"
-                                                xmlns="http://www.w3.org/2000/svg"
+                                            {JSON.parse(report.content).type}
+                                        </th>
+                                        <td className="px-4 py-3">
+                                            {JSON.parse(report.content).content}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            {report.candidateId}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            {moment
+                                                .utc(report.createdTime)
+                                                .locale(lang)
+                                                .fromNow()}
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setSelected(report)
+                                                }
                                             >
-                                                <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            </svg>
-                                        </button>
-                                        <div
-                                            id="apple-imac-27-dropdown"
-                                            className="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600"
-                                        >
-                                            <ul
-                                                className="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                                aria-labelledby="apple-imac-27-dropdown-button"
+                                                Disalbe
+                                            </button>
+                                        </td>
+                                        <td className="px-4 py-3">
+                                            <button
+                                                type="button"
+                                                onClick={() =>
+                                                    setSelected(report)
+                                                }
                                             >
-                                                <li>
-                                                    <a
-                                                        href="#"
-                                                        className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                                    >
-                                                        Show
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a
-                                                        href="#"
-                                                        className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                                    >
-                                                        Edit
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                            <div className="py-1">
-                                                <a
-                                                    href="#"
-                                                    className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                                                >
-                                                    Delete
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                                <EyeIcon className="w-5 h-5" />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
-                    <nav
+                    {/* <nav
                         className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
                         aria-label="Table navigation"
                     >
@@ -426,7 +255,7 @@ const ReportList = () => {
                                 </a>
                             </li>
                         </ul>
-                    </nav>
+                    </nav> */}
                 </div>
             </div>
         </section>
@@ -434,3 +263,70 @@ const ReportList = () => {
 };
 
 export default ReportList;
+
+const ReportDetail = ({
+    isOpen,
+    closeModal,
+    data,
+}: {
+    isOpen: boolean;
+    closeModal: () => void;
+    data?: IReportDto;
+}) => {
+    return (
+        <Transition appear show={isOpen} as={Fragment}>
+            <Dialog as="div" className="relative z-10" onClose={closeModal}>
+                <Transition.Child
+                    as={Fragment}
+                    enter="ease-out duration-300"
+                    enterFrom="opacity-0"
+                    enterTo="opacity-100"
+                    leave="ease-in duration-200"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                >
+                    <div className="fixed inset-0 bg-black/25" />
+                </Transition.Child>
+
+                <div className="fixed inset-0 overflow-y-auto">
+                    <div className="flex min-h-full items-center justify-center p-4 text-center">
+                        <Transition.Child
+                            as={Fragment}
+                            enter="ease-out duration-300"
+                            enterFrom="opacity-0 scale-95"
+                            enterTo="opacity-100 scale-100"
+                            leave="ease-in duration-200"
+                            leaveFrom="opacity-100 scale-100"
+                            leaveTo="opacity-0 scale-95"
+                        >
+                            <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                                <Dialog.Title
+                                    as="h3"
+                                    className="text-lg font-medium leading-6 text-gray-900"
+                                >
+                                    Report detail
+                                </Dialog.Title>
+                                <div className="mt-2">
+                                    <p className="text-sm text-gray-500">
+                                        {data &&
+                                            JSON.parse(data.content).content}
+                                    </p>
+                                </div>
+
+                                <div className="mt-4">
+                                    <button
+                                        type="button"
+                                        className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                        onClick={closeModal}
+                                    >
+                                        Got it, thanks!
+                                    </button>
+                                </div>
+                            </Dialog.Panel>
+                        </Transition.Child>
+                    </div>
+                </div>
+            </Dialog>
+        </Transition>
+    );
+};

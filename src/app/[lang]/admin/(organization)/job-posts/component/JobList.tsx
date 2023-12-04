@@ -1,13 +1,15 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useState } from "react";
 import moment from "moment";
 import { useParams } from "next/navigation";
 import { EyeIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 import jobServices from "@/services/job/job.service";
+import { DeleteModal, Portal } from "@/components";
 
 const JobList = () => {
     const { lang } = useParams();
@@ -15,9 +17,60 @@ const JobList = () => {
         queryKey: ["jobs"],
         queryFn: () => jobServices.getListAsync(),
     });
+
+    const [selectedId, setSelectedId] = useState<string>();
+
+    const queryClient = useQueryClient();
+    const disableMutation = useMutation({
+        mutationKey: ["disable-job", selectedId],
+        mutationFn: (id: string) => jobServices.suspendJob(id),
+        onSuccess: async res => {
+            await queryClient.invalidateQueries({
+                queryKey: ["jobs"],
+            });
+            toast.success(res.message);
+            setSelectedId(undefined);
+        },
+        onError(error) {
+            toast.error(error.message);
+        },
+    });
+
+    const reativateMutation = useMutation({
+        mutationKey: ["reactivate-job", selectedId],
+        mutationFn: (id: string) => jobServices.suspendJob(id),
+        onSuccess: async res => {
+            await queryClient.invalidateQueries({
+                queryKey: ["jobs"],
+            });
+            toast.success(res.message);
+            setSelectedId(undefined);
+        },
+        onError(error) {
+            toast.error(error.message);
+        },
+    });
+
+    const handleSuspendJob = async () => {
+        if (selectedId) await disableMutation.mutateAsync(selectedId);
+    };
+
+    const handleReactivateJob = async (id: string) => {
+        await reativateMutation.mutateAsync(id);
+    };
+
     return (
         <div>
-            <div className="mb-6"></div>
+            <Portal>
+                <DeleteModal
+                    title="Disable job post"
+                    description={`Are you sure you want to disable this job?`}
+                    loading={disableMutation.isPending}
+                    show={selectedId !== undefined}
+                    onClose={() => setSelectedId(undefined)}
+                    onConfirm={handleSuspendJob}
+                />
+            </Portal>
 
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 rounded overflow-hidden">
                 <thead className="text-xs text-gray-700 uppercase bg-blue_primary_100 dark:bg-gray-700 dark:text-gray-400">
@@ -73,7 +126,18 @@ const JobList = () => {
                             <td className="px-6 py-4">{job.status}</td>
                             <td className="px-6 py-4">{0}</td>
                             <td className="px-6 py-4">
-                                <button type="button">Disable</button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        if (job.status !== "SUSPENDED")
+                                            setSelectedId(job.id);
+                                        else handleReactivateJob(job.id);
+                                    }}
+                                >
+                                    {job.status === "SUSPENDED"
+                                        ? "Reactivate"
+                                        : "Suspend"}
+                                </button>
                             </td>
                             <td className="px-6 py-4">
                                 <Link

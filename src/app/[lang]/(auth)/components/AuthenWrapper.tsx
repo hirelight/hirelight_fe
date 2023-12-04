@@ -17,7 +17,7 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
 
     const handleLogout = useCallback(() => {
         dispatch(logout());
-        router.push("login");
+        router.push(`/${lang}/login`);
     }, [dispatch, router]);
 
     useEffect(() => {

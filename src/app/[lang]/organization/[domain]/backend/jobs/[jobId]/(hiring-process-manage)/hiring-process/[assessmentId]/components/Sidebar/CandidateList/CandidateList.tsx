@@ -74,6 +74,16 @@ const CandidateList = ({ disqualify }: CandidateListProps) => {
                         ? profile.applicantProfile.status === "DISQUALIFIED"
                         : profile.applicantProfile.status !== "DISQUALIFIED"
                 )
+                .sort((a, b) =>
+                    a.assessment.assessmentTypeName !== "SOURCED_ASSESSMENT"
+                        ? a.applicantProfile.keywordsMatch &&
+                          b.applicantProfile.keywordsMatch &&
+                          a.applicantProfile.keywordsMatch.split(",").length >
+                              b.applicantProfile.keywordsMatch.split(",").length
+                            ? 1
+                            : -1
+                        : 1
+                )
                 .map(profile => (
                     <li
                         key={profile.applicantProfile.candidateId}

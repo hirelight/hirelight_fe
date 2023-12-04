@@ -133,6 +133,7 @@ const AssessmentCard = ({ data }: { data: IJobPostAppAssDetailDto }) => {
                     ) : JSON.parse(data.questionAnswerSet).assessmentReport ? (
                         <Link
                             target="_blank"
+                            rel="noopener noreferrer"
                             href={
                                 JSON.parse(data.questionAnswerSet)
                                     .assessmentReport

@@ -105,6 +105,30 @@ const publishJobAsync = async (id: string): Promise<IResponse<any>> => {
     }
 };
 
+const suspendJob = async (id: string) => {
+    try {
+        const res = await interceptor.put<IResponse<any>>(
+            endpoints.JOBPOSTS + `/${id}/suspend`
+        );
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const reactivateJob = async (id: string) => {
+    try {
+        const res = await interceptor.put<IResponse<any>>(
+            endpoints.JOBPOSTS + `/${id}/reactivate`
+        );
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const jobServices = {
     createAsync,
     getListAsync,
@@ -113,6 +137,8 @@ const jobServices = {
     deleteByIdAsync,
     publishJobAsync,
     requestPublishJob,
+    suspendJob,
+    reactivateJob,
 };
 
 export default jobServices;

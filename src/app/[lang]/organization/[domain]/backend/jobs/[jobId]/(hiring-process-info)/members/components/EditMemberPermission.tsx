@@ -42,6 +42,7 @@ const EditMemberPermission: React.FC<EditMemberPermissionProps> = ({
     const handleUpdatePermission = async (e: FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
+
         try {
             const res = await collaboratorsServices.editCollaborator({
                 jobPostId: jobId as string,
@@ -108,11 +109,13 @@ const EditMemberPermission: React.FC<EditMemberPermissionProps> = ({
                         }))}
                         onChange={(newPermissions: IPermissionDto[]) =>
                             setCurrentPermissions(
-                                newPermissions.map(item => ({
-                                    permissionName: item.name,
-                                    permissionId: item.id,
-                                    assessmentId: item.assessmentId,
-                                }))
+                                newPermissions.map(item => {
+                                    return {
+                                        permissionName: item.name,
+                                        permissionId: item.id,
+                                        assessmentId: "",
+                                    };
+                                })
                             )
                         }
                     />

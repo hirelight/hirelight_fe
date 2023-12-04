@@ -63,6 +63,7 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
                 permissions: currentPermissions.map(item => ({
                     permissionId: item.id,
                     permissionName: item.name,
+                    assessmentId: item.assessmentId ?? "",
                 })),
             }),
         onSuccess: res => {

@@ -392,6 +392,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
 
                     <Link
                         target="_blank"
+                        rel="noopener noreferrer"
                         href={
                             "https://support.google.com/chrome/answer/2693767?hl=en&co=GENIE.Platform%3DDesktop&oco=0"
                         }

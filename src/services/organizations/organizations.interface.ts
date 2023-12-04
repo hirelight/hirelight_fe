@@ -18,6 +18,7 @@ export interface IOrganizationDto {
     ownerId: string;
     createdTime: Date | string;
     updatedTime: Date | string;
+    status: string;
 }
 
 export interface IEditOrganizationDto {

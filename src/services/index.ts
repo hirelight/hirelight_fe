@@ -51,3 +51,12 @@ export * from "./integration/integration.service";
 
 export * from "./meeting/meeting.interface";
 export * from "./meeting/meeting.service";
+
+export * from "./report/report.interface";
+export * from "./report/report.service";
+
+export * from "./activity/activity.interface";
+export * from "./activity/activity.service";
+
+export * from "./account/account.interface";
+export * from "./account/account.service";

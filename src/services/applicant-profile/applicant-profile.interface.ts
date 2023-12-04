@@ -31,4 +31,5 @@ export interface IApplicantProfileDto {
     firstName: string;
     lastName: string;
     status: string;
+    keywordsMatch: string | null;
 }

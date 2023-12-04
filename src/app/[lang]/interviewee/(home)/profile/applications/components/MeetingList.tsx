@@ -72,6 +72,7 @@ const MeetingList = () => {
                     </div>
                     <Link
                         target="_blank"
+                        rel="noopener noreferrer"
                         href={`/${lang}/events/${meeting.id}`}
                         className="inline-block text-blue-700 hover:text-white border border-blue_primary_800 hover:bg-blue_primary_800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-6 py-2 text-center mt-4 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
                     >

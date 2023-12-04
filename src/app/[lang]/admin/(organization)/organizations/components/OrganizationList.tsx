@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 
 import organizationsServices from "@/services/organizations/organizations.service";
 import { DeleteModal, Portal } from "@/components";
+import { IOrganizationDto } from "@/services";
 
 const OrganizationList = () => {
     const { lang } = useParams();
@@ -17,16 +18,31 @@ const OrganizationList = () => {
         queryKey: ["organizations"],
         queryFn: organizationsServices.getListOrganizations,
     });
-    const [selectedId, setSelectedId] = useState<string>();
+    const [selected, setSelected] = useState<IOrganizationDto>();
     const disableMutation = useMutation({
-        mutationKey: ["disable-org", selectedId],
+        mutationKey: ["disable-org", selected?.id ?? ""],
+        mutationFn: (id: string) => organizationsServices.suspendOrg(id),
+        onSuccess: async res => {
+            await queryClient.invalidateQueries({
+                queryKey: ["organizations"],
+            });
+            toast.success(res.message);
+            setSelected(undefined);
+        },
+        onError(error) {
+            toast.error(error.message);
+        },
+    });
+
+    const reactivateOrg = useMutation({
+        mutationKey: ["reactivate-org", selected?.id ?? ""],
         mutationFn: (id: string) => organizationsServices.reactivateOrg(id),
         onSuccess: async res => {
             await queryClient.invalidateQueries({
                 queryKey: ["organizations"],
             });
             toast.success(res.message);
-            setSelectedId(undefined);
+            setSelected(undefined);
         },
         onError(error) {
             toast.error(error.message);
@@ -34,19 +50,22 @@ const OrganizationList = () => {
     });
 
     const handleSuspendOrg = async () => {
-        if (selectedId) await disableMutation.mutateAsync(selectedId);
+        if (selected) await disableMutation.mutateAsync(selected.id);
+    };
+
+    const handleReactiveOrg = async (id: string) => {
+        await reactivateOrg.mutateAsync(id);
     };
 
     return (
         <div>
-            <div className="mb-6"></div>
             <Portal>
                 <DeleteModal
                     title="Disable organization"
                     description={`Are you sure you want to disable this organization?`}
                     loading={disableMutation.isPending}
-                    show={selectedId !== undefined}
-                    onClose={() => setSelectedId(undefined)}
+                    show={selected !== undefined}
+                    onClose={() => setSelected(undefined)}
                     onConfirm={handleSuspendOrg}
                 />
             </Portal>
@@ -100,13 +119,19 @@ const OrganizationList = () => {
                                     .locale(lang)
                                     .format("DD/MM/yyyy")}
                             </td>
-                            <td className="px-6 py-4">{0}</td>
+                            <td className="px-6 py-4">{org.status}</td>
                             <td className="px-6 py-4">
                                 <button
                                     type="button"
-                                    onClick={() => setSelectedId(org.id)}
+                                    onClick={() => {
+                                        if (org.status === "ACTIVE")
+                                            setSelected(org);
+                                        else handleReactiveOrg(org.id);
+                                    }}
                                 >
-                                    Disable
+                                    {org.status === "ACTIVE"
+                                        ? "Disable"
+                                        : "Reactivate"}
                                 </button>
                             </td>
                         </tr>

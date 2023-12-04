@@ -3,14 +3,14 @@ export interface ISendCollabInvitationDto {
     employerId: string;
     permissions: {
         permissionId: string;
-        assessmentId?: string;
+        assessmentId: string;
         permissionName: string;
     }[];
 }
 
 export interface ICollabPermission {
     permissionId: string;
-    assessmentId?: string;
+    assessmentId: string;
     permissionName: string;
 }
 export interface IEditCollaboratorDto {

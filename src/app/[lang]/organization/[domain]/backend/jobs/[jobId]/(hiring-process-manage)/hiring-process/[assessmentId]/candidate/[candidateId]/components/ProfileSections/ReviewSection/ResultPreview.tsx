@@ -297,6 +297,7 @@ const IntegrationResult = ({ results }: { results: IntegrationResult }) => {
             <h3 className="mb-4">{results.assessmentName}</h3>
             <Link
                 target="_blank"
+                rel="noopener noreferrer"
                 href={results.assessmentReport}
                 title="Integration result"
                 className="font-semibold text-blue_primary_600 hover:text-blue_primary_800 hover:underline"

@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import React, { useRef } from "react";
+import { useParams, useRouter } from "next/navigation";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 import { UserIcon } from "@heroicons/react/24/solid";
 import moment from "moment";
@@ -11,12 +11,16 @@ import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setSelectCandidate } from "@/redux/slices/candidates.slice";
 import { ApplicationFormJSON, IJobPostAppAssDetailDto } from "@/services";
 
+import MatchSkillsModal from "./MatchSkillsModal";
+
 type CandidateCardProps = {
     profile: IJobPostAppAssDetailDto;
 };
 
 const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
     const { jobId, assessmentId, lang } = useParams();
+    const router = useRouter();
+
     const dispatch = useAppDispatch();
     const selectedCandidates = useAppSelector(
         state => state.candidates.selectedCandidates
@@ -24,6 +28,8 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
     const parsedContent = JSON.parse(
         profile.applicantProfile.content
     ) as ApplicationFormJSON;
+
+    const [showSkills, setShowSkills] = useState(false);
     const avatar = useRef<any | undefined>(
         parsedContent.form_structure[0].fields.find(
             item => item.id === "avatar"
@@ -36,9 +42,19 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
     );
 
     return (
-        <Link
-            href={`/backend/jobs/${jobId}/hiring-process/${assessmentId}/candidate/${profile.applicantProfileId}`}
+        <div
+            role="link"
+            onClick={() =>
+                router.push(
+                    `/backend/jobs/${jobId}/hiring-process/${assessmentId}/candidate/${profile.applicantProfileId}`
+                )
+            }
         >
+            <MatchSkillsModal
+                skills={profile.applicantProfile.keywordsMatch!!.split(",")}
+                isOpen={showSkills}
+                closeModal={() => setShowSkills(false)}
+            />
             <div className="p-4 xl:px-6">
                 <div className="flex items-start gap-3">
                     <label
@@ -81,7 +97,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
                                 <p>{headline.current.value}</p>
                             )}
                         </div>
-                        <div>
+                        <div className="mb-2 text-gray-500 text-xs">
                             <span>
                                 {moment
                                     .utc(profile.createdTime)
@@ -89,10 +105,31 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
                                     .fromNow()}
                             </span>
                         </div>
+                        {profile.applicantProfile.keywordsMatch &&
+                            profile.applicantProfile.keywordsMatch.length >
+                                0 && (
+                                <button
+                                    type="button"
+                                    className="hover:underline"
+                                    onClick={e => {
+                                        e.stopPropagation();
+                                        setShowSkills(true);
+                                    }}
+                                >
+                                    <strong>
+                                        {
+                                            profile.applicantProfile.keywordsMatch.split(
+                                                ","
+                                            ).length
+                                        }
+                                    </strong>{" "}
+                                    skills matched
+                                </button>
+                            )}
                     </div>
                 </div>
             </div>
-        </Link>
+        </div>
     );
 };
 

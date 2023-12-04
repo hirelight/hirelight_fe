@@ -176,6 +176,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                             schedule a{" "}
                             <Link
                                 target="_blank"
+                                rel="noopener noreferrer"
                                 href={`/${lang}/events/${data.id}`}
                                 className="inline-flex items-center gap-1 text-blue_primary_800 group mr-3"
                             >

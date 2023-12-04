@@ -106,6 +106,7 @@ const ErrorAssessment = ({ lang }: any) => {
                 Seem like your provided token is expired or not correct!{" "}
                 <Link
                     target="_blank"
+                    rel="noopener noreferrer"
                     href={`/${lang}/backend/settings/integrations`}
                     className="text-blue_primary_600 font-semibold hover:text-blue_primary_800 hover:underline"
                 >

@@ -8,15 +8,16 @@ import {
     ClockIcon,
     CurrencyDollarIcon,
     PencilIcon,
+    PresentationChartLineIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import moment from "moment";
 import { useQuery } from "@tanstack/react-query";
 
-import { Selection } from "@/components";
+import { ButtonOutline, Selection } from "@/components";
 import { useAppSelector } from "@/redux/reduxHooks";
 import currencies from "@/utils/shared/currencies.json";
 import { CurrencyKey } from "@/interfaces/job-post.interface";
@@ -24,6 +25,7 @@ import applicantAssessmentDetailServices from "@/services/applicant-assessment-d
 import { Calendar } from "@/icons";
 
 import styles from "./AssessmentInfoHeader.module.scss";
+import AssignAssessorModal from "./AssignAssessorModal";
 
 const Tooltip = dynamic(
     () => import("flowbite-react").then(mod => mod.Tooltip),
@@ -37,6 +39,9 @@ const Tooltip = dynamic(
 
 const AssessmentInfoHeader = () => {
     const { assessmentId, jobId, lang } = useParams();
+
+    const [assignModal, setAssignModal] = useState(false);
+
     const job = useAppSelector(state => state.job.data);
     const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
     const { data: profileList } = useQuery({
@@ -49,6 +54,10 @@ const AssessmentInfoHeader = () => {
 
     return (
         <div className="bg-white shadow-md mt-8 mb-6">
+            <AssignAssessorModal
+                isOpen={assignModal}
+                closeModal={() => setAssignModal(false)}
+            />
             <div className="max-w-screen-xl mx-auto py-6 px-4 xl:px-6">
                 <div className="flex items-center justify-between mb-4">
                     <div>
@@ -89,22 +98,19 @@ const AssessmentInfoHeader = () => {
                                 </Tooltip>
                             </li>
                             <li>
-                                <Tooltip content="Group chat">
-                                    <Link href={"#"}>
-                                        <ChatBubbleLeftRightIcon className="w-5 h-5" />
+                                <Tooltip content="Activities">
+                                    <Link
+                                        href={`/${lang}/backend/jobs/${job.id}/activities`}
+                                    >
+                                        <PresentationChartLineIcon className="w-5 h-5" />
                                     </Link>
                                 </Tooltip>
                             </li>
                         </ul>
-                        <Selection
-                            title=""
-                            placeholder="Add candidates"
-                            items={["Add resume", "Add manually"].map(item => ({
-                                label: item,
-                                value: item,
-                            }))}
-                            onChange={() => {}}
-                        />
+
+                        <ButtonOutline onClick={() => setAssignModal(true)}>
+                            Assign assessors
+                        </ButtonOutline>
                     </div>
                 </div>
                 <div className="mb-8">

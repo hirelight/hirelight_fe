@@ -14,11 +14,9 @@ const JobDetail = () => {
     return (
         <Tab.Group
             as="div"
-            className={
-                "min-w-[675px] max-w-full bg-white p-6 mt-6 mx-auto rounded-md shadow-md "
-            }
+            className={"min-w-[675px] max-w-full p-6 mt-6 mx-auto rounded-md"}
         >
-            <Tab.List className="w-full flex justify-center gap-6 mb-4">
+            <Tab.List className="w-full bg-white flex justify-center gap-6 mb-4">
                 <Tab
                     className={({ selected }) =>
                         classNames(
@@ -47,11 +45,11 @@ const JobDetail = () => {
                 </Tab>
             </Tab.List>
 
-            <Tab.Panels>
-                <Tab.Panel>
+            <Tab.Panels className="flex justify-center">
+                <Tab.Panel className="max-w-4xl bg-white p-6 shadow-md">
                     <JobInfo />
                 </Tab.Panel>
-                <Tab.Panel>
+                <Tab.Panel className={"p-6 bg-white w-full shadow-md"}>
                     <ReportList />
                 </Tab.Panel>
             </Tab.Panels>
