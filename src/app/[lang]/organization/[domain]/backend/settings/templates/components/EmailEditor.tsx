@@ -88,6 +88,7 @@ const EmailEditor: React.FC<IEmailEditor> = ({
 
     const handleTextChange = React.useCallback(
         function (delta: any, oldDelta: any, source: any) {
+            console.log("Change");
             if (source == "api") {
                 console.log("An API call triggered this change.");
             } else if (source == "user") {
@@ -184,7 +185,7 @@ const EmailEditor: React.FC<IEmailEditor> = ({
                 quill.root.setAttribute("spellcheck", "false");
                 quillInstance.current = quill;
 
-                quill.root.innerHTML = value;
+                quill.clipboard.dangerouslyPasteHTML(value);
             }
 
             quillInstance.current.on("text-change", handleTextChange);

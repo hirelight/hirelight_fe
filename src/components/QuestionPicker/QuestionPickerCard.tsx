@@ -10,6 +10,7 @@ import {
     QuestionAnswerContentJson,
     QuestionDifficulty,
 } from "@/interfaces/questions.interface";
+import { sanitizeHtml } from "@/helpers/sanitizeHTML";
 
 import DifficultyBadge from "../DifficultyBadge";
 
@@ -58,7 +59,7 @@ const QuestionPickerCard: React.FC<QuestionPickerCardProps> = ({
                         <div
                             className="inline-block"
                             dangerouslySetInnerHTML={{
-                                __html: parsedContent.name,
+                                __html: sanitizeHtml(parsedContent.name),
                             }}
                         ></div>
                     </h3>
@@ -113,7 +114,9 @@ const QuestionPickerCard: React.FC<QuestionPickerCardProps> = ({
                                                             htmlFor={`answerno-${index}-${parsedContent.name}`}
                                                             className={`${styles.answer__label}`}
                                                             dangerouslySetInnerHTML={{
-                                                                __html: answer.name,
+                                                                __html: sanitizeHtml(
+                                                                    answer.name
+                                                                ),
                                                             }}
                                                         >
                                                             {/* {answer.name} */}
@@ -131,7 +134,9 @@ const QuestionPickerCard: React.FC<QuestionPickerCardProps> = ({
                                                 </h4>
                                                 <p
                                                     dangerouslySetInnerHTML={{
-                                                        __html: parsedContent.description,
+                                                        __html: sanitizeHtml(
+                                                            parsedContent.description
+                                                        ),
                                                     }}
                                                     className="md:col-span-1 text-sm text-gray-600"
                                                 ></p>

@@ -18,6 +18,7 @@ import {
 } from "@/interfaces/questions.interface";
 import questionAnswerServices from "@/services/questions/questions.service";
 import { DeleteModal, DifficultyBadge, Portal } from "@/components";
+import { sanitizeHtml } from "@/helpers/sanitizeHTML";
 
 import styles from "./QuestionCard.module.scss";
 
@@ -71,7 +72,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                         </p>
                         <span
                             dangerouslySetInnerHTML={{
-                                __html: parsedContent.name,
+                                __html: sanitizeHtml(parsedContent.name),
                             }}
                         ></span>
                     </h3>
@@ -105,7 +106,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                                     <label
                                         className={`${styles.answer__label}`}
                                         dangerouslySetInnerHTML={{
-                                            __html: answer.name,
+                                            __html: sanitizeHtml(answer.name),
                                         }}
                                     >
                                         {/* {answer.name} */}
@@ -118,7 +119,9 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                         parsedContent.description && (
                             <p
                                 dangerouslySetInnerHTML={{
-                                    __html: parsedContent.description,
+                                    __html: sanitizeHtml(
+                                        parsedContent.description
+                                    ),
                                 }}
                                 className="md:col-span-1 text-sm text-gray-600"
                             ></p>

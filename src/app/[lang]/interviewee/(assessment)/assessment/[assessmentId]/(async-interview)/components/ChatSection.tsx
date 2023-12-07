@@ -6,6 +6,7 @@ import React from "react";
 import { VideoWrapper } from "@/components";
 import { videoJsOptions } from "@/components/VideoWrapper";
 import LoadingIndicator from "@/components/LoadingIndicator";
+import { sanitizeHtml } from "@/helpers/sanitizeHTML";
 
 import styles from "./ChatSection.module.scss";
 import { useAsyncVideoAssessment } from "./AsyncVideoAssessment";
@@ -44,8 +45,9 @@ const ChatSection = () => {
 
                     <div
                         dangerouslySetInnerHTML={{
-                            __html:
-                                applicantDetail.assessment.description ?? "",
+                            __html: sanitizeHtml(
+                                applicantDetail.assessment.description ?? ""
+                            ),
                         }}
                         className="ql-editor h-fit !p-0"
                     ></div>
@@ -86,7 +88,9 @@ const ChatSection = () => {
                         {
                             <div
                                 dangerouslySetInnerHTML={{
-                                    __html: answers[curPos].content.name,
+                                    __html: sanitizeHtml(
+                                        answers[curPos].content.name
+                                    ),
                                 }}
                                 className="ql-editor !p-0"
                             ></div>

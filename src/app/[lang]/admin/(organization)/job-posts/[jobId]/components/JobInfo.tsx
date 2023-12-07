@@ -7,6 +7,7 @@ import React, { useMemo, useRef } from "react";
 import jobServices from "@/services/job/job.service";
 import { DoubleRingLoading } from "@/components";
 import { JobContentJson } from "@/services";
+import { sanitizeHtml } from "@/helpers/sanitizeHTML";
 
 import styles from "./JobInfo.module.scss";
 
@@ -48,9 +49,11 @@ const JobInfo = () => {
                         <div
                             className="ql-editor !p-0"
                             dangerouslySetInnerHTML={{
-                                __html: parsedContent[
-                                    key as keyof typeof parsedContent
-                                ],
+                                __html: sanitizeHtml(
+                                    parsedContent[
+                                        key as keyof typeof parsedContent
+                                    ]
+                                ),
                             }}
                         ></div>
                     </section>

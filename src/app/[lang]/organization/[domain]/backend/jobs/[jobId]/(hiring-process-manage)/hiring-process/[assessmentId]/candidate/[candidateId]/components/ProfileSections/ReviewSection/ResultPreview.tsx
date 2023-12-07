@@ -15,6 +15,7 @@ import {
 import { useAppSelector } from "@/redux/reduxHooks";
 import { VideoWrapper } from "@/components";
 import { videoJsOptions } from "@/components/VideoWrapper";
+import { sanitizeHtml } from "@/helpers/sanitizeHTML";
 
 type MCQResultType = (Omit<IQuestionAnswerDto, "content"> & {
     content: QuestionAnswerContentJson;
@@ -207,7 +208,9 @@ const MCQResult = ({
                 <section key={item.id}>
                     <p
                         className="ql-editor !p-0 font-semibold text-neutral-700 mb-2"
-                        dangerouslySetInnerHTML={{ __html: item.content.name }}
+                        dangerouslySetInnerHTML={{
+                            __html: sanitizeHtml(item.content.name),
+                        }}
                     ></p>
 
                     <ul className="space-y-2 pl-2">
@@ -242,7 +245,7 @@ const MCQResult = ({
                                     <div
                                         className="ql-editor !p-0"
                                         dangerouslySetInnerHTML={{
-                                            __html: ans.name,
+                                            __html: sanitizeHtml(ans.name),
                                         }}
                                     ></div>
                                 </li>
@@ -264,7 +267,7 @@ const AsyncResult = ({ results }: { results: IAsyncAnswer[] }) => {
                         <span>{quesNo + 1}.</span>
                         <div
                             dangerouslySetInnerHTML={{
-                                __html: item.content.name,
+                                __html: sanitizeHtml(item.content.name),
                             }}
                             className="ql-editor !p-0"
                         ></div>

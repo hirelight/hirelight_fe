@@ -18,6 +18,7 @@ import {
 import { Button, VideoWrapper } from "@/components";
 import { videoJsOptions } from "@/components/VideoWrapper";
 import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
+import { sanitizeHtml } from "@/helpers/sanitizeHTML";
 
 import styles from "./AsyncReview.module.scss";
 
@@ -112,7 +113,9 @@ const AsyncReviewPage: React.FC<ReviewPageProps> = ({ data }) => {
                                 <span>{ansIndx + 1}.</span>
                                 <div
                                     dangerouslySetInnerHTML={{
-                                        __html: answer.content.name,
+                                        __html: sanitizeHtml(
+                                            answer.content.name
+                                        ),
                                     }}
                                     className="ql-editor !p-0"
                                 ></div>

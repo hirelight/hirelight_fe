@@ -22,6 +22,7 @@ import {
 } from "@/interfaces/questions.interface";
 import questionAnswerServices from "@/services/questions/questions.service";
 import { DeleteModal, Portal } from "@/components";
+import { sanitizeHtml } from "@/helpers/sanitizeHTML";
 
 import styles from "./QuestionCard.module.scss";
 import { useMultipleChoiceAssessment } from "./MultipleChoiceAssessment";
@@ -91,7 +92,9 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                         </p>
                         <span
                             dangerouslySetInnerHTML={{
-                                __html: parsedContent.current.name,
+                                __html: sanitizeHtml(
+                                    parsedContent.current.name
+                                ),
                             }}
                         ></span>
                     </h3>
@@ -131,7 +134,9 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                                             htmlFor={`answer-${index}-${id}`}
                                             className={`${styles.answer__label}`}
                                             dangerouslySetInnerHTML={{
-                                                __html: answer.name,
+                                                __html: sanitizeHtml(
+                                                    answer.name
+                                                ),
                                             }}
                                         >
                                             {/* {answer.name} */}
@@ -145,7 +150,9 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                         parsedContent.current.description && (
                             <p
                                 dangerouslySetInnerHTML={{
-                                    __html: parsedContent.current.description,
+                                    __html: sanitizeHtml(
+                                        parsedContent.current.description
+                                    ),
                                 }}
                                 className="md:col-span-1 text-sm text-gray-600"
                             ></p>

@@ -23,6 +23,7 @@ import { SpinLoading } from "@/icons";
 import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
 import useTrackAssessment from "@/hooks/useTrackAssessment";
 import { handleError } from "@/helpers";
+import { sanitizeHtml } from "@/helpers/sanitizeHTML";
 
 import styles from "./MultipleChoiceAssessment.module.scss";
 
@@ -196,7 +197,9 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                         {!displayTest && data.assessment.description && (
                             <div
                                 dangerouslySetInnerHTML={{
-                                    __html: data.assessment.description,
+                                    __html: sanitizeHtml(
+                                        data.assessment.description
+                                    ),
                                 }}
                                 className="ql-editor !max-w-[40%]"
                             ></div>

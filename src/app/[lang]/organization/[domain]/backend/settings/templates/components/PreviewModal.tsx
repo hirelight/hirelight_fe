@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { Modal } from "@/components";
 import { useTranslation } from "@/components/InternationalizationProvider";
 import { IEmailTemplatesDto } from "@/services/email-template/email-template.interface";
+import { sanitizeHtml } from "@/helpers/sanitizeHTML";
 
 import datas from "../mock-data.json";
 import { Locale } from "../../../../../../../../../i18n.config";
@@ -35,7 +36,7 @@ const PreviewModal: React.FC<IPreviewModal> = ({ isOpen, onClose, data }) => {
             <div
                 className="!p-6 ql-editor text-sm"
                 dangerouslySetInnerHTML={{
-                    __html: data.content,
+                    __html: sanitizeHtml(data.content),
                 }}
             ></div>
         </Modal>

@@ -11,6 +11,7 @@ import logo from "/public/images/logo.svg";
 
 import { IJobDto, IOrganizationDto, JobContentJson } from "@/services";
 import { IAppFormSection } from "@/interfaces";
+import { sanitizeHtml } from "@/helpers/sanitizeHTML";
 
 interface JobCardProps {
     data: Omit<IJobDto, "content" | "applicationForm"> & {
@@ -74,7 +75,7 @@ const JobCard: React.FC<JobCardProps> = ({ data }) => {
                 <p
                     className="ql-editor !text-neutral-600 !text-sm !hidden md:!block !p-0 overflow-hidden text-ellipsis max-h-20 "
                     dangerouslySetInnerHTML={{
-                        __html: data.content.description,
+                        __html: sanitizeHtml(data.content.description),
                     }}
                 ></p>
             </div>

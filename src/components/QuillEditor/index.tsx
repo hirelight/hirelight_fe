@@ -12,6 +12,7 @@ import { checkResErr, resizeImage, uploadFile } from "@/helpers";
 
 import styles from "./QuillEditor.module.scss";
 import EditorToolbar from "./EditorToolbar";
+import CustomSpan from "./CustomSpan";
 
 const inter = Inter({
     subsets: ["latin"],
@@ -142,6 +143,9 @@ const QuillEditor = ({
     React.useEffect(() => {
         if (editorRef.current) {
             if (!quillInstance.current) {
+                CustomSpan.blotName = "complex";
+                CustomSpan.tagName = "span";
+                Quill.register(CustomSpan, true);
                 const options: QuillOptionsStatic = {
                     modules: {
                         toolbar: {
@@ -158,7 +162,7 @@ const QuillEditor = ({
                 quill.root.setAttribute("spellcheck", "false");
                 quillInstance.current = quill;
 
-                quill.root.innerHTML = value;
+                quill.clipboard.dangerouslyPasteHTML(value);
             }
 
             quillInstance.current.on("text-change", handleTextChange);

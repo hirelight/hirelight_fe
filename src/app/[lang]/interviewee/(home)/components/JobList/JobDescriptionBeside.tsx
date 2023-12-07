@@ -18,6 +18,7 @@ import {
 } from "@/services";
 import logo from "@/app/icon.svg";
 import { decryptData } from "@/helpers/authHelpers";
+import { sanitizeHtml } from "@/helpers/sanitizeHTML";
 
 import ApplyFormModal from "../ApplyFormModal/ApplyFormModal";
 
@@ -136,7 +137,7 @@ const JobDescriptionBeside: React.FC<JobDescriptionBesideProps> = ({
                         <div
                             className="ql-editor !text-sm"
                             dangerouslySetInnerHTML={{
-                                __html: data.content.description,
+                                __html: sanitizeHtml(data.content.description),
                             }}
                         ></div>
                     </section>
@@ -147,7 +148,7 @@ const JobDescriptionBeside: React.FC<JobDescriptionBesideProps> = ({
                         <div
                             className="ql-editor !text-sm"
                             dangerouslySetInnerHTML={{
-                                __html: data.content.requirements,
+                                __html: sanitizeHtml(data.content.requirements),
                             }}
                         ></div>
                     </section>
@@ -156,7 +157,7 @@ const JobDescriptionBeside: React.FC<JobDescriptionBesideProps> = ({
                         <div
                             className="ql-editor !text-sm"
                             dangerouslySetInnerHTML={{
-                                __html: data.content.benefits,
+                                __html: sanitizeHtml(data.content.benefits),
                             }}
                         ></div>
                     </section>

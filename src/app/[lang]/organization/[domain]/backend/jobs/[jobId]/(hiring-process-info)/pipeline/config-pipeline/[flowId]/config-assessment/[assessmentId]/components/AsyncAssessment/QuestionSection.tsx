@@ -11,6 +11,7 @@ import dynamic from "next/dynamic";
 import { produce } from "immer";
 
 import { humanReadable } from "@/helpers";
+import { sanitizeHtml } from "@/helpers/sanitizeHTML";
 
 import AddNewQuestionSection, {
     numOfTakes,
@@ -127,7 +128,7 @@ const QuestionSection = ({
                         <div
                             className="inline-block text-ellipsis ql-editor !p-0"
                             dangerouslySetInnerHTML={{
-                                __html: data.content.name,
+                                __html: sanitizeHtml(data.content.name),
                             }}
                         ></div>
                     </div>
