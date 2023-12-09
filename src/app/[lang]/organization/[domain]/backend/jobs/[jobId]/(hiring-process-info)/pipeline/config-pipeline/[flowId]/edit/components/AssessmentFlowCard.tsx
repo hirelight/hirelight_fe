@@ -25,7 +25,7 @@ const defaultStage: AssessmentTypeKey[] = [
 ];
 
 type AssessmentFlowCardProps = {
-    data: IAssessmentFlow & { id: string };
+    data: IAssessmentFlow & { id?: string };
     updateStage: (updateStage: any) => void;
     deleteStage: () => void;
 };
@@ -84,13 +84,13 @@ const AssessmentFlowCard: React.FC<AssessmentFlowCardProps> = ({
                             >
                                 Edit
                             </button>
-                            {/* <button
+                            <button
                                 type="button"
                                 className="text-red-600 hover:underline hover:text-red-700"
                                 onClick={deleteStage}
                             >
                                 Delete
-                            </button> */}
+                            </button>
                         </div>
                     )}
                 </div>

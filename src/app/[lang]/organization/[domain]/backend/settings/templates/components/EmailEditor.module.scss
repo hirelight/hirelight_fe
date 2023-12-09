@@ -37,7 +37,7 @@
     margin: 0px -16px;
     &.snow {
         margin: 0px 0px;
-        @apply border border-gray-300 border-t-0;
+        @apply border border-gray-300;
     }
 
     & .ql-editor.ql-blank::before {

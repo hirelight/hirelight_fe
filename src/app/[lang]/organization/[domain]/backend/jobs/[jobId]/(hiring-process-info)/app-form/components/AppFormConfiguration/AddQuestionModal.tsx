@@ -167,9 +167,14 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                                 item => item.type === questionField.type
                             )?.label ?? AppFormInputTypes[0].label
                         }
-                        onChange={value =>
-                            setQuestionField({ ...questionField, type: value })
-                        }
+                        onChange={value => {
+                            setQuestionField({ ...questionField, type: value });
+                            setQuestionErr({
+                                labelErr: "",
+                                choicesErr: "",
+                                choiceLabelErr: "",
+                            });
+                        }}
                         className="mb-6"
                     />
 
@@ -287,7 +292,7 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                         </div>
                     )}
 
-                    {questionField.type === "boolean" && (
+                    {/* {questionField.type === "boolean" && (
                         <div className="flex items-center pt-4">
                             <input
                                 id="custom-field-disqualify"
@@ -308,7 +313,7 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                                 Disqualify candidate if answer is no
                             </label>
                         </div>
-                    )}
+                    )} */}
 
                     {questionField.type === "multiple_choice" && (
                         <div className="flex items-center pt-4">

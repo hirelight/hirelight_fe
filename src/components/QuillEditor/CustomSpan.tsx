@@ -22,7 +22,6 @@ export default class CustomSpan extends Embed {
     // }
 
     static value(domNode: HTMLElement) {
-        console.log("Value ", domNode);
         return domNode.getAttribute("id");
     }
 

@@ -25,7 +25,7 @@ export interface IEditAssessmentFlowDto {
     endTime: Date | string;
     assessments: {
         name: string;
-        id: string;
+        id?: string;
         assessmentType: AssessmentTypeKey;
     }[];
 }

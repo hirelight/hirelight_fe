@@ -9,6 +9,7 @@ import { useOutsideClick } from "@/hooks/useClickOutside";
 import interceptor from "@/services/interceptor";
 import { IResponse } from "@/interfaces/service.interface";
 import { checkResErr, resizeImage, uploadFile } from "@/helpers";
+import { sanitizeHtml } from "@/helpers/sanitizeHTML";
 
 import styles from "./QuillEditor.module.scss";
 import EditorToolbar from "./EditorToolbar";
@@ -143,9 +144,6 @@ const QuillEditor = ({
     React.useEffect(() => {
         if (editorRef.current) {
             if (!quillInstance.current) {
-                CustomSpan.blotName = "complex";
-                CustomSpan.tagName = "span";
-                Quill.register(CustomSpan, true);
                 const options: QuillOptionsStatic = {
                     modules: {
                         toolbar: {
@@ -162,7 +160,7 @@ const QuillEditor = ({
                 quill.root.setAttribute("spellcheck", "false");
                 quillInstance.current = quill;
 
-                quill.clipboard.dangerouslyPasteHTML(value);
+                quill.root.innerHTML = value;
             }
 
             quillInstance.current.on("text-change", handleTextChange);

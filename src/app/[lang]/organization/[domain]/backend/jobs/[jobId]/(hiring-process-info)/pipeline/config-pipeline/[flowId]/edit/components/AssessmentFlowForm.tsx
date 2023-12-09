@@ -116,11 +116,24 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
     };
 
     const handleAddNewStage = (newStage: IAssessmentFlow) => {
-        // setFormState(prev =>
-        //     produce(prev, draft => {
-        //         draft.assessments.push(newStage);
-        //     })
-        // );
+        if (formState.assessments.find(item => item.name === newStage.name))
+            return toast.error("Assessment name already existed!");
+        setFormState(prev =>
+            produce(prev, draft => {
+                // draft.assessments = draft.assessments
+                //     .slice(0, -1)
+                //     .concat([
+                //         newStage,
+                //         draft.assessments[draft.assessments.length - 1],
+                //     ]);
+
+                draft.assessments.splice(
+                    draft.assessments.length - 1,
+                    0,
+                    newStage
+                );
+            })
+        );
         setShowAddStage(false);
     };
 
@@ -208,7 +221,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                     >
                         {formState.assessments?.map((assessment, index) => (
                             <AssessmentFlowCard
-                                key={assessment.id}
+                                key={assessment.name}
                                 data={assessment}
                                 updateStage={updateStage =>
                                     handleUpdateStage(updateStage, index)
@@ -226,7 +239,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                         </p>
                     )}
 
-                    {/* {showAddStage ? (
+                    {showAddStage ? (
                         <FlowStageForm
                             onSave={handleAddNewStage}
                             onCancel={() => setShowAddStage(false)}
@@ -240,7 +253,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                             <PlusCircleIcon className="w-6 h-6" />
                             <span>Add new assessment</span>
                         </button>
-                    )} */}
+                    )}
                 </section>
             </div>
             <div className="p-4 flex items-center justify-end gap-4 text-sm">

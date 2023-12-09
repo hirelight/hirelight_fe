@@ -26,23 +26,14 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
     const [loading, setLoading] = React.useState(false);
 
     const dispatch = useAppDispatch();
-    const { data: job, error: jobErr } = useAppSelector(state => state.job);
+    const {
+        data: job,
+        error: jobErr,
+        contentLength,
+    } = useAppSelector(state => state.job);
 
     const isInvalidInput = (): boolean => {
-        const {
-            title,
-            area,
-            maxSalary,
-            minSalary,
-            startTime,
-            endTime,
-            content: { benefits, description, requirements },
-        } = job;
-        const contentLength = {
-            description: extractTextFromHtml(description).length,
-            requirements: extractTextFromHtml(requirements).length,
-            benefits: extractTextFromHtml(benefits).length,
-        };
+        const { title, area, maxSalary, minSalary, startTime, endTime } = job;
 
         let errors = Object.assign({}, jobErr);
 

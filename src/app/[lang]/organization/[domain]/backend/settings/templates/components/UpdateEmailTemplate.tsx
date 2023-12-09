@@ -93,7 +93,7 @@ const UpdateEmailTemplate: React.FC<IUpdateEmailTemplate> = ({
                         <span className="text-red-500 mr-1">*</span>
                         {t.form.title.label}
                     </label>
-                    <QuillEditorNoSSR
+                    <EmailEditorNoSSR
                         value={form.subject}
                         onChange={content =>
                             setForm({ ...form, subject: content })
@@ -104,6 +104,7 @@ const UpdateEmailTemplate: React.FC<IUpdateEmailTemplate> = ({
                                 visibile: false,
                             },
                         }}
+                        onEmailTemplateTypeChange={(id: string) => {}}
                     />
                 </div>
                 <div></div>

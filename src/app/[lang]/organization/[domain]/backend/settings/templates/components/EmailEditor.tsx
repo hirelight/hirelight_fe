@@ -16,6 +16,7 @@ import { fetchEmailTemplateTypes } from "@/redux/thunks/email-templates.thunk";
 import { checkResErr, resizeImage, uploadFile } from "@/helpers";
 import interceptor from "@/services/interceptor";
 import { IResponse } from "@/interfaces/service.interface";
+import { sanitizeHtml } from "@/helpers/sanitizeHTML";
 
 import styles from "./EmailEditor.module.scss";
 import EmailEditorToolbar from "./EmailEditorToolbar";
@@ -185,7 +186,7 @@ const EmailEditor: React.FC<IEmailEditor> = ({
                 quill.root.setAttribute("spellcheck", "false");
                 quillInstance.current = quill;
 
-                quill.clipboard.dangerouslyPasteHTML(value);
+                quill.clipboard.dangerouslyPasteHTML(sanitizeHtml(value));
             }
 
             quillInstance.current.on("text-change", handleTextChange);
@@ -220,7 +221,11 @@ const EmailEditor: React.FC<IEmailEditor> = ({
         >
             <div
                 ref={toolbarRef}
-                className={styles.toolbar__container}
+                className={`${styles.toolbar__container} ${
+                    config.toolbar?.visibile
+                        ? ""
+                        : "!invisible !h-0 !overflow-hidden"
+                }`}
                 style={{
                     display: !readOnly ? "block" : "none",
                 }}
@@ -242,6 +247,10 @@ const EmailEditor: React.FC<IEmailEditor> = ({
                         roboto_mono.className,
                         publicSans.className,
                         theme === "snow" ? styles.snow : "",
+                        readOnly ? "!border-0" : "",
+                        config.toolbar?.visibile
+                            ? "border-t-0"
+                            : "!rounded-md !overflow-hidden",
                     ].join(" ")}
                 ></div>
                 <div id="complextype" style={{ display: "none" }}>
