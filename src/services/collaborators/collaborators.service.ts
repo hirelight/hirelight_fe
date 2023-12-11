@@ -6,9 +6,11 @@ import interceptor from "../interceptor";
 import { IEmployerInvitationDto } from "..";
 
 import {
+    IAssignAssessorDto,
     ICollaboratorDto,
     IEditCollaboratorDto,
     ISendCollabInvitationDto,
+    IUnassignAssessorDto,
 } from "./collaborators.interface";
 
 const baseEndpoint = "/job-posts";
@@ -140,6 +142,46 @@ const getPermissionById = async (id: string): Promise<IResponse<any>> => {
     }
 };
 
+const assignAssessor = async (
+    assignDto: IAssignAssessorDto
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.put<IResponse<any>>(
+            baseEndpoint + `/${assignDto.jobPostId}/collaborators/assign`,
+            {
+                assessmentId: assignDto.assessmentId,
+                employerIds: assignDto.employerIds,
+            }
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const unAssignAssessor = async (
+    unassignDto: IUnassignAssessorDto
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.put<IResponse<any>>(
+            baseEndpoint + `/${unassignDto.jobPostId}/collaborators/unassign`,
+            {
+                assessmentId: unassignDto.assessmentId,
+                employerIds: unassignDto.employerIds,
+            }
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const collaboratorsServices = {
     getCollaboratorList,
     getCollaboratorById,
@@ -149,6 +191,8 @@ const collaboratorsServices = {
     sendInvitation,
     getPermissionById,
     getCollabInvitations,
+    assignAssessor,
+    unAssignAssessor,
 };
 
 export default collaboratorsServices;

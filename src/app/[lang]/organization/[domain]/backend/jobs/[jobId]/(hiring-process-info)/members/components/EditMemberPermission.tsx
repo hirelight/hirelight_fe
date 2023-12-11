@@ -1,23 +1,18 @@
 "use client";
 
 import React, { FormEvent, useEffect, useState } from "react";
-import { LightBulbIcon } from "@heroicons/react/24/outline";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { Button, CustomInput, Modal, Selection } from "@/components";
-import permissionServices from "@/services/permission/permission.service";
-import { IOrgEmployerDto, IPermissionDto } from "@/services";
+import { Button, CustomInput, Modal } from "@/components";
+import { AllowedPermissions, IPermissionDto } from "@/services";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
-import { useAppSelector } from "@/redux/reduxHooks";
-import organizationsServices from "@/services/organizations/organizations.service";
 import {
     ICollabPermission,
     ICollaboratorDto,
 } from "@/services/collaborators/collaborators.interface";
-import { SpinLoading } from "@/icons";
 
 import PermissionTable from "./PermissionTable";
 
@@ -47,7 +42,9 @@ const EditMemberPermission: React.FC<EditMemberPermissionProps> = ({
             const res = await collaboratorsServices.editCollaborator({
                 jobPostId: jobId as string,
                 employerId: member.employerDto.id,
-                permissions: currentPermissions,
+                permissions: currentPermissions.filter(permission =>
+                    AllowedPermissions.includes(permission.permissionName)
+                ),
             });
 
             toast.success(res.message);

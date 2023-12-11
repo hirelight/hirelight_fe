@@ -152,7 +152,7 @@
             "label": {
                 "first_name": "Họ",
                 "last_name": "Tên",
-                "email": "Email doanh nghiệp",
+                "email": "Email",
                 "password": "Mật khẩu"
             },
             "or": "Hoặc",

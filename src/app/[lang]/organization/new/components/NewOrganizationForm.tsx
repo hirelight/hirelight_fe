@@ -15,6 +15,7 @@ import {
 import { IResponse } from "@/interfaces/service.interface";
 import authServices from "@/services/auth/auth.service";
 import { useAppSelector } from "@/redux/reduxHooks";
+import { UserAvatar } from "@/components";
 
 import styles from "./NewOrganizationForm.module.scss";
 
@@ -60,8 +61,8 @@ const NewOrganizationForm = () => {
             toast.error(error.message ? error.message : "Create org failure!", {
                 position: "bottom-left",
             });
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     const validateFormInput = () => {
@@ -91,11 +92,13 @@ const NewOrganizationForm = () => {
                 <hr className="flex-1 h-[1.5px] w-4/5 bg-gray-300 self-center" />
                 <div className="px-8 py-2 flex flex-col">
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="flex items-center justify-center w-14 h-14 bg-gray-300 rounded-full overflow-hidden p-3">
-                            <UserIcon className="w-full h-full text-neutral-700" />
+                        <div className="flex items-center justify-center w-14 h-14 bg-gray-300 text-neutral-700 rounded-full overflow-hidden">
+                            {<UserAvatar avatarUrl={authUser?.avatarUrl} />}
                         </div>
                         <div className="inline-flex flex-col text-sm text-left">
-                            <strong>{`${authUser?.firstName} ${authUser?.lastName}`}</strong>
+                            <strong>{`${authUser?.firstName} ${
+                                authUser?.lastName ?? ""
+                            }`}</strong>
                             <p className="text-gray-500">
                                 {authUser?.emailAddress}
                             </p>

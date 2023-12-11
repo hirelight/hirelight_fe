@@ -6,6 +6,7 @@ import { EyeIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { PencilIcon } from "@heroicons/react/24/solid";
 
 import { IQuesAnsSetDto, IQuestionAnswerDto } from "@/services";
 import { DeleteModal, Portal } from "@/components";
@@ -59,7 +60,7 @@ const QuestionSetCard: React.FC<QuestionSetCardProps> = ({ data }) => {
                         href={`/${lang}/backend/settings/question-sets/${data.id}/edit`}
                         className="w-6 h-6  text-blue_primary_600 hover:text-blue_primary_800"
                     >
-                        <EyeIcon />
+                        <PencilIcon />
                     </Link>
                 </div>
                 <div className="w-20 aspect-square rounded-full overflow-hidden">

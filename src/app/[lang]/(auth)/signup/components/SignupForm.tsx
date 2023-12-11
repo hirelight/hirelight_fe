@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { GoogleIcon, LinkedInIcon, SpinLoading } from "@/icons";
 import authServices from "@/services/auth/auth.service";
 import { RegisterEmployerDto } from "@/services/auth/auth.interface";
+import { isInvalidForm } from "@/helpers";
 
 import styles from "./SignupForm.module.scss";
 
@@ -26,6 +27,8 @@ const initialFormErrState = {
     lastNameErr: "",
 };
 
+const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
 interface ISignupForm {
     _t: Record<"signup_form" | "common", any>;
 }
@@ -40,25 +43,37 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
         React.useState<RegisterEmployerDto>(initialFormState);
     const [loading, setLoading] = React.useState(false);
 
+    const validInputs = () => {
+        const errors = { ...signupFormErr };
+        const { email, password } = signupForm;
+
+        if (!email) errors.emailErr = _t.signup_form.error.empty_email;
+
+        if (!regex.test(password))
+            errors.passwordErr = `Password must have at least 8 characters!
+            Password must have at least one uppercase, one lowercase and one number!`;
+        if (isInvalidForm(errors)) {
+            setSignupFormErr(errors);
+            return false;
+        }
+        return true;
+    };
+
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (signupForm.email === "")
-            return setSignupFormErr(prev => ({
-                ...prev,
-                emailErr: _t.signup_form.error.empty_email,
-            }));
+
+        if (!validInputs())
+            return toast.error(`Invalid input!
+        Please check red places`);
 
         setLoading(true);
-
         try {
             const res = await authServices.registerEmployee(signupForm);
 
             toast.success(res.message);
-            setLoading(false);
             router.push(`login`);
         } catch (error) {
             setLoading(false);
-            console.error(error);
         }
     };
 
@@ -78,6 +93,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                     <input
                         type="type"
                         id="first-name"
+                        autoComplete="given-name"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="John"
                         value={signupForm.firstName}
@@ -87,7 +103,10 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                                 ...signupForm,
                                 firstName: e.target.value,
                             });
-                            setSignupFormErr(initialFormErrState);
+                            setSignupFormErr({
+                                ...signupFormErr,
+                                firstNameErr: "",
+                            });
                         }}
                     />
                 </div>
@@ -101,6 +120,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                     <input
                         type="text"
                         id="last-name"
+                        autoComplete="family-name"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="Doe"
                         required
@@ -110,7 +130,10 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                                 ...signupForm,
                                 lastName: e.target.value,
                             });
-                            setSignupFormErr(initialFormErrState);
+                            setSignupFormErr({
+                                ...signupFormErr,
+                                lastNameErr: "",
+                            });
                         }}
                     />
                 </div>
@@ -124,6 +147,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                     <input
                         type="email"
                         id="email"
+                        autoComplete="email"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="example@hirelight.xyz"
                         value={signupForm.email}
@@ -132,7 +156,10 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                                 ...signupForm,
                                 email: e.target.value,
                             });
-                            setSignupFormErr(initialFormErrState);
+                            setSignupFormErr({
+                                ...signupFormErr,
+                                emailErr: "",
+                            });
                         }}
                     />
                 </div>
@@ -147,6 +174,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                         type="password"
                         id="password"
                         placeholder="**********"
+                        autoComplete="new-password"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         value={signupForm.password}
                         required
@@ -155,7 +183,10 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                                 ...signupForm,
                                 password: e.target.value,
                             });
-                            setSignupFormErr(initialFormErrState);
+                            setSignupFormErr({
+                                ...signupFormErr,
+                                passwordErr: "",
+                            });
                         }}
                     />
                 </div>
@@ -171,7 +202,8 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                 )}
                 <button
                     type="submit"
-                    className="flex items-center gap-1 justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-full px-5 py-2.5 mt-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    className="flex items-center gap-1 justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-full px-5 py-2.5 mt-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-80 disabled:cursor-not-allowed"
+                    disabled={loading}
                 >
                     {loading && <SpinLoading />}
                     {_t.signup_form.btn.signup}

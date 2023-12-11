@@ -7,8 +7,13 @@ $content_padding_xl: 1.5rem;
     @apply w-full lg:w-3/4 lg:mr-8 shadow-md rounded-md;
 }
 
+.instruction_wrapper {
+    @apply hidden md:flex items-center justify-end absolute -right-8;
+}
+
 .instruction__text {
     max-width: calc(25% - $form_margin_right - $content_padding_xl);
+    transform: translateX(100%);
     @apply hidden lg:block;
 }
 

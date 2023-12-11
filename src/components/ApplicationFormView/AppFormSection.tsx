@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, Fragment, useState } from "react";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { toast } from "react-toastify";
 import jwtDecode from "jwt-decode";
@@ -10,6 +10,8 @@ import {
     CustomInput,
     CustomTextArea,
     DatePicker,
+    EducationSection,
+    ExperienceSection,
     Selection,
 } from "@/components";
 import { IAppFormField, IAppFormSection, ICustomField } from "@/interfaces";
@@ -36,10 +38,9 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
         switch (field.type) {
             case "text-area":
                 return (
-                    <div key={field.label} className=" mb-6">
+                    <div className=" mb-6">
                         <CustomTextArea
                             id={field.id}
-                            key={field.label}
                             title={field.label}
                             type={field.type}
                             required={field.required}
@@ -48,10 +49,9 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                 );
             case "paragraph":
                 return (
-                    <div key={field.label} className=" mb-6">
+                    <div className=" mb-6">
                         <CustomTextArea
                             id={field.id}
-                            key={field.label}
                             title={field.label}
                             type={field.type}
                             required={field.required}
@@ -62,9 +62,8 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                 if (field.id === "avatar") return null;
 
                 return (
-                    <div key={field.label} className=" mb-6">
+                    <div className=" mb-6">
                         <CustomFileInput
-                            key={field.label}
                             id={field.id}
                             title={field.label}
                             type={field.type}
@@ -75,33 +74,32 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
             }
             case "boolean":
                 return (
-                    <div key={field.label} className=" mb-6">
+                    <div className=" mb-6">
                         <YesNoInput field={field as ICustomField} />
                     </div>
                 );
             case "multiple_choice":
                 return (
-                    <div key={field.id} className="mb-6">
+                    <div className="mb-6">
                         <MultipleChoiceInpuit field={field as ICustomField} />
                     </div>
                 );
             case "date":
                 return (
-                    <div key={field.id} className="mb-6">
+                    <div className="mb-6">
                         <DateInput field={field as ICustomField} />
                     </div>
                 );
             case "dropdown":
                 return (
-                    <div key={field.id} className="mb-6">
+                    <div className="mb-6">
                         <SelectionInput field={field as ICustomField} />
                     </div>
                 );
             default: {
                 return (
-                    <div key={field.label} className=" mb-6">
+                    <div className=" mb-6">
                         <CustomInput
-                            key={field.label}
                             id={field.id}
                             title={field.label}
                             type={field.type}
@@ -244,7 +242,27 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                                 Clear
                             </div>
                         </div>
-                        {section.fields.map(field => inputFieldOnType(field))}
+                        {section.fields.map(field => {
+                            if (field.id === "education")
+                                return (
+                                    <EducationSection
+                                        key={field.id}
+                                        data={field}
+                                    />
+                                );
+                            else if (field.id === "experience")
+                                return (
+                                    <ExperienceSection
+                                        key={field.id}
+                                        data={field}
+                                    />
+                                );
+                            return (
+                                <Fragment key={field.id}>
+                                    {inputFieldOnType(field)}
+                                </Fragment>
+                            );
+                        })}
                     </section>
                 );
             })}

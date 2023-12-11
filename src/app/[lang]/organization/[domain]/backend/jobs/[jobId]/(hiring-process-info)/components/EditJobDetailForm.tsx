@@ -166,7 +166,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                 />
                             </div>
                         </div>
-                        <div className="hidden md:block absolute -right-8 top-1/2 translate-x-full -translate-y-1/2 w-screen">
+                        <div className={styles.instruction_wrapper}>
                             <div className={styles.instruction__text}>
                                 <span className="text-sm text-neutral-500">
                                     Sử dụng chức danh công việc phổ biến cho khả
@@ -210,7 +210,7 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                 />
                             </div>
                         </div>
-                        <div className="hidden md:block absolute -right-8 top-1/2 translate-x-full -translate-y-1/2 w-screen">
+                        <div className={styles.instruction_wrapper}>
                             <div className={styles.instruction__text}>
                                 <span className="text-sm text-neutral-500">
                                     Sử dụng vị trí để thu hút các ứng viên phù

@@ -22,9 +22,15 @@ const SelectCollaborators: React.FC<SelectAttendeeListProps> = ({
         queryKey: ["collaborators", jobId],
         queryFn: () =>
             collaboratorsServices.getCollaboratorList(jobId as string),
+        select(data) {
+            return {
+                ...data,
+                data: data.data.filter(
+                    collab => !selected.find(item => item.id === collab.id)
+                ),
+            };
+        },
     });
-
-    console.log(collabRes);
 
     return (
         <Listbox value={selected} onChange={onSelect} multiple>

@@ -13,6 +13,7 @@ import { useAppSelector } from "@/redux/reduxHooks";
 import { SpinLoading } from "@/icons";
 import employerOrgServices from "@/services/employer-organization/employer-organization.service";
 import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
+import { handleError } from "@/helpers";
 
 import PermissionTable from "./PermissionTable";
 
@@ -37,6 +38,7 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
         IPermissionDto[]
     >([]);
     const { authUser }: any = useAppSelector(state => state.auth);
+
     const { data: memberRes, isLoading } = useQuery({
         queryKey: ["members"],
         queryFn: employerOrgServices.getListAsync,
@@ -73,7 +75,7 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
             onClose();
         },
         onError: error => {
-            toast.error(error.message ? error.message : "Something went wrong");
+            handleError(error);
         },
     });
 

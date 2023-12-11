@@ -106,6 +106,21 @@ const JobCard: React.FC<JobCardProps> = ({
                                 Publish
                             </button>
                         )}
+                    {status === JobPostStatus.ACTIVE &&
+                        authUser &&
+                        authUser.role === Roles.ORGANIZATION_ADMIN && (
+                            <button
+                                type="button"
+                                className="focus:outline-none text-neutral-700 font-semibold bg-slate-300 hover:bg-slate-400 focus:ring-4 rounded-lg text-sm px-4 py-1 hidden md:block disabled:cursor-not-allowed disabled:opacity-80"
+                                onClick={handlePublishJob.bind(null, id)}
+                                disabled={publishJobMutations.isPending}
+                            >
+                                {publishJobMutations.isPending && (
+                                    <SpinLoading className="mr-2" />
+                                )}
+                                Unpublish
+                            </button>
+                        )}
                     <div ref={actionsDropDown} className="relative">
                         <TooltipNoSSR
                             content={

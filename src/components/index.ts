@@ -28,6 +28,9 @@ import RescheduleModal from "./RescheduleModal";
 import WarningModal from "./WarningModal";
 import DifficultyBadge from "./DifficultyBadge";
 import BadgeInput from "./BadgeInput";
+import UserAvatar from "./UserAvatar";
+import EducationSection from "./EducationSection";
+import ExperienceSection from "./ExperienceSection";
 
 export {
     Modal,
@@ -60,4 +63,7 @@ export {
     WarningModal,
     DifficultyBadge,
     BadgeInput,
+    UserAvatar,
+    EducationSection,
+    ExperienceSection,
 };

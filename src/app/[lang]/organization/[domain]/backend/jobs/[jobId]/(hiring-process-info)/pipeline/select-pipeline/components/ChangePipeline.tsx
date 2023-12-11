@@ -15,6 +15,7 @@ import {
 import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
 import { isInvalidForm } from "@/helpers";
+import { useAppSelector } from "@/redux/reduxHooks";
 
 const initialData: ICreateAssessmentFlowDto = {
     name: "",
@@ -42,6 +43,8 @@ interface IChangePipeline {
 const ChangePipeline = ({ datas }: IChangePipeline) => {
     const { jobId } = useParams();
     const router = useRouter();
+
+    const job = useAppSelector(state => state.job.data);
 
     const queryClient = useQueryClient();
 
@@ -74,6 +77,10 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
         if (moment(startTime).isAfter(endTime))
             errors.flowTimelineErr =
                 "Start time must be earlier than end time!";
+
+        if (moment(startTime).isBefore(job.startTime))
+            errors.flowTimelineErr =
+                "Assessment flow must start after job post start time!";
 
         if (moment().isAfter(endTime))
             errors.flowTimelineErr = "End time must be in the future!";

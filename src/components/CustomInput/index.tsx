@@ -1,6 +1,12 @@
 "use client";
 
 import React, { DetailedHTMLProps, InputHTMLAttributes } from "react";
+import {
+    FieldValues,
+    RegisterOptions,
+    UseFormRegisterReturn,
+    useFormContext,
+} from "react-hook-form";
 
 import styles from "./styles.module.scss";
 
@@ -13,11 +19,21 @@ interface ICustomInput
     required?: boolean;
     placeholder?: string;
     errorText?: string;
+    registerData?: UseFormRegisterReturn<string>;
 }
 
 const CustomInput = (props: ICustomInput) => {
-    const { id, className, required, title, onChange, errorText, ...rest } =
-        props;
+    const {
+        id,
+        className,
+        required,
+        title,
+        errorText,
+        name,
+        registerData,
+        ...rest
+    } = props;
+
     return (
         <div className="w-full">
             {title && (
@@ -44,8 +60,9 @@ const CustomInput = (props: ICustomInput) => {
                 className={`${styles.input__box} ${
                     errorText ? styles.error : ""
                 } ${className ? className : ""}`}
-                onChange={onChange ? onChange : () => {}}
+                {...registerData}
             />
+
             {errorText && (
                 <p className="mt-2 text-sm text-red-600 dark:text-red-500">
                     <span className="font-medium">{errorText} </span>

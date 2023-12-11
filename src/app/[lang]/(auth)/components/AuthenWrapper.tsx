@@ -2,7 +2,6 @@
 
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useCallback, useEffect } from "react";
-import jwtDecode from "jwt-decode";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { logout } from "@/redux/slices/auth.slice";
@@ -13,16 +12,15 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
     const { lang } = useParams();
 
     const dispatch = useAppDispatch();
-    const token = useAppSelector(state => state.auth.token);
 
     const handleLogout = useCallback(() => {
         dispatch(logout());
         router.push(`/${lang}/login`);
-    }, [dispatch, router]);
+    }, [dispatch, lang, router]);
 
     useEffect(() => {
         if (authEnd && authEnd === "true") handleLogout();
-    }, [authEnd, handleLogout, lang, router, token]);
+    }, [authEnd, handleLogout, lang, router]);
     return <>{children}</>;
 };
 

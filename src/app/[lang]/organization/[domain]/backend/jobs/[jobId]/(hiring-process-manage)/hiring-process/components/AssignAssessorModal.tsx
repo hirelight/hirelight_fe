@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { UserCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 
-import { Button } from "@/components";
+import { Button, UserAvatar } from "@/components";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
 import { handleError } from "@/helpers";
 import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
@@ -31,65 +31,23 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
 
     const [selected, setSelected] = useState<ICollaboratorDto[]>([]);
     const oldSelected = useRef<ICollaboratorDto[]>();
-    const { data: permissionRes } = useQuery({
-        queryKey: ["job-permissions"],
-        queryFn: permissionServices.getJobPostPermission,
-    });
 
     const handleAssignAssessors = async () => {
-        if (!permissionRes) return;
         try {
-            const evaluationPermission = permissionRes.data.find(
-                permission => permission.name === "CREATE_EVALUATION"
-            )!!;
-            const selectedMap = new Map<string, ICollaboratorDto>();
-            selected.forEach(item => {
-                if (!selectedMap.has(item.id)) {
-                    selectedMap.set(item.id, item);
-                }
+            // const selectedMap = new Map<string, ICollaboratorDto>();
+            // selected.forEach(item => {
+            //     if (!selectedMap.has(item.id)) {
+            //         selectedMap.set(item.id, item);
+            //     }
+            // });
+
+            const res = await collaboratorsServices.assignAssessor({
+                jobPostId: jobId as string,
+                assessmentId: assessmentId as string,
+                employerIds: selected.map(item => item.employerDto.id),
             });
 
-            const res = await Promise.all([
-                ...selected
-                    //Remove unchange collaborators
-                    .filter(
-                        collaborator =>
-                            !oldSelected.current!!.includes(collaborator)
-                    )
-                    // Update collaborators's assessment permission
-                    .map(collaborator => {
-                        return collaboratorsServices.editCollaborator({
-                            jobPostId: jobId as string,
-                            employerId: collaborator.employerDto.id,
-                            permissions: collaborator.permissions.concat([
-                                {
-                                    permissionId: evaluationPermission.id,
-                                    permissionName: evaluationPermission.name,
-                                    assessmentId: assessmentId as string,
-                                },
-                            ]),
-                        });
-                    }),
-                ...oldSelected
-                    // Get unselected collaborators
-                    .current!!.filter(
-                        collaborator => !selectedMap.has(collaborator.id)
-                    )
-                    // Update permission for collaborators
-                    .map(collaborator => {
-                        return collaboratorsServices.editCollaborator({
-                            jobPostId: jobId as string,
-                            employerId: collaborator.employerDto.id,
-                            permissions: collaborator.permissions.filter(
-                                permission =>
-                                    permission.permissionName !==
-                                    "CREATE_EVALUATION"
-                            ),
-                        });
-                    }),
-            ]);
-
-            toast.success("Assign assessors successfully!");
+            toast.success(res.message);
         } catch (error) {
             handleError(error);
         }
@@ -114,12 +72,11 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
                                 permission.assessmentId &&
                                 permission.assessmentId === assessmentId &&
                                 permission.permissionName ===
-                                    "CREATE_EVALUATION"
+                                    "CREATE_UPDATE_EVALUATION"
                         ) !== undefined
                 );
                 oldSelected.current = assessors;
                 setSelected(assessors);
-                console.log(assessors);
             } catch (error) {
                 handleError(error);
             }
@@ -167,7 +124,13 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
                                             <li key={selectAttendee.id}>
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-10 h-10 rounded-full text-neutral-600">
-                                                        <UserCircleIcon />
+                                                        <UserAvatar
+                                                            avatarUrl={
+                                                                selectAttendee
+                                                                    .employerDto
+                                                                    .avatarUrl
+                                                            }
+                                                        />
                                                     </div>
                                                     <div className="flex-1 text-sm">
                                                         <h3 className="font-semibold">
@@ -180,7 +143,7 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
                                                                     .lastName ??
                                                                     "")}
                                                         </h3>
-                                                        {authUser &&
+                                                        {/* {authUser &&
                                                             selectAttendee
                                                                 .employerDto
                                                                 .id ===
@@ -188,7 +151,7 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
                                                                 <p className="text-gray-500">
                                                                     Organizer
                                                                 </p>
-                                                            )}
+                                                            )} */}
                                                     </div>
                                                     <button
                                                         type="button"

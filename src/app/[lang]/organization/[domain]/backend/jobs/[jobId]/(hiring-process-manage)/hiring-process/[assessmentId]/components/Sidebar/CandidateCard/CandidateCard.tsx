@@ -44,6 +44,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
     return (
         <div
             role="link"
+            className="cursor-pointer"
             onClick={() =>
                 router.push(
                     `/backend/jobs/${jobId}/hiring-process/${assessmentId}/candidate/${profile.applicantProfileId}`

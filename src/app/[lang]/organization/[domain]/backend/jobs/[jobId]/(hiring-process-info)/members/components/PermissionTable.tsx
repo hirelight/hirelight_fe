@@ -1,20 +1,18 @@
 import React, { useState } from "react";
 import { LightBulbIcon, NoSymbolIcon } from "@heroicons/react/24/outline";
+import { CheckIcon } from "@heroicons/react/24/solid";
 
 import { IPermissionDto } from "@/services";
 import permissionServices from "@/services/permission/permission.service";
 
 import PermissionLoadingTable from "./PermissionLoadingTable";
 
-const sortOrder = ["READ", "CREATE", "DELETE", "UPDATE"];
-const fields = [
-    "Job post",
-    "Application form",
-    "Assessment flow",
-    "Assessment",
-    "Evaluation",
-    "Applicant status",
-];
+const permissionLabel = new Map<string, string>([
+    ["UPDATE_JOB_POST", "Job post"],
+    ["CREATE_UPDATE_ASSESSMENT_FLOW", "Assessment flow"],
+    ["UPDATE_ASSESSMENT", "Assessment"],
+    ["UPDATE_APPLICANT_STATUS", "Applicant"],
+]);
 
 type PermissionTableProps = {
     curPemissions: IPermissionDto[];
@@ -27,64 +25,15 @@ const PermissionTable: React.FC<PermissionTableProps> = ({
 }) => {
     const [permissions, setPermissions] = useState<IPermissionDto[]>([]);
     const [loading, setLoading] = useState(false);
-    const [templatePermissions, setTemplatePermissions] = useState<
-        {
-            label: string;
-            permissions: IPermissionDto[];
-        }[]
-    >([
-        {
-            label: "Limited access",
-            permissions: [],
-        },
-        {
-            label: "Standard access",
-            permissions: [],
-        },
-        {
-            label: "All access",
-            permissions: [],
-        },
-    ]);
 
-    const [selectedTemplate, setSeletedTemplate] = useState<{
-        label: string;
-        permissions: IPermissionDto[];
-    }>(templatePermissions[0]);
     React.useEffect(() => {
         const fetchPermissions = async () => {
             try {
                 setLoading(true);
                 const res = await permissionServices.getJobPostPermission();
+
                 setPermissions(res.data);
-                setTemplatePermissions([
-                    {
-                        label: "Limited access",
-                        permissions: res.data.filter(item =>
-                            item.name.includes("READ")
-                        ),
-                    },
-                    {
-                        label: "Standard access",
-                        permissions: res.data.filter(
-                            item =>
-                                item.name.includes("READ") ||
-                                item.name.includes("CREATE")
-                        ),
-                    },
-                    {
-                        label: "All access",
-                        permissions: res.data,
-                    },
-                ]);
-                setSeletedTemplate({
-                    label: "Standard access",
-                    permissions: res.data.filter(
-                        item =>
-                            item.name.includes("READ") ||
-                            item.name.includes("CREATE")
-                    ),
-                });
+
                 setLoading(false);
             } catch (error) {
                 console.error(error);
@@ -95,12 +44,12 @@ const PermissionTable: React.FC<PermissionTableProps> = ({
         fetchPermissions();
     }, []);
     return (
-        <div className="relative overflow-x-auto">
+        <div className="relative">
             <div className="mb-4">
                 <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                     User permissions
                 </span>
-                <div className="flex flex-col gap-4 md:flex-row md:gap-6 mb-2">
+                {/* <div className="flex flex-col gap-4 md:flex-row md:gap-6 mb-2">
                     {templatePermissions.map((template, index) => (
                         <div key={template.label} className="flex items-center">
                             <input
@@ -126,7 +75,7 @@ const PermissionTable: React.FC<PermissionTableProps> = ({
                     This is the most versatile option. Based on job or
                     department these users can: create jobs and hiring teams,
                     assign roles in a team, move and comment on candidates.
-                </p>
+                </p> */}
             </div>
 
             <div className="border border-blue-500 rounded-sm p-2 items-start gap-2 my-2 hidden md:flex">
@@ -148,22 +97,68 @@ const PermissionTable: React.FC<PermissionTableProps> = ({
                             <th scope="col" className="px-6 py-3 rounded-l-lg">
                                 Capabilities
                             </th>
-                            <th scope="col" className="px-6 py-3">
-                                Read
+                            <th scope="col" className="px-6 py-3 text-center">
+                                View
                             </th>
-                            <th scope="col" className="px-6 py-3">
-                                Create
-                            </th>
-                            <th scope="col" className="px-6 py-3">
-                                Delete
-                            </th>
-                            <th scope="col" className="px-6 py-3 rounded-r-lg">
-                                Update
+                            <th scope="col" className="px-6 py-3 text-center">
+                                Manage
                             </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {fields.map(field => (
+                        {permissions.map(permission => (
+                            <tr
+                                key={permission.id}
+                                className="bg-white dark:bg-gray-800"
+                            >
+                                <th
+                                    scope="row"
+                                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                                >
+                                    {permissionLabel.get(permission.name)}
+                                </th>
+                                <td
+                                    // key={index}
+                                    className="px-6 py-4 text-center"
+                                >
+                                    <CheckIcon className="w-5 h-5 text-green-500 inline-block" />
+                                </td>
+                                <td
+                                    // key={index}
+                                    className="px-6 py-4 text-center"
+                                >
+                                    <input
+                                        id={permission.id}
+                                        type="checkbox"
+                                        value={permission.name}
+                                        checked={
+                                            curPemissions.find(
+                                                _ => _.name === permission.name
+                                            ) !== undefined
+                                        }
+                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                        onChange={e => {
+                                            if (e.currentTarget.checked)
+                                                onChange(
+                                                    curPemissions.concat(
+                                                        permission
+                                                    )
+                                                );
+                                            else
+                                                onChange(
+                                                    curPemissions.filter(
+                                                        _ =>
+                                                            _.id !==
+                                                            permission.id
+                                                    )
+                                                );
+                                        }}
+                                    />
+                                </td>
+                            </tr>
+                        ))}
+
+                        {/* {fields.map(field => (
                             <tr
                                 key={field}
                                 className="bg-white dark:bg-gray-800"
@@ -227,7 +222,7 @@ const PermissionTable: React.FC<PermissionTableProps> = ({
                                     );
                                 })}
                             </tr>
-                        ))}
+                        ))} */}
                     </tbody>
                 </table>
             )}

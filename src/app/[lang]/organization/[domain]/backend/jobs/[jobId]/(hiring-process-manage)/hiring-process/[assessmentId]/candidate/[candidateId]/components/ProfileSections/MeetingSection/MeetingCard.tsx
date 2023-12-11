@@ -31,7 +31,7 @@ import {
 import { AppFormDefaultSection, IAppFormField } from "@/interfaces";
 import { useAppSelector } from "@/redux/reduxHooks";
 import meetingServices from "@/services/meeting/meeting.service";
-import { DeleteModal, Portal } from "@/components";
+import { DeleteModal, Portal, UserAvatar } from "@/components";
 
 import styles from "./MeetingCard.module.scss";
 import EditMeeting from "./EditMeeting";
@@ -118,26 +118,6 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
         await deleteMeetingMutate.mutateAsync(data.id);
     };
 
-    const getImageNode = (url?: string | null) => {
-        if (url)
-            return (
-                <Image
-                    src={url}
-                    alt="Collaborator avatar"
-                    width={300}
-                    height={300}
-                    className="w-full h-full rounded-full object-cover"
-                    unoptimized
-                />
-            );
-        else
-            return (
-                <div className="w-full h-full rounded-full text-neutral-600">
-                    <UserCircleIcon />
-                </div>
-            );
-    };
-
     return (
         <>
             <EditMeeting
@@ -160,9 +140,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
             <div className="max-w-full">
                 <div className="flex items-center gap-2">
                     <div className="w-8 h-8">
-                        {getImageNode(
-                            data.creator ? data.creator.avatarUrl : ""
-                        )}
+                        <UserAvatar avatarUrl={data.creator?.avatarUrl} />
                     </div>
                     <div className="flex-1">
                         <p>
@@ -251,9 +229,9 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                         {data.candidate && (
                             <div className="flex items-center gap-2 basis-56">
                                 <div className="relative w-8 h-8">
-                                    {getImageNode(
-                                        data.candidate.avatarUrl ?? ""
-                                    )}
+                                    <UserAvatar
+                                        avatarUrl={data.candidate.avatarUrl}
+                                    />
 
                                     <MeetingStatusBadge status={data.status} />
                                 </div>

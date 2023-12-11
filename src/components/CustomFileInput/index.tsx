@@ -46,7 +46,6 @@ const CustomFileInput = (props: ICustomFileInput) => {
                     );
                 });
 
-                toast.success(res.message);
                 (
                     document.getElementById(
                         props.id + "_fileName"

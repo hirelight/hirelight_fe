@@ -20,7 +20,7 @@ import LoadingIndicator from "@/components/LoadingIndicator";
 import { MeetingStatus } from "@/services";
 import { SpinLoading } from "@/icons";
 import { handleError } from "@/helpers";
-import { RescheduleModal } from "@/components";
+import { RescheduleModal, UserAvatar } from "@/components";
 
 import styles from "./styles.module.scss";
 
@@ -67,25 +67,6 @@ const EventInfoPage = () => {
         },
     });
 
-    const getImageNode = (url?: string) => {
-        if (url)
-            return (
-                <Image
-                    src={url}
-                    alt="Collaborator avatar"
-                    width={30}
-                    height={30}
-                    className="w-full h-full rounded-full object-cover"
-                    unoptimized={true}
-                />
-            );
-        else
-            return (
-                <div className="w-full h-full rounded-full text-neutral-600">
-                    <UserCircleIcon />
-                </div>
-            );
-    };
     const handleAccept = () => {
         acceptMeetingMutate.mutate(eventId as string);
     };
@@ -188,9 +169,11 @@ const EventInfoPage = () => {
                         <div className={styles.subsection}>
                             <div className="flex items-center gap-3">
                                 <div className="relative w-20 h-20">
-                                    {getImageNode(
-                                        meeting.data.candidate.avatarUrl ?? ""
-                                    )}
+                                    <UserAvatar
+                                        avatarUrl={
+                                            meeting.data.candidate.avatarUrl
+                                        }
+                                    />
                                     <MeetingStatusBadge
                                         status={meeting.data.status}
                                     />
@@ -217,10 +200,11 @@ const EventInfoPage = () => {
                                         className="flex items-center gap-3"
                                     >
                                         <div className="relative w-20 h-20">
-                                            {getImageNode(
-                                                employer.employer.avatarUrl ??
-                                                    ""
-                                            )}
+                                            <UserAvatar
+                                                avatarUrl={
+                                                    employer.employer.avatarUrl
+                                                }
+                                            />
                                             <MeetingStatusBadge
                                                 status={employer.status}
                                             />

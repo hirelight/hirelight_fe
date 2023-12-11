@@ -9,7 +9,7 @@ interface ILocationAutocomplete extends React.HTMLProps<HTMLInputElement> {
     title: string;
     required?: boolean;
     placeholder?: string;
-    handlePlaceChange: any;
+    handlePlaceChange: (value: string) => void;
     errorText?: string;
 }
 

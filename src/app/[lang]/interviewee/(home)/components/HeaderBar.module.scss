@@ -3,7 +3,8 @@
 .avatar__btn {
     border-radius: 100%;
     overflow: hidden;
-    @apply border border-gray-300;
+    color: white;
+    @apply w-10 h-10 border border-gray-300;
 }
 
 .avatar__dropdown__wrapper {

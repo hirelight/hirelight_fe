@@ -1,9 +1,18 @@
 "use client";
 
-import React, { FormEvent } from "react";
+import React, { FormEvent, useState } from "react";
 import { produce } from "immer";
+import { toast } from "react-toastify";
 
-import { Button, CustomInput, LocationAutocomplete } from "@/components";
+import {
+    Button,
+    CustomInput,
+    LocationAutocomplete,
+    Selection,
+} from "@/components";
+import { industries } from "@/utils/shared/initialDatas";
+import organizationsServices from "@/services/organizations/organizations.service";
+import { IEditOrganizationDto } from "@/services";
 
 import styles from "../styles.module.scss";
 
@@ -11,9 +20,21 @@ import { useOrgProfileForm } from "./OrgProfileForm";
 
 const ProfileSection = () => {
     const { orgData, setOrgData } = useOrgProfileForm();
+    const [loading, setLoading] = useState(false);
 
-    const handleSaveProfileChanges = (e: FormEvent) => {
+    const handleSaveProfileChanges = async (e: FormEvent) => {
         e.preventDefault();
+        setLoading(true);
+        try {
+            const res = await organizationsServices.editOrgProfile({
+                ...(orgData as IEditOrganizationDto),
+            });
+
+            toast.success(res.message);
+        } catch (error) {
+            console.error(error);
+        }
+        setLoading(false);
     };
 
     return (
@@ -27,6 +48,7 @@ const ProfileSection = () => {
                     <div>
                         <CustomInput
                             type="text"
+                            id="org-name"
                             title="Organization name"
                             value={orgData.name}
                             onChange={e =>
@@ -43,18 +65,18 @@ const ProfileSection = () => {
                     <div>
                         <LocationAutocomplete
                             type="text"
+                            id="organization-location"
                             title="Location"
                             value={orgData.address ?? ""}
                             placeholder="Organization location"
-                            onChange={(e: any) =>
+                            autoComplete="street-address"
+                            handlePlaceChange={value =>
                                 setOrgData(
                                     produce(orgData, draft => {
-                                        draft.address = e.target.value;
+                                        draft.address = value;
                                     })
                                 )
                             }
-                            handlePlaceChange={() => {}}
-                            required
                         />
                     </div>
 
@@ -62,6 +84,7 @@ const ProfileSection = () => {
                         <div className="relative mb-1">
                             <CustomInput
                                 type="text"
+                                id="org-domain"
                                 title="Domain"
                                 value={orgData.subdomain ?? ""}
                                 onChange={e =>
@@ -83,10 +106,31 @@ const ProfileSection = () => {
                             can&apos;t end with a dash
                         </p>
                     </div>
-                    <div></div>
+                    <div>
+                        <Selection
+                            title="Industry"
+                            value={orgData.industry ?? ""}
+                            items={industries.map(industry => ({
+                                label: industry,
+                                value: industry,
+                            }))}
+                            onChange={value =>
+                                setOrgData({
+                                    ...orgData,
+                                    industry: value,
+                                })
+                            }
+                        />
+                    </div>
                 </div>
                 <div className="p-6 border-t border-gray-300">
-                    <Button type="submit">Save changes</Button>
+                    <Button
+                        type="submit"
+                        isLoading={loading}
+                        disabled={loading}
+                    >
+                        Save changes
+                    </Button>
                 </div>
             </form>
         </section>

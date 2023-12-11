@@ -7,7 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 
 import logo from "/public/images/logo.svg";
 
-import { LocaleSwitcher } from "@/components";
+import { LocaleSwitcher, UserAvatar } from "@/components";
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import { useAppSelector } from "@/redux/reduxHooks";
 
@@ -70,15 +70,7 @@ const HeaderBar = () => {
                                     setShowAvatarDropdown(!showAvatarDropdown)
                                 }
                             >
-                                <Image
-                                    alt="Avatar"
-                                    src={
-                                        process.env
-                                            .NEXT_PUBLIC_AVATAR_URL as string
-                                    }
-                                    width={40}
-                                    height={40}
-                                />
+                                <UserAvatar avatarUrl={authUser.avatarUrl} />
                             </button>
                             <div
                                 className={`${

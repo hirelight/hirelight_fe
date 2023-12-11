@@ -45,8 +45,8 @@ const LoginForm = () => {
             router.push("/");
         } catch (error: any) {
             toast.error(error.message ? error.message : "Something went wrong");
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     const getToken = React.useCallback(

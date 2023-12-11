@@ -27,3 +27,17 @@ export const decryptData = (name: string): string | null => {
         } else return null;
     } else return null;
 };
+
+export const encryptStr = (value: string): string => {
+    return CryptoJS.AES.encrypt(
+        value,
+        process.env.NEXT_PUBLIC_SECRET_KEY as string
+    ).toString();
+};
+
+export const decryptStr = (encrypted: string): any => {
+    return CryptoJS.AES.decrypt(
+        encrypted,
+        process.env.NEXT_PUBLIC_SECRET_KEY as string
+    ).toString(CryptoJS.enc.Utf8);
+};

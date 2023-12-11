@@ -154,7 +154,7 @@
             "label": {
                 "first_name": "First name",
                 "last_name": "Last name",
-                "email": "Work email",
+                "email": "Email",
                 "password": "Password"
             },
             "or": "Or",

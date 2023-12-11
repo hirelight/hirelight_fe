@@ -9,7 +9,7 @@ import { RegisterCandidateDto } from "@/services/auth/auth.interface";
 import authServices from "@/services/auth/auth.service";
 import { SpinLoading } from "@/icons";
 import { Button } from "@/components";
-import { handleError } from "@/helpers";
+import { handleError, isInvalidForm } from "@/helpers";
 
 const initialErr = {
     firstName: "",
@@ -22,6 +22,8 @@ const initialErr = {
     password: "",
     confirmPassword: "",
 };
+
+const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
 interface FormState extends RegisterCandidateDto {
     confirmPassword: string;
@@ -37,7 +39,7 @@ const SignupForm = () => {
         password: "",
         confirmPassword: "",
     });
-    const [formErr, setFormErr] = useState({});
+
     const [formError, setFormError] = useState(initialErr);
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -54,17 +56,32 @@ const SignupForm = () => {
         });
     };
 
-    const validateInput = () => {};
+    const validInputs = () => {
+        const errors = { ...formError };
+        const { email, password, confirmPassword } = formState;
+
+        if (!email) errors.email = "Email is required";
+
+        if (!regex.test(password))
+            errors.password = `Password must have at least 8 characters!
+            Password must have at least one uppercase, one lowercase and one number!`;
+
+        if (password !== confirmPassword)
+            errors.confirmPassword = "Confirm password not matched!";
+
+        if (isInvalidForm(errors)) {
+            setFormError(errors);
+            return false;
+        }
+
+        return true;
+    };
 
     const handleSubmitSignup = async (e: FormEvent) => {
         e.preventDefault();
-        if (formState.password !== formState.confirmPassword) {
-            setFormError({
-                ...formError,
-                confirmPassword: "Confirm password not matched!",
-            });
-            return;
-        }
+        if (!validInputs())
+            return toast.error(`Invalid input!
+        Please check red places`);
         setLoading(true);
         try {
             const res = await authServices.registerCandidate(formState);
@@ -126,7 +143,6 @@ const SignupForm = () => {
                     />
                     {formError.lastName && (
                         <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                            <span className="font-medium">Oh, snapp!</span>{" "}
                             {formError.lastName}.
                         </p>
                     )}
@@ -152,7 +168,6 @@ const SignupForm = () => {
                 />
                 {formError.email && (
                     <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                        <span className="font-medium">Oh, snapp!</span>{" "}
                         {formError.email}.
                     </p>
                 )}
@@ -189,7 +204,6 @@ const SignupForm = () => {
                 </div>
                 {formError.password && (
                     <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                        <span className="font-medium">Oh, snapp!</span>{" "}
                         {formError.password}.
                     </p>
                 )}
@@ -224,7 +238,6 @@ const SignupForm = () => {
                 </div>
                 {formError.confirmPassword && (
                     <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                        <span className="font-medium">Oh, snapp!</span>{" "}
                         {formError.confirmPassword}.
                     </p>
                 )}

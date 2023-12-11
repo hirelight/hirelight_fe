@@ -2,14 +2,7 @@ import React from "react";
 
 import { SpinLoading } from "@/icons";
 
-const fields = [
-    "Job post",
-    "Application form",
-    "Assessment flow",
-    "Assessment",
-    "Evaluation",
-    "Applicant status",
-];
+const fields = ["Job post", "Assessment flow", "Assessment", "Applicant"];
 const PermissionLoadingTable = () => {
     return (
         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -18,17 +11,11 @@ const PermissionLoadingTable = () => {
                     <th scope="col" className="px-6 py-3 rounded-l-lg">
                         Capabilities
                     </th>
-                    <th scope="col" className="px-6 py-3">
-                        Read
+                    <th scope="col" className="px-6 py-3 text-ceter">
+                        View
                     </th>
-                    <th scope="col" className="px-6 py-3">
-                        Create
-                    </th>
-                    <th scope="col" className="px-6 py-3">
-                        Delete
-                    </th>
-                    <th scope="col" className="px-6 py-3 rounded-r-lg">
-                        Update
+                    <th scope="col" className="px-6 py-3 text-ceter">
+                        Manage
                     </th>
                 </tr>
             </thead>
@@ -41,7 +28,7 @@ const PermissionLoadingTable = () => {
                         >
                             {field}
                         </th>
-                        {new Array(4).fill("").map((_, index) => {
+                        {new Array(2).fill("").map((_, index) => {
                             return (
                                 <td
                                     key={index}

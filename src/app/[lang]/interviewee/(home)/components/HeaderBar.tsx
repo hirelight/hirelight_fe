@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import logo from "/public/images/logo.svg";
 
-import { LocaleSwitcher } from "@/components";
+import { LocaleSwitcher, UserAvatar } from "@/components";
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import { useAppSelector } from "@/redux/reduxHooks";
 
@@ -23,11 +23,17 @@ const HeaderBar = () => {
         setShowAvatarDropdown(false)
     );
 
-    const handleLogout = async () => {
+    const handleLogout = () => {
         setShowAvatarDropdown(false);
         localStorage.removeItem("hirelight_access_token");
         router.push(`/${lang}/login`);
     };
+
+    useEffect(() => {
+        if (authUser && authUser.exp * 1000 < new Date().getTime()) {
+            localStorage.removeItem("hirelight_access_token");
+        }
+    }, [authUser]);
 
     return (
         <header className="w-full bg-blue_primary_600 px-4 md:px-10">
@@ -71,13 +77,7 @@ const HeaderBar = () => {
                                     setShowAvatarDropdown(!showAvatarDropdown)
                                 }
                             >
-                                <Image
-                                    alt="Avatar"
-                                    src={authUser.avatarUrl ?? ""}
-                                    width={40}
-                                    height={40}
-                                    unoptimized={true}
-                                />
+                                <UserAvatar avatarUrl={authUser.avatarUrl} />
                             </button>
                             <div
                                 className={`${

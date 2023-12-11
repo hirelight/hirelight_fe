@@ -23,12 +23,18 @@ const HeaderBar: React.FC<HeaderBarProps> = ({}) => {
     const router = useRouter();
 
     const dispatch = useAppDispatch();
-    const token = useAppSelector(state => state.auth.token);
+    const { token, authUser } = useAppSelector(state => state.auth);
 
     const handleLogout = useCallback(() => {
         dispatch(logout());
         router.push("login");
     }, [router, dispatch]);
+
+    useEffect(() => {
+        if (authUser && authUser.exp * 1000 < new Date().getTime()) {
+            handleLogout();
+        }
+    }, [authUser, handleLogout]);
 
     return (
         <div className="text-center w-full  h-fit bg-white dark:bg-blue-950 drop-shadow-md relative z-10">

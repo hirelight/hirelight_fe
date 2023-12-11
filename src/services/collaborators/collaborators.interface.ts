@@ -33,3 +33,11 @@ export interface ICollaboratorDto {
     status: string;
     permissions: ICollabPermission[];
 }
+
+export interface IAssignAssessorDto {
+    jobPostId: string;
+    assessmentId: string;
+    employerIds: string[];
+}
+
+export interface IUnassignAssessorDto extends IAssignAssessorDto {}

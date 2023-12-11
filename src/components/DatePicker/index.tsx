@@ -39,6 +39,7 @@ interface DatePickerProps {
     required?: boolean;
     title?: string;
     errorText?: string;
+    disabled?: boolean;
 }
 
 const DatePicker: React.FC<DatePickerProps> = ({
@@ -52,6 +53,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
     required,
     title,
     errorText,
+    disabled,
 }) => {
     const { lang } = useParams();
 
@@ -62,10 +64,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     const [showDatepicker, setShowDatepicker] = useState(false);
-    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-    const [currentDate, setCurrentDate] = useState(
-        selectedDate ? selectedDate : new Date()
-    );
+    const [selectedDate, setSelectedDate] = useState<Date>();
+    const [currentDate, setCurrentDate] = useState(new Date());
     const [showYear, setShowYear] = useState(false);
     const [showMonth, setShowMonth] = useState(false);
 
@@ -274,10 +274,17 @@ const DatePicker: React.FC<DatePickerProps> = ({
                         id={id}
                         name={name}
                         required={required}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        onFocusCapture={() => setShowDatepicker(true)}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:border-none disabled:cursor-not-allowed disabled:bg-gray-100/70 transition-all duration-500"
+                        onFocusCapture={() => {
+                            if (!disabled) setShowDatepicker(true);
+                        }}
+                        disabled={disabled}
                         placeholder="dd/mm/yyyy"
-                        value={moment(selectedDate).format("DD/MM/YY") ?? ""}
+                        value={
+                            selectedDate
+                                ? moment(selectedDate).format("DD/MM/YY")
+                                : ""
+                        }
                         onChange={e => {
                             e.preventDefault();
 

@@ -28,3 +28,14 @@ export interface IUserDto {
     organizationSubdomain: string;
     exp: 1699646020;
 }
+
+export interface IUpdateInfoDto {
+    password?: string;
+    firstName?: string;
+    lastName?: string;
+    avatarUrl?: string;
+    timeZone?: number;
+    certificates?: string;
+    educations?: string;
+    experiences?: string;
+}

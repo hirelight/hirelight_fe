@@ -16,6 +16,8 @@ import {
 } from "@/services/assessment-flows/assessment-flows.interface";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
 import { isInvalidForm } from "@/helpers";
+import { useAppSelector } from "@/redux/reduxHooks";
+import assessmentsServices from "@/services/assessments/assessments.service";
 
 import AssessmentFlowCard from "./AssessmentFlowCard";
 import FlowStageForm from "./FlowStageForm";
@@ -27,6 +29,8 @@ type AssessmentFlowFormProps = {
 const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
     const { flowId } = useParams();
     const router = useRouter();
+
+    const job = useAppSelector(state => state.job.data);
 
     const queryClient = useQueryClient();
 
@@ -53,6 +57,9 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
         if (moment(startTime).isAfter(endTime))
             errors.flowTimelineErr =
                 "Start time must be earlier than end time!";
+        if (moment(startTime).isBefore(job.startTime))
+            errors.flowTimelineErr =
+                "Assessment flow must start after job post start time!";
 
         if (moment().isAfter(endTime))
             errors.flowTimelineErr = "End time must be in the future!";
@@ -97,13 +104,30 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
         }
     };
 
-    const handleDeleteStage = (pos: number) => {
-        setFormState(prev => ({
-            ...prev,
-            assessments: prev.assessments.filter(
-                (_, assessmentPos) => assessmentPos !== pos
-            ),
-        }));
+    const handleDeleteStage = async (
+        assessment: IAssessmentFlow & { id?: string },
+        pos: number
+    ) => {
+        if (assessment.id) {
+            try {
+                await assessmentsServices.deleteById(assessment.id, job.id);
+                setFormState(prev => ({
+                    ...prev,
+                    assessments: prev.assessments.filter(
+                        (_, assessmentPos) => assessmentPos !== pos
+                    ),
+                }));
+            } catch (error) {
+                console.error(error);
+            }
+        } else {
+            setFormState(prev => ({
+                ...prev,
+                assessments: prev.assessments.filter(
+                    (_, assessmentPos) => assessmentPos !== pos
+                ),
+            }));
+        }
     };
 
     const handleUpdateStage = (updateStage: any, pos: number) => {
@@ -226,7 +250,9 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                                 updateStage={updateStage =>
                                     handleUpdateStage(updateStage, index)
                                 }
-                                deleteStage={() => handleDeleteStage(index)}
+                                deleteStage={() =>
+                                    handleDeleteStage(assessment, index)
+                                }
                             />
                         ))}
                     </Reorder.Group>

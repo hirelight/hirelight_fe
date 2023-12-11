@@ -273,7 +273,7 @@ const CreateQuestionPage = () => {
                             </button>
                         </Tooltip>
                         <Tooltip content="Upload questions file">
-                            <label className="w-6 h-6 block">
+                            <label className="w-6 h-6 block cursor-pointer">
                                 <ArrowUpTrayIcon />
                                 <input
                                     type="file"

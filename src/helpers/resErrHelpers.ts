@@ -22,6 +22,11 @@ export const handleError = (res: IResponse<any> | any) => {
                 else toast.error("Session timout! Please login again!");
                 break;
             }
+            case 403: {
+                if (res.message) toast.error(res.message);
+                else toast.error("You are not allowed to perform this action!");
+                break;
+            }
             case 404: {
                 if (res.message) toast.error(res.message);
                 else toast.error("Data not found!");
@@ -50,6 +55,11 @@ export const handleError = (res: IResponse<any> | any) => {
             case 401: {
                 if (res.message) toast.error(res.message);
                 else toast.error("Session timout! Please login again!");
+                break;
+            }
+            case 403: {
+                if (res.message) toast.error(res.message);
+                else toast.error("You are not allowed to perform this action!");
                 break;
             }
             case 404: {

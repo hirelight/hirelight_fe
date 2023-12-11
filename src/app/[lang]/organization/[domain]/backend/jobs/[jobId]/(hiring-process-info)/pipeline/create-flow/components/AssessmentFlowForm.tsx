@@ -17,7 +17,7 @@ import {
 } from "@/components";
 import { ICreateAssessmentFlowDto } from "@/services/assessment-flows/assessment-flows.interface";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
-import { useAppDispatch } from "@/redux/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { isInvalidForm } from "@/helpers";
 
 import AssessmentFlowCard from "./AssessmentFlowCard";
@@ -50,6 +50,8 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
     const { jobId } = useParams();
     const router = useRouter();
 
+    const job = useAppSelector(state => state.job.data);
+
     const queryClient = useQueryClient();
     const [showAddStage, setShowAddStage] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -73,6 +75,10 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
         if (moment(startTime).isAfter(endTime))
             errors.flowTimelineErr =
                 "Start time must be earlier than end time!";
+
+        if (moment(startTime).isBefore(job.startTime))
+            errors.flowTimelineErr =
+                "Assessment flow must start after job post start time!";
 
         if (moment().isAfter(endTime))
             errors.flowTimelineErr = "End time must be in the future!";

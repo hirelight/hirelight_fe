@@ -82,7 +82,14 @@ const MemberCard: React.FC<MemberCardProps> = ({ employer, index }) => {
 
                 <td className="hidden lg:table-cell">
                     <div className={styles.row__wrapper}>
-                        {employer.role.name.toLowerCase().replace("_", " ")}
+                        {employer.role.name
+                            .split("_")
+                            .map(
+                                item =>
+                                    item.charAt(0).toUpperCase() +
+                                    item.toLowerCase().substring(1)
+                            )
+                            .join(" ")}
                     </div>
                 </td>
                 <td>

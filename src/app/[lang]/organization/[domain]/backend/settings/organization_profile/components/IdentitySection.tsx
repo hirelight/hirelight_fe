@@ -6,8 +6,9 @@ import Image from "next/image";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import { produce } from "immer";
+import { toast } from "react-toastify";
 
-import { Button } from "@/components";
+import { Button, CustomTextArea } from "@/components";
 import { uploadFile } from "@/helpers";
 import organizationsServices from "@/services/organizations/organizations.service";
 import { IEditOrganizationDto } from "@/services";
@@ -15,13 +16,6 @@ import { IEditOrganizationDto } from "@/services";
 import styles from "../styles.module.scss";
 
 import { useOrgProfileForm } from "./OrgProfileForm";
-
-const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
-    ssr: false,
-    loading: () => (
-        <div className="min-h-[200px] border border-gray-300 rounded-md overflow-hidden"></div>
-    ),
-});
 
 const IdentitySection = () => {
     const inputRef = React.useRef<HTMLInputElement>(null);
@@ -88,11 +82,18 @@ const IdentitySection = () => {
 
     const handleSaveIdentityChages = async (e: FormEvent) => {
         e.preventDefault();
+
+        setLoading(true);
         try {
             const res = await organizationsServices.editOrgProfile({
                 ...(orgData as IEditOrganizationDto),
             });
-        } catch (error) {}
+
+            toast.success(res.message);
+        } catch (error) {
+            console.error(error);
+        }
+        setLoading(false);
     };
     return (
         <section>
@@ -154,11 +155,11 @@ const IdentitySection = () => {
                                         src={orgData.logoUrl ?? ""}
                                         height={64}
                                         width={64}
-                                        className="h-16 w-auto object-contain"
+                                        className="h-16 w-auto aspect-square rounded-full object-cover"
                                     />
                                     <button
                                         type="button"
-                                        className="absolute right-0 top-0 translate-x-1/2 -translate-y-1/2"
+                                        className="absolute right-0 top-0 translate-x-1/2 -translate-y-1/2 z-10"
                                         onClick={handleResetFile}
                                     >
                                         <XCircleIcon className="w-6 h-6" />
@@ -202,20 +203,23 @@ const IdentitySection = () => {
                     </div>
 
                     <div className="mb-4">
-                        <strong className="block text-sm">
-                            Company Introduction
-                        </strong>
-                        <p className="text-sm text-neutral-500 mb-4">
-                            The company introduction helps other people know
-                            briefly about your company
-                        </p>
-                        <QuillEditorNoSSR
-                            theme="snow"
+                        <label htmlFor="organization-introduction">
+                            <strong className="block text-sm">
+                                Company Introduction
+                            </strong>
+                            <p className="text-sm text-neutral-500 mb-4">
+                                The company introduction helps other people know
+                                briefly about your company
+                            </p>
+                        </label>
+                        <CustomTextArea
+                            id="organization-introduction"
+                            title=""
                             value={orgData.introduction ?? ""}
-                            onChange={innerHtml =>
+                            onChange={e =>
                                 setOrgData(
                                     produce(orgData, draft => {
-                                        draft.introduction = innerHtml;
+                                        draft.introduction = e.target.value;
                                     })
                                 )
                             }
@@ -224,22 +228,25 @@ const IdentitySection = () => {
                     </div>
 
                     <div>
-                        <strong className="block text-sm">
-                            Company Description
-                        </strong>
-                        <p className="text-sm text-neutral-500 mb-4">
-                            The company description helps to set you apart on
-                            some job boards, including the Workable Job Board.
-                            It also appears on welcome pages for features like
-                            video interviews and assessments.
-                        </p>
-                        <QuillEditorNoSSR
-                            theme="snow"
+                        <label htmlFor="organization-description">
+                            <strong className="block text-sm">
+                                Company Description
+                            </strong>
+                            <p className="text-sm text-neutral-500 mb-4">
+                                The company description helps to set you apart
+                                on some job boards, including the Workable Job
+                                Board. It also appears on welcome pages for
+                                features like video interviews and assessments.
+                            </p>
+                        </label>
+                        <CustomTextArea
+                            id="organization-description"
+                            title=""
                             value={orgData.description ?? ""}
-                            onChange={innerHtml =>
+                            onChange={e =>
                                 setOrgData(
                                     produce(orgData, draft => {
-                                        draft.description = innerHtml;
+                                        draft.description = e.target.value;
                                     })
                                 )
                             }
@@ -248,7 +255,13 @@ const IdentitySection = () => {
                     </div>
                 </div>
                 <div className="p-6 border-t border-gray-300">
-                    <Button type="submit">Save changes</Button>
+                    <Button
+                        type="submit"
+                        isLoading={loading}
+                        disabled={loading}
+                    >
+                        Save changes
+                    </Button>
                 </div>
             </form>
         </section>

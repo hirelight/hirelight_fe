@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 
 import {
     Button,
+    ButtonOutline,
     CustomInput,
     Modal,
     Portal,
@@ -26,8 +27,10 @@ const QuestionSetForm: React.FC<QuestionSetFormProps> = ({ data }) => {
     const [pickedQuestions, setPickedQuestions] = useState<
         IQuestionAnswerDto[]
     >([]);
+    const [loading, setLoading] = useState(false);
 
     const handleCreateSet = async () => {
+        setLoading(true);
         try {
             const res = await questionAnsSetServices.createAsync({
                 name,
@@ -35,14 +38,18 @@ const QuestionSetForm: React.FC<QuestionSetFormProps> = ({ data }) => {
             });
 
             toast.success(res.message);
-        } catch (error) {
-            console.error(error);
-            toast.error("Create set error");
+            setPickedQuestions([]);
+            setName("");
+        } catch (error: any) {
+            toast.error(error.message ? error.message : "Create set error");
         }
+        setLoading(false);
     };
 
     const handleUpdateSet = async () => {
         if (!data) return toast.error("update failure");
+
+        setLoading(true);
         try {
             const res = await questionAnsSetServices.editAsync({
                 id: data.id,
@@ -51,10 +58,10 @@ const QuestionSetForm: React.FC<QuestionSetFormProps> = ({ data }) => {
             });
 
             toast.success(res.message);
-        } catch (error) {
-            console.error(error);
-            toast.error("Edit set error");
+        } catch (error: any) {
+            toast.error(error.message ? error.message : "Edit set error");
         }
+        setLoading(false);
     };
 
     useEffect(() => {
@@ -68,13 +75,6 @@ const QuestionSetForm: React.FC<QuestionSetFormProps> = ({ data }) => {
         <form>
             <h1 className="text-xl text-blue_primary_800 font-semibold text-center mb-4 relative">
                 {data ? "Update question set" : "Create question set"}
-                <Button
-                    type="button"
-                    onClick={() => setShowPicker(!showPicker)}
-                    className="absolute top-1/2 right-4 -translate-y-1/2"
-                >
-                    Show
-                </Button>
             </h1>
             <div className="mb-4">
                 <CustomInput
@@ -98,12 +98,24 @@ const QuestionSetForm: React.FC<QuestionSetFormProps> = ({ data }) => {
                 ))}
             </ul>
 
-            <Button
-                type="button"
-                onClick={data ? handleUpdateSet : handleCreateSet}
-            >
-                {data ? "Update set" : "Create set"}
-            </Button>
+            <div>
+                <Button
+                    type="button"
+                    className="mr-2"
+                    isLoading={loading}
+                    disabled={loading}
+                    onClick={data ? handleUpdateSet : handleCreateSet}
+                >
+                    {data ? "Update set" : "Create set"}
+                </Button>
+                <ButtonOutline
+                    type="button"
+                    onClick={() => setShowPicker(!showPicker)}
+                    disabled={loading}
+                >
+                    Select questions
+                </ButtonOutline>
+            </div>
 
             <Portal>
                 <Modal

@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import React from "react";
 
 import activityServices from "@/services/activity/activity.service";
-import { getImageNode } from "@/helpers/getIconBaseType";
 
 const JobActivites = () => {
     const { jobId } = useParams();

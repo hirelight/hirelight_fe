@@ -29,23 +29,3 @@ export const getIconBaseOnAssessmentType = (type: AssessmentTypeKey) => {
             return <UserIcon />;
     }
 };
-
-export const getImageNode = (url?: string | null) => {
-    if (url)
-        return (
-            <Image
-                src={url}
-                alt="Collaborator avatar"
-                width={30}
-                height={30}
-                className="w-full h-full rounded-full object-cover"
-                unoptimized
-            />
-        );
-    else
-        return (
-            <div className="w-full h-full rounded-full text-neutral-600">
-                <UserCircleIcon />
-            </div>
-        );
-};

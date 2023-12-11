@@ -42,21 +42,21 @@ const InvitationDropDown = () => {
                     authUser ? authUser.userId : "",
                 ],
             });
+            toast.success("Accept invitation successtion");
         },
         onError: error => {
-            console.error(error);
-            toast.error("Accept invitation failure");
+            throw new Error(error.message);
         },
     });
 
     const handleAcceptInvitation = async (orgId: string, subdomain: string) => {
-        toast.promise(acceptInvitationMutation.mutateAsync(orgId), {
-            pending: "Accepting invitation",
-            success: "Accept invitation successfully!",
-        });
-        if (acceptInvitationMutation.isSuccess) {
+        try {
+            await toast.promise(acceptInvitationMutation.mutateAsync(orgId), {
+                pending: "Accepting invitation",
+            });
             handleRedirectOnAccept(orgId, subdomain);
-            setShowDropdown(false);
+        } catch (error) {
+            toast.error("Accept invitation failure");
         }
     };
 
@@ -107,7 +107,7 @@ const InvitationDropDown = () => {
                                 <div>
                                     <button
                                         type="button"
-                                        className="font-medium text-blue_primary_800 hover:text-blue_primary_600 mr-4"
+                                        className="font-medium text-blue_primary_800 hover:text-blue_primary_600 mr-4 disabled:opacity-80 disabled:cursor-not-allowed"
                                         disabled={
                                             acceptInvitationMutation.isPending
                                         }

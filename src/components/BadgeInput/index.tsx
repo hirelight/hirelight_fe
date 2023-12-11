@@ -40,7 +40,7 @@ const BadgeInput = (props: ICustomInput) => {
     const [text, setText] = useState("");
 
     const handleAddBadge = () => {
-        const regex = /[`~,<>;':"\[\]\|{}()=_+]/;
+        const regex = /[`~,<>;':"\[\]\|{}()=_\[+]]/;
         if (values.includes(text)) {
             return toast.error("Key word has alread existed!");
         }

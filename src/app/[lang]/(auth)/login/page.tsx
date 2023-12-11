@@ -23,14 +23,16 @@ const Login = async ({
 }) => {
     const { login_page, common } = await getDictionary(params.lang);
 
+    const showPageLoad =
+        (searchParams["status"] && searchParams["loginId"]) ||
+        (searchParams["authEnd"] && searchParams["authEnd"] == "true");
+
     return (
         <div className="min-w-[500px] max-w-[500px] min-h-[400px] relative bg-white shadow-lg rounded-md p-8 mx-0 md:mx-6 text-center">
-            {searchParams["status"] && searchParams["loginId"] && (
-                <Portal>
-                    <div className="fixed inset-0 z-[2000] w-full h-screen backdrop-brightness-50 backdrop-blur-sm flex items-center justify-center">
-                        <SpinLoading className="w-32 h-32 text-blue_primary_600" />
-                    </div>
-                </Portal>
+            {showPageLoad && (
+                <div className="fixed inset-0 z-[2000] w-full h-screen backdrop-brightness-50 backdrop-blur-sm flex items-center justify-center">
+                    <SpinLoading className="w-32 h-32 text-blue_primary_600" />
+                </div>
             )}
 
             <LoginForm _t={{ login_form: login_page.login_form, common }} />

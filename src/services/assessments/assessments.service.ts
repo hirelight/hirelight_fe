@@ -39,6 +39,25 @@ const editAsync = async (
     }
 };
 
+const deleteById = async (
+    id: string,
+    jobPostId: string
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.delete(endpoints.ASSESSMENTS + `/${id}`, {
+            params: {
+                jobPostId,
+            },
+        });
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const getListIntegrationAssessments = async (
     service?: string
 ): Promise<IResponse<any>> => {
@@ -86,6 +105,7 @@ const assessmentsServices = {
     editAsync,
     getListIntegrationAssessments,
     getListThirdParty,
+    deleteById,
 };
 
 export default assessmentsServices;
