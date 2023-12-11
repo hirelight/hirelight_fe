@@ -356,13 +356,17 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                                 setFormState({
                                                     ...formState,
                                                     startTime: date,
-                                                    endTime: moment(
-                                                        date
-                                                    ).isAfter(formState.endTime)
-                                                        ? moment(date)
-                                                              .add(7, "days")
-                                                              .toDate()
-                                                        : formState.endTime,
+                                                    endTime:
+                                                        moment(
+                                                            formState.endTime
+                                                        ).diff(date, "days") < 7
+                                                            ? moment(date)
+                                                                  .add(
+                                                                      7,
+                                                                      "days"
+                                                                  )
+                                                                  .toDate()
+                                                            : formState.endTime,
                                                 });
                                                 setFormErr({
                                                     ...formErr,
@@ -381,11 +385,9 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                             maxDate={moment()
                                                 .add(1, "year")
                                                 .toDate()}
-                                            minDate={
-                                                moment(
-                                                    formState.startTime
-                                                ).toDate() ?? new Date()
-                                            }
+                                            minDate={moment(formState.startTime)
+                                                .add(7, "days")
+                                                .toDate()}
                                             onChange={date => {
                                                 setFormState({
                                                     ...formState,

@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
 import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
@@ -24,11 +24,15 @@ const CollaboratorCard: React.FC<CollaboratorCardProps> = ({ member }) => {
     const job = useAppSelector(state => state.job.data);
     const { authUser } = useAppSelector(state => state.auth);
 
+    const queryClient = useQueryClient();
     const deleteMemberMutation = useMutation({
         mutationKey: ["deleteMemberById"],
         mutationFn: (memberId: string) =>
             collaboratorsServices.deleteCollaborator(jobId as string, memberId),
-        onSuccess: res => {
+        onSuccess: async res => {
+            await queryClient.invalidateQueries({
+                queryKey: ["collaborators", jobId],
+            });
             toast.success(res.message);
         },
         onError: err => {
@@ -44,8 +48,9 @@ const CollaboratorCard: React.FC<CollaboratorCardProps> = ({ member }) => {
         <>
             <Portal>
                 <DeleteModal
-                    title="Delete question"
-                    description="Are you sure you want to delete this question? All of your data will be permanently removed. This action cannot be undone."
+                    title="Remove collaborator"
+                    description={`Are you sure you want to remove this collaborator?
+                    This action cannot be undone.`}
                     show={showDeleteAlert}
                     loading={deleteMemberMutation.isPending}
                     onClose={() => setShowDeleteAlert(false)}

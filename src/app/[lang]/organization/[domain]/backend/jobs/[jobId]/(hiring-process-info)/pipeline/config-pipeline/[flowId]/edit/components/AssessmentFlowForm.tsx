@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Reorder } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -27,7 +27,7 @@ type AssessmentFlowFormProps = {
 };
 
 const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
-    const { flowId } = useParams();
+    const { flowId, jobId } = useParams();
     const router = useRouter();
 
     const job = useAppSelector(state => state.job.data);
@@ -111,12 +111,15 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
         if (assessment.id) {
             try {
                 await assessmentsServices.deleteById(assessment.id, job.id);
-                setFormState(prev => ({
-                    ...prev,
-                    assessments: prev.assessments.filter(
-                        (_, assessmentPos) => assessmentPos !== pos
-                    ),
-                }));
+                await queryClient.invalidateQueries({
+                    queryKey: [`assessmentFlow`, flowId],
+                });
+                // setFormState(prev => ({
+                //     ...prev,
+                //     assessments: prev.assessments.filter(
+                //         (_, assessmentPos) => assessmentPos !== pos
+                //     ),
+                // }));
             } catch (error) {
                 console.error(error);
             }
@@ -139,27 +142,42 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
         }));
     };
 
-    const handleAddNewStage = (newStage: IAssessmentFlow) => {
+    const handleAddNewStage = async (newStage: IAssessmentFlow) => {
         if (formState.assessments.find(item => item.name === newStage.name))
             return toast.error("Assessment name already existed!");
-        setFormState(prev =>
-            produce(prev, draft => {
-                // draft.assessments = draft.assessments
-                //     .slice(0, -1)
-                //     .concat([
-                //         newStage,
-                //         draft.assessments[draft.assessments.length - 1],
-                //     ]);
+        try {
+            const res = await assessmentsServices.addAssessment({
+                jobPostId: jobId as string,
+                assessmentType: newStage.assessmentType,
+                name: newStage.name,
+            });
 
-                draft.assessments.splice(
-                    draft.assessments.length - 1,
-                    0,
-                    newStage
-                );
-            })
-        );
-        setShowAddStage(false);
+            await queryClient.invalidateQueries({
+                queryKey: [`assessmentFlow`],
+            });
+
+            // setFormState(prev =>
+            //     produce(prev, draft => {
+
+            //         draft.assessments.splice(
+            //             draft.assessments.length - 1,
+            //             0,
+            //             res.data
+            //         );
+            //     })
+            // );
+            setShowAddStage(false);
+        } catch (error) {
+            console.error(error);
+        }
     };
+    useEffect(() => {
+        setFormState({
+            ...data,
+            startTime: moment.utc(data.startTime).toDate(),
+            endTime: moment.utc(data.endTime).toDate(),
+        });
+    }, [data]);
 
     return (
         <div>
@@ -203,7 +221,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                         </h3>
                         <DatePicker
                             value={new Date(formState.endTime)}
-                            minDate={moment(formState.startTime).toDate()}
+                            minDate={formState.startTime as Date}
                             maxDate={moment().add(1, "years").toDate()}
                             onChange={date =>
                                 setFormState(prev => ({
@@ -245,7 +263,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                     >
                         {formState.assessments?.map((assessment, index) => (
                             <AssessmentFlowCard
-                                key={assessment.name}
+                                key={assessment.id}
                                 data={assessment}
                                 updateStage={updateStage =>
                                     handleUpdateStage(updateStage, index)

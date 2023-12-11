@@ -285,16 +285,17 @@ const DatePicker: React.FC<DatePickerProps> = ({
                                 ? moment(selectedDate).format("DD/MM/YY")
                                 : ""
                         }
-                        onChange={e => {
-                            e.preventDefault();
+                        // onChange={e => {
+                        //     e.preventDefault();
 
-                            onChange(
-                                moment(
-                                    e.currentTarget.value,
-                                    "DD/MM/YY"
-                                ).toDate()
-                            );
-                        }}
+                        //     onChange(
+                        //         moment(
+                        //             e.currentTarget.value,
+                        //             "DD/MM/YY"
+                        //         ).toDate()
+                        //     );
+                        // }}
+                        readOnly
                     />
                 </div>{" "}
                 {errorText && (

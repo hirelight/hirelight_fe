@@ -22,6 +22,12 @@ export interface IEditAssessmentDto {
     assessmentQuestionAnswerSetContent: string;
 }
 
+export interface IAddAssessmentDto {
+    jobPostId: string;
+    assessmentType: AssessmentTypeKey;
+    name: string;
+}
+
 export interface IAssessmentDto {
     id: string;
     name: string;

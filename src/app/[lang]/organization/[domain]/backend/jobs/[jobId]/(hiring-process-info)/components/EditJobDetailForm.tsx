@@ -257,13 +257,17 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                                 setJob({
                                                     ...job,
                                                     startTime: date,
-                                                    endTime: moment(
-                                                        date
-                                                    ).isAfter(job.endTime)
-                                                        ? moment(date)
-                                                              .add(7, "days")
-                                                              .toDate()
-                                                        : job.endTime,
+                                                    endTime:
+                                                        moment(
+                                                            job.endTime
+                                                        ).diff(date, "days") < 7
+                                                            ? moment(date)
+                                                                  .add(
+                                                                      7,
+                                                                      "days"
+                                                                  )
+                                                                  .toDate()
+                                                            : job.endTime,
                                                 })
                                             );
                                             dispatch(
@@ -282,7 +286,9 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
                                     <DatePicker
                                         pos={"top"}
                                         value={job.endTime}
-                                        minDate={job.startTime as Date}
+                                        minDate={moment(job.startTime)
+                                            .add(7, "days")
+                                            .toDate()}
                                         maxDate={moment(job.endTime)
                                             .add(1, "year")
                                             .toDate()}

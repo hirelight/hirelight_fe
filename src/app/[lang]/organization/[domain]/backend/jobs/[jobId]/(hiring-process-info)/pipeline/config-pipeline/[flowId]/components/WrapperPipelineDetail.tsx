@@ -22,6 +22,17 @@ const WrapperPipelineDetail = ({ children }: { children: React.ReactNode }) => {
     const { data: flowRes, isLoading } = useQuery({
         queryKey: [`assessmentFlow`, flowId],
         queryFn: () => assessmentFlowsServices.getByIdAsync(flowId as string),
+        select(data) {
+            return {
+                ...data,
+                data: {
+                    ...data.data,
+                    assessments: data.data.assessments.filter(
+                        item => item.status !== "TERMINATED"
+                    ),
+                },
+            };
+        },
     });
 
     useEffect(() => {
@@ -47,7 +58,7 @@ const WrapperPipelineDetail = ({ children }: { children: React.ReactNode }) => {
                 );
             }
         }
-    }, [flowRes, dispatch, assessmentId, router, flowId]);
+    }, [flowRes, dispatch, assessmentId, router, flowId, path]);
 
     if (isLoading || !data.id)
         return (

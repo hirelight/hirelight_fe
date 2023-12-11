@@ -3,8 +3,10 @@ import { checkResErr } from "@/helpers";
 import { IResponse } from "@/interfaces/service.interface";
 
 import interceptor from "../interceptor";
+import { IAssessmentFlow } from "..";
 
 import {
+    IAddAssessmentDto,
     IAssessmentDto,
     IEditAsyncVideoInterviewDto,
     ThirdPartyAssessment,
@@ -29,6 +31,23 @@ const editAsync = async (
         const res = await interceptor.put(
             endpoints.ASSESSMENTS + `/${editDto.id}`,
             editDto
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+const addAssessment = async (
+    addDto: IAddAssessmentDto
+): Promise<IResponse<IAssessmentFlow>> => {
+    try {
+        const res = await interceptor.post<IResponse<IAssessmentFlow>>(
+            endpoints.ASSESSMENTS,
+            addDto
         );
 
         checkResErr(res.data);
@@ -106,6 +125,7 @@ const assessmentsServices = {
     getListIntegrationAssessments,
     getListThirdParty,
     deleteById,
+    addAssessment,
 };
 
 export default assessmentsServices;
