@@ -14,6 +14,7 @@ import {
 } from "@/components";
 import { updateJob } from "@/redux/thunks/job.thunk";
 import { extractTextFromHtml, isInvalidForm } from "@/helpers";
+import { JobPostStatus } from "@/interfaces/job-post.interface";
 
 import styles from "./EditJobDetailForm.module.scss";
 import DescriptionSection from "./DescriptionSection";
@@ -98,6 +99,11 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
 
     const handleSubmitJobDetail = async (e: FormEvent) => {
         e.preventDefault();
+
+        if (job.status === JobPostStatus.ACTIVE)
+            return toast.error(
+                "Job post is publishing! Please unpublish before perform any changes!"
+            );
 
         if (isInvalidInput()) {
             return;

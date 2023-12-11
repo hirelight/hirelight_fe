@@ -1,9 +1,14 @@
 import React from "react";
+import { Metadata } from "next";
 
 import settingStyles from "../styles.module.scss";
 
 import CurrentPlan from "./components/CurrentPlan";
 import PlanOptions from "./components/PlanOptions";
+
+export const metadata: Metadata = {
+    title: "Hirelight | Organization Plan",
+};
 
 const OrganizationBilling = () => {
     return (

@@ -31,6 +31,10 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
 }) => {
     const { candidateId } = useParams();
 
+    const applicantAssessmentDetail = useAppSelector(
+        state => state.applicantAssessmentDetail.data
+    );
+
     const queryClient = useQueryClient();
 
     const [loading, setLoading] = useState(false);
@@ -68,7 +72,10 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
             const res = await evaluationServices.createEvaluation(addState);
 
             await queryClient.invalidateQueries({
-                queryKey: ["assessment-evaluations", candidateId],
+                queryKey: [
+                    "assessment-evaluations",
+                    applicantAssessmentDetail?.id,
+                ],
             });
             toast.success(res.message);
         } catch (error: any) {

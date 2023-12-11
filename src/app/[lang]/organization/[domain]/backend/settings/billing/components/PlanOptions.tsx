@@ -1,6 +1,9 @@
+"use client";
+
 import React from "react";
 
 import { Button } from "@/components";
+import interceptor from "@/services/interceptor";
 
 import styles from "./PlanOptions.module.scss";
 
@@ -55,6 +58,21 @@ const plans = [
 ];
 
 const PlanOptions = () => {
+    const handlePurchase = async () => {
+        try {
+            const res = await interceptor.post(
+                "/payemnt/createPayment",
+                {},
+                {
+                    params: {
+                        bankCode: "ABB",
+                        planId: 3381025271316480,
+                    },
+                }
+            );
+        } catch (error) {}
+    };
+
     return (
         <div className="w-full bg-white rounded-md drop-shadow-md border border-gray-300">
             <article className={styles.plan_wrapper}>
@@ -106,7 +124,10 @@ const PlanOptions = () => {
                                     </span>
                                 </div>
 
-                                <Button className="!w-full mt-4">
+                                <Button
+                                    className="!w-full mt-4"
+                                    onClick={handlePurchase}
+                                >
                                     Purchase
                                 </Button>
                                 <p className="mt-4 text-center text-xs text-gray-500">

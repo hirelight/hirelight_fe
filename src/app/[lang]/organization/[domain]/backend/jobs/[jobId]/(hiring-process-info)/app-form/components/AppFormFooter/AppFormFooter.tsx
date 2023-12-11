@@ -36,6 +36,11 @@ const AppFormFooter = () => {
     };
 
     const handleSaveDraft = async () => {
+        if (job.status === JobPostStatus.ACTIVE)
+            return toast.error(
+                "Job post is publishing! Please unpublish before perform any changes!"
+            );
+
         setLoading(true);
         await dispatch(
             updateJob({

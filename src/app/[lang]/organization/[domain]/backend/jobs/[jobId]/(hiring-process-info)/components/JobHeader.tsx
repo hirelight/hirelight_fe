@@ -12,6 +12,7 @@ import { setJob } from "@/redux/slices/job.slice";
 import jobServices from "@/services/job/job.service";
 import { updateJob } from "@/redux/thunks/job.thunk";
 import { SpinLoading } from "@/icons";
+import { JobPostStatus } from "@/interfaces/job-post.interface";
 
 import styles from "./JobHeader.module.scss";
 
@@ -70,6 +71,11 @@ const JobHeader = ({}: IJobHeader) => {
                 redirectLink = `/${lang}/backend/jobs/${job.id}/pipeline/config-pipeline`;
                 break;
         }
+
+        if (job.status === JobPostStatus.ACTIVE)
+            return toast.error(
+                "Job post is publishing! Please unpublish before perform any changes!"
+            );
 
         try {
             const stage = pathname.split("/")[5];

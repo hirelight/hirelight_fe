@@ -26,9 +26,11 @@ type EditEvaluationProps = {
 };
 
 const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
-    const { candidateId } = useParams();
-
     const queryClient = useQueryClient();
+
+    const applicantAssessmentDetail = useAppSelector(
+        state => state.applicantAssessmentDetail.data
+    );
 
     const [loading, setLoading] = useState(false);
     const [editState, setEditState] = useState<IEvaluationDto>(data);
@@ -59,10 +61,13 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
         setLoading(true);
         try {
             const res = await evaluationServices.editEvaluation(editState);
-            toast.success(res.message);
-            queryClient.invalidateQueries({
-                queryKey: ["assessment-evaluations", candidateId],
+            await queryClient.invalidateQueries({
+                queryKey: [
+                    "assessment-evaluations",
+                    applicantAssessmentDetail?.id,
+                ],
             });
+            toast.success(res.message);
         } catch (error: any) {
             toast.error(
                 error.message ? error.message : "Something went wrong!"
