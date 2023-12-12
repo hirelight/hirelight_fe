@@ -23,8 +23,7 @@ export const handleError = (res: IResponse<any> | any) => {
                 break;
             }
             case 403: {
-                if (res.message) toast.error(res.message);
-                else toast.error("You are not allowed to perform this action!");
+                toast.error("You are not allowed to perform this action!");
                 break;
             }
             case 404: {
@@ -58,8 +57,7 @@ export const handleError = (res: IResponse<any> | any) => {
                 break;
             }
             case 403: {
-                if (res.message) toast.error(res.message);
-                else toast.error("You are not allowed to perform this action!");
+                toast.error("You are not allowed to perform this action!");
                 break;
             }
             case 404: {

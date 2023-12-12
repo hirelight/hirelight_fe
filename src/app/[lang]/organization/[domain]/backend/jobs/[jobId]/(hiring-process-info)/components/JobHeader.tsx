@@ -141,7 +141,6 @@ const JobHeader = ({}: IJobHeader) => {
     const handleRequestPublish = (id: string) => {
         requestPublishMutation.mutate(id);
     };
-    publishJobMutations;
     const handlePublish = (id: string) => {
         publishJobMutations.mutate(id);
     };
@@ -184,10 +183,8 @@ const JobHeader = ({}: IJobHeader) => {
                                         requestPublishMutation.isPending ||
                                         jobLoading
                                     }
+                                    isLoading={requestPublishMutation.isPending}
                                 >
-                                    {requestPublishMutation.isPending && (
-                                        <SpinLoading className="mr-2" />
-                                    )}
                                     Request publish
                                 </Button>
                             )}
@@ -202,10 +199,8 @@ const JobHeader = ({}: IJobHeader) => {
                                         publishJobMutations.isPending ||
                                         jobLoading
                                     }
+                                    isLoading={publishJobMutations.isPending}
                                 >
-                                    {publishJobMutations.isPending && (
-                                        <SpinLoading className="mr-2" />
-                                    )}
                                     Publish
                                 </Button>
                             )}

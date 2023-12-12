@@ -67,16 +67,20 @@ export const mergeAppFormFields = (
         const isExist = myMap.get(key);
         if (isExist) {
             const fieldMap = new Map();
-            isExist.fields.forEach((srcField: any) => {
+
+            // Get template layout
+            section.fields.forEach((srcField: any) => {
                 if (!fieldMap.has(srcField.id))
                     fieldMap.set(srcField.id, srcField);
             });
 
-            section.fields.forEach((mergeField: any) => {
-                if (!fieldMap.has(mergeField.id))
+            // Merge job post data to template
+            isExist.fields.forEach((mergeField: any) => {
+                if (fieldMap.has(mergeField.id))
                     fieldMap.set(mergeField.id, mergeField);
             });
 
+            // Return layouted section
             myMap.set(key, {
                 ...isExist,
                 fields: Array.from(fieldMap.values()),

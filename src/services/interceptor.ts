@@ -3,6 +3,7 @@ import axios, {
     InternalAxiosRequestConfig,
     AxiosResponse,
 } from "axios";
+import { toast } from "react-toastify";
 
 import { decryptData } from "@/helpers/authHelpers";
 
@@ -27,11 +28,12 @@ interceptor.interceptors.response.use(
         return res;
     },
     (error: AxiosError) => {
-        console.log("Interceptor err", error);
         if (error.response?.status === 401) {
             localStorage.removeItem("hirelight_access_token");
         }
-
+        if (error.response?.status === 403) {
+            return Promise.reject(error.response);
+        }
         if (error.response) {
             return error.response;
         } else {

@@ -132,7 +132,11 @@ const CandidateActionTabs = () => {
                 ),
                 {
                     pending: `Moving candidate ${nextAssesment.name}`,
-                    success: "Move candidate successfully!",
+                    success: {
+                        render({ data }) {
+                            return `${data?.message}`;
+                        },
+                    },
                 }
             );
 

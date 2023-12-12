@@ -22,8 +22,7 @@ const NotificationList = () => {
                     item =>
                         (!["MOVED", "IDLE"].includes(item.status) ||
                             (item.status === "MOVED" && item.result)) &&
-                        item.applicantProfile.jobPostId === applicantId &&
-                        item.result
+                        item.applicantProfile.jobPostId === applicantId
                 ),
             };
         },

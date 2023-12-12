@@ -67,8 +67,9 @@ const ProfileSection = () => {
     React.useEffect(() => {
         const fetchLayout = async () => {
             try {
-                const res = await appFormTemplateServices.getListAsync();
-                let profileLayout = JSON.parse(res.data[0].content)
+                const res =
+                    await appFormTemplateServices.getDefaultAppFormTemplate();
+                let profileLayout = JSON.parse(res.data.content)
                     .profile as IAppFormTemplateProfileSection[];
                 const fieldMap = new Map<string, any>();
 

@@ -11,7 +11,7 @@ import { UserCircleIcon } from "@heroicons/react/24/solid";
 
 import { Bell } from "@/icons";
 import { useOutsideClick } from "@/hooks/useClickOutside";
-import { LocaleSwitcher } from "@/components";
+import { LocaleSwitcher, UserAvatar } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { logout } from "@/redux/slices/auth.slice";
 
@@ -115,106 +115,94 @@ const HeaderBar = () => {
                     <div className="flex gap-4 text-neutral-700 border-gray-400">
                         <LocaleSwitcher />
                     </div>
-                    <div
-                        className="relative inline-block text-left"
-                        ref={avatarDropdownRef}
-                    >
-                        <button
-                            type="button"
-                            className={styles.avatar__btn}
-                            onClick={() =>
-                                setShowAvatarDropdown(!showAvatarDropdown)
-                            }
-                        >
-                            {authUser?.avatarUrl ? (
-                                <Image
-                                    alt="Logo"
-                                    src={authUser?.avatarUrl}
-                                    width={100}
-                                    height={100}
-                                    className="w-10 aspect-square object-contain"
-                                    unoptimized
-                                />
-                            ) : (
-                                <UserCircleIcon className="w-10 aspect-square text-neutral-700" />
-                            )}
-                        </button>
+                    {authUser && (
                         <div
-                            className={`${styles.avatar__dropdown__wrapper} ${
-                                showAvatarDropdown
-                                    ? styles.entering
-                                    : styles.leaving
-                            }`}
-                            role="menu"
-                            aria-orientation="vertical"
-                            aria-labelledby="menu-button"
-                            tabIndex={-1}
+                            className="relative inline-block text-left"
+                            ref={avatarDropdownRef}
                         >
-                            <div className="p-4 border-b border-gray-300 flex items-center gap-2">
-                                <span className="flex-shrink-0 inline-block rounded-full overflow-hidden">
-                                    {authUser?.avatarUrl ? (
-                                        <Image
-                                            alt="Logo"
-                                            width={100}
-                                            height={100}
-                                            src={authUser?.avatarUrl}
-                                            className="w-10 aspect-square object-contain"
-                                            unoptimized
+                            <button
+                                type="button"
+                                className={styles.avatar__btn}
+                                onClick={() =>
+                                    setShowAvatarDropdown(!showAvatarDropdown)
+                                }
+                            >
+                                <UserAvatar avatarUrl={authUser.avatarUrl} />
+                            </button>
+                            <div
+                                className={`${
+                                    styles.avatar__dropdown__wrapper
+                                } ${
+                                    showAvatarDropdown
+                                        ? styles.entering
+                                        : styles.leaving
+                                }`}
+                                role="menu"
+                                aria-orientation="vertical"
+                                aria-labelledby="menu-button"
+                                tabIndex={-1}
+                            >
+                                <div className="p-4 border-b border-gray-300 flex items-center gap-2">
+                                    <div className="flex-shrink-0 inline-block rounded-full overflow-hidden w-10 aspect-square object-contain text-neutral-700">
+                                        <UserAvatar
+                                            avatarUrl={authUser.avatarUrl}
                                         />
-                                    ) : (
-                                        <UserCircleIcon className="w-10 aspect-square text-neutral-700" />
-                                    )}
-                                </span>
-                                <div>
-                                    <h4 className="text-neutral-700 font-semibold">
-                                        {authUser?.firstName +
-                                            " " +
-                                            (authUser?.lastName ?? "")}
-                                    </h4>
-                                    <p className="text-sm text-neutral-500">
-                                        {authUser?.emailAddress}
-                                    </p>
+                                    </div>
+                                    <div>
+                                        <h4 className="text-neutral-700 font-semibold">
+                                            {authUser.firstName +
+                                                " " +
+                                                (authUser.lastName ?? "")}
+                                        </h4>
+                                        <p className="text-sm text-neutral-500">
+                                            {authUser.emailAddress}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="py-1" role="none">
+                                    <Link
+                                        href={`/${lang}/backend/settings/assessment_flow`}
+                                        className={styles.avatar__dropdown__btn}
+                                        role="menuitem"
+                                        tabIndex={-1}
+                                        onClick={() =>
+                                            setShowAvatarDropdown(false)
+                                        }
+                                    >
+                                        Settings
+                                    </Link>
+                                    <a
+                                        href="#"
+                                        className={styles.avatar__dropdown__btn}
+                                        role="menuitem"
+                                        tabIndex={-1}
+                                    >
+                                        Help
+                                    </a>
+                                    <button
+                                        type="button"
+                                        className={styles.avatar__dropdown__btn}
+                                        role="menuitem"
+                                        tabIndex={-1}
+                                        onClick={() =>
+                                            setShowAvatarDropdown(false)
+                                        }
+                                    >
+                                        Add a company
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className={styles.avatar__dropdown__btn}
+                                        role="menuitem"
+                                        tabIndex={-1}
+                                        onClick={handleLogout}
+                                    >
+                                        Sign out
+                                    </button>
                                 </div>
                             </div>
-                            <div className="py-1" role="none">
-                                <Link
-                                    href={`/${lang}/backend/settings/assessment_flow`}
-                                    className={styles.avatar__dropdown__btn}
-                                    role="menuitem"
-                                    tabIndex={-1}
-                                    onClick={() => setShowAvatarDropdown(false)}
-                                >
-                                    Settings
-                                </Link>
-                                <a
-                                    href="#"
-                                    className={styles.avatar__dropdown__btn}
-                                    role="menuitem"
-                                    tabIndex={-1}
-                                >
-                                    Help
-                                </a>
-                                <button
-                                    type="button"
-                                    className={styles.avatar__dropdown__btn}
-                                    role="menuitem"
-                                    tabIndex={-1}
-                                    onClick={() => setShowAvatarDropdown(false)}
-                                >
-                                    Add a company
-                                </button>
-                                <button
-                                    type="button"
-                                    className={styles.avatar__dropdown__btn}
-                                    role="menuitem"
-                                    tabIndex={-1}
-                                    onClick={handleLogout}
-                                >
-                                    Sign out
-                                </button>
-                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </header>

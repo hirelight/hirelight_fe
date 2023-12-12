@@ -11,6 +11,7 @@ import { useOutsideClick } from "@/hooks/useClickOutside";
 import { useAppSelector } from "@/redux/reduxHooks";
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
 import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
+import { handleError } from "@/helpers";
 
 import styles from "./styles.module.scss";
 
@@ -58,9 +59,7 @@ const MoveCandidateDialog = () => {
                 `/${lang}/backend/jobs/${jobId}/hiring-process/${assessmentId}`
             );
         } catch (error: any) {
-            toast.error(
-                error.message ? error.message : "Some thing went wrong"
-            );
+            handleError(error);
         }
         setLoading(false);
         setShowDialog(false);
