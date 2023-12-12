@@ -1,56 +1,105 @@
 "use client";
 
 import { Dialog, Transition } from "@headlessui/react";
-import React, { Fragment, useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { UserCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 
-import { Button, UserAvatar } from "@/components";
+import { Button, CustomInput, UserAvatar } from "@/components";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
 import { handleError } from "@/helpers";
 import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
 import permissionServices from "@/services/permission/permission.service";
 import { useAppSelector } from "@/redux/reduxHooks";
+import assessmentsServices from "@/services/assessments/assessments.service";
 
 import SelectCollaborators from "./SelectCollaborators";
 
 type AssignAssessorModalProps = {
     isOpen: boolean;
     closeModal: () => void;
+    assessors: ICollaboratorDto[];
 };
 
 const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
     isOpen,
     closeModal,
+    assessors,
 }) => {
     const { jobId, assessmentId } = useParams();
 
+    const queryClient = useQueryClient();
+
     const { authUser } = useAppSelector(state => state.auth);
 
-    const [selected, setSelected] = useState<ICollaboratorDto[]>([]);
-    const oldSelected = useRef<ICollaboratorDto[]>();
+    const [selected, setSelected] = useState<ICollaboratorDto[]>(assessors);
+    const [numEvaluations, setNumEvaluations] = useState<string>("");
+    const oldSelected = useMemo(() => assessors, [assessors]);
 
     const handleAssignAssessors = async () => {
         try {
-            // const selectedMap = new Map<string, ICollaboratorDto>();
-            // selected.forEach(item => {
-            //     if (!selectedMap.has(item.id)) {
-            //         selectedMap.set(item.id, item);
-            //     }
-            // });
+            const [unassigns, assigns] = getAssessorList(oldSelected, selected);
+            const promises = [];
+            if (unassigns.length > 0)
+                promises.push(
+                    collaboratorsServices.unAssignAssessor({
+                        jobPostId: jobId as string,
+                        assessmentId: assessmentId as string,
+                        employerIds: unassigns.map(item => item.employerDto.id),
+                    })
+                );
+            if (assigns.length > 0)
+                promises.push(
+                    collaboratorsServices.assignAssessor({
+                        jobPostId: jobId as string,
+                        assessmentId: assessmentId as string,
+                        employerIds: assigns.map(item => item.employerDto.id),
+                    })
+                );
 
-            const res = await collaboratorsServices.assignAssessor({
-                jobPostId: jobId as string,
-                assessmentId: assessmentId as string,
-                employerIds: selected.map(item => item.employerDto.id),
+            if (numEvaluations && Number(numEvaluations) > 0)
+                promises.push(
+                    assessmentsServices.configNumOfEvaluations(
+                        assessmentId as string,
+                        Number(numEvaluations)
+                    )
+                );
+
+            await Promise.all(promises);
+
+            await queryClient.invalidateQueries({
+                queryKey: ["assigned-assessors", assessmentId],
             });
 
-            toast.success(res.message);
+            toast.success("Update evaluators successfully!");
+            closeModal();
         } catch (error) {
             handleError(error);
         }
+    };
+
+    const getAssessorList = (
+        oldArr: ICollaboratorDto[],
+        newArr: ICollaboratorDto[]
+    ) => {
+        const newArrMap = new Map<string, ICollaboratorDto>();
+        const unAssigns: ICollaboratorDto[] = [];
+        newArr.forEach(person => {
+            newArrMap.set(person.employerDto.id, person);
+        });
+
+        oldArr.forEach(person => {
+            if (!newArrMap.has(person.employerDto.id)) unAssigns.push(person);
+            else newArrMap.delete(person.employerDto.id);
+        });
+
+        return [unAssigns, Array.from(newArrMap.values())];
+    };
+
+    const handleSelectCollaborators = (selected: ICollaboratorDto[]) => {
+        setSelected(selected);
     };
 
     const handleRemoveAssessor = (id: string) => {
@@ -58,32 +107,6 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
             prev.filter(person => person.employerDto.id !== id)
         );
     };
-
-    useEffect(() => {
-        const getAssessmentAssessors = async () => {
-            try {
-                const res = await collaboratorsServices.getCollaboratorList(
-                    jobId as string
-                );
-                const assessors = res.data.filter(
-                    collaborator =>
-                        collaborator.permissions.find(
-                            permission =>
-                                permission.assessmentId &&
-                                permission.assessmentId === assessmentId &&
-                                permission.permissionName ===
-                                    "CREATE_UPDATE_EVALUATION"
-                        ) !== undefined
-                );
-                oldSelected.current = assessors;
-                setSelected(assessors);
-            } catch (error) {
-                handleError(error);
-            }
-        };
-
-        getAssessmentAssessors();
-    }, [assessmentId, jobId]);
 
     return (
         <Transition appear show={isOpen} as={Fragment}>
@@ -114,7 +137,23 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
                             <Dialog.Panel className="w-full max-w-md transform overflow-visible rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                                 <Dialog.Title
                                     as="h3"
-                                    className="text-lg font-medium leading-6 text-gray-900"
+                                    className="text-lg font-medium leading-6 text-gray-900 mb-4"
+                                >
+                                    Number of evaluations
+                                </Dialog.Title>
+                                <div className="mt-2">
+                                    <CustomInput
+                                        title=""
+                                        type="number"
+                                        value={numEvaluations}
+                                        onChange={e =>
+                                            setNumEvaluations(e.target.value)
+                                        }
+                                    />
+                                </div>
+                                <Dialog.Title
+                                    as="h3"
+                                    className="text-lg font-medium leading-6 text-gray-900 mb-4 mt-6"
                                 >
                                     Assign assessors
                                 </Dialog.Title>
@@ -169,9 +208,7 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
                                         ))}
                                     </ul>
                                     <SelectCollaborators
-                                        onSelect={selected =>
-                                            setSelected(selected)
-                                        }
+                                        onSelect={handleSelectCollaborators}
                                         selected={selected}
                                     />
                                 </div>

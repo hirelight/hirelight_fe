@@ -13,6 +13,7 @@ export interface RegisterEmployerDto {
     lastName: string;
     email: string;
     password: string;
+    otp: string;
 }
 
 export interface LoginCandidateDto extends LoginEmployerDto {}

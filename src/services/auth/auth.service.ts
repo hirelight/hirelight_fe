@@ -76,6 +76,22 @@ const registerEmployee = async (
     }
 };
 
+const sendVerifyCode = async (email: string): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.post<IResponse<any>>(
+            `/identity/verify-email`,
+            {
+                email,
+            }
+        );
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const getAccessToken = async (loginId: string) => {
     const res = await interceptor.get<IResponse<any>>(
         `/identity/access-tokens?loginId=${loginId}`
@@ -120,6 +136,7 @@ const authServices = {
     getOrgAccessToken,
     loginCandidate,
     registerCandidate,
+    sendVerifyCode,
 };
 
 export default authServices;

@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { ICandidateAssessmentDetailDto } from "@/services";
 import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
 import { ButtonOutline } from "@/components";
+import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 
 type NotificationCardProps = {
     data: ICandidateAssessmentDetailDto;
@@ -85,7 +86,11 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ data }) => {
 
     return (
         <div className="p-6 flex items-center gap-4 bg-white rounded-md drop-shadow-lg">
-            <Image alt="Company logo" src={logo} width={40} height={40} />
+            <div className="h-10 w-10">
+                {getIconBaseOnAssessmentType(
+                    data.assessment.assessmentTypeName
+                )}
+            </div>
             <div className="flex-1">
                 <h2 className="text-lg font-semibold mb-1">
                     {data.assessment.name}

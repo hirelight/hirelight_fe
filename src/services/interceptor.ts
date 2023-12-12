@@ -27,7 +27,7 @@ interceptor.interceptors.response.use(
         return res;
     },
     (error: AxiosError) => {
-        console.log("Interceptor err", error.toJSON());
+        console.log("Interceptor err", error);
         if (error.response?.status === 401) {
             localStorage.removeItem("hirelight_access_token");
         }

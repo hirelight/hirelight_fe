@@ -13,6 +13,8 @@ import jobServices from "@/services/job/job.service";
 import { updateJob } from "@/redux/thunks/job.thunk";
 import { SpinLoading } from "@/icons";
 import { JobPostStatus } from "@/interfaces/job-post.interface";
+import { Button } from "@/components";
+import { Roles } from "@/services";
 
 import styles from "./JobHeader.module.scss";
 
@@ -31,7 +33,7 @@ const JobHeader = ({}: IJobHeader) => {
     const [isLoading, setIsLoading] = useState(false);
     const queryClient = useQueryClient();
     const requestPublishMutation = useMutation({
-        mutationKey: [`publish-job-${job.id}`],
+        mutationKey: [`request-publish`, jobId],
         mutationFn: (id: string) => jobServices.requestPublishJob(id),
         onSuccess: async res => {
             await queryClient.invalidateQueries({
@@ -52,6 +54,30 @@ const JobHeader = ({}: IJobHeader) => {
                 autoClose: 1000,
             });
 
+            setIsLoading(false);
+        },
+    });
+    const publishJobMutations = useMutation({
+        mutationKey: [`publish-job`, jobId],
+        mutationFn: (id: string) => jobServices.publishJobAsync(id),
+        onSuccess: async res => {
+            await queryClient.invalidateQueries({
+                queryKey: ["jobs", authUser!!.organizationId],
+            });
+            await queryClient.invalidateQueries({
+                queryKey: ["jobs", jobId],
+            });
+            toast.success(res.message, {
+                position: "bottom-right",
+                autoClose: 1000,
+            });
+        },
+        onError: error => {
+            console.error(error);
+            toast.error("Publish failure", {
+                position: "bottom-right",
+                autoClose: 1000,
+            });
             setIsLoading(false);
         },
     });
@@ -115,6 +141,10 @@ const JobHeader = ({}: IJobHeader) => {
     const handleRequestPublish = (id: string) => {
         requestPublishMutation.mutate(id);
     };
+    publishJobMutations;
+    const handlePublish = (id: string) => {
+        publishJobMutations.mutate(id);
+    };
 
     return (
         <div
@@ -144,9 +174,8 @@ const JobHeader = ({}: IJobHeader) => {
                             authUser &&
                             authUser.userId === job.creatorId &&
                             job.status === "DRAFT" && (
-                                <button
+                                <Button
                                     type="button"
-                                    className="text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 disabled:cursor-not-allowed disabled:opacity-80"
                                     onClick={handleRequestPublish.bind(
                                         null,
                                         job.id
@@ -160,7 +189,25 @@ const JobHeader = ({}: IJobHeader) => {
                                         <SpinLoading className="mr-2" />
                                     )}
                                     Request publish
-                                </button>
+                                </Button>
+                            )}
+
+                        {authUser &&
+                            authUser.role === Roles.ORGANIZATION_ADMIN &&
+                            job.status === JobPostStatus.PENDING_APPROVAL && (
+                                <Button
+                                    type="button"
+                                    onClick={handlePublish.bind(null, job.id)}
+                                    disabled={
+                                        publishJobMutations.isPending ||
+                                        jobLoading
+                                    }
+                                >
+                                    {publishJobMutations.isPending && (
+                                        <SpinLoading className="mr-2" />
+                                    )}
+                                    Publish
+                                </Button>
                             )}
                     </div>
                 </div>

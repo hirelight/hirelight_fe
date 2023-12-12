@@ -4,25 +4,13 @@ export interface IActivityLogDto {
     assessmentId: string;
     activityCategoryId: string;
     activityCategoryName: string;
-    collaboratorId: 0;
-    collaborator: {
+    collaboratorId: string;
+    collaboratorDto: {
         id: string;
-        employerDto: {
-            id: string;
-            email: string;
-            firstName: string;
-            lastName: string;
-            avatarUrl: string;
-            status: string;
-        };
-        jobPostId: 0;
-        permissions: [
-            {
-                permissionId: string;
-                assessmentId: string;
-                permissionName: string;
-            },
-        ];
+        email: string;
+        firstName: string | null;
+        lastName: string | null;
+        avatarUrl: string | null;
         status: string;
     };
     title: string;

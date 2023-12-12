@@ -17,7 +17,7 @@ import { IApplicantAssessmentDetailDto, IEvaluationDto } from "@/services";
 import { useAppSelector } from "@/redux/reduxHooks";
 import employerOrgServices from "@/services/employer-organization/employer-organization.service";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
-import { DeleteModal, Portal } from "@/components";
+import { DeleteModal, Portal, UserAvatar } from "@/components";
 import evaluationServices from "@/services/evaluation/evaluation.service";
 import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
 
@@ -124,14 +124,17 @@ const EvaluationCard: React.FC<EvaluationCardProps> = ({ data }) => {
                     className="w-8 h-8 rounded-full object-cover"
                 /> */}
                 <div className="w-10 h-10 rounded-full text-neutral-600">
-                    <UserCircleIcon />
+                    <UserAvatar avatarUrl={data.collaboratorAvatarUrl} />
                 </div>
                 <div className="flex-1">
                     <h3 className="font-semibold mb-2 flex items-center gap-2">
-                        collaborator name <span>{getRating(data.rating)}</span>
+                        {`${data.collaboratorFirstName ?? ""} ${
+                            data.collaboratorLastName ?? ""
+                        }`}{" "}
+                        <span>{getRating(data.rating)}</span>
                     </h3>
                     <p className="text-gray-500">
-                        {moment(data.updatedTime).locale(lang).fromNow()}
+                        {moment.utc(data.updatedTime).locale(lang).fromNow()}
                     </p>
                 </div>
 

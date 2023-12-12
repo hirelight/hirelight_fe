@@ -119,6 +119,29 @@ const getListThirdParty = async (
     }
 };
 
+const configNumOfEvaluations = async (
+    id: string,
+    numOfAssessor: number
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.put(
+            endpoints.ASSESSMENTS + `/${id}/evaluators`,
+            undefined,
+            {
+                params: {
+                    numOfAssessor,
+                },
+            }
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const assessmentsServices = {
     getById,
     editAsync,
@@ -126,6 +149,7 @@ const assessmentsServices = {
     getListThirdParty,
     deleteById,
     addAssessment,
+    configNumOfEvaluations,
 };
 
 export default assessmentsServices;

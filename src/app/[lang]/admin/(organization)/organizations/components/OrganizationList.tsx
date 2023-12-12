@@ -96,7 +96,7 @@ const OrganizationList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {orgRes?.data.map((org, orgIndex) => (
+                    {orgRes?.data?.map((org, orgIndex) => (
                         <tr
                             key={org.id}
                             className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"

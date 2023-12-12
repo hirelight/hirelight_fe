@@ -31,6 +31,24 @@ const getCollaboratorList = async (
     }
 };
 
+const getAssignedCollaboratorList = async (
+    jobPostId: string,
+    assessmentId: string
+): Promise<IResponse<ICollaboratorDto[]>> => {
+    try {
+        const res = await interceptor.get<IResponse<ICollaboratorDto[]>>(
+            baseEndpoint +
+                `/${jobPostId}/collaborators/evaluators/${assessmentId}`
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const getCollaboratorById = async (
     jobPostId: string,
     memberId: string
@@ -193,6 +211,7 @@ const collaboratorsServices = {
     getCollabInvitations,
     assignAssessor,
     unAssignAssessor,
+    getAssignedCollaboratorList,
 };
 
 export default collaboratorsServices;

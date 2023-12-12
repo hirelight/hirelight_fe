@@ -146,9 +146,13 @@ const CreateAssessment = () => {
                 assessmentQuestionAnswerSetContent:
                     JSON.stringify(pickedQuestions),
             });
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
                 queryKey: [`assessmentFlow`, flowId],
             });
+            await queryClient.invalidateQueries({
+                queryKey: ["assessment", assessmentId],
+            });
+
             toast.success(res.message);
             setIsLoading(false);
         } catch (error: any) {

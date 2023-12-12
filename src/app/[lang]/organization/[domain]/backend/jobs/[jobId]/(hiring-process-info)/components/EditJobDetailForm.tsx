@@ -100,10 +100,10 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
     const handleSubmitJobDetail = async (e: FormEvent) => {
         e.preventDefault();
 
-        if (job.status === JobPostStatus.ACTIVE)
-            return toast.error(
-                "Job post is publishing! Please unpublish before perform any changes!"
-            );
+        // if (job.status === JobPostStatus.ACTIVE)
+        //     return toast.error(
+        //         "Job post is publishing! Please unpublish before perform any changes!"
+        //     );
 
         if (isInvalidInput()) {
             return;

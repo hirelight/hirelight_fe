@@ -15,22 +15,27 @@ const NotificationList = () => {
     const { data: myAssessments } = useQuery({
         queryKey: [`my-assessments`, applicantId],
         queryFn: applicantAssessmentDetailServices.getMyInvitedAssessments,
+        select(data) {
+            return {
+                ...data,
+                data: data.data.filter(
+                    item =>
+                        (!["MOVED", "IDLE"].includes(item.status) ||
+                            (item.status === "MOVED" && item.result)) &&
+                        item.applicantProfile.jobPostId === applicantId &&
+                        item.result
+                ),
+            };
+        },
     });
 
     return (
         <ul className="space-y-4">
-            {myAssessments?.data
-                ?.filter(
-                    item =>
-                        (!["MOVED", "IDLE"].includes(item.status) ||
-                            (item.status === "MOVED" && item.result)) &&
-                        item.applicantProfile.jobPostId === applicantId
-                )
-                .map(item => (
-                    <li key={item.id}>
-                        <NotificationCard data={item} />
-                    </li>
-                ))}
+            {myAssessments?.data.map(item => (
+                <li key={item.id}>
+                    <NotificationCard data={item} />
+                </li>
+            ))}
         </ul>
     );
 };

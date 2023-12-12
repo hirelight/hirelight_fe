@@ -37,17 +37,12 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const [showAddStage, setShowAddStage] = useState(false);
-    const [formState, setFormState] = useState<IEditAssessmentFlowDto>({
-        ...data,
-        startTime: moment.utc(data.startTime).toDate(),
-        endTime: moment.utc(data.endTime).toDate(),
-    });
+    const [formState, setFormState] = useState<IEditAssessmentFlowDto>(data);
     const [formErr, setFormErr] = useState({
         nameErr: "",
         flowTimelineErr: "",
         flowErr: "",
     });
-
     const inValidInput = (): boolean => {
         const errors = formErr;
         const { name, startTime, endTime } = formState;
@@ -91,6 +86,8 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
             const res = await assessmentFlowsServices.editAsync({
                 ...formState,
                 assessments: formState.assessments.slice(1, -1),
+                startTime: moment.parseZone(formState.startTime).utc().format(),
+                endTime: moment.parseZone(formState.endTime).utc().format(),
             });
 
             await queryClient.invalidateQueries({
@@ -172,11 +169,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
         }
     };
     useEffect(() => {
-        setFormState({
-            ...data,
-            startTime: moment.utc(data.startTime).toDate(),
-            endTime: moment.utc(data.endTime).toDate(),
-        });
+        setFormState(data);
     }, [data]);
 
     return (
@@ -202,17 +195,21 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                             Start time
                         </h3>
                         <DatePicker
-                            value={new Date(formState.startTime)}
+                            value={formState.startTime as Date}
                             minDate={moment().toDate()}
-                            onChange={date =>
+                            onChange={date => {
                                 setFormState(prev => ({
                                     ...prev,
                                     startTime: date.toString(),
                                     endTime: moment(date).isAfter(prev.endTime)
                                         ? moment(date).add(7, "days").toDate()
                                         : prev.endTime,
-                                }))
-                            }
+                                }));
+                                setFormErr({
+                                    ...formErr,
+                                    flowTimelineErr: "",
+                                });
+                            }}
                         />
                     </div>
                     <div>
@@ -220,15 +217,19 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                             End time
                         </h3>
                         <DatePicker
-                            value={new Date(formState.endTime)}
+                            value={formState.endTime as Date}
                             minDate={formState.startTime as Date}
                             maxDate={moment().add(1, "years").toDate()}
-                            onChange={date =>
+                            onChange={date => {
                                 setFormState(prev => ({
                                     ...prev,
                                     endTime: date.toString(),
-                                }))
-                            }
+                                }));
+                                setFormErr({
+                                    ...formErr,
+                                    flowTimelineErr: "",
+                                });
+                            }}
                         />
                     </div>
                     {formErr.flowTimelineErr && (

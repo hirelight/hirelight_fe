@@ -119,8 +119,11 @@ const IntegrationForm = () => {
                 content: JSON.stringify(selectedAssessment),
                 query: JSON.stringify(formState.query),
             });
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
                 queryKey: [`assessmentFlow`, flowId],
+            });
+            await queryClient.invalidateQueries({
+                queryKey: ["assessment", assessmentId],
             });
             toast.success(res.message);
             setIsLoading(false);

@@ -11,7 +11,7 @@ type EditFlowPageProps = {};
 const EditFlowPage: React.FC<EditFlowPageProps> = ({ params }: any) => {
     const { flowId } = params;
     const { data: flowRes } = useAppSelector(state => state.assessmentFlow);
-    console.log("🚀 ~ file: page.tsx:14 ~ flowRes:", flowRes);
+
     return (
         <React.Fragment>
             <div className="flex justify-between items-center">

@@ -3,6 +3,7 @@
 import React, { useEffect } from "react";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
+import moment from "moment";
 
 import LoadingIndicator from "@/components/LoadingIndicator";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
@@ -22,17 +23,6 @@ const WrapperPipelineDetail = ({ children }: { children: React.ReactNode }) => {
     const { data: flowRes, isLoading } = useQuery({
         queryKey: [`assessmentFlow`, flowId],
         queryFn: () => assessmentFlowsServices.getByIdAsync(flowId as string),
-        select(data) {
-            return {
-                ...data,
-                data: {
-                    ...data.data,
-                    assessments: data.data.assessments.filter(
-                        item => item.status !== "TERMINATED"
-                    ),
-                },
-            };
-        },
     });
 
     useEffect(() => {
@@ -40,22 +30,21 @@ const WrapperPipelineDetail = ({ children }: { children: React.ReactNode }) => {
             dispatch(
                 setAssessmentFlow({
                     ...flowRes.data,
-                    startTime: new Date(flowRes.data.startTime),
-                    endTime: new Date(flowRes.data.endTime),
+                    startTime: moment.utc(flowRes.data.startTime).toDate(),
+                    endTime: moment.utc(flowRes.data.endTime).toDate(),
                 })
             );
             if (
                 path.split("/")[path.split("/").length - 2] ===
                 "config-pipeline"
             ) {
-                router.push(
-                    `${flowId}/config-assessment/${
-                        flowRes.data.assessments.find(
-                            item =>
-                                !defaultStage.includes(item.assessmentTypeName)
-                        )!!.id
-                    }`
+                const getAssessment = flowRes.data.assessments.find(
+                    item => !defaultStage.includes(item.assessmentTypeName)
                 );
+                if (getAssessment)
+                    router.push(
+                        `${flowId}/config-assessment/${getAssessment.id}`
+                    );
             }
         }
     }, [flowRes, dispatch, assessmentId, router, flowId, path]);

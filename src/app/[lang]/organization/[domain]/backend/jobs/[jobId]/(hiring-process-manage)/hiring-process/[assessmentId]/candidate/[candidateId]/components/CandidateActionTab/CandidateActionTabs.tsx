@@ -81,10 +81,13 @@ const CandidateActionTabs = () => {
         ],
         mutationFn: (id: string) =>
             applicantAssessmentDetailServices.disqualifyCandidate(id),
-        onSuccess: async res => {
+        onSuccess: async () => {
             await queryClient.invalidateQueries({
-                queryKey: [`job-profiles`, jobId, assessmentId],
+                queryKey: ["job-profiles", jobId],
             });
+            router.push(
+                `/${lang}/backend/jobs/${jobId}/hiring-process/${assessmentId}`
+            );
         },
         onError: err => {
             toast.error(err.message);
@@ -146,15 +149,19 @@ const CandidateActionTabs = () => {
     };
 
     const handleDisqualifyCandidate = async () => {
-        await toast.promise(
-            disqualifyMutate.mutateAsync(
-                applicantAssessmentDetail.applicantProfileId
-            ),
-            {
-                pending: "Disqualifying candidate",
-                success: "Disqualify candidate success!",
-            }
-        );
+        try {
+            await toast.promise(
+                disqualifyMutate.mutateAsync(
+                    applicantAssessmentDetail.applicantProfileId
+                ),
+                {
+                    pending: "Disqualifying candidate",
+                    success: "Disqualify candidate success!",
+                }
+            );
+        } catch (error) {
+            handleError(error);
+        }
     };
 
     const handleRestoreCandidate = () => {};

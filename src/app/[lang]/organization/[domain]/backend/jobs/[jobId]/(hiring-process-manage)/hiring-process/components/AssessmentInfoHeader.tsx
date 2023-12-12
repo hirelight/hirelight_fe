@@ -17,12 +17,13 @@ import dynamic from "next/dynamic";
 import moment from "moment";
 import { useQuery } from "@tanstack/react-query";
 
-import { ButtonOutline, Selection } from "@/components";
+import { AvatarGroup, ButtonOutline, Selection } from "@/components";
 import { useAppSelector } from "@/redux/reduxHooks";
 import currencies from "@/utils/shared/currencies.json";
 import { CurrencyKey } from "@/interfaces/job-post.interface";
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
 import { Calendar } from "@/icons";
+import collaboratorsServices from "@/services/collaborators/collaborators.service";
 
 import styles from "./AssessmentInfoHeader.module.scss";
 import AssignAssessorModal from "./AssignAssessorModal";
@@ -51,13 +52,24 @@ const AssessmentInfoHeader = () => {
                 jobId as string
             ),
     });
+    const { data: assignedAssessors } = useQuery({
+        queryKey: ["assigned-assessors", assessmentId],
+        queryFn: () =>
+            collaboratorsServices.getAssignedCollaboratorList(
+                jobId as string,
+                assessmentId as string
+            ),
+    });
 
     return (
         <div className="bg-white shadow-md mt-8 mb-6">
-            <AssignAssessorModal
-                isOpen={assignModal}
-                closeModal={() => setAssignModal(false)}
-            />
+            {assignedAssessors && (
+                <AssignAssessorModal
+                    isOpen={assignModal}
+                    assessors={assignedAssessors.data}
+                    closeModal={() => setAssignModal(false)}
+                />
+            )}
             <div className="max-w-screen-xl mx-auto py-6 px-4 xl:px-6">
                 <div className="flex items-center justify-between mb-4">
                     <div>
@@ -113,7 +125,7 @@ const AssessmentInfoHeader = () => {
                         </ButtonOutline>
                     </div>
                 </div>
-                <div className="mb-8">
+                <div className="mb-8 w-full flex items-center">
                     <span className="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-4 py-1 rounded dark:bg-blue-900 dark:text-blue-300">
                         Num of candidates:{" "}
                         <span>{profileList?.data.length ?? 0}</span>
@@ -159,6 +171,15 @@ const AssessmentInfoHeader = () => {
                             </span>
                         </div>
                     </div>
+                    {assignedAssessors && (
+                        <div className="ml-auto inline-block">
+                            <AvatarGroup
+                                urls={assignedAssessors.data.map(
+                                    item => item.employerDto.avatarUrl
+                                )}
+                            />
+                        </div>
+                    )}
                 </div>
 
                 {assessmentFlow.id && (

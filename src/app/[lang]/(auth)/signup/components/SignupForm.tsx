@@ -1,15 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 
 import { GoogleIcon, LinkedInIcon, SpinLoading } from "@/icons";
 import authServices from "@/services/auth/auth.service";
 import { RegisterEmployerDto } from "@/services/auth/auth.interface";
-import { isInvalidForm } from "@/helpers";
+import { handleError, isInvalidForm } from "@/helpers";
+import { Button, ButtonOutline, CustomInput } from "@/components";
 
 import styles from "./SignupForm.module.scss";
 
@@ -18,6 +20,7 @@ const initialFormState = {
     password: "",
     firstName: "",
     lastName: "",
+    otp: "",
 };
 
 const initialFormErrState = {
@@ -25,6 +28,8 @@ const initialFormErrState = {
     passwordErr: "",
     firstNameErr: "",
     lastNameErr: "",
+    confirmPasswordErr: "",
+    otpErr: "",
 };
 
 const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
@@ -41,17 +46,25 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
         React.useState(initialFormErrState);
     const [signupForm, setSignupForm] =
         React.useState<RegisterEmployerDto>(initialFormState);
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = React.useState(false);
+    const [sendLoading, setSendLoading] = React.useState(false);
+    const [showVerify, setShowVerify] = React.useState(false);
 
     const validInputs = () => {
         const errors = { ...signupFormErr };
-        const { email, password } = signupForm;
+        const { email, password, firstName, lastName } = signupForm;
 
         if (!email) errors.emailErr = _t.signup_form.error.empty_email;
+        if (!firstName) errors.firstNameErr = "First name is required!";
+        if (!lastName) errors.lastNameErr = "Last name is required!";
 
         if (!regex.test(password))
             errors.passwordErr = `Password must have at least 8 characters!
             Password must have at least one uppercase, one lowercase and one number!`;
+
+        if (confirmPassword !== password)
+            errors.confirmPasswordErr = "Confirm password miss match!";
         if (isInvalidForm(errors)) {
             setSignupFormErr(errors);
             return false;
@@ -59,12 +72,33 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
         return true;
     };
 
+    const handleSendVerifyCode = async () => {
+        if (!signupForm.email)
+            return setSignupFormErr({
+                ...signupFormErr,
+                emailErr: "Email is required for getting verify code",
+            });
+
+        setSendLoading(true);
+        try {
+            const res = await authServices.sendVerifyCode(signupForm.email);
+            toast.success(res.message);
+            setShowVerify(true);
+        } catch (error) {
+            handleError(error);
+        }
+        setSendLoading(false);
+    };
+
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
-
         if (!validInputs())
-            return toast.error(`Invalid input!
-        Please check red places`);
+            return toast.error(
+                <div>
+                    <p>Invalid input!</p>
+                    <p>Please check red places!</p>
+                </div>
+            );
 
         setLoading(true);
         try {
@@ -74,6 +108,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
             router.push(`login`);
         } catch (error) {
             setLoading(false);
+            handleError(error);
         }
     };
 
@@ -83,21 +118,13 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                 <h1 className={styles.title}>
                     {_t.signup_form.title.highlight}
                 </h1>
-                <div className="mb-2 text-left">
-                    <label
-                        htmlFor="first-name"
-                        className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
-                    >
-                        {_t.signup_form.label.first_name}
-                    </label>
-                    <input
-                        type="type"
+                <div className="mb-2 text-left grid grid-cols-2 gap-4">
+                    <CustomInput
                         id="first-name"
+                        title="First name"
                         autoComplete="given-name"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="John"
                         value={signupForm.firstName}
-                        required
                         onChange={e => {
                             setSignupForm({
                                 ...signupForm,
@@ -108,22 +135,14 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                                 firstNameErr: "",
                             });
                         }}
-                    />
-                </div>
-                <div className="mb-2 text-left">
-                    <label
-                        htmlFor="last-name"
-                        className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
-                    >
-                        {_t.signup_form.label.last_name}
-                    </label>
-                    <input
-                        type="text"
-                        id="last-name"
-                        autoComplete="family-name"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Doe"
                         required
+                        errorText={signupFormErr.firstNameErr}
+                    />
+                    <CustomInput
+                        id="last-name"
+                        title="Last name"
+                        autoComplete="family-name"
+                        placeholder="Doe"
                         value={signupForm.lastName}
                         onChange={e => {
                             setSignupForm({
@@ -135,20 +154,16 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                                 lastNameErr: "",
                             });
                         }}
+                        required
+                        errorText={signupFormErr.lastNameErr}
                     />
                 </div>
                 <div className="mb-2 text-left">
-                    <label
-                        htmlFor="email"
-                        className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
-                    >
-                        {_t.signup_form.label.email}
-                    </label>
-                    <input
-                        type="email"
+                    <CustomInput
                         id="email"
+                        title="Email"
+                        type="email"
                         autoComplete="email"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         placeholder="example@hirelight.xyz"
                         value={signupForm.email}
                         onChange={e => {
@@ -161,23 +176,19 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                                 emailErr: "",
                             });
                         }}
+                        required
+                        errorText={signupFormErr.emailErr}
                     />
                 </div>
-                <div className="text-left">
-                    <label
-                        htmlFor="password"
-                        className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
-                    >
-                        {_t.signup_form.label.password}
-                    </label>
-                    <input
-                        type="password"
+
+                <div className="text-left mb-2">
+                    <CustomInput
                         id="password"
-                        placeholder="**********"
+                        title="Password"
+                        type="password"
                         autoComplete="new-password"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="**********"
                         value={signupForm.password}
-                        required
                         onChange={e => {
                             setSignupForm({
                                 ...signupForm,
@@ -188,26 +199,68 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                                 passwordErr: "",
                             });
                         }}
+                        required
+                        errorText={signupFormErr.passwordErr}
                     />
                 </div>
-                {signupFormErr.emailErr && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        className="w-full border-2 border-red-500 bg-red-50 p-6 rounded-md text-center text-red-700 text-sm font-medium"
-                    >
-                        <p>{_t.common.error.noti}</p>
-                        <p>{signupFormErr.emailErr}</p>
-                    </motion.div>
+                <div className="text-left mb-2">
+                    <CustomInput
+                        id="confirm-password"
+                        title="Confirm password"
+                        type="password"
+                        placeholder="**********"
+                        value={confirmPassword}
+                        onChange={e => {
+                            setConfirmPassword(e.target.value);
+                            setSignupFormErr({
+                                ...signupFormErr,
+                                confirmPasswordErr: "",
+                            });
+                        }}
+                        required
+                        errorText={signupFormErr.confirmPasswordErr}
+                    />
+                </div>
+
+                {showVerify && (
+                    <div className="text-left">
+                        <CustomInput
+                            id="verify-code"
+                            title="Verify code"
+                            type="text"
+                            value={signupForm.otp}
+                            required
+                            onChange={e => {
+                                setSignupForm({
+                                    ...signupForm,
+                                    otp: e.target.value,
+                                });
+                                setSignupFormErr({
+                                    ...signupFormErr,
+                                    otpErr: "",
+                                });
+                            }}
+                            errorText={signupFormErr.otpErr}
+                        />
+                    </div>
                 )}
-                <button
-                    type="submit"
-                    className="flex items-center gap-1 justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-full px-5 py-2.5 mt-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-80 disabled:cursor-not-allowed"
-                    disabled={loading}
+                {showVerify && (
+                    <Button
+                        type="submit"
+                        disabled={loading || sendLoading}
+                        isLoading={loading}
+                    >
+                        {_t.signup_form.btn.signup}
+                    </Button>
+                )}
+                <ButtonOutline
+                    type="button"
+                    disabled={sendLoading || loading}
+                    isLoading={sendLoading}
+                    onClick={handleSendVerifyCode}
                 >
-                    {loading && <SpinLoading />}
-                    {_t.signup_form.btn.signup}
-                </button>
+                    {showVerify ? "Resend code" : "Get verify code"}
+                </ButtonOutline>
 
                 <div className="flex items-center justify-between gap-2">
                     <hr className="flex-1 h-[1.5px] bg-gray-300" />

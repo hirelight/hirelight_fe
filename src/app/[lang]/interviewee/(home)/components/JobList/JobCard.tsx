@@ -32,7 +32,7 @@ const JobCard: React.FC<JobCardProps> = ({ data }) => {
                     src={data.organization.logoUrl ?? logo}
                     width={80}
                     height={80}
-                    className="w-full h-auto object-contain"
+                    className="w-full aspect-square object-cover"
                 />
             </div>
 

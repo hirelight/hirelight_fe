@@ -15,10 +15,10 @@ const PipelineHeader = () => {
     const job = useAppSelector(state => state.job.data);
 
     const handleNavigate = () => {
-        if (job.status === JobPostStatus.ACTIVE)
-            return toast.error(
-                "Job is publish! Please unpublish job before edit"
-            );
+        // if (job.status === JobPostStatus.ACTIVE)
+        //     return toast.error(
+        //         "Job is publish! Please unpublish job before edit"
+        //     );
         router.push(
             `/${lang}/backend/jobs/${jobId}/pipeline/config-pipeline/${assessmentFlow.id}/edit`
         );
@@ -34,7 +34,7 @@ const PipelineHeader = () => {
                 className="text-sm font-medium hover:underline"
                 onClick={handleNavigate}
             >
-                Edit pipeline
+                Edit flow
             </button>
         </div>
     );

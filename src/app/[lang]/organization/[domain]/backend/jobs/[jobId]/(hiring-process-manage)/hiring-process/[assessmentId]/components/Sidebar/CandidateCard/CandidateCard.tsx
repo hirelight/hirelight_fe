@@ -52,7 +52,9 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
             }
         >
             <MatchSkillsModal
-                skills={profile.applicantProfile.keywordsMatch!!.split(",")}
+                skills={
+                    profile.applicantProfile.keywordsMatch?.split(",") ?? []
+                }
                 isOpen={showSkills}
                 closeModal={() => setShowSkills(false)}
             />

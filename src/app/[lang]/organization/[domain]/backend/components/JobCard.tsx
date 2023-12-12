@@ -51,15 +51,15 @@ const JobCard: React.FC<JobCardProps> = ({
     const publishJobMutations = useMutation({
         mutationKey: [`publish-job`, id],
         mutationFn: (id: string) => jobServices.publishJobAsync(id),
-        onSuccess: res => {
+        onSuccess: async res => {
+            await queryClient.invalidateQueries({
+                queryKey: ["jobs", authUser!!.organizationId],
+            });
             toast.success(res.message, {
                 position: "bottom-right",
                 autoClose: 1000,
             });
 
-            queryClient.invalidateQueries({
-                queryKey: ["jobs", authUser!!.organizationId],
-            });
             setIsLoading(false);
         },
         onError: error => {
@@ -80,12 +80,14 @@ const JobCard: React.FC<JobCardProps> = ({
         <div className="w-full p-6 bg-white shadow-md rounded-lg">
             <div className="w-full flex  items-center justify-between mb-6">
                 <div className="flex  flex-wrap sm:flex-nowrap items-start sm:items-center sm:flex-row gap-3">
-                    <h3
-                        // href={`backend/jobs/${id}/hiring-process/applied`}
-                        className="text-blue_primary_700 text-xl font-medium whitespace-nowrap"
+                    <Link
+                        href={`backend/jobs/${id}/hiring-process/${
+                            assessmentFlow?.assessments[0].id ?? ""
+                        }`}
+                        className="text-blue_primary_700 text-xl font-medium whitespace-nowrap hover:underline"
                     >
                         {title}
-                    </h3>
+                    </Link>
                     <span className="text-sm text-neutral-500 whitespace-nowrap">
                         {area}
                     </span>

@@ -9,6 +9,10 @@ import {
 export interface IEvaluationDto {
     id: string;
     collaboratorId: string;
+    collaboratorEmail: string;
+    collaboratorFirstName: string;
+    collaboratorLastName: string;
+    collaboratorAvatarUrl: string;
     applicantAssessmentDetailId: string;
     applicantAssessmentDetail: IApplicantAssessmentDetailDto;
     evaluation: string;

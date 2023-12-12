@@ -22,7 +22,7 @@ const AuthGroupWrapper = ({ children }: { children: React.ReactNode }) => {
         }
     }, [router, token, lang]);
 
-    return token ? <div></div> : <>{children}</>;
+    return <>{children}</>;
 };
 
 export default AuthGroupWrapper;

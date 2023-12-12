@@ -219,10 +219,10 @@ const MCQResult = ({
                                 <li
                                     key={index}
                                     className={`flex items-center font-medium gap-2  ${
-                                        ans.isChosen
-                                            ? ans.isChosen && ans.correct
-                                                ? "text-green-600"
-                                                : "text-red-600"
+                                        ans.isChosen && ans.correct
+                                            ? "text-green-600"
+                                            : ans.correct
+                                            ? "text-red-600"
                                             : ""
                                     }`}
                                 >

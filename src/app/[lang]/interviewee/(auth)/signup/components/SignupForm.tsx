@@ -8,19 +8,16 @@ import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { RegisterCandidateDto } from "@/services/auth/auth.interface";
 import authServices from "@/services/auth/auth.service";
 import { SpinLoading } from "@/icons";
-import { Button } from "@/components";
+import { Button, ButtonOutline, CustomInput } from "@/components";
 import { handleError, isInvalidForm } from "@/helpers";
 
 const initialErr = {
     firstName: "",
     lastName: "",
-    company: "",
-    phoneNumber: "",
-    site: "",
-    visitors: 0,
     email: "",
     password: "",
     confirmPassword: "",
+    otp: "",
 };
 
 const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
@@ -38,12 +35,13 @@ const SignupForm = () => {
         email: "",
         password: "",
         confirmPassword: "",
+        otp: "",
     });
 
     const [formError, setFormError] = useState(initialErr);
     const [loading, setLoading] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirm, setShowConfirm] = useState(false);
+    const [sendLoading, setSendLoading] = React.useState(false);
+    const [showVerify, setShowVerify] = React.useState(false);
 
     const handleChangeForm = (e: any, key: string) => {
         setFormState({
@@ -77,17 +75,37 @@ const SignupForm = () => {
         return true;
     };
 
+    const handleSendVerifyCode = async () => {
+        if (!formState.email)
+            return setFormError({
+                ...formError,
+                email: "Email is required for getting verify code",
+            });
+        setSendLoading(true);
+        try {
+            const res = await authServices.sendVerifyCode(formState.email);
+            toast.success(res.message);
+            setShowVerify(true);
+        } catch (error) {
+            handleError(error);
+        }
+        setSendLoading(false);
+    };
+
     const handleSubmitSignup = async (e: FormEvent) => {
         e.preventDefault();
         if (!validInputs())
-            return toast.error(`Invalid input!
-        Please check red places`);
+            return toast.error(
+                <div>
+                    <p>Invalid input!</p>
+                    <p>Please check red places!</p>
+                </div>
+            );
         setLoading(true);
         try {
             const res = await authServices.registerCandidate(formState);
 
             toast.success(res.message);
-            setLoading(false);
             router.push("login");
         } catch (error) {
             setLoading(false);
@@ -99,158 +117,110 @@ const SignupForm = () => {
         <form onSubmit={handleSubmitSignup}>
             <div className="grid gap-4 mb-4 md:grid-cols-2">
                 <div>
-                    <label
-                        htmlFor="first_name"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                        First name
-                        <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="first_name"
+                    <CustomInput
+                        id="first-name"
+                        title="First name"
+                        autoComplete="given-name"
+                        placeholder="John"
                         value={formState.firstName}
                         onChange={e => handleChangeForm(e, "firstName")}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="John"
-                        autoComplete="first-name"
                         required
+                        errorText={formError.firstName}
                     />
-                    {formError.firstName && (
-                        <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                            <span className="font-medium">Oh, snapp!</span>{" "}
-                            {formError.firstName}.
-                        </p>
-                    )}
                 </div>
                 <div>
-                    <label
-                        htmlFor="last_name"
-                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >
-                        Last name
-                        <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        id="last_name"
+                    <CustomInput
+                        id="last-name"
+                        title="Last name"
+                        autoComplete="family-name"
+                        placeholder="Doe"
                         value={formState.lastName}
                         onChange={e => handleChangeForm(e, "lastName")}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Doe"
-                        autoComplete="last-name"
                         required
+                        errorText={formError.lastName}
                     />
-                    {formError.lastName && (
-                        <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                            {formError.lastName}.
-                        </p>
-                    )}
                 </div>
             </div>
             <div className="mb-4">
-                <label
-                    htmlFor="email"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                    Email address
-                    <span className="text-red-500">*</span>
-                </label>
-                <input
-                    type="email"
+                <CustomInput
                     id="email"
+                    title="Email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="example@hirelight.xyz"
                     value={formState.email}
                     onChange={e => handleChangeForm(e, "email")}
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="john.doe@company.com"
-                    autoComplete="email"
                     required
+                    errorText={formError.email}
                 />
-                {formError.email && (
-                    <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                        {formError.email}.
-                    </p>
-                )}
             </div>
             <div className="mb-4">
-                <label
-                    htmlFor="password"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                    Password
-                    <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                    <input
-                        type={showPassword ? "text" : "password"}
-                        id="password"
-                        value={formState.password}
-                        onChange={e => handleChangeForm(e, "password")}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="•••••••••"
-                        minLength={8}
-                        maxLength={25}
-                        title="Password must between 8 and 25"
-                        autoComplete="new-password"
-                        required
-                    />
-                    <button
-                        type="button"
-                        className="w-5 h-5 absolute top-1/2 right-2 -translate-y-1/2"
-                        onClick={() => setShowPassword(!showPassword)}
-                    >
-                        {showPassword ? <EyeSlashIcon /> : <EyeIcon />}
-                    </button>
-                </div>
-                {formError.password && (
-                    <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                        {formError.password}.
-                    </p>
-                )}
+                <CustomInput
+                    id="password"
+                    title="Password"
+                    type="password"
+                    placeholder="**********"
+                    value={formState.password}
+                    onChange={e => handleChangeForm(e, "password")}
+                    required
+                    errorText={formError.password}
+                />
             </div>
             <div className="mb-4">
-                <label
-                    htmlFor="confirm_password"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                    Confirm password
-                    <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                    <input
-                        type={showConfirm ? "text" : "password"}
-                        id="confirm_password"
-                        value={formState.confirmPassword}
-                        onChange={e => handleChangeForm(e, "confirmPassword")}
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="•••••••••"
-                        minLength={8}
-                        maxLength={25}
-                        required
-                    />
-                    <button
-                        type="button"
-                        className="w-5 h-5 absolute top-1/2 right-2 -translate-y-1/2"
-                        onClick={() => setShowConfirm(!showConfirm)}
-                    >
-                        {showConfirm ? <EyeSlashIcon /> : <EyeIcon />}
-                    </button>
-                </div>
-                {formError.confirmPassword && (
-                    <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                        {formError.confirmPassword}.
-                    </p>
-                )}
+                <CustomInput
+                    id="confirm-password"
+                    title="Confirm password"
+                    type="password"
+                    placeholder="**********"
+                    value={formState.confirmPassword}
+                    onChange={e => handleChangeForm(e, "confirmPassword")}
+                    required
+                    errorText={formError.confirmPassword}
+                />
             </div>
 
-            <Button
-                type="submit"
+            {showVerify && (
+                <div className="text-left mb-6">
+                    <CustomInput
+                        id="verify-code"
+                        title="Verify code"
+                        type="text"
+                        value={formState.otp}
+                        required
+                        onChange={e => {
+                            setFormState({
+                                ...formState,
+                                otp: e.target.value,
+                            });
+                            setFormError({
+                                ...formError,
+                                otp: "",
+                            });
+                        }}
+                        errorText={formError.otp}
+                    />
+                </div>
+            )}
+
+            {showVerify && (
+                <Button
+                    type="submit"
+                    className="!w-full mb-4"
+                    disabled={loading || sendLoading}
+                    isLoading={loading}
+                >
+                    Submit
+                </Button>
+            )}
+            <ButtonOutline
+                type="button"
                 className="!w-full"
-                disabled={loading}
-                isLoading={loading}
+                disabled={sendLoading || loading}
+                isLoading={sendLoading}
+                onClick={handleSendVerifyCode}
             >
-                Submit
-            </Button>
+                {showVerify ? "Resend code" : "Get verify code"}
+            </ButtonOutline>
         </form>
     );
 };

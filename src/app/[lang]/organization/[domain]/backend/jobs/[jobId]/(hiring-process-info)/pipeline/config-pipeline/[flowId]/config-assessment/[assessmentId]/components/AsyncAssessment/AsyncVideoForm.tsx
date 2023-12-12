@@ -46,7 +46,7 @@ type AsyncVideoForm = Omit<IEditAsyncVideoInterviewDto, "content"> & {
 };
 
 const AsyncVideoForm = () => {
-    const { flowId } = useParams();
+    const { flowId, assessmentId } = useParams();
     const assessment = useAppSelector(state => state.assessment.data);
 
     const queryClient = useQueryClient();
@@ -67,16 +67,19 @@ const AsyncVideoForm = () => {
         descriptionErr: "",
     });
     const [formState, setFormState] = React.useState<AsyncVideoForm>({
-        id: "",
-        name: "",
-        description: "",
-        content: {
-            welcomeNote: "",
-        },
-        query: "",
-        duration: 0,
-        index: 0,
-        assessmentQuestionAnswerSetContent: "",
+        id: assessment.id,
+        name: assessment.name,
+        description: assessment.description ?? "",
+        content: assessment.content
+            ? JSON.parse(assessment.content)
+            : {
+                  welcomeNote: "",
+              },
+        query: assessment.query ?? "",
+        duration: assessment.duration ?? 0,
+        index: assessment.index,
+        assessmentQuestionAnswerSetContent:
+            assessment.assessmentQuestionAnswerSetContent ?? "",
     });
 
     const inValidInput = (): boolean => {
@@ -133,8 +136,11 @@ const AsyncVideoForm = () => {
                 duration: sumOfDuration,
             });
 
-            queryClient.invalidateQueries({
+            await queryClient.invalidateQueries({
                 queryKey: ["assessmentFlow", flowId],
+            });
+            await queryClient.invalidateQueries({
+                queryKey: ["assessment", assessmentId],
             });
             toast.success(res.message);
         } catch (error: any) {
@@ -143,31 +149,6 @@ const AsyncVideoForm = () => {
 
         setIsLoading(false);
     };
-
-    useEffect(() => {
-        if (assessment.id) {
-            setQuestions(
-                assessment.assessmentQuestionAnswerSetContent
-                    ? JSON.parse(assessment.assessmentQuestionAnswerSetContent)
-                    : []
-            );
-            setFormState({
-                id: assessment.id,
-                name: assessment.name,
-                description: assessment.description ?? "",
-                content: assessment.content
-                    ? JSON.parse(assessment.content)
-                    : {
-                          welcomeNote: "",
-                      },
-                query: assessment.query ?? "",
-                duration: assessment.duration ?? 0,
-                index: assessment.index,
-                assessmentQuestionAnswerSetContent:
-                    assessment.assessmentQuestionAnswerSetContent ?? "",
-            });
-        }
-    }, [assessment]);
 
     return (
         <React.Fragment>

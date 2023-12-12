@@ -31,8 +31,10 @@ import BadgeInput from "./BadgeInput";
 import UserAvatar from "./UserAvatar";
 import EducationSection from "./EducationSection";
 import ExperienceSection from "./ExperienceSection";
+import AvatarGroup from "./AvatarGroup";
 
 export {
+    AvatarGroup,
     Modal,
     Button,
     Pagination,

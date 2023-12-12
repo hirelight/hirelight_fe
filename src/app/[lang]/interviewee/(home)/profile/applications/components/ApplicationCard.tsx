@@ -18,7 +18,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ data }) => {
             <div className="hidden md:block rounded-full w-20 h-20 border border-slate-200 overflow-hidden">
                 <Image
                     alt="Company Logo"
-                    src={logo}
+                    src={data.jobPost.organization?.logoUrl ?? logo}
                     width={72}
                     height={72}
                     className="w-full h-auto object-contain"

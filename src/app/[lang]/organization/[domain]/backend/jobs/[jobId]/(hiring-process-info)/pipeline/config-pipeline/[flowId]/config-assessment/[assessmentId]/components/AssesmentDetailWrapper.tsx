@@ -2,6 +2,7 @@
 
 import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { fetchAssessmentById } from "@/redux/thunks/assessment.thunk";
@@ -18,7 +19,7 @@ const AssesmentDetailWrapper = ({
     const { loading, data } = useAppSelector(state => state.assessment);
 
     useEffect(() => {
-        if (assessmentId) dispatch(fetchAssessmentById(assessmentId as string));
+        dispatch(fetchAssessmentById(assessmentId as string));
     }, [dispatch, assessmentId]);
 
     if (loading || !data.id)

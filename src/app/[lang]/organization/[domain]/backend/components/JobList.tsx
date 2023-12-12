@@ -53,7 +53,9 @@ const JobList: React.FC<JobListProps> = ({ initialData }) => {
                         ?.filter(job =>
                             selectedStatus === JobPostStatus.INACTIVE
                                 ? job.status === selectedStatus &&
-                                  moment.utc(job.startTime).isAfter(moment())
+                                  moment
+                                      .utc(job.startTime)
+                                      .isSameOrAfter(moment(), "dates")
                                 : job.status === selectedStatus
                         )
                         .map(job => (

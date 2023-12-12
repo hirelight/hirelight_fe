@@ -61,7 +61,7 @@ const ReviewContent = () => {
         );
 
     return (
-        <div className="mt-4">
+        <div className="mt-4 space-y-6">
             {!curDetailEvaluate?.data.length ? (
                 <div className="flex justify-center items-center p-6">
                     <BookmarkSlashIcon className="w-16 h-16 text-neutral-700" />
@@ -152,71 +152,75 @@ const ReviewContent = () => {
                             Previous submissions
                         </h3>
                     )}
-                {querRes?.data
-                    .filter(
-                        item =>
-                            item.assessmentEvaluations.length > 0 &&
-                            item.id !== applicantAssessmentDetail.id
-                    )
-                    .map(item => (
-                        <section key={item.id} className="text-sm">
-                            <div className="pb-6 pt-4 border-b border-gray-300 flex gap-4">
-                                <h4 className="text-base font-semibold">
-                                    {item.assessment.name}
-                                </h4>
-
-                                <div>
-                                    {Array.from(
-                                        item.assessmentEvaluations
-                                            ?.reduce((prev, cur) => {
-                                                if (!prev.has(cur.rating)) {
-                                                    prev.set(cur.rating, {
-                                                        value: cur,
-                                                        count: 1,
-                                                    });
-                                                } else {
-                                                    prev.set(cur.rating, {
-                                                        value: cur,
-                                                        count:
-                                                            prev.get(cur.rating)
-                                                                .count + 1,
-                                                    });
-                                                }
-
-                                                return prev;
-                                            }, new Map())
-                                            .values()
-                                    ).map(item => (
-                                        <div
-                                            key={item.value.rating}
-                                            className="inline-flex gap-1 mr-3"
-                                        >
-                                            {getRating(
-                                                item.value.rating,
-                                                <span>{item.count}</span>
-                                            )}
-                                        </div>
-                                    ))}
+                <div className="space-y-4">
+                    {querRes?.data
+                        .filter(
+                            item =>
+                                item.assessmentEvaluations.length > 0 &&
+                                item.id !== applicantAssessmentDetail.id
+                        )
+                        .map(item => (
+                            <section key={item.id} className="text-sm ">
+                                <div className="pb-6 pt-4 border-b border-gray-300 flex gap-4">
+                                    <h4 className="text-base font-semibold">
+                                        {item.assessment.name}
+                                    </h4>
+                                    <div>
+                                        {Array.from(
+                                            item.assessmentEvaluations
+                                                ?.reduce((prev, cur) => {
+                                                    if (!prev.has(cur.rating)) {
+                                                        prev.set(cur.rating, {
+                                                            value: cur,
+                                                            count: 1,
+                                                        });
+                                                    } else {
+                                                        prev.set(cur.rating, {
+                                                            value: cur,
+                                                            count:
+                                                                prev.get(
+                                                                    cur.rating
+                                                                ).count + 1,
+                                                        });
+                                                    }
+                                                    return prev;
+                                                }, new Map())
+                                                .values()
+                                        ).map(item => (
+                                            <div
+                                                key={item.value.rating}
+                                                className="inline-flex gap-1 mr-3"
+                                            >
+                                                {getRating(
+                                                    item.value.rating,
+                                                    <span>{item.count}</span>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
-
-                            <ul>
-                                {item.assessmentEvaluations?.map(evaluation => (
-                                    <li
-                                        key={evaluation.id}
-                                        className="py-6 border-b border-gray-300"
-                                    >
-                                        <EvaluationCard data={evaluation} />
-                                    </li>
-                                ))}
-                            </ul>
-                        </section>
-                    ))}
+                                <ul>
+                                    {item.assessmentEvaluations?.map(
+                                        evaluation => (
+                                            <li
+                                                key={evaluation.id}
+                                                className="py-6 border-b border-gray-300"
+                                            >
+                                                <EvaluationCard
+                                                    data={evaluation}
+                                                />
+                                            </li>
+                                        )
+                                    )}
+                                </ul>
+                            </section>
+                        ))}
+                </div>
             </ul>
 
             <button
                 type="button"
-                className="text-sm text-blue_primary_600 font-semibold hover:underline hover:text-blue_primary_800 my-6"
+                className="text-sm text-blue_primary_600 font-semibold hover:underline hover:text-blue_primary_800"
                 onClick={handleShowAddEvaluation.bind(
                     null,
                     applicantAssessmentDetail.id
