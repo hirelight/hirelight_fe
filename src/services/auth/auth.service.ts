@@ -83,9 +83,7 @@ const sendVerifyCode = async (
     try {
         const res = await interceptor.post<IResponse<any>>(
             `/identity/verify-email`,
-            {
-                verifyDto,
-            }
+            verifyDto
         );
         checkResErr(res.data);
 

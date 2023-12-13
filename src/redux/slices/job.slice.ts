@@ -17,6 +17,7 @@ import {
     IDelteCustomField,
     IEditAppFormField,
 } from "@/interfaces";
+import { handleError } from "@/helpers";
 
 import { createNewJobPost, getJobById, updateJob } from "../thunks/job.thunk";
 
@@ -222,8 +223,9 @@ const jobSlice = createSlice({
                     autoClose: 1000,
                 });
             })
-            .addCase(updateJob.rejected, state => {
+            .addCase(updateJob.rejected, (state, action) => {
                 state.loading = false;
+                handleError(action.payload);
             });
 
         builder

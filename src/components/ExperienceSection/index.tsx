@@ -16,7 +16,7 @@ type ExperienceSectionProps = {
 };
 
 const ExperienceSection: React.FC<ExperienceSectionProps> = ({ data }) => {
-    const [showForm, setShowForm] = useState(true);
+    const [showForm, setShowForm] = useState(false);
     const [experiences, setExperiences] = useState<ExperienceType[]>([]);
 
     const onSave = (newData: ExperienceType) => {
@@ -32,7 +32,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ data }) => {
         <div className="space-y-4">
             <div className="flex justify-between items-center">
                 <span className="text-gray-900 font-medium text-sm">
-                    Education
+                    Experience
                     <span className="text-gray-400 font-normal ml-2">
                         (Optional)
                     </span>
@@ -68,19 +68,26 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ data }) => {
                     />
                 ))}
             </ul>
+
+            <textarea
+                id={data.id}
+                name={data.id}
+                value={JSON.stringify(experiences)}
+                className="sr-only"
+            />
         </div>
     );
 };
 
 export default ExperienceSection;
 
-type ExperienceType = {
+export type ExperienceType = {
     title: string;
     company?: string;
     industry?: string;
     summary?: string;
-    startDate?: Date;
-    endDate?: Date;
+    startDate?: Date | string;
+    endDate?: Date | string;
     currentlyWork?: boolean;
 };
 
@@ -112,7 +119,15 @@ const FormInput = ({
     };
 
     const handleAddEducation = () => {
-        onSave(formState);
+        onSave({
+            ...formState,
+            startDate: formState.startDate
+                ? moment.parseZone(formState.startDate).utc().format()
+                : formState.startDate,
+            endDate: formState.endDate
+                ? moment.parseZone(formState.endDate).utc().format()
+                : formState.endDate,
+        });
     };
 
     return (

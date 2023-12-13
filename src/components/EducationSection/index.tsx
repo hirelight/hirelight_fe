@@ -16,7 +16,7 @@ type EducationSectionProps = {
 };
 
 const EducationSection: React.FC<EducationSectionProps> = ({ data }) => {
-    const [showForm, setShowForm] = useState(true);
+    const [showForm, setShowForm] = useState(false);
     const [educations, setEducations] = useState<EducationFormState[]>([]);
 
     const onSave = (newData: EducationFormState) => {
@@ -68,18 +68,24 @@ const EducationSection: React.FC<EducationSectionProps> = ({ data }) => {
                     />
                 ))}
             </ul>
+            <textarea
+                id={data.id}
+                name={data.id}
+                value={JSON.stringify(educations)}
+                className="sr-only"
+            />
         </div>
     );
 };
 
 export default EducationSection;
 
-type EducationFormState = {
+export type EducationFormState = {
     school: string;
     fieldOfStudy?: string;
     degree?: string;
-    startDate?: Date;
-    endDate?: Date;
+    startDate?: string | Date;
+    endDate?: string | Date;
 };
 
 const FormInput = ({
@@ -110,7 +116,15 @@ const FormInput = ({
     };
 
     const handleAddEducation = () => {
-        onSave(formState);
+        onSave({
+            ...formState,
+            startDate: formState.startDate
+                ? moment.parseZone(formState.startDate).utc().format()
+                : formState.startDate,
+            endDate: formState.endDate
+                ? moment.parseZone(formState.endDate).utc().format()
+                : formState.endDate,
+        });
     };
 
     return (
@@ -220,9 +234,12 @@ const EducationCard = ({
                             Period
                         </dt>
                         <dd className="ml-12">
-                            {moment(startDate).locale(lang).format("LL  -  ") ??
+                            {moment
+                                .utc(startDate)
+                                .locale(lang)
+                                .format("LL  -  ") ?? ""}
+                            {moment.utc(endDate).locale(lang).format("LL") ??
                                 ""}
-                            {moment(endDate).locale(lang).format("LL") ?? ""}
                         </dd>
                     </dl>
                 )}

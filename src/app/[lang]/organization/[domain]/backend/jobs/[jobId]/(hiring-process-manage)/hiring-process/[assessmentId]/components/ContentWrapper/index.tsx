@@ -36,16 +36,18 @@ const ContentWrapper = ({ children }: { children: React.ReactNode }) => {
                     !showSidebar ? "-translate-x-full" : ""
                 }`}
             >
-                <Sidebar />
-                <button
-                    type="button"
-                    className={`${styles.sidebar__toggle__btn} ${
-                        !showSidebar ? "!rotate-0 !translate-x-full" : ""
-                    }`}
-                    onClick={() => setShowSidebar(!showSidebar)}
-                >
-                    <PlayIcon className="w-5 h-5" />
-                </button>
+                <div className="flex-1 max-h-screen sticky top-2 lg:top-0 lg:relative">
+                    <Sidebar />
+                    <button
+                        type="button"
+                        className={`${styles.sidebar__toggle__btn} ${
+                            !showSidebar ? "!rotate-0 !translate-x-full" : ""
+                        }`}
+                        onClick={() => setShowSidebar(!showSidebar)}
+                    >
+                        <PlayIcon className="w-5 h-5" />
+                    </button>
+                </div>
             </div>
 
             <div

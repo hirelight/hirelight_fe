@@ -1,4 +1,4 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk, isRejectedWithValue } from "@reduxjs/toolkit";
 
 import jobServices from "@/services/job/job.service";
 import { ICreateJobDto, IEditJobDto } from "@/services/job/job.interface";
@@ -45,10 +45,15 @@ export const getJobById = createAsyncThunk(
 
 export const updateJob = createAsyncThunk(
     EDIT_JOB,
-    async (editJobDto: IEditJobDto) => {
-        const res = await jobServices.editAsync(editJobDto);
+    async (editJobDto: IEditJobDto, { rejectWithValue }) => {
+        try {
+            const res = await jobServices.editAsync(editJobDto);
 
-        return { ...res, data: editJobDto };
+            return { ...res, data: editJobDto };
+        } catch (error) {
+            console.log(error);
+            return rejectWithValue(error);
+        }
     }
 );
 

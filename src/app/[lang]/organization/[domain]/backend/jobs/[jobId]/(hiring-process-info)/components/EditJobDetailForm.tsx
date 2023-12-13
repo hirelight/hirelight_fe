@@ -13,7 +13,7 @@ import {
     LocationAutocomplete,
 } from "@/components";
 import { updateJob } from "@/redux/thunks/job.thunk";
-import { extractTextFromHtml, isInvalidForm } from "@/helpers";
+import { extractTextFromHtml, handleError, isInvalidForm } from "@/helpers";
 import { JobPostStatus } from "@/interfaces/job-post.interface";
 
 import styles from "./EditJobDetailForm.module.scss";
@@ -24,12 +24,11 @@ import EmploymentDetailsSection from "./EmploymentDetailsSection";
 type EditJobDetailFormProps = {};
 
 const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
-    const [loading, setLoading] = React.useState(false);
-
     const dispatch = useAppDispatch();
     const {
         data: job,
         error: jobErr,
+        loading,
         contentLength,
     } = useAppSelector(state => state.job);
 
@@ -109,23 +108,16 @@ const EditJobDetailForm: React.FC<EditJobDetailFormProps> = () => {
             return;
         }
 
-        setLoading(true);
-        try {
-            await dispatch(
-                updateJob({
-                    ...job,
-                    id: job.id,
-                    content: JSON.stringify(job.content),
-                    startTime: moment.parseZone(job.startTime).utc().format(),
-                    endTime: moment.parseZone(job.endTime).utc().format(),
-                    applicationForm: JSON.stringify(job.applicationForm),
-                })
-            );
-        } catch (error: any) {
-            console.error(error);
-            toast.error(error.message ? error.message : "Edit job failure");
-        }
-        setLoading(false);
+        dispatch(
+            updateJob({
+                ...job,
+                id: job.id,
+                content: JSON.stringify(job.content),
+                startTime: moment.parseZone(job.startTime).utc().format(),
+                endTime: moment.parseZone(job.endTime).utc().format(),
+                applicationForm: JSON.stringify(job.applicationForm),
+            })
+        );
     };
 
     return (

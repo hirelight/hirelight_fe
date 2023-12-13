@@ -125,7 +125,7 @@ const PasswordInput = (props: ICustomInput) => {
                 />
                 <button
                     type="button"
-                    className="w-5 h-5 absolute top-1/2 right-2 -translate-y-1/2"
+                    className="w-5 h-5 absolute top-1/2 right-2 -translate-y-1/2 text-neutral-700"
                     onClick={() => setShow(!show)}
                 >
                     {show ? <EyeSlashIcon /> : <EyeIcon />}

@@ -13,7 +13,7 @@ import { Button, Portal } from "@/components";
 import { SpinLoading } from "@/icons";
 import { IOrganizationDto } from "@/services/organizations/organizations.interface";
 import authServices from "@/services/auth/auth.service";
-import { isDevMode, validWorkEmail } from "@/helpers";
+import { handleError, isDevMode, validWorkEmail } from "@/helpers";
 import organizationsServices from "@/services/organizations/organizations.service";
 import { decryptData } from "@/helpers/authHelpers";
 import { useAppSelector } from "@/redux/reduxHooks";
@@ -49,8 +49,7 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
                 `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/backend?accessToken=${res.data.accessToken}`
             );
         } catch (error) {
-            toast.error("Redirect failure");
-            console.error(error);
+            handleError(error);
             setPageLoading(false);
         }
     };

@@ -137,7 +137,8 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
         for (let i = 0; i < elements.length; i++) {
             const element = elements[i];
 
-            // console.log(element.id, element, formData.getAll(element.id));
+            // console.log(element.id, element, element.innerText);
+
             if (fieldMap.has(element.id)) {
                 const type = fieldMap.get(element.id)!!.type;
                 switch (type) {
@@ -165,11 +166,19 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                                 element.id
                             );
                         break;
+                    case "group":
+                        if (element.value)
+                            fieldMap.get(element.id)!!.value = JSON.parse(
+                                element.value
+                            );
+                        break;
                     default:
                         fieldMap.get(element.id)!!.value = element.value;
                 }
             }
         }
+        // const div = document.createElement("div");
+        // div.innerText
 
         // for (const [key, value] of Array.from(fieldMap.entries())) {
         //     console.log(`Key: ${key}, Value:`, value);

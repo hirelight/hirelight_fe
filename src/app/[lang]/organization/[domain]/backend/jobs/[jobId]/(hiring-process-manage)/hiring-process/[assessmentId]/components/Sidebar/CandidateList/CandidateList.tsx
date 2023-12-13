@@ -67,7 +67,7 @@ const CandidateList = ({ disqualify }: CandidateListProps) => {
     }
 
     return (
-        <ul className="bg-white">
+        <ul className="bg-white max-h-full overflow-y-auto">
             {applicantDetail?.data
                 ?.filter(profile =>
                     disqualify

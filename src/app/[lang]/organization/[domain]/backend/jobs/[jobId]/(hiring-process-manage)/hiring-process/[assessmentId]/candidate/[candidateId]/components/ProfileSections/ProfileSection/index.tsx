@@ -2,6 +2,8 @@
 
 import React, { useRef, useState } from "react";
 import moment from "moment";
+import { useParams } from "next/navigation";
+import { Ultra } from "next/font/google";
 
 import { PdfViewer } from "@/components";
 import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
@@ -13,11 +15,15 @@ import { useAppSelector } from "@/redux/reduxHooks";
 import { IAppFormField, IAppFormSection, ICustomField } from "@/interfaces";
 import PDFViewer from "@/components/PdfViewer";
 import { ApplicationFormJSON } from "@/services";
+import { EducationFormState } from "@/components/EducationSection";
+import { ExperienceType } from "@/components/ExperienceSection";
 
 import { profileDatas, profileLayout, candidateSection } from "./data";
 import styles from "./styles.module.scss";
 
 const ProfileSection = () => {
+    const { lang } = useParams();
+
     const [profileTab, setProfileTab] = React.useState(0);
     const [sections, setSections] = useState<IAppFormTemplateProfileSection[]>(
         []
@@ -32,7 +38,7 @@ const ProfileSection = () => {
     const getDetailByField = (field: IAppFormTemplateField) => {
         const value = field.value
             ? field.type === "date"
-                ? moment(field.value)
+                ? moment.utc(field.value).toDate()
                 : field.value
             : "";
 
@@ -43,7 +49,13 @@ const ProfileSection = () => {
                     fileName={field.value!!.name}
                 />
             ) : null;
-        else
+        else if (field.type === "group") {
+            return field.id === "education" ? (
+                <EducationSectionList datas={field.value} />
+            ) : (
+                <ExperienceSectionList datas={field.value} />
+            );
+        } else
             return (
                 <div className="flex flex-col lg:flex-row">
                     {field.type !== "paragraph" && (
@@ -76,9 +88,9 @@ const ProfileSection = () => {
                 formDetails.current.form_structure
                     .map(section => section.fields)
                     .flat(1)
-                    .forEach(fields => {
-                        if (!fieldMap.has(fields.id))
-                            fieldMap.set(fields.id, fields);
+                    .forEach(field => {
+                        if (!fieldMap.has(field.id))
+                            fieldMap.set(field.id, field);
                     });
 
                 profileLayout = profileLayout
@@ -93,9 +105,15 @@ const ProfileSection = () => {
                             .filter(item => item.value),
                     }))
                     .filter(
-                        section => !section.fields.every(item => !item.value)
+                        section =>
+                            !section.fields.every(
+                                item =>
+                                    !item.value ||
+                                    (item.value &&
+                                        Array.isArray(item.value) &&
+                                        !item.value.length)
+                            )
                     );
-
                 setSections(profileLayout);
             } catch (error) {
                 console.error(error);
@@ -104,7 +122,6 @@ const ProfileSection = () => {
 
         fetchLayout();
     }, [formDetails.current.form_structure]);
-
     return (
         <div className="">
             <section>
@@ -118,17 +135,22 @@ const ProfileSection = () => {
 
                 {sections?.map((section, index) => {
                     return (
-                        <div key={index} className="mb-4">
+                        <div
+                            key={index}
+                            className="py-6 border-b border-gray-200 last:border-b-0"
+                        >
                             <strong className="block text-sm text-neutral-600 uppercase mb-2">
                                 {section.label}
                             </strong>
-                            {section.fields.map((field, index) => {
-                                return (
-                                    <div key={index} className="mb-4 text-sm">
-                                        {getDetailByField(field)}
-                                    </div>
-                                );
-                            })}
+                            <div className="space-y-4">
+                                {section.fields.map((field, index) => {
+                                    return (
+                                        <div key={index} className="text-sm">
+                                            {getDetailByField(field)}
+                                        </div>
+                                    );
+                                })}
+                            </div>
                         </div>
                     );
                 })}
@@ -188,3 +210,80 @@ const ProfileSection = () => {
 };
 
 export default ProfileSection;
+
+const EducationSectionList = ({ datas }: { datas: EducationFormState[] }) => {
+    const { lang } = useParams();
+    return (
+        <ul className="w-full space-y-3">
+            {datas.map((item, index: number) => (
+                <li key={index} className="w-full flex flex-col lg:flex-row">
+                    <span className="inline-block text-neutral-600 mr-6 lg:basis-40">
+                        {moment
+                            .utc(item.startDate)
+                            .locale(lang)
+                            .format("MM/yyyy  -  ") ?? ""}
+                        {moment
+                            .utc(item.endDate)
+                            .locale(lang)
+                            .format("MM/yyyy") ?? ""}
+                    </span>
+                    <div>
+                        <p>
+                            {item.degree && (
+                                <>
+                                    <strong>{item.degree}</strong>
+                                    <span> in </span>
+                                </>
+                            )}
+                            {item.fieldOfStudy && (
+                                <>
+                                    <strong>{item.fieldOfStudy}</strong>
+                                    <span> at </span>
+                                </>
+                            )}
+                            <strong>{item.school}</strong>
+                        </p>
+                    </div>
+                </li>
+            ))}
+        </ul>
+    );
+};
+
+const ExperienceSectionList = ({ datas }: { datas: ExperienceType[] }) => {
+    const { lang } = useParams();
+    return (
+        <ul className="w-full space-y-3">
+            {datas.map((item, index: number) => (
+                <li key={index} className="w-full flex flex-col lg:flex-row">
+                    <span className="inline-block text-neutral-600 mr-6 lg:basis-40">
+                        {moment
+                            .utc(item.startDate)
+                            .locale(lang)
+                            .format("MM/yyyy  -  ") ?? ""}
+                        {moment
+                            .utc(item.endDate)
+                            .locale(lang)
+                            .format("MM/yyyy") ?? ""}
+                    </span>
+                    <div>
+                        <p>
+                            <strong>{item.title}</strong>
+                            {item.company && (
+                                <>
+                                    <span> at </span>
+                                    <strong>{item.company}</strong>
+                                </>
+                            )}
+                        </p>
+                        {item.summary && (
+                            <p className="ql-editor !p-0 !text-neutral-600">
+                                {item.summary}
+                            </p>
+                        )}
+                    </div>
+                </li>
+            ))}
+        </ul>
+    );
+};

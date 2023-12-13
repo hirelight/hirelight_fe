@@ -194,7 +194,7 @@ const CandidateActionTabs = () => {
                 show={showDrawer}
                 onClose={() => setShowDrawer(false)}
             />
-            <div className="sticky -top-4">
+            <div className="sticky -top-4 z-10">
                 <div className="bg-white absolute top-6 right-3 py-2 px-4 flex items-center gap-4 rounded-md shadow-md text-neutral-600">
                     {applicantAssessmentDetail.assessment.assessmentTypeName ===
                         "LIVE_VIDEO_INTERVIEW_ASSESSMENT" && (
