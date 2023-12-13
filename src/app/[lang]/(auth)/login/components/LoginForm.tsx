@@ -65,7 +65,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
             setPageLoading(true);
             if (isAdmin(res.data.accessToken))
                 return router.replace(
-                    `${window.location.protocol}//admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}?accessToken=${res.data.accessToken}`
+                    `${window.location.protocol}//admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/organizations?accessToken=${res.data.accessToken}`
                 );
 
             router.push(
@@ -102,7 +102,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
         } else {
             if (isAdmin(accessToken))
                 router.replace(
-                    `${window.location.protocol}//admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}?accessToken=${accessToken}`
+                    `${window.location.protocol}//admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/organizations?accessToken=${accessToken}`
                 );
             else router.push("select-org");
         }

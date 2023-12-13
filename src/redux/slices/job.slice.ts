@@ -200,9 +200,7 @@ const jobSlice = createSlice({
     extraReducers: builder => {
         builder
             .addCase(createNewJobPost.pending, () => {})
-            .addCase(createNewJobPost.fulfilled, (state, action) => {
-                console.log(action.payload);
-            })
+            .addCase(createNewJobPost.fulfilled, (state, action) => {})
             .addCase(createNewJobPost.rejected, (state, action) => {});
 
         builder
@@ -233,7 +231,6 @@ const jobSlice = createSlice({
                 state.loading = true;
             })
             .addCase(getJobById.fulfilled, (state, action) => {
-                console.log(moment.utc(action.payload.startTime).toDate());
                 state.data = {
                     ...action.payload,
                     startTime: moment

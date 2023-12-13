@@ -77,27 +77,6 @@ const deleteById = async (
     }
 };
 
-const getListIntegrationAssessments = async (
-    service?: string
-): Promise<IResponse<any>> => {
-    try {
-        const res = await interceptor.get(
-            endpoints.ASSESSMENTS + `/integration`,
-            {
-                params: {
-                    service,
-                },
-            }
-        );
-
-        checkResErr(res.data);
-
-        return res.data;
-    } catch (error) {
-        throw error;
-    }
-};
-
 const getListThirdParty = async (
     service: string
 ): Promise<IResponse<ThirdPartyAssessment[]>> => {
@@ -121,7 +100,7 @@ const getListThirdParty = async (
 
 const configNumOfEvaluations = async (
     id: string,
-    numOfAssessor: number
+    numOfAssessor?: string
 ): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.put(
@@ -145,7 +124,6 @@ const configNumOfEvaluations = async (
 const assessmentsServices = {
     getById,
     editAsync,
-    getListIntegrationAssessments,
     getListThirdParty,
     deleteById,
     addAssessment,

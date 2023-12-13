@@ -13,7 +13,7 @@ import jobServices from "@/services/job/job.service";
 import { updateJob } from "@/redux/thunks/job.thunk";
 import { SpinLoading } from "@/icons";
 import { JobPostStatus } from "@/interfaces/job-post.interface";
-import { Button } from "@/components";
+import { Button, ButtonOutline } from "@/components";
 import { Roles } from "@/services";
 
 import styles from "./JobHeader.module.scss";
@@ -64,13 +64,38 @@ const JobHeader = ({}: IJobHeader) => {
             await queryClient.invalidateQueries({
                 queryKey: ["jobs", authUser!!.organizationId],
             });
+
             await queryClient.invalidateQueries({
-                queryKey: ["jobs", jobId],
+                queryKey: ["job", jobId],
             });
             toast.success(res.message, {
                 position: "bottom-right",
                 autoClose: 1000,
             });
+        },
+        onError: error => {
+            console.error(error);
+            toast.error("Publish failure", {
+                position: "bottom-right",
+                autoClose: 1000,
+            });
+            setIsLoading(false);
+        },
+    });
+
+    const unpublishJobMutations = useMutation({
+        mutationKey: [`unpublish-job`, jobId],
+        mutationFn: (id: string) => jobServices.unpublishJobAsync(id),
+        onSuccess: async res => {
+            await queryClient.invalidateQueries({
+                queryKey: ["jobs", authUser!!.organizationId],
+            });
+            toast.success(res.message, {
+                position: "bottom-right",
+                autoClose: 1000,
+            });
+
+            setIsLoading(false);
         },
         onError: error => {
             console.error(error);
@@ -144,6 +169,9 @@ const JobHeader = ({}: IJobHeader) => {
     const handlePublish = (id: string) => {
         publishJobMutations.mutate(id);
     };
+    const handleUnpublishJob = (id: string) => {
+        unpublishJobMutations.mutate(id);
+    };
 
     return (
         <div
@@ -172,7 +200,7 @@ const JobHeader = ({}: IJobHeader) => {
                         {job.assessmentFlowId &&
                             authUser &&
                             authUser.userId === job.creatorId &&
-                            job.status === "DRAFT" && (
+                            job.status === JobPostStatus.DRAFT && (
                                 <Button
                                     type="button"
                                     onClick={handleRequestPublish.bind(
@@ -203,6 +231,45 @@ const JobHeader = ({}: IJobHeader) => {
                                 >
                                     Publish
                                 </Button>
+                            )}
+
+                        {authUser &&
+                            authUser.role === Roles.ORGANIZATION_ADMIN &&
+                            job.status === JobPostStatus.ACTIVE && (
+                                <ButtonOutline
+                                    type="button"
+                                    onClick={handleUnpublishJob.bind(
+                                        null,
+                                        job.id
+                                    )}
+                                    disabled={
+                                        unpublishJobMutations.isPending ||
+                                        jobLoading
+                                    }
+                                    isLoading={unpublishJobMutations.isPending}
+                                >
+                                    Unpublish
+                                </ButtonOutline>
+                            )}
+
+                        {authUser &&
+                            authUser.userId === job.creatorId &&
+                            authUser.role !== Roles.ORGANIZATION_ADMIN &&
+                            job.status === JobPostStatus.ACTIVE && (
+                                <ButtonOutline
+                                    type="button"
+                                    onClick={handleUnpublishJob.bind(
+                                        null,
+                                        job.id
+                                    )}
+                                    disabled={
+                                        unpublishJobMutations.isPending ||
+                                        jobLoading
+                                    }
+                                    isLoading={unpublishJobMutations.isPending}
+                                >
+                                    Request editing
+                                </ButtonOutline>
                             )}
                     </div>
                 </div>

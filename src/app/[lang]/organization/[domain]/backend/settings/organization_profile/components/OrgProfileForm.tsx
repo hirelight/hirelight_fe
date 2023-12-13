@@ -51,7 +51,6 @@ const OrgProfileForm: React.FC<OrgProfileFormProps> = ({ children }) => {
         const getOrg = async (id: string) => {
             try {
                 const res = await organizationsServices.getByIdAsync(id);
-                console.log(res);
                 setOrgData(res.data);
             } catch (error) {
                 console.log(error);

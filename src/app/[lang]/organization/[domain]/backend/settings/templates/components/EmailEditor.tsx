@@ -89,9 +89,9 @@ const EmailEditor: React.FC<IEmailEditor> = ({
 
     const handleTextChange = React.useCallback(
         function (delta: any, oldDelta: any, source: any) {
-            console.log("Change");
+            // console.log("Change");
             if (source == "api") {
-                console.log("An API call triggered this change.");
+                // console.log("An API call triggered this change.");
             } else if (source == "user") {
                 if (onChange) {
                     const editorContent =

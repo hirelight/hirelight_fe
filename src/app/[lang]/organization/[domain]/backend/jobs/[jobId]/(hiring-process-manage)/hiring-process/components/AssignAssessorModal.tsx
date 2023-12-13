@@ -32,7 +32,7 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
 
     const queryClient = useQueryClient();
 
-    const { authUser } = useAppSelector(state => state.auth);
+    const { data: flowData } = useAppSelector(state => state.assessmentFlow);
 
     const [selected, setSelected] = useState<ICollaboratorDto[]>(assessors);
     const [numEvaluations, setNumEvaluations] = useState<string>("");
@@ -59,13 +59,12 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
                     })
                 );
 
-            if (numEvaluations && Number(numEvaluations) > 0)
-                promises.push(
-                    assessmentsServices.configNumOfEvaluations(
-                        assessmentId as string,
-                        Number(numEvaluations)
-                    )
-                );
+            promises.push(
+                assessmentsServices.configNumOfEvaluations(
+                    assessmentId as string,
+                    numEvaluations
+                )
+            );
 
             await Promise.all(promises);
 

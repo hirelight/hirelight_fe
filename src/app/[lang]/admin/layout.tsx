@@ -1,10 +1,15 @@
 import React from "react";
 import dynamic from "next/dynamic";
+import { Metadata } from "next";
 
 import DoubleRingLoading from "@/components/DoubleRingLoading";
 
 import HeaderBar from "./components/HeaderBar";
 import Sidebar from "./components/Sidebar";
+
+export const metadata: Metadata = {
+    title: "Hirelight - Admin",
+};
 
 const AuthenWrapper = dynamic(() => import("./components/AuthenWrapper"), {
     ssr: false,

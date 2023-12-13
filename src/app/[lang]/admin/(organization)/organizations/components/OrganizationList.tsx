@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import organizationsServices from "@/services/organizations/organizations.service";
 import { DeleteModal, Portal } from "@/components";
 import { IOrganizationDto } from "@/services";
+import { ArrowRotateLeftIcon, BanIcon } from "@/icons";
 
 const OrganizationList = () => {
     const { lang } = useParams();
@@ -120,7 +121,7 @@ const OrganizationList = () => {
                                     .format("DD/MM/yyyy")}
                             </td>
                             <td className="px-6 py-4">{org.status}</td>
-                            <td className="px-6 py-4">
+                            <td className="px-6 py-4 text-center">
                                 <button
                                     type="button"
                                     onClick={() => {
@@ -128,10 +129,17 @@ const OrganizationList = () => {
                                             setSelected(org);
                                         else handleReactiveOrg(org.id);
                                     }}
+                                    className="p-1 rounded hover:bg-slate-200 group disabled:opacity-80 disabled:cursor-not-allowed"
+                                    disabled={
+                                        disableMutation.isPending ||
+                                        reactivateOrg.isPending
+                                    }
                                 >
-                                    {org.status === "ACTIVE"
-                                        ? "Disable"
-                                        : "Reactivate"}
+                                    {org.status === "ACTIVE" ? (
+                                        <BanIcon className="w-5 h-5 text-red-500 group-hover:text-red-700" />
+                                    ) : (
+                                        <ArrowRotateLeftIcon className="w-5 h-5 text-green-500 group-hover:text-green-700" />
+                                    )}
                                 </button>
                             </td>
                         </tr>

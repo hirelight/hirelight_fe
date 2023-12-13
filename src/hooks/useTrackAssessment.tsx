@@ -18,7 +18,6 @@ const useTrackAssessment = (
     const stopAutoTask = () => {
         // Stop the interval
         if (intervalRef.current !== null) {
-            console.log("Stop tracking");
             clearInterval(intervalRef.current);
             intervalRef.current = null;
         }

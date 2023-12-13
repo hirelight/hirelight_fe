@@ -17,12 +17,11 @@ const MeetingList = () => {
     const { lang } = useParams();
     const { authUser } = useAppSelector(state => state.auth);
     const { data: meetings } = useQuery({
-        queryKey: ["my-meetings"],
+        queryKey: ["meetings"],
         queryFn: () =>
             meetingServices.getListByAssessmentId(undefined, authUser!!.userId),
     });
 
-    console.log(meetings);
     return (
         <div className="space-y-6">
             {meetings?.data.map(meeting => (

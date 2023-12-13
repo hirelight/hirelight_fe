@@ -105,6 +105,19 @@ const publishJobAsync = async (id: string): Promise<IResponse<any>> => {
     }
 };
 
+const unpublishJobAsync = async (id: string): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.put<IResponse<any>>(
+            `${endpoints.JOBPOSTS}/unpublish/${id}`
+        );
+
+        checkResErr(res.data);
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const suspendJob = async (id: string) => {
     try {
         const res = await interceptor.put<IResponse<any>>(
@@ -139,6 +152,7 @@ const jobServices = {
     requestPublishJob,
     suspendJob,
     reactivateJob,
+    unpublishJobAsync,
 };
 
 export default jobServices;

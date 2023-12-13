@@ -6,6 +6,7 @@ import interceptor from "../interceptor";
 
 import {
     AuthResponse,
+    IVerifyCodeDto,
     LoginCandidateDto,
     LoginEmployerDto,
     RegisterCandidateDto,
@@ -76,12 +77,14 @@ const registerEmployee = async (
     }
 };
 
-const sendVerifyCode = async (email: string): Promise<IResponse<any>> => {
+const sendVerifyCode = async (
+    verifyDto: IVerifyCodeDto
+): Promise<IResponse<any>> => {
     try {
         const res = await interceptor.post<IResponse<any>>(
             `/identity/verify-email`,
             {
-                email,
+                verifyDto,
             }
         );
         checkResErr(res.data);

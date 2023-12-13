@@ -46,9 +46,9 @@ const ReportList = () => {
                                             xmlns="http://www.w3.org/2000/svg"
                                         >
                                             <path
-                                                fill-rule="evenodd"
+                                                fillRule="evenodd"
                                                 d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                                clip-rule="evenodd"
+                                                clipRule="evenodd"
                                             />
                                         </svg>
                                     </div>
@@ -74,8 +74,8 @@ const ReportList = () => {
                                     aria-hidden="true"
                                 >
                                     <path
-                                        clip-rule="evenodd"
-                                        fill-rule="evenodd"
+                                        clipRule="evenodd"
+                                        fillRule="evenodd"
                                         d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                                     />
                                 </svg>
@@ -185,9 +185,9 @@ const ReportList = () => {
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
                                         <path
-                                            fill-rule="evenodd"
+                                            fillRule="evenodd"
                                             d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                            clip-rule="evenodd"
+                                            clipRule="evenodd"
                                         />
                                     </svg>
                                 </a>
@@ -247,9 +247,9 @@ const ReportList = () => {
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
                                         <path
-                                            fill-rule="evenodd"
+                                            fillRule="evenodd"
                                             d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                            clip-rule="evenodd"
+                                            clipRule="evenodd"
                                         />
                                     </svg>
                                 </a>
@@ -319,7 +319,7 @@ const ReportDetail = ({
                                         className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                                         onClick={closeModal}
                                     >
-                                        Got it, thanks!
+                                        Close
                                     </button>
                                 </div>
                             </Dialog.Panel>

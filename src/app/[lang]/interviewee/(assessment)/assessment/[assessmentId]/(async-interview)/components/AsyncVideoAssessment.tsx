@@ -378,7 +378,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
         };
         if (assessmentData) handleSaveStateOnAnswerChange();
     }, [assessmentData, curPos, data.id]);
-    // console.log(window, "MediaRecorder" in window);
+
     if ("MediaRecorder" in window && !permission)
         return (
             <div className="fixed inset-0 z-50">

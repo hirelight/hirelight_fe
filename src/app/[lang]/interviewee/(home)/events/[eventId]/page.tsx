@@ -137,32 +137,46 @@ const EventInfoPage = () => {
                             </strong>
                         </p>
 
-                        <h3 className="uppercase">Meeting link</h3>
+                        {meeting.data.meetingLink && (
+                            <>
+                                <h3 className="uppercase">Meeting link</h3>
 
-                        <Link
-                            href={
-                                meeting.data.meetingLink
-                                    .toLowerCase()
-                                    .includes("zoom")
-                                    ? meeting.data.meetingLink.replace(
-                                          "Zoom meeting: ",
-                                          ""
-                                      )
-                                    : meeting.data.meetingLink
-                            }
-                            target="_blank"
-                            rel="noreferrer noopener"
-                            className="text-blue_primary_800 font-semibold"
-                        >
-                            {meeting.data.meetingLink
-                                .toLowerCase()
-                                .includes("zoom")
-                                ? meeting.data.meetingLink.replace(
-                                      "Zoom meeting: ",
-                                      ""
-                                  )
-                                : meeting.data.meetingLink}
-                        </Link>
+                                <Link
+                                    href={
+                                        meeting.data.meetingLink
+                                            .toLowerCase()
+                                            .includes("zoom")
+                                            ? meeting.data.meetingLink.replace(
+                                                  "Zoom meeting: ",
+                                                  ""
+                                              )
+                                            : meeting.data.meetingLink
+                                    }
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                    className="text-blue_primary_800 font-semibold"
+                                >
+                                    {meeting.data.meetingLink
+                                        .toLowerCase()
+                                        .includes("zoom")
+                                        ? meeting.data.meetingLink.replace(
+                                              "Zoom meeting: ",
+                                              ""
+                                          )
+                                        : meeting.data.meetingLink}
+                                </Link>
+                            </>
+                        )}
+
+                        {meeting.data.location && (
+                            <>
+                                <h3 className="uppercase">Location</h3>
+
+                                <p className="text-blue_primary_800 font-semibold">
+                                    {meeting.data.location}
+                                </p>
+                            </>
+                        )}
                     </div>
 
                     {meeting.data.candidate && (
@@ -192,7 +206,7 @@ const EventInfoPage = () => {
                             Interviewers
                         </h3>
 
-                        <ul>
+                        <ul className={styles.attendee_list}>
                             {meeting.data.employerMeetingRefs?.map(
                                 (employer, index) => (
                                     <li

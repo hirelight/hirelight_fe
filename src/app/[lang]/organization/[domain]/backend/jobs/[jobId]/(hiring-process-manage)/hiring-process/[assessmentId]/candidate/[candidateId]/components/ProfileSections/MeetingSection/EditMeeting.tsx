@@ -66,6 +66,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
         startTime: moment.utc(data.startTime).toDate(),
         endTime: moment.utc(data.endTime).toDate(),
     });
+    const [isOffline, setIsOffline] = useState<boolean>(data.location !== "");
     const [meetingTime, setMeetingTime] = useState({
         startTime: moment()
             .hours(moment.utc(data.startTime).local().hours())
@@ -90,7 +91,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
     >(data.employerMeetingRefs.map(item => item.employer) as any);
 
     const isInvalidFormInput = (): boolean => {
-        const { name, meetingLink, endTime, startTime } = formState;
+        const { name, meetingLink, endTime, startTime, location } = formState;
 
         let errors = formErr;
 
@@ -98,9 +99,16 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
             errors.nameErr = "Subject is required";
         }
 
-        if (meetingLink.length === 0) {
-            errors.meetingLinkErr = "Meeting link is required";
+        if (isOffline) {
+            if (!location) {
+                errors.locationErr = "Location is required";
+            }
+        } else {
+            if (meetingLink.length === 0) {
+                errors.meetingLinkErr = "Meeting link is required";
+            }
         }
+
         if (
             (moment(meetingTime.startTime).isAfter(meetingTime.endTime) &&
                 moment(startTime).isSame(endTime, "dates")) ||
@@ -142,18 +150,23 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
 
         setLoading(true);
         try {
+            const dto = { ...formState };
+            if (isOffline) {
+                dto.meetingLink = "";
+            } else dto.location = "";
+
             const res = await meetingServices.editMeeting({
-                id: formState.id,
-                assessmentId: formState.assessmentId,
-                candidateId: formState.candidateId,
-                description: formState.description,
-                recordLink: formState.recordLinks,
-                location: formState.location,
-                meetingLink: formState.meetingLink,
-                name: formState.name,
+                id: dto.id,
+                assessmentId: dto.assessmentId,
+                candidateId: dto.candidateId,
+                description: dto.description,
+                recordLink: dto.recordLinks,
+                location: dto.location,
+                meetingLink: dto.meetingLink,
+                name: dto.name,
                 startTime: moment
                     .parseZone(
-                        moment(formState.startTime)
+                        moment(dto.startTime)
                             .minutes(moment(meetingTime.startTime).minutes())
                             .hours(moment(meetingTime.startTime).hours())
                             .format()
@@ -162,7 +175,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                     .format(),
                 endTime: moment
                     .parseZone(
-                        moment(formState.endTime)
+                        moment(dto.endTime)
                             .minutes(moment(meetingTime.endTime).minutes())
                             .hours(moment(meetingTime.endTime).hours())
                             .format()
@@ -227,8 +240,8 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                         <CloseIcon className="w-6 h-6" />
                                     </button>
                                 </Dialog.Title>
-                                <div className="p-6 flex-1 overflow-y-auto">
-                                    <div className="mb-6">
+                                <div className="p-6 flex-1 overflow-y-auto space-y-6">
+                                    <div>
                                         <CustomInput
                                             title="Subject"
                                             type="text"
@@ -247,41 +260,94 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                             required
                                         />
                                     </div>
-
-                                    <div className="mb-6">
-                                        <CustomInput
-                                            title="Meeting link"
-                                            type="url"
-                                            placeholder="Example: meet.google.com"
-                                            value={
-                                                formState.meetingLink
-                                                    .toLowerCase()
-                                                    .includes("zoom")
-                                                    ? formState.meetingLink.replace(
-                                                          "Zoom meeting: ",
-                                                          ""
-                                                      )
-                                                    : formState.meetingLink
-                                            }
-                                            onChange={e => {
-                                                setFormState(prev =>
-                                                    produce(prev, draft => {
-                                                        draft.meetingLink =
-                                                            e.target.value;
-                                                    })
-                                                );
-                                                handleResetErr(
-                                                    "meetingLinkErr"
-                                                );
-                                            }}
-                                            errorText={formErr.meetingLinkErr}
-                                            required
-                                        />
+                                    <div className="w-full flex items-center justify-between">
+                                        <label
+                                            htmlFor="offline-enable"
+                                            className="cursor-pointer"
+                                        >
+                                            <span className="text-sm font-medium text-gray-900 dark:text-gray-300">
+                                                Meeting offline
+                                            </span>
+                                        </label>
+                                        <label className="relative cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                value=""
+                                                id="offline-enable"
+                                                className="sr-only peer"
+                                                defaultChecked={isOffline}
+                                                onChange={e => {
+                                                    setIsOffline(
+                                                        e.target.checked
+                                                    );
+                                                }}
+                                            />
+                                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                        </label>
                                     </div>
 
-                                    <hr className="h-[1px] w-full my-8 bg-gray-300" />
+                                    <div>
+                                        {!isOffline ? (
+                                            <CustomInput
+                                                title="Meeting link"
+                                                type="url"
+                                                placeholder="Example: meet.google.com"
+                                                value={
+                                                    formState.meetingLink
+                                                        .toLowerCase()
+                                                        .includes("zoom")
+                                                        ? formState.meetingLink.replace(
+                                                              "Zoom meeting: ",
+                                                              ""
+                                                          )
+                                                        : formState.meetingLink
+                                                }
+                                                onChange={e => {
+                                                    setFormState(prev =>
+                                                        produce(prev, draft => {
+                                                            draft.meetingLink =
+                                                                e.target.value;
+                                                        })
+                                                    );
+                                                    handleResetErr(
+                                                        "meetingLinkErr"
+                                                    );
+                                                }}
+                                                errorText={
+                                                    formErr.meetingLinkErr
+                                                }
+                                                required
+                                            />
+                                        ) : (
+                                            <CustomInput
+                                                title="Location"
+                                                id="location"
+                                                type="text"
+                                                placeholder="Ho Chi Minh"
+                                                autoComplete="street-address"
+                                                value={formState.location}
+                                                onChange={e => {
+                                                    setFormState(prev =>
+                                                        produce(prev, draft => {
+                                                            draft.location =
+                                                                e.target.value;
+                                                        })
+                                                    );
+                                                    handleResetErr(
+                                                        "locationErr"
+                                                    );
+                                                }}
+                                                errorText={formErr.locationErr}
+                                                required
+                                            />
+                                        )}
+                                    </div>
 
-                                    <h4 className="block mb-6 text-sm font-medium text-neutral-900 dark:text-white">
+                                    <div className="py-2 w-full">
+                                        <hr className="h-[1px] w-full bg-gray-300" />
+                                    </div>
+
+                                    <h4 className="block text-sm font-medium text-neutral-900 dark:text-white">
                                         Schedule
                                     </h4>
                                     <div>
@@ -431,49 +497,12 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                         )}
                                         {selected.map(selectAttendee => (
                                             <li key={selectAttendee.id}>
-                                                <div className="flex items-center gap-2">
-                                                    {selectAttendee.avatarUrl ? (
-                                                        <Image
-                                                            src={
-                                                                selectAttendee.avatarUrl
-                                                            }
-                                                            alt="Collaborator avatar"
-                                                            width={300}
-                                                            height={300}
-                                                            className="w-8 h-8 rounded-full object-cover"
-                                                            unoptimized
-                                                        />
-                                                    ) : (
-                                                        <div className="w-10 h-10 rounded-full text-neutral-600">
-                                                            <UserCircleIcon />
-                                                        </div>
-                                                    )}
-                                                    <div className="flex-1 text-sm">
-                                                        <h3 className="font-semibold">
-                                                            {selectAttendee.firstName +
-                                                                " " +
-                                                                (selectAttendee.lastName ??
-                                                                    "")}
-                                                        </h3>
-                                                        {authUser &&
-                                                            selectAttendee.id ===
-                                                                authUser.userId && (
-                                                                <p className="text-gray-500">
-                                                                    Organizer
-                                                                </p>
-                                                            )}
-                                                    </div>
-                                                    <button
-                                                        type="button"
-                                                        className="p-1 rounded hover:bg-slate-300/80 transition-all duration-500"
-                                                        onClick={handleRemoveAttendee.bind(
-                                                            null,
-                                                            selectAttendee.id
-                                                        )}
-                                                    >
-                                                        <XMarkIcon className="w-5 h-5" />
-                                                    </button>
-                                                </div>
+                                                <AttendeeCard
+                                                    data={selectAttendee}
+                                                    onRemove={id =>
+                                                        handleRemoveAttendee(id)
+                                                    }
+                                                />
                                             </li>
                                         ))}
                                     </ul>
@@ -532,3 +561,54 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
 };
 
 export default EditMeeting;
+
+const AttendeeCard = ({
+    data,
+    onRemove,
+}: {
+    data: {
+        id: string;
+        email: string;
+        firstName: string;
+        lastName: string | null;
+        status: string;
+        avatarUrl: string | null;
+    };
+    onRemove: (id: string) => void;
+}) => {
+    const authUser = useAppSelector(state => state.auth.authUser);
+
+    return (
+        <div className="flex items-center gap-2">
+            {data.avatarUrl ? (
+                <Image
+                    src={data.avatarUrl}
+                    alt="Collaborator avatar"
+                    width={300}
+                    height={300}
+                    className="w-8 h-8 rounded-full object-cover"
+                    unoptimized
+                />
+            ) : (
+                <div className="w-10 h-10 rounded-full text-neutral-600">
+                    <UserCircleIcon />
+                </div>
+            )}
+            <div className="flex-1 text-sm">
+                <h3 className="font-semibold">
+                    {data.firstName + " " + (data.lastName ?? "")}
+                </h3>
+                {authUser && data.id === authUser.userId && (
+                    <p className="text-gray-500">Organizer</p>
+                )}
+            </div>
+            <button
+                type="button"
+                className="p-1 rounded hover:bg-slate-300/80 transition-all duration-500"
+                onClick={onRemove.bind(null, data.id)}
+            >
+                <XMarkIcon className="w-5 h-5" />
+            </button>
+        </div>
+    );
+};

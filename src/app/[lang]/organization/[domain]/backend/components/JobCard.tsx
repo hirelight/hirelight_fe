@@ -72,8 +72,36 @@ const JobCard: React.FC<JobCardProps> = ({
         },
     });
 
+    const unpublishJobMutations = useMutation({
+        mutationKey: [`unpublish-job`, id],
+        mutationFn: (id: string) => jobServices.unpublishJobAsync(id),
+        onSuccess: async res => {
+            await queryClient.invalidateQueries({
+                queryKey: ["jobs", authUser!!.organizationId],
+            });
+            toast.success(res.message, {
+                position: "bottom-right",
+                autoClose: 1000,
+            });
+
+            setIsLoading(false);
+        },
+        onError: error => {
+            console.error(error);
+            toast.error("Publish failure", {
+                position: "bottom-right",
+                autoClose: 1000,
+            });
+            setIsLoading(false);
+        },
+    });
+
     const handlePublishJob = (id: string) => {
         publishJobMutations.mutate(id);
+    };
+
+    const handleUnpublishJob = (id: string) => {
+        unpublishJobMutations.mutate(id);
     };
 
     return (
@@ -114,10 +142,10 @@ const JobCard: React.FC<JobCardProps> = ({
                             <button
                                 type="button"
                                 className="focus:outline-none text-neutral-700 font-semibold bg-slate-300 hover:bg-slate-400 focus:ring-4 rounded-lg text-sm px-4 py-1 hidden md:block disabled:cursor-not-allowed disabled:opacity-80"
-                                onClick={handlePublishJob.bind(null, id)}
-                                disabled={publishJobMutations.isPending}
+                                onClick={handleUnpublishJob.bind(null, id)}
+                                disabled={unpublishJobMutations.isPending}
                             >
-                                {publishJobMutations.isPending && (
+                                {unpublishJobMutations.isPending && (
                                     <SpinLoading className="mr-2" />
                                 )}
                                 Unpublish

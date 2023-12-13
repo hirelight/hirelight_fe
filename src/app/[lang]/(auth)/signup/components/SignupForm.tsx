@@ -81,7 +81,10 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
 
         setSendLoading(true);
         try {
-            const res = await authServices.sendVerifyCode(signupForm.email);
+            const res = await authServices.sendVerifyCode({
+                email: signupForm.email,
+                type: "REGISTER",
+            });
             toast.success(res.message);
             setShowVerify(true);
         } catch (error) {

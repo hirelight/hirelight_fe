@@ -48,11 +48,8 @@ const assessmentSlice = createSlice({
                 state.loading = true;
             })
             .addCase(fetchAssessmentById.fulfilled, (state, action) => {
-                const { data, message, statusCode } = action.payload;
-                console.log(
-                    "🚀 ~ file: assessment.slice.ts:52 ~ .addCase ~ data:",
-                    data
-                );
+                const { data } = action.payload;
+
                 state.data = data;
                 state.loading = false;
             })

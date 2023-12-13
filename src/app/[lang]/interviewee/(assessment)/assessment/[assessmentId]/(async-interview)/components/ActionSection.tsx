@@ -230,7 +230,6 @@ const ActionSection: React.FC<ActionSectionProps> = ({
     // Auto start record time
     useEffect(() => {
         if (canRecord && !isRetake && remainThinkTime === 0) {
-            console.log("Use effect");
             setIsBreak(true);
         }
     }, [
@@ -320,10 +319,12 @@ const ActionSection: React.FC<ActionSectionProps> = ({
                 startQuestionTime = parsed.startQuestionTime ?? new Date();
 
                 const eslapseTime = moment(startQuestionTime)
-                    .add(selectedAnswer.content.config!!.thinkTime, "seconds")
+                    .add(
+                        selectedAnswer.content.config?.thinkTime ?? 0,
+                        "seconds"
+                    )
                     .diff(moment(), "seconds");
 
-                console.log(eslapseTime);
                 if (parsed.isThinkEnd) setRemainThinkTime(0);
                 else setRemainThinkTime(eslapseTime);
             } else

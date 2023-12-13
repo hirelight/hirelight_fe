@@ -27,7 +27,7 @@ import { MeetingStatus } from "@/services";
 import styles from "./styles.module.scss";
 
 const EventInfoPage = () => {
-    const { eventId } = useParams();
+    const { eventId, lang } = useParams();
 
     const { authUser } = useAppSelector(state => state.auth);
 
@@ -138,6 +138,7 @@ const EventInfoPage = () => {
                                 {moment
                                     .utc(meeting.data.startTime)
                                     .local()
+                                    .locale(lang)
                                     .format("dddd MMMM Do HH:mm A")}
                             </strong>
                             <span> to </span>
@@ -145,36 +146,51 @@ const EventInfoPage = () => {
                                 {`${moment
                                     .utc(meeting.data.endTime)
                                     .local()
+                                    .locale(lang)
                                     .format("dddd MMMM Do HH:mm A")}`}
                             </strong>
                         </p>
 
-                        <h3 className="uppercase">Meeting link</h3>
+                        {meeting.data.meetingLink && (
+                            <>
+                                <h3 className="uppercase">Meeting link</h3>
 
-                        <Link
-                            href={
-                                meeting.data.meetingLink
-                                    .toLowerCase()
-                                    .includes("zoom")
-                                    ? meeting.data.meetingLink.replace(
-                                          "Zoom meeting: ",
-                                          ""
-                                      )
-                                    : meeting.data.meetingLink
-                            }
-                            target="_blank"
-                            rel="noreferrer noopener"
-                            className="text-blue_primary_800 font-semibold"
-                        >
-                            {meeting.data.meetingLink
-                                .toLowerCase()
-                                .includes("zoom")
-                                ? meeting.data.meetingLink.replace(
-                                      "Zoom meeting: ",
-                                      ""
-                                  )
-                                : meeting.data.meetingLink}
-                        </Link>
+                                <Link
+                                    href={
+                                        meeting.data.meetingLink
+                                            .toLowerCase()
+                                            .includes("zoom")
+                                            ? meeting.data.meetingLink.replace(
+                                                  "Zoom meeting: ",
+                                                  ""
+                                              )
+                                            : meeting.data.meetingLink
+                                    }
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                    className="text-blue_primary_800 font-semibold"
+                                >
+                                    {meeting.data.meetingLink
+                                        .toLowerCase()
+                                        .includes("zoom")
+                                        ? meeting.data.meetingLink.replace(
+                                              "Zoom meeting: ",
+                                              ""
+                                          )
+                                        : meeting.data.meetingLink}
+                                </Link>
+                            </>
+                        )}
+
+                        {meeting.data.location && (
+                            <>
+                                <h3 className="uppercase">Location</h3>
+
+                                <p className="text-blue_primary_800 font-semibold">
+                                    {meeting.data.location}
+                                </p>
+                            </>
+                        )}
                     </div>
 
                     {meeting.data.candidate && (
@@ -204,14 +220,14 @@ const EventInfoPage = () => {
                             Interviewers
                         </h3>
 
-                        <ul>
+                        <ul className={styles.attendee_list}>
                             {meeting.data.employerMeetingRefs?.map(
                                 (employer, index) => (
                                     <li
                                         key={index}
                                         className="flex items-center gap-3"
                                     >
-                                        <div className="relative w-20 h-20">
+                                        <div className="relative w-20 h-20 flex-shrink-0">
                                             <UserAvatar
                                                 avatarUrl={
                                                     employer.employer.avatarUrl

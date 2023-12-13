@@ -179,8 +179,8 @@ const HeaderBar = () => {
                                     >
                                         Help
                                     </a>
-                                    <button
-                                        type="button"
+                                    <Link
+                                        href={`${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/organization/new`}
                                         className={styles.avatar__dropdown__btn}
                                         role="menuitem"
                                         tabIndex={-1}
@@ -189,7 +189,7 @@ const HeaderBar = () => {
                                         }
                                     >
                                         Add a company
-                                    </button>
+                                    </Link>
                                     <button
                                         type="button"
                                         className={styles.avatar__dropdown__btn}

@@ -282,25 +282,39 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                     </div>
 
                     {/* ************************************Meeting link section**************************************** */}
-                    <div>Meeting link</div>
-                    <div>
-                        <Link
-                            href={
-                                data.meetingLink.toLowerCase().includes("zoom")
-                                    ? data.meetingLink.replace(
-                                          "Zoom meeting: ",
-                                          ""
-                                      )
-                                    : data.meetingLink
-                            }
-                            target="_blank"
-                            rel="noreferrer noopener"
-                            className="text-blue_primary_700 font-semibold hover:underline hover:text-blue_primary_800"
-                        >
-                            Link
-                            <LinkIcon className="inline-block ml-1 h-5 w-5" />
-                        </Link>
-                    </div>
+                    {data.meetingLink && (
+                        <>
+                            <div>Meeting link</div>
+                            <div>
+                                <Link
+                                    href={
+                                        data.meetingLink
+                                            .toLowerCase()
+                                            .includes("zoom")
+                                            ? data.meetingLink.replace(
+                                                  "Zoom meeting: ",
+                                                  ""
+                                              )
+                                            : data.meetingLink
+                                    }
+                                    target="_blank"
+                                    rel="noreferrer noopener"
+                                    className="text-blue_primary_700 font-semibold hover:underline hover:text-blue_primary_800"
+                                >
+                                    Link
+                                    <LinkIcon className="inline-block ml-1 h-5 w-5" />
+                                </Link>
+                            </div>
+                        </>
+                    )}
+
+                    {/* ************************************Location section**************************************** */}
+                    {data.location && (
+                        <>
+                            <div>Location</div>
+                            <div>{data.location}</div>
+                        </>
+                    )}
 
                     {/* ************************************Meeting title section**************************************** */}
                     <div>Title</div>

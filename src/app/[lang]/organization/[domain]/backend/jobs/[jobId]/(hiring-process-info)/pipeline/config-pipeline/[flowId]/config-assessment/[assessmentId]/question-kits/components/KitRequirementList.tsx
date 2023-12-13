@@ -65,10 +65,8 @@ const KitRequirementList = ({ contents, onSave }: IKitRequirementList) => {
             );
         }
         const parent = e.currentTarget.parentElement!!;
-        console.log(parent);
         parent.style.height = `${parent?.clientHeight}px`;
         parent.style.width = `${parent?.clientWidth}px`;
-        console.log(e.currentTarget.clientHeight);
     };
 
     const handleMouseUp = () => {

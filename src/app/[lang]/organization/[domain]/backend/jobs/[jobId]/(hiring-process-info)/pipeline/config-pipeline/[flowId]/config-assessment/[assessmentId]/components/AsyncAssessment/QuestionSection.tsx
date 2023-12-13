@@ -43,7 +43,6 @@ const QuestionSection = ({
 
     const handleMoveUp = () => {
         const index = datas.indexOf(data);
-        console.log(index);
         onReorder(
             produce(datas, draft => {
                 const temp = draft[index - 1];

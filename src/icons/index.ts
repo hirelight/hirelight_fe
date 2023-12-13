@@ -30,6 +30,8 @@ import CheckToSlot from "./CheckToSlot";
 import HackerrankIcon from "./HackerrankIcon";
 import TestlifyLogo from "./TestlifyLogo";
 import FileCircleMinus from "./FileCircleMinus";
+import BanIcon from "./BanIcon";
+import ArrowRotateLeftIcon from "./ArrowRotateLeftIcon";
 
 export {
     Logo,
@@ -64,4 +66,6 @@ export {
     HackerrankIcon,
     TestlifyLogo,
     FileCircleMinus,
+    BanIcon,
+    ArrowRotateLeftIcon,
 };

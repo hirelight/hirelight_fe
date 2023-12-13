@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 
 import jobServices from "@/services/job/job.service";
 import { DeleteModal, Portal } from "@/components";
+import { ArrowRotateLeftIcon, BanIcon } from "@/icons";
 
 const JobList = () => {
     const { lang } = useParams();
@@ -38,7 +39,7 @@ const JobList = () => {
 
     const reativateMutation = useMutation({
         mutationKey: ["reactivate-job", selectedId],
-        mutationFn: (id: string) => jobServices.suspendJob(id),
+        mutationFn: (id: string) => jobServices.reactivateJob(id),
         onSuccess: async res => {
             await queryClient.invalidateQueries({
                 queryKey: ["jobs"],
@@ -125,7 +126,7 @@ const JobList = () => {
                             </td>
                             <td className="px-6 py-4">{job.status}</td>
                             <td className="px-6 py-4">{0}</td>
-                            <td className="px-6 py-4">
+                            <td className="px-6 py-4 text-center">
                                 <button
                                     type="button"
                                     onClick={() => {
@@ -133,10 +134,17 @@ const JobList = () => {
                                             setSelectedId(job.id);
                                         else handleReactivateJob(job.id);
                                     }}
+                                    className="p-1 rounded hover:bg-slate-200 group disabled:opacity-80 disabled:cursor-not-allowed"
+                                    disabled={
+                                        disableMutation.isPending ||
+                                        reativateMutation.isPending
+                                    }
                                 >
-                                    {job.status === "SUSPENDED"
-                                        ? "Reactivate"
-                                        : "Suspend"}
+                                    {job.status === "SUSPENDED" ? (
+                                        <ArrowRotateLeftIcon className="w-5 h-5 text-green-500 group-hover:text-green-700" />
+                                    ) : (
+                                        <BanIcon className="w-5 h-5 text-red-500 group-hover:text-red-700" />
+                                    )}
                                 </button>
                             </td>
                             <td className="px-6 py-4">

@@ -40,3 +40,8 @@ export interface IUpdateInfoDto {
     educations?: string;
     experiences?: string;
 }
+
+export interface IVerifyCodeDto {
+    email: string;
+    type: "REGISTER" | "RESET_PASSWORD";
+}

@@ -8,3 +8,8 @@
 .subsection_title {
     @apply text-base uppercase font-semibold mb-4;
 }
+
+.attendee_list{
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(228px, 1fr));
+}

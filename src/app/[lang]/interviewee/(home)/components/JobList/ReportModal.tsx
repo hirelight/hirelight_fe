@@ -1,7 +1,7 @@
 "use client";
 
 import { Dialog, Transition } from "@headlessui/react";
-import React, { FormEvent, Fragment, useState } from "react";
+import React, { FormEvent, Fragment, useEffect, useState } from "react";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { toast } from "react-toastify";
 
@@ -43,11 +43,22 @@ const ReportModal: React.FC<ReportModalProps> = ({
                 content: JSON.stringify(formState),
             });
             toast.success(res.message);
+
+            closeModal();
         } catch (error) {
             handleError(error);
         }
         setLoading(false);
     };
+
+    useEffect(() => {
+        return () => {
+            setFormState({
+                type: "",
+                content: "",
+            });
+        };
+    }, []);
 
     return (
         <Transition appear show={isOpen} as={Fragment}>

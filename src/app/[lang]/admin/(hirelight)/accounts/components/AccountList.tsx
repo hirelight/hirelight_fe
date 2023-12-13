@@ -11,7 +11,6 @@ const AccountList = () => {
         queryFn: accountServices.getByEmail,
     });
 
-    console.log(res);
     return <div>AccountList</div>;
 };
 

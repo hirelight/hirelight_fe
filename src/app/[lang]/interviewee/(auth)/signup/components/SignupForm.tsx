@@ -83,7 +83,10 @@ const SignupForm = () => {
             });
         setSendLoading(true);
         try {
-            const res = await authServices.sendVerifyCode(formState.email);
+            const res = await authServices.sendVerifyCode({
+                email: formState.email,
+                type: "REGISTER",
+            });
             toast.success(res.message);
             setShowVerify(true);
         } catch (error) {
