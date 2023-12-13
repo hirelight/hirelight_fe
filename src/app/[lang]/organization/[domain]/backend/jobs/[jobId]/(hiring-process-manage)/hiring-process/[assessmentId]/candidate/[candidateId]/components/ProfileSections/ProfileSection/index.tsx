@@ -24,7 +24,6 @@ import styles from "./styles.module.scss";
 const ProfileSection = () => {
     const { lang } = useParams();
 
-    const [profileTab, setProfileTab] = React.useState(0);
     const [sections, setSections] = useState<IAppFormTemplateProfileSection[]>(
         []
     );
@@ -36,11 +35,20 @@ const ProfileSection = () => {
     );
 
     const getDetailByField = (field: IAppFormTemplateField) => {
-        const value = field.value
-            ? field.type === "date"
-                ? moment.utc(field.value).toDate()
-                : field.value
-            : "";
+        let value = field.value;
+        switch (field.type) {
+            case "date":
+                value = moment
+                    .utc(field.value)
+                    .locale(lang)
+                    .format("DD/MM/YYYY");
+                break;
+            case "boolean":
+                value = field.value ? "Yes" : "No";
+                break;
+            default:
+                value = field.value ? field.value : "";
+        }
 
         if (field.id === "resume")
             return field.value ? (
@@ -76,6 +84,42 @@ const ProfileSection = () => {
             );
     };
 
+    const getCustomQuesVal = (field: ICustomField) => {
+        switch (field.type) {
+            case "file":
+                return (
+                    <a
+                        href={field.value.value}
+                        download
+                        className="text-blue_primary_700 font-semibold hover:underline"
+                    >
+                        {field.value.value}
+                    </a>
+                );
+            case "date":
+                return moment
+                    .utc(field.value)
+                    .locale(lang)
+                    .format("DD/MM/YYYY");
+            case "multiple_choice":
+                if (Array.isArray(field.value)) {
+                    return (
+                        <>
+                            {field.value?.map(choice => (
+                                <div key={choice} className="mt-2 first:mt-0">
+                                    {choice}
+                                </div>
+                            ))}
+                        </>
+                    );
+                } else return field.value;
+            case "boolean":
+                return field.value ? "Yes" : "No";
+            default:
+                return field.value;
+        }
+    };
+
     React.useEffect(() => {
         const fetchLayout = async () => {
             try {
@@ -108,9 +152,8 @@ const ProfileSection = () => {
                         section =>
                             !section.fields.every(
                                 item =>
-                                    !item.value ||
-                                    (item.value &&
-                                        Array.isArray(item.value) &&
+                                    item.value === undefined ||
+                                    (Array.isArray(item.value) &&
                                         !item.value.length)
                             )
                     );
@@ -175,30 +218,7 @@ const ProfileSection = () => {
                                     <span>{answer.label}</span>
                                 </div>
                                 <div className="border-l-2 border-gray-300 pl-4 text-neutral-600">
-                                    {answer.type === "file" ? (
-                                        <a
-                                            href={answer.value.value}
-                                            download
-                                            className="text-blue_primary_700 font-semibold hover:underline"
-                                        >
-                                            {answer.value.value}
-                                        </a>
-                                    ) : answer.type === "date" ? (
-                                        moment(answer.value, "DD/MM/YYYY")
-                                            .toDate()
-                                            .toISOString()
-                                    ) : Array.isArray(answer.value) ? (
-                                        answer.value?.map(choice => (
-                                            <div
-                                                key={choice}
-                                                className="mt-2 first:mt-0"
-                                            >
-                                                {choice}
-                                            </div>
-                                        ))
-                                    ) : (
-                                        answer.value
-                                    )}
+                                    {getCustomQuesVal(answer)}
                                 </div>
                             </div>
                         );
@@ -217,7 +237,7 @@ const EducationSectionList = ({ datas }: { datas: EducationFormState[] }) => {
         <ul className="w-full space-y-3">
             {datas.map((item, index: number) => (
                 <li key={index} className="w-full flex flex-col lg:flex-row">
-                    <span className="inline-block text-neutral-600 mr-6 lg:basis-40">
+                    <span className="inline-block text-neutral-600 whitespace-nowrap mr-6 lg:basis-40 lg:flex-shrink-0">
                         {moment
                             .utc(item.startDate)
                             .locale(lang)
@@ -256,7 +276,7 @@ const ExperienceSectionList = ({ datas }: { datas: ExperienceType[] }) => {
         <ul className="w-full space-y-3">
             {datas.map((item, index: number) => (
                 <li key={index} className="w-full flex flex-col lg:flex-row">
-                    <span className="inline-block text-neutral-600 mr-6 lg:basis-40">
+                    <span className="inline-block text-neutral-600 whitespace-nowrap mr-6 lg:basis-40 lg:flex-shrink-0">
                         {moment
                             .utc(item.startDate)
                             .locale(lang)

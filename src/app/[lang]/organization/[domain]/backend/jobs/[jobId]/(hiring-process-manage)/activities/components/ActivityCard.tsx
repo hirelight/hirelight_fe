@@ -10,6 +10,16 @@ const ActivityCard = ({ data }: { data: IActivityLogDto }) => {
         <div className="flex text-sm">
             <div className="w-2/3">
                 <p>{data.title}</p>
+                {data.url && (
+                    <Link
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        href={data.url}
+                        className="text-blue_primary_600 hover:text-blue_primary_800 hover:underline"
+                    >
+                        View
+                    </Link>
+                )}
             </div>
             <div className="w-1/3 pl-2 flex items-center">
                 <div className="w-8 h-8 mt-0.5 mr-2">

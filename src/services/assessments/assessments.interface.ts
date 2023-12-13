@@ -44,6 +44,7 @@ export interface IAssessmentDto {
     index: number;
     createdTime: Date | string;
     updatedTime: Date | string;
+    numberOfAssessors?: number;
     status: string;
 }
 

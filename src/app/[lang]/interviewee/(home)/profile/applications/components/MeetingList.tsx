@@ -52,6 +52,7 @@ const MeetingList = () => {
                                         {moment
                                             .utc(meeting.startTime)
                                             .local()
+                                            .locale(lang)
                                             .format("dddd MMMM Do HH:mm A")}
                                     </strong>
                                 </span>
@@ -63,6 +64,7 @@ const MeetingList = () => {
                                         {moment
                                             .utc(meeting.endTime)
                                             .local()
+                                            .locale(lang)
                                             .format("dddd MMMM Do HH:mm A")}
                                     </strong>
                                 </span>

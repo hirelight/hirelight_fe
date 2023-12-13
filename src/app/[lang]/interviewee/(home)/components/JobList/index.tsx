@@ -18,8 +18,8 @@ const JobList = () => {
     const [searchString, setSearchString] = useState("");
 
     const { data: jobsRes } = useQuery({
-        queryKey: ["jobs-candidate"],
-        queryFn: () => jobServices.getListAsync(undefined),
+        queryKey: ["jobs"],
+        queryFn: () => jobServices.getListAsync(),
     });
 
     return (
@@ -34,49 +34,50 @@ const JobList = () => {
                         <div className="w-full max-w-full overflow-hidden">
                             <div className="w-full flex justify-between">
                                 <h3 className="text-neutral-700 font-semibold text-xl mb-6">
-                                    {
-                                        jobsRes?.data.filter(job =>
-                                            job.title
-                                                .toLowerCase()
-                                                .includes(searchString)
-                                        ).length
-                                    }{" "}
+                                    {jobsRes?.data?.filter(job =>
+                                        job.title
+                                            .toLowerCase()
+                                            .includes(searchString)
+                                    ).length ?? 0}{" "}
                                     jobs associated
                                 </h3>
                             </div>
 
                             <div>
                                 <ul className="flex flex-col gap-3">
-                                    {jobsRes?.data
-                                        .filter(job =>
-                                            job.title
-                                                .toLowerCase()
-                                                .includes(searchString)
-                                        )
-                                        .map((job, index) => (
-                                            <li
-                                                key={index}
-                                                onClick={() => {
-                                                    setShowJD(true);
-                                                    setSelectedJob(job);
-                                                }}
-                                            >
-                                                <JobCard
-                                                    data={
-                                                        {
-                                                            ...job,
-                                                            content: JSON.parse(
-                                                                job.content
-                                                            ),
-                                                            applicationForm:
-                                                                JSON.parse(
-                                                                    job.applicationForm
-                                                                ),
-                                                        } as any
-                                                    }
-                                                />
-                                            </li>
-                                        ))}
+                                    {jobsRes &&
+                                        jobsRes.data &&
+                                        jobsRes.data
+                                            .filter(job =>
+                                                job.title
+                                                    .toLowerCase()
+                                                    .includes(searchString)
+                                            )
+                                            .map((job, index) => (
+                                                <li
+                                                    key={index}
+                                                    onClick={() => {
+                                                        setShowJD(true);
+                                                        setSelectedJob(job);
+                                                    }}
+                                                >
+                                                    <JobCard
+                                                        data={
+                                                            {
+                                                                ...job,
+                                                                content:
+                                                                    JSON.parse(
+                                                                        job.content
+                                                                    ),
+                                                                applicationForm:
+                                                                    JSON.parse(
+                                                                        job.applicationForm
+                                                                    ),
+                                                            } as any
+                                                        }
+                                                    />
+                                                </li>
+                                            ))}
                                 </ul>
                             </div>
                         </div>
@@ -118,7 +119,7 @@ const JobList = () => {
                         </AnimatePresence>
                     </div>
 
-                    {jobsRes && jobsRes?.data.length > 10 && (
+                    {jobsRes && jobsRes.data && jobsRes.data.length > 10 && (
                         <div className="flex justify-center items-center mt-6">
                             <Pagination numOfPages={5} />
                         </div>

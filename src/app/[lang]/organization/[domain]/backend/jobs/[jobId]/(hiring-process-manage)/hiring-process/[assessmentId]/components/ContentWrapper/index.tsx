@@ -2,12 +2,26 @@
 
 import React, { useEffect } from "react";
 import { PlayIcon } from "@heroicons/react/24/solid";
+import { useParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+
+import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
+import { setAssessment } from "@/redux/slices/assessment.slice";
+import { fetchAssessmentById } from "@/redux/thunks/assessment.thunk";
+import assessmentsServices from "@/services/assessments/assessments.service";
 
 import Sidebar from "../Sidebar";
 
 import styles from "./styles.module.scss";
 
 const ContentWrapper = ({ children }: { children: React.ReactNode }) => {
+    const { assessmentId } = useParams();
+    const dispatch = useAppDispatch();
+    const { data: assessmentRes } = useQuery({
+        queryKey: ["assessment", assessmentId],
+        queryFn: () => assessmentsServices.getById(assessmentId as string),
+    });
+
     const [showSidebar, setShowSidebar] = React.useState(true);
 
     useEffect(() => {
@@ -29,6 +43,12 @@ const ContentWrapper = ({ children }: { children: React.ReactNode }) => {
         };
     }, [showSidebar]);
 
+    useEffect(() => {
+        if (assessmentRes) {
+            dispatch(setAssessment(assessmentRes.data));
+        }
+    }, [assessmentRes, dispatch]);
+
     return (
         <div className="relative flex">
             <div
@@ -36,7 +56,7 @@ const ContentWrapper = ({ children }: { children: React.ReactNode }) => {
                     !showSidebar ? "-translate-x-full" : ""
                 }`}
             >
-                <div className="flex-1 max-h-screen sticky top-2 lg:top-0 lg:relative">
+                <div className="flex-1 max-h-screen sticky top-2 bg-white lg:top-0 lg:relative">
                     <Sidebar />
                     <button
                         type="button"

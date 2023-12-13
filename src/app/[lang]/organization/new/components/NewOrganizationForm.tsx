@@ -21,7 +21,6 @@ import styles from "./NewOrganizationForm.module.scss";
 
 const NewOrganizationForm = () => {
     const router = useRouter();
-    const loginId = useSearchParams().get("loginId");
     const { authUser } = useAppSelector(state => state.auth);
 
     const [newOrgFormErr, setNewOrgFormErr] = React.useState({
@@ -48,10 +47,7 @@ const NewOrganizationForm = () => {
                 const { subdomain, id } = data.data;
                 const resOrgToken = await authServices.getOrgAccessToken(id);
 
-                toast.success("Create org successfully!", {
-                    position: "bottom-left",
-                    autoClose: 1000,
-                });
+                toast.success("Create org successfully!");
 
                 router.replace(
                     `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend?accessToken=${resOrgToken.data.accessToken}`

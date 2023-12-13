@@ -1,18 +1,23 @@
+"use client";
+
 import Image from "next/image";
 import React from "react";
 import Link from "next/link";
+import moment from "moment";
+import { useParams } from "next/navigation";
 
 import { Calendar, Clock, DollarCurrency, MapPin } from "@/icons";
 
 import logo from "/public/images/logo.svg";
 
-import { IApplicantProfileDto, IJobPostProfileDto } from "@/services";
+import { IApplicantProfileDto } from "@/services";
 
 interface ApplicationCardProps {
     data: IApplicantProfileDto;
 }
 
 const ApplicationCard: React.FC<ApplicationCardProps> = ({ data }) => {
+    const { lang } = useParams();
     return (
         <div className="flex gap-4 p-4 sm:p-6 bg-white border border-gray-200 rounded-lg shadow">
             <div className="hidden md:block rounded-full w-20 h-20 border border-slate-200 overflow-hidden">
@@ -49,13 +54,20 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ data }) => {
                     <div className="flex items-center">
                         <DollarCurrency className="w-4 h-4 inline-block mr-1" />
                         <span className="text-xs sm:text-sm whitespace-nowrap">
-                            Salary
+                            {!data.jobPost.maxSalary && !data.jobPost.maxSalary
+                                ? "Negotiate"
+                                : data.jobPost.minSalary +
+                                  "-" +
+                                  data.jobPost.maxSalary}
                         </span>
                     </div>
                     <div className="hidden xl:flex items-center">
                         <Calendar className="w-4 h-4 inline-block mr-1" />
                         <span className="text-xs sm:text-sm whitespace-nowrap">
-                            29 minutes ago
+                            {moment
+                                .utc(data.jobPost.updatedTime)
+                                .locale(lang)
+                                .fromNow()}
                         </span>
                     </div>
                 </div>

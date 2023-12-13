@@ -32,9 +32,9 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
 
     const queryClient = useQueryClient();
 
-    const { data: flowData } = useAppSelector(state => state.assessmentFlow);
+    const { data: assessmentData } = useAppSelector(state => state.assessment);
 
-    const [selected, setSelected] = useState<ICollaboratorDto[]>(assessors);
+    const [selected, setSelected] = useState<ICollaboratorDto[]>([]);
     const [numEvaluations, setNumEvaluations] = useState<string>("");
     const oldSelected = useMemo(() => assessors, [assessors]);
 
@@ -71,6 +71,9 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
             await queryClient.invalidateQueries({
                 queryKey: ["assigned-assessors", assessmentId],
             });
+            await queryClient.invalidateQueries({
+                queryKey: ["assessment", assessmentId],
+            });
 
             toast.success("Update evaluators successfully!");
             closeModal();
@@ -106,6 +109,15 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
             prev.filter(person => person.employerDto.id !== id)
         );
     };
+
+    useEffect(() => {
+        setNumEvaluations(
+            assessmentData.numberOfAssessors
+                ? assessmentData.numberOfAssessors.toString()
+                : ""
+        );
+        setSelected(assessors);
+    }, [assessmentData, assessors]);
 
     return (
         <Transition appear show={isOpen} as={Fragment}>

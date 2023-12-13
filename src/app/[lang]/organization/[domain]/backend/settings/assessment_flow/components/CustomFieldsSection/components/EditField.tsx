@@ -8,6 +8,7 @@ import {
     IAppFormTemplateField,
     IEditField,
 } from "@/interfaces/app-form-template.interface";
+import { AppFormInputTypes } from "@/interfaces";
 
 const appFormPos = new Map<string, string>([
     ["personal_information", "Personal information"],
@@ -67,11 +68,17 @@ const EditField: React.FC<EditFieldProps> = ({ data, onUpdate, onCancel }) => {
                         <Selection
                             title="Field type"
                             required
-                            items={["Paragraph", "asd"].map(item => ({
-                                label: item,
-                                value: item,
+                            items={AppFormInputTypes.map(item => ({
+                                label: item.label,
+                                value: item.type,
                             }))}
-                            value={formState.updatedField.type}
+                            value={
+                                AppFormInputTypes.find(
+                                    item =>
+                                        item.type ===
+                                        formState.updatedField.type
+                                )?.label ?? AppFormInputTypes[0].label
+                            }
                             placeholder="Please select an option"
                             onChange={(content: string) =>
                                 setFormState({

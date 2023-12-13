@@ -52,17 +52,25 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
     const [formErr, setFormErr] = useState({
         fromErr: "",
         toErr: "",
+        durationErr: "",
     });
 
     const inValidInput = (): boolean => {
         const errors = { ...formErr };
         const { from, to } = formState;
 
-        if (moment(to).isBefore(from))
+        if (moment(to).isSameOrBefore(from))
             errors.toErr = "The from time must greator than to time";
 
-        if (moment(from).isBefore(moment()))
-            errors.fromErr = "Free time must be in future";
+        if (moment(from).isSameOrBefore(moment()))
+            errors.fromErr = "Free time must start in the future";
+
+        if (
+            Math.abs(moment(from).diff(to, "milliseconds")) >
+            24 * 60 * 60 * 1000
+        ) {
+            errors.durationErr = "Meeting duration must within 24 hours!";
+        }
 
         if (isInvalidForm(errors)) {
             toast.error("Invalid input");
@@ -91,6 +99,10 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
     };
 
     const handleSendReschedule = async () => {
+        if (sections.length === 0)
+            return toast.error(
+                "Please provide information about your free time!"
+            );
         setLoading(true);
         try {
             let res;
@@ -267,6 +279,8 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
                                                                 setFormErr({
                                                                     ...formErr,
                                                                     fromErr: "",
+                                                                    durationErr:
+                                                                        "",
                                                                 });
                                                             }}
                                                             required
@@ -294,6 +308,8 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
                                                                 setFormErr({
                                                                     ...formErr,
                                                                     toErr: "",
+                                                                    durationErr:
+                                                                        "",
                                                                 });
                                                             }}
                                                             required
@@ -301,6 +317,15 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
                                                                 formErr.toErr
                                                             }
                                                         />
+                                                        {formErr.durationErr && (
+                                                            <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                                                                <span className="font-medium">
+                                                                    {
+                                                                        formErr.durationErr
+                                                                    }{" "}
+                                                                </span>
+                                                            </p>
+                                                        )}
 
                                                         <div>
                                                             <ButtonOutline

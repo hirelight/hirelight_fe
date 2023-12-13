@@ -25,6 +25,9 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
     const selectedCandidates = useAppSelector(
         state => state.candidates.selectedCandidates
     );
+    const applicantDetail = useAppSelector(
+        state => state.applicantAssessmentDetail.data
+    );
     const parsedContent = JSON.parse(
         profile.applicantProfile.content
     ) as ApplicationFormJSON;

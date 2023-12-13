@@ -221,8 +221,10 @@ const MCQResult = ({
                                     className={`flex items-center font-medium gap-2  ${
                                         ans.isChosen && ans.correct
                                             ? "text-green-600"
-                                            : ans.correct
+                                            : ans.isChosen && !ans.correct
                                             ? "text-red-600"
+                                            : ans.correct
+                                            ? "text-green-600"
                                             : ""
                                     }`}
                                 >

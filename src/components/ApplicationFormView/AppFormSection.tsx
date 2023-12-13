@@ -241,40 +241,46 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                 <span className="text-red-500 mr-1">*</span>
                 Required fields
             </h4>
-            {data.form_structure.map(section => {
-                return (
-                    <section key={section.name}>
-                        <div className="flex items-center justify-between border-b border-gray-300 pb-2 mb-8">
-                            <h2 className="text-xl">{section.name}</h2>
-                            <div className="flex gap-1 items-center text-neutral-500 text-sm">
-                                <TrashIcon className="w-4 h-4" />
-                                Clear
+            <div className="space-y-8">
+                {data.form_structure.map(section => {
+                    return (
+                        <section key={section.id}>
+                            <div className="flex items-center justify-between border-b border-gray-300 pb-2 mb-8">
+                                <h2 className="text-xl">{section.name}</h2>
+                                <div className="flex gap-1 items-center text-neutral-500 text-sm">
+                                    <TrashIcon className="w-4 h-4" />
+                                    Clear
+                                </div>
                             </div>
-                        </div>
-                        {section.fields.map(field => {
-                            if (field.id === "education")
-                                return (
-                                    <EducationSection
-                                        key={field.id}
-                                        data={field}
-                                    />
-                                );
-                            else if (field.id === "experience")
-                                return (
-                                    <ExperienceSection
-                                        key={field.id}
-                                        data={field}
-                                    />
-                                );
-                            return (
-                                <Fragment key={field.id}>
-                                    {inputFieldOnType(field)}
-                                </Fragment>
-                            );
-                        })}
-                    </section>
-                );
-            })}
+                            <div className="space-y-6">
+                                {section.fields.map(field => {
+                                    if (field.id === "education")
+                                        return (
+                                            <Fragment key={field.id}>
+                                                <EducationSection
+                                                    data={field}
+                                                />
+                                            </Fragment>
+                                        );
+                                    else if (field.id === "experience")
+                                        return (
+                                            <Fragment key={field.id}>
+                                                <ExperienceSection
+                                                    data={field}
+                                                />
+                                            </Fragment>
+                                        );
+                                    return (
+                                        <Fragment key={field.id}>
+                                            {inputFieldOnType(field)}
+                                        </Fragment>
+                                    );
+                                })}
+                            </div>
+                        </section>
+                    );
+                })}
+            </div>
             {data.questions.map(field => inputFieldOnType(field))}
 
             <div className="flex justify-end gap-6 mb-6">

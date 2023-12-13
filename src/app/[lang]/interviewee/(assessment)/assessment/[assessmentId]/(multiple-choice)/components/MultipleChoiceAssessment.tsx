@@ -3,27 +3,20 @@
 import React, { createContext, useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { toast } from "react-toastify";
-import { flushSync } from "react-dom";
 import { useParams, useRouter } from "next/navigation";
-import moment from "moment";
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { useQueryClient } from "@tanstack/react-query";
 
-import {
-    ICandidateMCContentJson,
-    ICandidateMCDto,
-} from "@/interfaces/questions.interface";
+import { ICandidateMCDto } from "@/interfaces/questions.interface";
 import {
     ICandidateAssessmentDetailDto,
     IMCAppliAssessmentDto,
     mcAssessmentServices,
 } from "@/services";
-import { ButtonOutline, CountdownTimer } from "@/components";
-import { SpinLoading } from "@/icons";
+import { ButtonOutline } from "@/components";
 import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
-import useTrackAssessment from "@/hooks/useTrackAssessment";
 import { handleError } from "@/helpers";
 import { sanitizeHtml } from "@/helpers/sanitizeHTML";
+import useTrackAssessment from "@/hooks/useTrackAssessment";
 
 import styles from "./MultipleChoiceAssessment.module.scss";
 
@@ -77,11 +70,15 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
         useState<IMCAppliAssessmentDto | null>(null);
     const [displayTest, setDisplayTest] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [startAutoTask, stopAutoTask] = useTrackAssessment(
+        () => handleTrackTest(),
+        30
+    );
 
     const handleTrackTest = useCallback(
         async function () {
             try {
-                const res = await mcAssessmentServices.trackMCAssessment({
+                await mcAssessmentServices.trackMCAssessment({
                     applicantAssessmentDetailId: data.id,
                     answers: answers,
                 });
@@ -91,11 +88,6 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
         },
         [answers, data.id]
     );
-
-    // const [startAutoTask, stopAutoTask] = useTrackAssessment(
-    //     handleTrackTest,
-    //     10
-    // );
 
     const handleJoinTest = async () => {
         setIsLoading(true);
@@ -112,6 +104,7 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                 JSON.parse(res.data.questionAnswerSet!!) as ICandidateMCDto[]
             );
             setDisplayTest(true);
+            startAutoTask();
         } catch (error: any) {
             handleError(error);
         }
@@ -130,25 +123,19 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                 queryKey: [`my-assessment`, assesmentData!!.id],
             });
             toast.success(res.message);
+            stopAutoTask();
             router.push(`${data.id}/review`);
         } catch (error: any) {
             handleError(error);
         }
         setIsLoading(false);
-    }, [answers, assesmentData, data.id, queryClient, router]);
+    }, [answers, assesmentData, data.id, queryClient, router, stopAutoTask]);
 
-    // useEffect(() => {
-    //     if (
-    //         [
-    //             ApplicantAssessmentDetailStatus.EVALUATED,
-    //             ApplicantAssessmentDetailStatus.PENDING_EVALUATION,
-    //         ].includes(data.status)
-    //     ) {
-    //         setDisplayTest(true);
-    //         setAnswers(JSON.parse(data.questionAnswerSet as string));
-    //         setAssessmentData(data as IMCAppliAssessmentDto);
-    //     }
-    // }, [data]);
+    useEffect(() => {
+        if (displayTest) {
+            startAutoTask();
+        }
+    }, [displayTest, startAutoTask]);
 
     useEffect(() => {
         const trackBeforeUnload = (e: BeforeUnloadEvent) => {

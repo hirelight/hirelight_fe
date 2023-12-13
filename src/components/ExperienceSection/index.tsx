@@ -73,6 +73,7 @@ const ExperienceSection: React.FC<ExperienceSectionProps> = ({ data }) => {
                 id={data.id}
                 name={data.id}
                 value={JSON.stringify(experiences)}
+                readOnly
                 className="sr-only"
             />
         </div>
@@ -119,6 +120,8 @@ const FormInput = ({
     };
 
     const handleAddEducation = () => {
+        if (!formState.title)
+            return setFormErr({ ...formErr, title: "Field is required!" });
         onSave({
             ...formState,
             startDate: formState.startDate
@@ -138,6 +141,7 @@ const FormInput = ({
                     value={formState.title}
                     onChange={e => handleFormChange("title", e.target.value)}
                     required
+                    errorText={formErr.title}
                 />
                 <CustomInput
                     title="Company"
@@ -237,14 +241,14 @@ const ExperienceCard = ({
         <li className="px-6 py-4 bg-gray-200/70">
             <div className="pr-24 relative text-sm space-y-2" data-ui="group">
                 <dl className="flex">
-                    <dt className="text-neutral-700 font-semibold basis-36 text-right">
+                    <dt className="text-neutral-700 font-semibold basis-36 flex-shrink-0 text-right">
                         Title
                     </dt>
                     <dd className="ml-12">{title}</dd>
                 </dl>
                 {company && (
                     <dl className="flex">
-                        <dt className="text-neutral-700 font-semibold basis-36 text-right">
+                        <dt className="text-neutral-700 font-semibold basis-36 flex-shrink-0 text-right">
                             Company
                         </dt>
                         <dd className="ml-12">{company}</dd>
@@ -252,7 +256,7 @@ const ExperienceCard = ({
                 )}
                 {industry && (
                     <dl className="flex">
-                        <dt className="text-neutral-700 font-semibold basis-36 text-right">
+                        <dt className="text-neutral-700 font-semibold basis-36 flex-shrink-0 text-right">
                             Industry
                         </dt>
                         <dd className="ml-12">{industry}</dd>
@@ -260,7 +264,7 @@ const ExperienceCard = ({
                 )}
                 {summary && (
                     <dl className="flex">
-                        <dt className="text-neutral-700 font-semibold basis-36 text-right">
+                        <dt className="text-neutral-700 font-semibold basis-36 flex-shrink-0 text-right">
                             Summary
                         </dt>
                         <dd className="ml-12 italic">{summary}</dd>
@@ -268,7 +272,7 @@ const ExperienceCard = ({
                 )}
                 {(startDate || endDate) && (
                     <dl className="flex">
-                        <dt className="text-neutral-700 font-semibold basis-36 text-right">
+                        <dt className="text-neutral-700 font-semibold basis-36 flex-shrink-0 text-right">
                             Period
                         </dt>
                         <dd className="ml-12">

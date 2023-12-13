@@ -6,9 +6,10 @@ import { useSearchParams } from "next/navigation";
 import jwtDecode from "jwt-decode";
 
 import { IUserDto } from "@/services";
-import { useAppDispatch } from "@/redux/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { logout, setToken } from "@/redux/slices/auth.slice";
 import { decryptData } from "@/helpers/authHelpers";
+import { DoubleRingLoading } from "@/components";
 
 const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
     const accessToken = useSearchParams().get("accessToken");
@@ -16,20 +17,20 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
     const { lang } = useParams();
     const router = useRouter();
     const dispatch = useAppDispatch();
+    const { token: userToken, authUser } = useAppSelector(state => state.auth);
 
     React.useEffect(() => {
-        const token = decryptData("hirelight_access_token");
-        if (!token) {
+        if (!userToken) {
             if (accessToken) {
                 dispatch(setToken(accessToken));
                 router.push(`/${lang}/backend`);
             } else {
                 router.replace(
-                    `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login`
+                    `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login?authEnd=true`
                 );
             }
         } else {
-            const decoded = jwtDecode(token) as IUserDto;
+            const decoded = jwtDecode(userToken) as IUserDto;
             if (
                 typeof window !== "undefined" &&
                 decoded.organizationSubdomain !==
@@ -43,11 +44,19 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
                 router.push(`/${lang}/backend`);
             } else if (decoded.exp < Date.now() / 1000) {
                 dispatch(logout());
-                window.location.href = `http://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login?authEnd=true`;
+                router.replace(
+                    `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/login?authEnd=true`
+                );
             }
         }
-    }, [accessToken, dispatch, lang, router]);
+    }, [accessToken, dispatch, lang, router, userToken]);
 
+    if (!userToken)
+        return (
+            <div className="w-screen h-screen flex items-center justify-center">
+                <DoubleRingLoading className="w-28 h-28" />
+            </div>
+        );
     return <>{children}</>;
 };
 

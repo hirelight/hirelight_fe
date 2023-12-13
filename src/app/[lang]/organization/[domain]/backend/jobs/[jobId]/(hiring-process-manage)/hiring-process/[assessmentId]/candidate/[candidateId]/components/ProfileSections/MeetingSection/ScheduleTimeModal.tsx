@@ -3,6 +3,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import moment from "moment";
+import { useParams } from "next/navigation";
 
 type ScheduleTimeModalProps = {
     show: boolean;
@@ -18,6 +19,8 @@ const ScheduleTimeModal: React.FC<ScheduleTimeModalProps> = ({
     close,
     scheduleTime,
 }) => {
+    const { lang } = useParams();
+
     return (
         <Transition appear show={show} as={Fragment}>
             <Dialog as="div" className="relative z-10" onClose={close}>
@@ -67,6 +70,7 @@ const ScheduleTimeModal: React.FC<ScheduleTimeModalProps> = ({
                                                             {moment
                                                                 .utc(item.from)
                                                                 .local()
+                                                                .locale(lang)
                                                                 .format(
                                                                     "MM/DD/yyy hh:mm A"
                                                                 )}
@@ -76,6 +80,7 @@ const ScheduleTimeModal: React.FC<ScheduleTimeModalProps> = ({
                                                             {moment
                                                                 .utc(item.to)
                                                                 .local()
+                                                                .locale(lang)
                                                                 .format(
                                                                     "MM/DD/yyy hh:mm A"
                                                                 )}

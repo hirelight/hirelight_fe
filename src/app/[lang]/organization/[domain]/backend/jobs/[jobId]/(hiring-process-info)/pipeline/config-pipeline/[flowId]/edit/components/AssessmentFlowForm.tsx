@@ -15,7 +15,7 @@ import {
     IEditAssessmentFlowDto,
 } from "@/services/assessment-flows/assessment-flows.interface";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
-import { isInvalidForm } from "@/helpers";
+import { handleError, isInvalidForm } from "@/helpers";
 import { useAppSelector } from "@/redux/reduxHooks";
 import assessmentsServices from "@/services/assessments/assessments.service";
 
@@ -118,15 +118,8 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                 //     ),
                 // }));
             } catch (error) {
-                console.error(error);
+                handleError(error);
             }
-        } else {
-            setFormState(prev => ({
-                ...prev,
-                assessments: prev.assessments.filter(
-                    (_, assessmentPos) => assessmentPos !== pos
-                ),
-            }));
         }
     };
 

@@ -72,6 +72,7 @@ const EducationSection: React.FC<EducationSectionProps> = ({ data }) => {
                 id={data.id}
                 name={data.id}
                 value={JSON.stringify(educations)}
+                readOnly
                 className="sr-only"
             />
         </div>
@@ -116,6 +117,8 @@ const FormInput = ({
     };
 
     const handleAddEducation = () => {
+        if (!formState.school)
+            return setFormErr({ ...formErr, school: "Field is required!" });
         onSave({
             ...formState,
             startDate: formState.startDate
@@ -135,6 +138,7 @@ const FormInput = ({
                     value={formState.school}
                     onChange={e => handleFormChange("school", e.target.value)}
                     required
+                    errorText={formErr.school}
                 />
                 <CustomInput
                     title="Field of study"
@@ -207,14 +211,14 @@ const EducationCard = ({
         <li className="px-6 py-4 bg-gray-200/70">
             <div className="pr-24 relative text-sm space-y-2" data-ui="group">
                 <dl className="flex">
-                    <dt className="text-neutral-700 font-semibold basis-36 text-right">
+                    <dt className="text-neutral-700 font-semibold basis-36 flex-shrink-0 text-right">
                         School
                     </dt>
                     <dd className="ml-12">{school}</dd>
                 </dl>
                 {fieldOfStudy && (
                     <dl className="flex">
-                        <dt className="text-neutral-700 font-semibold basis-36 text-right">
+                        <dt className="text-neutral-700 font-semibold basis-36 flex-shrink-0 text-right">
                             Field of study
                         </dt>
                         <dd className="ml-12">{fieldOfStudy}</dd>
@@ -222,7 +226,7 @@ const EducationCard = ({
                 )}
                 {degree && (
                     <dl className="flex">
-                        <dt className="text-neutral-700 font-semibold basis-36 text-right">
+                        <dt className="text-neutral-700 font-semibold basis-36 flex-shrink-0 text-right">
                             Degree
                         </dt>
                         <dd className="ml-12">{degree}</dd>
@@ -230,7 +234,7 @@ const EducationCard = ({
                 )}
                 {(startDate || endDate) && (
                     <dl className="flex">
-                        <dt className="text-neutral-700 font-semibold basis-36 text-right">
+                        <dt className="text-neutral-700 font-semibold basis-36 flex-shrink-0 text-right">
                             Period
                         </dt>
                         <dd className="ml-12">

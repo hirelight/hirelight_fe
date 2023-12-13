@@ -2,24 +2,13 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
-import React, { useMemo, useState } from "react";
-import {
-    BookmarkSlashIcon,
-    PencilIcon,
-    TrashIcon,
-} from "@heroicons/react/24/outline";
-import { toast } from "react-toastify";
+import React, { useState } from "react";
+import { BookmarkSlashIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, LazyMotion, domAnimation } from "framer-motion";
-import Image from "next/image";
-import moment from "moment";
-import { Menu, Transition } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
 import evaluationServices from "@/services/evaluation/evaluation.service";
 import { Button } from "@/components";
-import { ICreateEvaluationDto } from "@/services/evaluation/evaluation.interface";
 import { useAppSelector } from "@/redux/reduxHooks";
-import collaboratorsServices from "@/services/collaborators/collaborators.service";
 
 import styles from "./styles.module.scss";
 import AddEvaluationSection from "./AddEvaluationSection";
@@ -228,52 +217,6 @@ const ReviewContent = () => {
             >
                 Add evaluation for this candidate
             </button>
-
-            {/* <Menu as="div" className="relative inline-block text-left py-6">
-                <div>
-                    <Menu.Button className="text-sm text-blue_primary_600 font-semibold hover:underline hover:text-blue_primary_800">
-                        Add evaluation for this candidate
-                    </Menu.Button>
-                </div>
-                <Transition
-                    as={React.Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                >
-                    <Menu.Items
-                        as="div"
-                        id="hello-world"
-                        className="absolute right-0 top-0 -translate-y-full z-50 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white drop-shadow-xl ring-1 ring-black/5 focus:outline-none"
-                    >
-                        <div className="px-1 py-1 ">
-                            {querRes?.data.map(item => (
-                                <Menu.Item key={item.id}>
-                                    {({ active }) => (
-                                        <button
-                                            type="button"
-                                            className={`${
-                                                active
-                                                    ? "bg-blue_primary_100"
-                                                    : ""
-                                            } group flex w-full text-neutral-700 items-center rounded-md px-2 py-2 font-semibold text-sm`}
-                                            onClick={handleShowAddEvaluation.bind(
-                                                null,
-                                                item.id
-                                            )}
-                                        >
-                                            {item.assessment.name}
-                                        </button>
-                                    )}
-                                </Menu.Item>
-                            ))}
-                        </div>
-                    </Menu.Items>
-                </Transition>
-            </Menu> */}
 
             <LazyMotion features={domAnimation}>
                 <AnimatePresence>

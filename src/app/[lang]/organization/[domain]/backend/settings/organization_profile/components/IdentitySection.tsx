@@ -26,7 +26,7 @@ const IdentitySection = () => {
 
     const [imageFile, setImageFile] = React.useState<File | undefined>();
     const [progressPer, setProgressPer] = React.useState(0);
-    const [loading, setLoading] = React.useState(true);
+    const [loading, setLoading] = React.useState(false);
 
     const handleFileChange = async (fileList: File[]) => {
         const reader = new FileReader();

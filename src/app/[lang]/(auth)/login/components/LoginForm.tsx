@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import { GoogleIcon, LinkedInIcon, SpinLoading } from "@/icons";
 import { LoginEmployerDto } from "@/services/auth/auth.interface";
 import { fetchAccessToken, loginEmailPwd } from "@/redux/thunks/auth.thunk";
-import { useAppDispatch } from "@/redux/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { decryptData } from "@/helpers/authHelpers";
 import { handleError } from "@/helpers";
 import authServices from "@/services/auth/auth.service";
@@ -26,6 +26,7 @@ interface ILoginForm {
 const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
     const router = useRouter();
     const dispatch = useAppDispatch();
+    const { token: userToken } = useAppSelector(state => state.auth);
 
     const { lang } = useParams();
 
@@ -60,9 +61,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
         try {
             const res = await authServices.loginEmployer(loginForm);
             dispatch(setToken(res.data.accessToken));
-            toast.success(res.message);
 
-            setPageLoading(true);
             if (isAdmin(res.data.accessToken))
                 return router.replace(
                     `${window.location.protocol}//admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/organizations?accessToken=${res.data.accessToken}`
@@ -80,6 +79,8 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
 
     const getToken = React.useCallback(
         async (loginId: string) => {
+            setPageLoading(true);
+
             try {
                 await dispatch(fetchAccessToken(loginId));
 
@@ -88,35 +89,32 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                 );
             } catch (error) {
                 console.error(error);
+                setPageLoading(false);
             }
         },
         [dispatch, isOrgMember, isOrgOwner, router]
     );
 
     React.useEffect(() => {
-        const accessToken = decryptData("hirelight_access_token");
-        if (!accessToken) {
+        if (!userToken) {
             if (loginStatus && loginId) {
                 getToken(loginId);
             }
         } else {
-            if (isAdmin(accessToken))
-                router.replace(
-                    `${window.location.protocol}//admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/organizations?accessToken=${accessToken}`
-                );
-            else router.push("select-org");
+            if (loginStatus && loginId) {
+                getToken(loginId);
+            } else {
+                if (isAdmin(userToken))
+                    router.replace(
+                        `${window.location.protocol}//admin.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/organizations?accessToken=${userToken}`
+                    );
+                else router.push("select-org");
+            }
         }
-    }, [getToken, isAdmin, lang, loginId, loginStatus, router]);
+    }, [getToken, isAdmin, lang, loginId, loginStatus, router, userToken]);
 
     return (
         <React.Fragment>
-            <Portal>
-                {pageLoading && (
-                    <div className="fixed inset-0 z-[2000] w-full h-screen backdrop-brightness-50 backdrop-blur-sm flex items-center justify-center">
-                        <SpinLoading className="w-32 h-32 text-blue_primary_600" />
-                    </div>
-                )}
-            </Portal>
             <form onSubmit={handleLogin}>
                 <div className="flex flex-col gap-4">
                     <h1 className={styles.title}>

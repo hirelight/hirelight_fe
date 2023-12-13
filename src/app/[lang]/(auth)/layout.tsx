@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import React, { ReactNode } from "react";
-import { cookies } from "next/headers";
 import dynamic from "next/dynamic";
 
 import styles from "./layout.module.scss";

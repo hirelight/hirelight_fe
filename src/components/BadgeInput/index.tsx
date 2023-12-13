@@ -38,17 +38,45 @@ const BadgeInput = (props: ICustomInput) => {
         ...rest
     } = props;
     const [text, setText] = useState("");
+    const [invalids, setInvalids] = useState("");
 
     const handleAddBadge = () => {
-        const regex = /[`~,<>;':"\[\]\|{}()=_\[+]]/;
+        const regex = /[`~,<>;':"\[\]\|{}()=_]/;
+        if (regex.test(text))
+            return toast.error("Key word cannot contain special characters!");
+
         if (values.includes(text)) {
             return toast.error("Key word has alread existed!");
         }
 
-        if (regex.test(text))
-            return toast.error("Key word cannot contain special characters!");
         onChange(values.concat([text]));
         setText("");
+    };
+
+    const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+        const regex = /[`~,<>;':"\[\]\|{}()=_]/;
+
+        const pasteVal = e.clipboardData.getData("Text");
+        const newItem = pasteVal.split(",").map(item => item.trim());
+        const inValids: string[] = [];
+        const valids: string[] = [];
+
+        newItem.forEach(item => {
+            if (values.includes(item) || regex.test(item)) {
+                inValids.push(item);
+            } else valids.push(item);
+        });
+
+        onChange(values.concat(valids));
+
+        if (inValids.length > 0) {
+            toast.error(
+                "Some key words alread existed or contained special characters!"
+            );
+        }
+        setTimeout(() => {
+            setText(inValids.join(", "));
+        }, 2);
     };
 
     return (
@@ -102,9 +130,10 @@ const BadgeInput = (props: ICustomInput) => {
                         {...rest}
                         required={required}
                         id={id}
-                        className={`inline-block outline-none border-none focus:outline-none focus:border-none focus:ring-0 p-0 m-0`}
+                        className={`flex-1 inline-block outline-none border-none focus:outline-none focus:border-none focus:ring-0 p-0 m-0`}
                         value={text}
                         onChange={e => setText(e.target.value)}
+                        onPaste={handlePaste}
                         onKeyDown={e => {
                             if (e.key === "Enter") {
                                 e.preventDefault();
