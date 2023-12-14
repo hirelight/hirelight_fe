@@ -1,0 +1,266 @@
+{
+    "36": [
+        {
+            "bankcode": "CC",
+            "name": "Visa, Master, JCB",
+            "displayorder": 1,
+            "pmcid": 36
+        }
+    ],
+    "38": [
+        {
+            "bankcode": "zalopayapp",
+            "name": "Thanh toán bằng ZaloPay App",
+            "displayorder": 0,
+            "pmcid": 0
+        }
+    ],
+    "39": [
+        {
+            "bankcode": "PVCB",
+            "name": "PVCombank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "KLB",
+            "name": "KienLongBank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "ABB",
+            "name": "ABBank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "CFC",
+            "name": "VietCredit",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "KEBHNHN",
+            "name": "Keb Hana HN",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "VTB",
+            "name": "Vietinbank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "KEBHNHCM",
+            "name": "Keb Hana HCM",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "BIDV",
+            "name": "BIDV",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "OJB",
+            "name": "Oceanbank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "HDB",
+            "name": "HDBank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "TPB",
+            "name": "TPBank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "VRB",
+            "name": "VRB",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "VPB",
+            "name": "VPBank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "SHB",
+            "name": "SHB ",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "PBVN",
+            "name": "PublicBankVietNam",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "SGCB",
+            "name": "TMCP Sài Gòn",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "MB",
+            "name": "MBBank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "SEAB",
+            "name": "SeABank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "EIB",
+            "name": "Eximbank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "SBIS",
+            "name": "Bank SBI",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "ACB",
+            "name": "ACB",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "DAB",
+            "name": "DongA Bank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "VCCB",
+            "name": "Ngân hàng Bản Việt",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "NASB",
+            "name": "BAC A BANK",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "UOB",
+            "name": "UOB",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "NCB",
+            "name": "NCB",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "VIB",
+            "name": "VIB",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "NAB",
+            "name": "Nam A Bank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "SGB",
+            "name": "SAIGONBANK",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "OCB",
+            "name": "OCB",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "BVB",
+            "name": "BaoVietBank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "TCB",
+            "name": "Techcombank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "MAFC",
+            "name": "Mirae Asset",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "SCB",
+            "name": "Sacombank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "VCB",
+            "name": "Vietcombank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "IVB",
+            "name": "Indovina",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "VAB",
+            "name": "VietABank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "WOO",
+            "name": "Wooribank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "SHBVN",
+            "name": "ShinhanBank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "GPB",
+            "name": "GPBank",
+            "displayorder": 1,
+            "pmcid": 39
+        },
+        {
+            "bankcode": "LPB",
+            "name": "LienVietPostBank",
+            "displayorder": 1,
+            "pmcid": 39
+        }
+    ]
+}

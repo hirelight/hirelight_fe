@@ -60,3 +60,6 @@ export * from "./activity/activity.service";
 
 export * from "./account/account.interface";
 export * from "./account/account.service";
+
+export * from "./transaction/transaction.service";
+export * from "./transaction/transaction.interface";
