@@ -14,19 +14,24 @@ import { handleError } from "@/helpers";
 import authServices from "@/services/auth/auth.service";
 import { setToken } from "@/redux/slices/auth.slice";
 import { Button } from "@/components";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+
+import { Locale } from "../../../../../../i18n.config";
 
 import styles from "./LoginForm.module.scss";
 
-interface ILoginForm {
-    _t: Record<"login_form" | "common", any>;
-}
+interface ILoginForm {}
 
-const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
+const LoginForm: React.FC<ILoginForm> = () => {
     const router = useRouter();
     const dispatch = useAppDispatch();
     const { token: userToken } = useAppSelector(state => state.auth);
 
     const { lang } = useParams();
+    const { t: _t } = useI18NextTranslation(lang as Locale, [
+        "login-page",
+        "common",
+    ]);
 
     const loginStatus = useSearchParams().get("status");
     const loginId = useSearchParams().get("loginId");
@@ -116,7 +121,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
             <form onSubmit={handleLogin}>
                 <div className="flex flex-col gap-4">
                     <h1 className={styles.title}>
-                        {_t.login_form.title.highlight}
+                        {_t("login_form.title.highlight")}
                     </h1>
                     {loginFormErr.errMessage && (
                         <motion.div
@@ -124,7 +129,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                             whileInView={{ opacity: 1 }}
                             className="w-full border-2 border-red-500 bg-red-50 p-6 rounded-md text-center text-red-700 text-sm font-medium max-w-full"
                         >
-                            <p>{_t.common.error.noti}</p>
+                            <p>{_t("error.noti", { ns: "common" })}</p>
                             <p>{loginFormErr.errMessage}</p>
                         </motion.div>
                     )}
@@ -133,7 +138,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                             htmlFor="email"
                             className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
                         >
-                            {_t.login_form.label.email}
+                            {_t("login_form.label.email")}
                         </label>
                         <input
                             type="email"
@@ -160,7 +165,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                             htmlFor="password"
                             className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
                         >
-                            {_t.login_form.label.password}
+                            {_t("login_form.label.password")}
                         </label>
                         <input
                             type="password"
@@ -187,13 +192,13 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                             whileInView={{ opacity: 1 }}
                             className="w-full border-2 border-red-500 bg-red-50 p-6 rounded-md text-center text-red-700 text-sm font-medium"
                         >
-                            <p>{_t.common.error.noti}</p>
+                            <p>{_t("error.noti", { ns: "common" })}</p>
                             <p>{loginFormErr.emailErr}</p>
                         </motion.div>
                     )}
                     <Link href={`${lang}/signup`}>
                         <p className="text-right text-xs text-blue_primary_600 font-semibold underline">
-                            {_t.login_form.btn.forgot_password}
+                            {_t("login_form.btn.forgot_password")}
                         </p>
                     </Link>
                     <Button
@@ -201,12 +206,12 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                         disabled={loading}
                         isLoading={loading}
                     >
-                        {_t.login_form.btn.signin}
+                        {_t("login_form.btn.signin")}
                     </Button>
                     <div className="flex items-center justify-between gap-2">
                         <hr className="flex-1 h-[1.5px] bg-gray-300" />
                         <span className="text-gray-500 font-medium">
-                            {_t.login_form.or}
+                            {_t("login_form.or")}
                         </span>
                         <hr className="flex-1 h-[1.5px] bg-gray-300" />
                     </div>
@@ -217,7 +222,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                         className={styles.button__signin__with}
                     >
                         <GoogleIcon className="w-6 h-6 mr-2" />
-                        <span>{_t.login_form.btn.signin_google}</span>
+                        <span>{_t("login_form.btn.signin_google")}</span>
                     </Link>
                     <Link
                         href={
@@ -227,7 +232,7 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                         className={styles.button__signin__with}
                     >
                         <LinkedInIcon className="w-8 h-8 mr-1" />
-                        <span>{_t.login_form.btn.signin_linkedin}</span>
+                        <span>{_t("login_form.btn.signin_linkedin")}</span>
                     </Link>
                 </div>
             </form>

@@ -1,0 +1,45 @@
+{
+    "header": {
+        "title": "Trang chủ"
+    },
+    "test": "Xin chào",
+    "error": {
+        "noti": "Có lỗi xảy ra!!!",
+        "internal_server": "Lỗi máy chủ",
+        "invalid_input": "Thông tin không hợp lệ!",
+        "check_red_places": "Hãy kiểm tra lỗi!",
+        "jobpost_is_publishing": "Tin tuyển dụng đang được đăng! Vui lòng gỡ bài đăng trước khi thực hiện bất kỳ thay đổi nào!"
+    },
+    "notification": {
+        "success": {
+            "login": "Đăng nhập thành công!",
+            "signup": "Đăng ký thành công!",
+            "create_new_org": "Tạo tài khoản công ty thành công!"
+        }
+    },
+    "components": {
+        "popover_warning": {
+            "btn": {
+                "confirm": "Tiếp tục",
+                "cancel": "Hủy"
+            }
+        },
+        "custom_input": {
+            "optional": "Không bắt buộc"
+        }
+    },
+    "start_time": "Thời gian bắt đầu",
+    "end_time": "Thời gian kết thúc",
+    "from": "Từ",
+    "to": "Đến",
+    "save_and_continue": "Lưu và tiếp tục",
+    "save_changes": "Lưu thay đổi",
+    "save_draft": "Lưu bản nháp",
+    "request_publish": "Gửi yêu cầu đăng bài",
+    "request_editing": "Gửi yêu cầu chỉnh sửa",
+    "delete": "Xóa",
+    "publish": "Đăng bài",
+    "unpublish": "Gỡ bài",
+    "assessment_flow": "Quy trình đánh giá",
+    "application_form": "Đơn ứng tuyển"
+}

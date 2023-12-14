@@ -15,6 +15,8 @@ import { SpinLoading } from "@/icons";
 import { JobPostStatus } from "@/interfaces/job-post.interface";
 import { Button, ButtonOutline } from "@/components";
 import { Roles } from "@/services";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "./JobHeader.module.scss";
 
@@ -23,6 +25,7 @@ interface IJobHeader {}
 const JobHeader = ({}: IJobHeader) => {
     const pathname = usePathname();
     const { lang, jobId } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "edit-job");
 
     const dispatch = useAppDispatch();
 
@@ -107,6 +110,25 @@ const JobHeader = ({}: IJobHeader) => {
         },
     });
 
+    const requestUnpublish = useMutation({
+        mutationKey: [`req-unpublish-job`, jobId],
+        mutationFn: (id: string) => jobServices.requestUnpublishJob(id),
+        onSuccess: async res => {
+            toast.success(res.message, {
+                position: "bottom-right",
+                autoClose: 1000,
+            });
+        },
+        onError: error => {
+            console.error(error);
+            toast.error("Publish failure", {
+                position: "bottom-right",
+                autoClose: 1000,
+            });
+            setIsLoading(false);
+        },
+    });
+
     const handleSaveAndContinue = async (e: any) => {
         e.preventDefault();
         let redirectLink = "";
@@ -124,9 +146,7 @@ const JobHeader = ({}: IJobHeader) => {
         }
 
         if (job.status === JobPostStatus.ACTIVE)
-            return toast.error(
-                "Job post is publishing! Please unpublish before perform any changes!"
-            );
+            return toast.error(t("common:error.jobpost_is_publishing"));
 
         try {
             const stage = pathname.split("/")[5];
@@ -172,6 +192,9 @@ const JobHeader = ({}: IJobHeader) => {
     const handleUnpublishJob = (id: string) => {
         unpublishJobMutations.mutate(id);
     };
+    const handleRequestUnpublish = (id: string) => {
+        requestUnpublish.mutate(id);
+    };
 
     return (
         <div
@@ -194,8 +217,8 @@ const JobHeader = ({}: IJobHeader) => {
                                 jobLoading || requestPublishMutation.isPending
                             }
                         >
-                            {jobLoading && <SpinLoading className="mr-2" />}Save
-                            draft
+                            {jobLoading && <SpinLoading className="mr-2" />}
+                            {t("common:save_draft")}
                         </button>
                         {job.assessmentFlowId &&
                             authUser &&
@@ -213,7 +236,7 @@ const JobHeader = ({}: IJobHeader) => {
                                     }
                                     isLoading={requestPublishMutation.isPending}
                                 >
-                                    Request publish
+                                    {t("common:request_publish")}
                                 </Button>
                             )}
 
@@ -229,7 +252,7 @@ const JobHeader = ({}: IJobHeader) => {
                                     }
                                     isLoading={publishJobMutations.isPending}
                                 >
-                                    Publish
+                                    {t("common:publish")}
                                 </Button>
                             )}
 
@@ -248,7 +271,7 @@ const JobHeader = ({}: IJobHeader) => {
                                     }
                                     isLoading={unpublishJobMutations.isPending}
                                 >
-                                    Unpublish
+                                    {t("common:unpublish")}
                                 </ButtonOutline>
                             )}
 
@@ -258,17 +281,16 @@ const JobHeader = ({}: IJobHeader) => {
                             job.status === JobPostStatus.ACTIVE && (
                                 <ButtonOutline
                                     type="button"
-                                    onClick={handleUnpublishJob.bind(
+                                    onClick={handleRequestUnpublish.bind(
                                         null,
                                         job.id
                                     )}
                                     disabled={
-                                        unpublishJobMutations.isPending ||
-                                        jobLoading
+                                        requestUnpublish.isPending || jobLoading
                                     }
-                                    isLoading={unpublishJobMutations.isPending}
+                                    isLoading={requestUnpublish.isPending}
                                 >
-                                    Request editing
+                                    {t("common:request_editing")}
                                 </ButtonOutline>
                             )}
                     </div>
@@ -286,11 +308,10 @@ const JobHeader = ({}: IJobHeader) => {
                             tabIndex={-1}
                         >
                             <h3 className={styles.section__title}>
-                                Job details
+                                {t("job_details")}
                             </h3>
                             <p className={`${styles.section__description}`}>
-                                Tells applicants about this role, including job
-                                title, location and requirements.
+                                {t("tell_applicant_about_this_role")}
                             </p>
                         </Link>
                     </div>
@@ -308,10 +329,10 @@ const JobHeader = ({}: IJobHeader) => {
                                 className={`h-full`}
                             >
                                 <h3 className={styles.section__title}>
-                                    Application Form
+                                    {t("application_form")}
                                 </h3>
                                 <p className={`${styles.section__description}`}>
-                                    Design the application form for this role.
+                                    {t("design_app_form")}
                                 </p>
                             </Link>
                         </div>
@@ -331,11 +352,10 @@ const JobHeader = ({}: IJobHeader) => {
                                 className={`h-full`}
                             >
                                 <h3 className={styles.section__title}>
-                                    Team Members
+                                    {t("team_members")}
                                 </h3>
                                 <p className={`${styles.section__description}`}>
-                                    Invite or add co-workers to collaborate on
-                                    this job.
+                                    {t("invite_or_add")}
                                 </p>
                             </Link>
                         </div>
@@ -360,11 +380,10 @@ const JobHeader = ({}: IJobHeader) => {
                                 className={`h-full`}
                             >
                                 <h3 className={styles.section__title}>
-                                    Workflow
+                                    {t("common:assessment_flow")}
                                 </h3>
                                 <p className={`${styles.section__description}`}>
-                                    Create a kit or assessment test for a
-                                    structured interview process.
+                                    {t("create_a_kit")}
                                 </p>
                             </Link>
                         </div>

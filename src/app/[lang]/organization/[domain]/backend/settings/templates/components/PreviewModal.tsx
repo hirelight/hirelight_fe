@@ -1,13 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { useParams } from "next/navigation";
 
 import { Modal } from "@/components";
-import { useTranslation } from "@/components/InternationalizationProvider";
 import { IEmailTemplatesDto } from "@/services/email-template/email-template.interface";
 import { sanitizeHtml } from "@/helpers/sanitizeHTML";
-
-import datas from "../mock-data.json";
-import { Locale } from "../../../../../../../../../i18n.config";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 interface IPreviewModal {
     isOpen: boolean;
@@ -17,9 +15,13 @@ interface IPreviewModal {
 
 const PreviewModal: React.FC<IPreviewModal> = ({ isOpen, onClose, data }) => {
     const { lang } = useParams();
-    const t = useTranslation(
-        lang as Locale,
-        "settings.templates.email_template_list.preview_modal"
+
+    const { t } = useI18NextTranslation(
+        lang as I18Locale,
+        "settings-templates",
+        {
+            keyPrefix: "preview_modal",
+        }
     );
 
     return (
@@ -30,7 +32,7 @@ const PreviewModal: React.FC<IPreviewModal> = ({ isOpen, onClose, data }) => {
         >
             <div className="p-6 border-b border-gray-300">
                 <h2 className="text-neutral-700 text-xl font-semibold">
-                    {t.preview_h2}: {data.name}
+                    {t("preview_h2")}: {data.name}
                 </h2>
             </div>
             <div

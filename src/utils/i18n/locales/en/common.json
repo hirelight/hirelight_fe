@@ -1,0 +1,45 @@
+{
+    "header": {
+        "title": "Home page"
+    },
+    "test": "Hello",
+    "error": {
+        "noti": "Opps! Something went wrong!!!",
+        "internal_server": "Internal Server Error",
+        "invalid_input": "Invalid input!",
+        "check_red_places": "Check issues in red!",
+        "jobpost_is_publishing": "Job post is publishing! Please unpublish before perform any changes!"
+    },
+    "notification": {
+        "success": {
+            "login": "Sign in successfully!",
+            "signup": "Sign up successfully!",
+            "create_new_org": "Create organization account successfully!"
+        }
+    },
+    "components": {
+        "popover_warning": {
+            "btn": {
+                "confirm": "Proceed",
+                "cancel": "Cancel"
+            }
+        },
+        "custom_input": {
+            "optional": "Optional"
+        }
+    },
+    "start_time": "Start time",
+    "end_time": "End time",
+    "from": "From",
+    "to": "To",
+    "save_and_continue": "Save & continue",
+    "save_changes": "Save changes",
+    "save_draft": "Save draft",
+    "request_publish": "Request publish",
+    "request_editing": "Request editing",
+    "delete": "Delete",
+    "publish": "Publish",
+    "unpublish": "Unpublish",
+    "assessment_flow": "Assessment flow",
+    "application_form": "Application form"
+}

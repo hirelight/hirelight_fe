@@ -1,29 +1,32 @@
 import React from "react";
+import Image from "next/image";
+import { Trans } from "react-i18next/TransWithoutContext";
+
+import { getI18NextTranslation } from "@/utils/i18n";
 
 import styles from "./JoinSection.module.scss";
 
-import Image from "next/image";
-
-import joinPoster from "/public/images/join_poster.jpg";
-
 interface IJoinSection {
-    _t: any;
+    lang: any;
 }
 
-const JoinSection: React.FC<IJoinSection> = ({ _t }) => {
+const JoinSection: React.FC<IJoinSection> = async ({ lang }) => {
+    const { t: _t } = await getI18NextTranslation(lang, "home", {
+        keyPrefix: "join_section",
+    });
     return (
         <div className="max-w-screen-xl mx-auto w-full flex flex-col gap-20 px-6">
             <section>
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-center px-9 mb-12">
-                    {_t.join_community.title.normal}{" "}
+                    {_t("join_community.title.normal")}{" "}
                     <span className={styles.title__gradient}>
-                        {_t.join_community.title.highlight}
+                        {_t("join_community.title.highlight")}
                     </span>
                 </h1>
                 <div className="w-full border border-gray-500 rounded-3xl py-10 px-12 lg:px-16 flex flex-col gap-9 md:gap-0 md:flex-row md:justify-between items-center">
                     <div className="flex items-center gap-2 lg:gap-4">
                         <Image
-                            src={"/images/github.png"}
+                            src={"/github.png"}
                             alt="Github"
                             width={82}
                             height={82}
@@ -34,13 +37,15 @@ const JoinSection: React.FC<IJoinSection> = ({ _t }) => {
                                 Github
                             </h1>
                             <p className="text-neutral-500 text-sm lg:text-base">
-                                {_t.join_community.community.github.description}
+                                {_t(
+                                    "join_community.community.github.description"
+                                )}
                             </p>
                         </div>
                     </div>
                     <div className="flex items-center gap-2 lg:gap-4">
                         <Image
-                            src={"/images/twitter.png"}
+                            src={"/twitter.png"}
                             alt="Twitter"
                             width={82}
                             height={82}
@@ -51,17 +56,16 @@ const JoinSection: React.FC<IJoinSection> = ({ _t }) => {
                                 Tweeter
                             </h1>
                             <p className="text-neutral-500 text-sm lg:text-base">
-                                {
-                                    _t.join_community.community.tweeter
-                                        .description
-                                }
+                                {_t(
+                                    "join_community.community.tweeter.description"
+                                )}
                             </p>
                         </div>
                     </div>
 
                     <div className="flex items-center gap-2 lg:gap-4">
                         <Image
-                            src={"/images/telegram.png"}
+                            src={"/telegram.png"}
                             alt="Telegram"
                             width={82}
                             height={82}
@@ -72,10 +76,9 @@ const JoinSection: React.FC<IJoinSection> = ({ _t }) => {
                                 Telegram
                             </h1>
                             <p className="text-neutral-500 text-sm lg:text-base">
-                                {
-                                    _t.join_community.community.telegram
-                                        .description
-                                }
+                                {_t(
+                                    "join_community.community.telegram.description"
+                                )}
                             </p>
                         </div>
                     </div>
@@ -83,21 +86,26 @@ const JoinSection: React.FC<IJoinSection> = ({ _t }) => {
             </section>
             <section className="flex flex-col items-center">
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-semibold text-center px-9 mb-8">
-                    {_t.ready_experience.title.normal}{" "}
+                    {_t("ready_experience.title.normal")}{" "}
                     <span className={styles.title__gradient}>
-                        {_t.ready_experience.title.highlight}
+                        {_t("ready_experience.title.highlight")}
                     </span>
                 </h1>
                 <p className="text-sm md:text-base text-gray-500 ">
-                    {_t.ready_experience.subtitle.replace("{{days}}, 15")}
+                    <Trans t={_t} i18nKey={"ready_experience.subtitle"}>
+                        Register now to experience it for free for the first{" "}
+                        {{ days: 15 }} days
+                    </Trans>
                 </p>
                 <div className="flex flex-col md:flex-row gap-4 md:gap-8 text-sm md:text-base text-gray-500 my-14 ">
-                    <p>{_t.ready_experience.btn.sign_up_google}</p>
-                    <p>{_t.ready_experience.btn.sign_up_linkedin}</p>
+                    <p>{_t("ready_experience.btn.sign_up_google")}</p>
+                    <p>{_t("ready_experience.btn.sign_up_linkedin")}</p>
                 </div>
                 <Image
                     alt="Poster"
-                    src={joinPoster}
+                    src={"/join_poster.jpg"}
+                    width={1000}
+                    height={1000}
                     className="max-w-[660px] w-full aspect-video object-cover rounded-tr-2xl  rounded-tl-[200px] rounded-bl-2xl rounded-br-[200px] border-2 border-blue-500"
                 />
             </section>

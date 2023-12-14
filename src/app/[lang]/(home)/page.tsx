@@ -1,7 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
 
-import { getDictionary } from "../../../utils/dictionaries/dictionnary";
 import { Locale } from "../../../../i18n.config";
 
 import OverviewSection from "./components/OverView/Overview";
@@ -22,23 +21,21 @@ export default async function Home({
 }: {
     params: { lang: Locale };
 }) {
-    const { home } = await getDictionary(lang);
-
     return (
         <div className="w-full flex flex-col gap-20">
-            <HomeHeader _t={home.header} />
+            <HomeHeader />
             <main className="w-full flex flex-col gap-20">
-                <OverviewSection _t={home.overview_section} lang={lang} />
-                <FeatureSection _t={home.feature_section} />
+                <OverviewSection lang={lang} />
+                <FeatureSection lang={lang} />
                 <div className="flex flex-col gap-20 relative">
                     <div className="hidden md:block w-full h-28 absolute -top-36 z-30 bg-gradient-to-b from-[#F2F7FE] to-white"></div>
-                    <FeatureDescription _t={home.feature_description_section} />
-                    <IntegrationDescription _t={home.integration_section} />
-                    <CustomerReview _t={home.customer_review_section} />
+                    <FeatureDescription lang={lang} />
+                    <IntegrationDescription lang={lang} />
+                    <CustomerReview lang={lang} />
                 </div>
-                <JoinSection _t={home.join_section} />
+                <JoinSection lang={lang} />
             </main>
-            <HomeFooter _t={home.footer} />
+            <HomeFooter lang={lang} />
         </div>
     );
 }

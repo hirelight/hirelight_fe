@@ -6,17 +6,14 @@ import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { Button, PopoverWarning, Portal } from "@/components";
+import { PopoverWarning, Portal } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setEditingId, setIsAdding } from "@/redux/slices/templates.slice";
 import { useOutsideClick } from "@/hooks/useClickOutside";
-import { useTranslation } from "@/components/InternationalizationProvider";
 import { IEmailTemplatesDto } from "@/services/email-template/email-template.interface";
-import { deleteEmailTemplateById } from "@/redux/thunks/email-templates.thunk";
 import emailTemplateService from "@/services/email-template/email-template.service";
-
-import datas from "../mock-data.json";
-import { Locale } from "../../../../../../../../../i18n.config";
+import { I18Locale } from "@/interfaces/i18.interface";
+import { useI18NextTranslation } from "@/utils/i18n/client";
 
 const PreviewModal = dynamic(() => import("./PreviewModal"));
 
@@ -26,9 +23,12 @@ interface IEmailTemplateCard {
 
 const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
     const { lang } = useParams();
-    const t = useTranslation(
-        lang as Locale,
-        "settings.templates.email_template_list.email_template_card"
+    const { t } = useI18NextTranslation(
+        lang as I18Locale,
+        "settings-templates",
+        {
+            keyPrefix: "email_template_list.email_template_card",
+        }
     );
 
     const queryClient = useQueryClient();
@@ -107,12 +107,12 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
                                 className="text-sm text-blue_primary_700 font-semibold hover:text-blue_primary_800 hover:underline"
                                 onClick={() => setShowPreview(true)}
                             >
-                                {t.btn.preview}
+                                {t("btn.preview")}
                             </button>
                             <div ref={warningRef}>
                                 <PopoverWarning
                                     show={showWarning}
-                                    content={t.popover.edit_warning.content}
+                                    content={t("popover.edit_warning.content")}
                                     onConfirm={handleProceed}
                                     onCancel={() => setShowWarning(false)}
                                     cancelButton={
@@ -120,7 +120,9 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
                                             type="button"
                                             className="border border-gray-600 py-2.5 px-10 rounded-md hover:bg-slate-200 text-neutral-700"
                                         >
-                                            {t.popover.edit_warning.btn.cancel}
+                                            {t(
+                                                "popover.edit_warning.btn.cancel"
+                                            )}
                                         </button>
                                     }
                                 >
@@ -136,7 +138,7 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
                                             }
                                         }}
                                     >
-                                        {t.btn.edit}
+                                        {t("btn.edit")}
                                     </button>
                                 </PopoverWarning>
                             </div>

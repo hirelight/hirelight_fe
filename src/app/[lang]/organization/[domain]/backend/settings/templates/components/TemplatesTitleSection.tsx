@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setEditingId, setIsAdding } from "@/redux/slices/templates.slice";
 import { Button, PopoverWarning } from "@/components";
 import { useOutsideClick } from "@/hooks/useClickOutside";
-import { useTranslation } from "@/components/InternationalizationProvider";
+import { useI18NextTranslation } from "@/utils/i18n/client";
 
 import styles from "../styles.module.scss";
 import { Locale } from "../../../../../../../../../i18n.config";
@@ -17,10 +17,9 @@ const TemplatesTitleSection = () => {
     const dispatch = useAppDispatch();
     const { lang } = useParams();
     const [showWarning, setShowWarning] = useState(false);
-    const t = useTranslation(
-        lang as Locale,
-        "settings.templates.templates_title_section"
-    );
+    const { t } = useI18NextTranslation(lang as Locale, "settings-templates", {
+        keyPrefix: "templates_title_section",
+    });
 
     const warningRef = useOutsideClick<HTMLDivElement>(() =>
         setShowWarning(false)
@@ -39,12 +38,12 @@ const TemplatesTitleSection = () => {
 
     return (
         <div className="flex justify-between">
-            <h2 className={styles.section__title}>{t.title}</h2>
+            <h2 className={styles.section__title}>{t("title")}</h2>
 
             <div ref={warningRef}>
                 <PopoverWarning
                     show={showWarning}
-                    content={t.popover.warning.content}
+                    content={t("popover.warning.content")}
                     onConfirm={handleProceed}
                     onCancel={() => setShowWarning(false)}
                     cancelButton={
@@ -52,7 +51,7 @@ const TemplatesTitleSection = () => {
                             type="button"
                             className="border border-gray-600 py-2.5 px-10 rounded-md hover:bg-slate-200 text-neutral-700"
                         >
-                            {t.popover.warning.btn.cancel}
+                            {t("popover.warning.btn.cancel")}
                         </button>
                     }
                 >
@@ -66,7 +65,7 @@ const TemplatesTitleSection = () => {
                         }}
                     >
                         <PlusCircleIcon className="w-5 h-5 inline" />
-                        <span>{t.btn.add_new_template}</span>
+                        <span>{t("btn.add_new_template")}</span>
                     </button>
                 </PopoverWarning>
             </div>

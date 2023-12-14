@@ -2,9 +2,9 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { UserIcon } from "@heroicons/react/24/solid";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { Trans } from "react-i18next";
 
 import { SpinLoading } from "@/icons";
 import organizationsServices from "@/services/organizations/organizations.service";
@@ -16,8 +16,8 @@ import { IResponse } from "@/interfaces/service.interface";
 import authServices from "@/services/auth/auth.service";
 import { useAppSelector } from "@/redux/reduxHooks";
 import { UserAvatar } from "@/components";
-import { useTranslation } from "@/components/InternationalizationProvider";
 import { handleError } from "@/helpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
 
 import { Locale } from "../../../../../../i18n.config";
 
@@ -26,7 +26,9 @@ import styles from "./NewOrganizationForm.module.scss";
 const NewOrganizationForm = () => {
     const router = useRouter();
     const { lang } = useParams();
-    const _t = useTranslation(lang as Locale, "new_org_page.new_org_form");
+    const { t } = useI18NextTranslation(lang as Locale, "new-org-page", {
+        keyPrefix: "new_org_form",
+    });
 
     const { authUser } = useAppSelector(state => state.auth);
 
@@ -54,10 +56,10 @@ const NewOrganizationForm = () => {
                 const { subdomain, id } = data.data;
                 const resOrgToken = await authServices.getOrgAccessToken(id);
 
-                toast.success(_t.success);
+                toast.success(t("success"));
 
                 router.replace(
-                    `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend?accessToken=${resOrgToken.data.accessToken}`
+                    `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/backend?accessToken=${resOrgToken.data.accessToken}`
                 );
             }
         } catch (error: any) {
@@ -71,7 +73,7 @@ const NewOrganizationForm = () => {
         if (!newOrgForm.name) {
             setNewOrgFormErr(prev => ({
                 ...prev,
-                nameErr: _t.error.org_name_empty,
+                nameErr: t("error.org_name_empty"),
             }));
             valid = true;
         }
@@ -83,9 +85,12 @@ const NewOrganizationForm = () => {
         <div>
             <div className="flex flex-col gap-4">
                 <div className="pt-6 px-6">
-                    <h1 className={styles.title}>{_t.title.highlight}</h1>
+                    <h1 className={styles.title}>{t("title.highlight")}</h1>
                     <p className="text-sm text-gray-500">
-                        {_t.subtitle.replace("{{days}}", 15)}
+                        <Trans t={t} i18nKey={"subtitle"}>
+                            Start your {{ days: 15 }}-day trial, no credit card
+                            required.
+                        </Trans>
                     </p>
                 </div>
                 <hr className="flex-1 h-[1.5px] w-4/5 bg-gray-300 self-center" />
@@ -104,7 +109,7 @@ const NewOrganizationForm = () => {
                         </div>
                     </div>
                     <p className="p-2 max-w-[280px] text-sm text-left self-center">
-                        {_t.almost_done}
+                        {t("almost_done")}
                     </p>
                 </div>
                 <hr className="flex-1 h-[1.5px] bg-gray-300" />
@@ -117,7 +122,7 @@ const NewOrganizationForm = () => {
                             htmlFor="organization-name"
                             className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
                         >
-                            {_t.label.org_name}
+                            {t("label.org_name")}
                         </label>
                         <input
                             type="text"
@@ -142,7 +147,7 @@ const NewOrganizationForm = () => {
                             htmlFor="domain"
                             className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
                         >
-                            {_t.label.domain}
+                            {t("label.domain")}
                         </label>
                         <input
                             type="text"
@@ -178,7 +183,9 @@ const NewOrganizationForm = () => {
                         disabled={loading}
                     >
                         {loading && <SpinLoading />}
-                        {_t.btn.submit.replace("{{days}}", 15)}
+                        <Trans t={t} i18nKey={"btn.submit"}>
+                            Start a {{ days: 15 }}-day trial
+                        </Trans>
                     </button>
                 </form>
             </div>

@@ -1,0 +1,19 @@
+{
+    "join_org_list": {
+        "error": {
+            "work_email_only": "Only work email can create organization"
+        },
+        "h1": {
+            "organization_list": "Organization List:"
+        },
+        "p": {
+            "empty_list": "You have not been member of any organization. Please check your invitation or create your organization!"
+        },
+        "span": {
+            "owned": "Owned"
+        },
+        "button": {
+            "create_new": "Create new organization"
+        }
+    }
+}

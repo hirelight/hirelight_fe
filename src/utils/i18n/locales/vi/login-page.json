@@ -1,0 +1,25 @@
+{
+    "login_form": {
+        "title": {
+            "highlight": "Đăng nhập vào Hirelight"
+        },
+        "label": {
+            "email": "Email",
+            "password": "Mật khẩu"
+        },
+        "or": "Hoặc",
+        "btn": {
+            "signin": "Đăng nhập",
+            "forgot_password": "Quên mật khẩu?",
+            "signin_google": "Đăng nhập với Google",
+            "signin_linkedin": "Đăng nhập với LinkedIn"
+        },
+        "error": {
+            "personal_email_no_org": "Bạn đang sử dụng email cá nhân. Đồng thời, bạn không thuộc về bất cứ công ty nào. Bạn cần sử dụng email doanh nghiệp để tạo công ty riêng cho mình hoặc trở thành thành viên của một công ty."
+        }
+    },
+    "dont_have_account": "Chưa có tài khoản Hirelight?",
+    "btn": {
+        "signup": "Đăng ký ngay để trải nghiệm miễn phí trong {{days}} ngày đầu tiên"
+    }
+}

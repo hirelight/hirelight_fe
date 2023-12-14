@@ -1,0 +1,91 @@
+{
+    "header": {
+        "nav": {
+            "home": "Home",
+            "pricing": "Pricing",
+            "about_us": "About us",
+            "career_center": "Career center"
+        },
+
+        "btn": {
+            "sign_in": "Sign in",
+            "sign_up": "Sign up"
+        }
+    },
+    "overview_section": {
+        "get_started": "Get started",
+        "free_trials": "{{days}} days free trials",
+        "easy_payment": "Easy payment method"
+    },
+    "feature_section": {
+        "title": {
+            "normal": "Hirelight's",
+            "highlight": "Features"
+        },
+        "feature_1_description": "Find and reach candidates quickly",
+        "feature_2_description": "Prioritize suitable candidates for the job",
+        "feature_3_description": "Reduces time by half compared to traditional recruitment",
+        "feature_4_description": "Help candidates become great employees"
+    },
+    "feature_description_section": {
+        "title": {
+            "normal": "Outstanding features <1>{{num}}</1>"
+        }
+    },
+    "integration_section": {
+        "title": {
+            "normal": "Integrates with",
+            "highlight": "popular applications"
+        }
+    },
+    "customer_review_section": {
+        "title": {
+            "normal": "Reviews from",
+            "highlight": "customers"
+        },
+        "downloaded": "Downloaded and Installation",
+        "rates": "Based on {{numOfReviews}} reviews",
+        "btn": {
+            "see_reviews": "See Reviews on app store",
+            "view_promote": "View Promotion"
+        }
+    },
+    "join_section": {
+        "join_community": {
+            "title": {
+                "normal": "Join the",
+                "highlight": "community"
+            },
+            "community": {
+                "github": {
+                    "description": "Open Source & Commit Code"
+                },
+                "tweeter": {
+                    "description": "Latest News & Update"
+                },
+                "telegram": {
+                    "description": "Channel For Community"
+                }
+            }
+        },
+        "ready_experience": {
+            "title": {
+                "normal": "Ready to",
+                "highlight": "experience"
+            },
+            "subtitle": "Register now to experience it for free for the first {{days}} days",
+            "btn": {
+                "sign_up_google": "Register an account with Google",
+                "sign_up_linkedin": "Register an account with LinkedIn"
+            }
+        }
+    },
+    "footer": {
+        "nav": {
+            "home": "Home",
+            "pages": "Pages",
+            "contact": "Contact"
+        },
+        "copyright": "{{year}} copyrights by Hirelight . All Rights Reserved."
+    }
+}

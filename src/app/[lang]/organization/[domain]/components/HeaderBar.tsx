@@ -14,7 +14,7 @@ import { useOutsideClick } from "@/hooks/useClickOutside";
 import { LocaleSwitcher, UserAvatar } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { logout } from "@/redux/slices/auth.slice";
-import { useTranslation } from "@/components/InternationalizationProvider";
+import { useI18NextTranslation } from "@/utils/i18n/client";
 
 import { Locale } from "../../../../../../i18n.config";
 
@@ -27,7 +27,9 @@ const HeaderBar = () => {
     const { lang } = useParams();
     const cite = pathname.split("/")[1];
 
-    const _t = useTranslation(lang as Locale, "domain.components.header_bar");
+    const { t } = useI18NextTranslation(lang as Locale, "domain-page", {
+        keyPrefix: "components.header_bar",
+    });
 
     const dispatch = useAppDispatch();
 
@@ -70,7 +72,7 @@ const HeaderBar = () => {
                                         : "text-blue_primary_600"
                                 } hover:text-blue_primary_800 font-medium`}
                             >
-                                {_t.link.jobs}
+                                {t("link.jobs")}
                             </Link>
                         </li>
                         <li>
@@ -82,7 +84,7 @@ const HeaderBar = () => {
                                         : "text-blue_primary_600"
                                 } hover:text-blue_primary_800 font-medium`}
                             >
-                                {_t.link.candidates}
+                                {t("link.candidates")}
                             </Link>
                         </li>
                         <li>
@@ -94,7 +96,7 @@ const HeaderBar = () => {
                                         : "text-blue_primary_600"
                                 } hover:text-blue_primary_800 font-medium`}
                             >
-                                {_t.link.dashboard}
+                                {t("link.dashboard")}
                             </Link>
                         </li>
                         <li>
@@ -106,7 +108,7 @@ const HeaderBar = () => {
                                         : "text-blue_primary_600"
                                 } hover:text-blue_primary_800 font-medium`}
                             >
-                                {_t.link.calendar}
+                                {t("link.calendar")}
                             </Link>
                         </li>
                     </ul>
@@ -170,7 +172,7 @@ const HeaderBar = () => {
                                             setShowAvatarDropdown(false)
                                         }
                                     >
-                                        {_t.avatar_menu.settings}
+                                        {t("avatar_menu.settings")}
                                     </Link>
                                     <a
                                         href="#"
@@ -178,7 +180,7 @@ const HeaderBar = () => {
                                         role="menuitem"
                                         tabIndex={-1}
                                     >
-                                        {_t.avatar_menu.help}
+                                        {t("avatar_menu.help")}
                                     </a>
                                     <Link
                                         href={`${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/organization/new`}
@@ -189,7 +191,7 @@ const HeaderBar = () => {
                                             setShowAvatarDropdown(false)
                                         }
                                     >
-                                        {_t.avatar_menu.add_company}
+                                        {t("avatar_menu.add_company")}
                                     </Link>
                                     <button
                                         type="button"
@@ -198,7 +200,7 @@ const HeaderBar = () => {
                                         tabIndex={-1}
                                         onClick={handleLogout}
                                     >
-                                        {_t.avatar_menu.sign_out}
+                                        {t("avatar_menu.sign_out")}
                                     </button>
                                 </div>
                             </div>

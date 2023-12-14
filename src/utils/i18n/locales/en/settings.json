@@ -1,0 +1,15 @@
+{
+    "components": {
+        "settings_sidebar": {
+            "organization_profile": "Organization profile",
+            "account_members": "Account members",
+            "assessment_flow": "Assessment flow",
+            "templates": "Templates",
+            "billing": "Billing",
+            "integrations": "Integrations",
+            "your_profile": "Your profile",
+            "questions_bank": "Questions bank",
+            "question_sets": "Questions sets"
+        }
+    }
+}

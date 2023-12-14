@@ -12,6 +12,9 @@ import authServices from "@/services/auth/auth.service";
 import { RegisterEmployerDto } from "@/services/auth/auth.interface";
 import { handleError, isInvalidForm } from "@/helpers";
 import { Button, ButtonOutline, CustomInput } from "@/components";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+
+import { Locale } from "../../../../../../i18n.config";
 
 import styles from "./SignupForm.module.scss";
 
@@ -34,13 +37,15 @@ const initialFormErrState = {
 
 const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
-interface ISignupForm {
-    _t: Record<"signup_form" | "common", any>;
-}
+interface ISignupForm {}
 
-const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
+const SignupForm: React.FC<ISignupForm> = () => {
     const router = useRouter();
     const { lang } = useParams();
+    const { t: _t } = useI18NextTranslation(lang as Locale, [
+        "signup-page",
+        "common",
+    ]);
 
     const [signupFormErr, setSignupFormErr] =
         React.useState(initialFormErrState);
@@ -55,17 +60,19 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
         const errors = { ...signupFormErr };
         const { email, password, firstName, lastName } = signupForm;
 
-        if (!email) errors.emailErr = _t.signup_form.error.empty_email;
+        if (!email) errors.emailErr = _t("signup_form.error.empty_email");
         if (!firstName)
-            errors.firstNameErr = _t.signup_form.error.empty_first_name;
+            errors.firstNameErr = _t("signup_form.error.empty_first_name");
         if (!lastName)
-            errors.lastNameErr = _t.signup_form.error.empty_last_name;
+            errors.lastNameErr = _t("signup_form.error.empty_last_name");
 
         if (!regex.test(password))
-            errors.passwordErr = _t.signup_form.error.password_invalid;
+            errors.passwordErr = _t("signup_form.error.password_invalid");
 
         if (confirmPassword !== password)
-            errors.confirmPasswordErr = _t.signup_form.error.confirm_missmatch;
+            errors.confirmPasswordErr = _t(
+                "signup_form.error.confirm_missmatch"
+            );
         if (isInvalidForm(errors)) {
             setSignupFormErr(errors);
             return false;
@@ -77,7 +84,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
         if (!signupForm.email)
             return setSignupFormErr({
                 ...signupFormErr,
-                emailErr: _t.signup_form.error.code_require_email,
+                emailErr: _t("signup_form.error.code_require_email"),
             });
 
         setSendLoading(true);
@@ -99,8 +106,8 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
         if (!validInputs())
             return toast.error(
                 <div>
-                    <p>{_t.common.error.invalid_input}</p>
-                    <p>{_t.common.error.check_red_places}</p>
+                    <p>{_t("error.invalid_input", { ns: "common" })}</p>
+                    <p>{_t("error.check_red_places", { ns: "common" })}</p>
                 </div>
             );
 
@@ -120,12 +127,12 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
         <form onSubmit={handleSignup}>
             <div className="flex flex-col gap-4">
                 <h1 className={styles.title}>
-                    {_t.signup_form.title.highlight}
+                    {_t("signup_form.title.highlight")}
                 </h1>
                 <div className="mb-2 text-left grid grid-cols-2 gap-4">
                     <CustomInput
                         id="first-name"
-                        title={_t.signup_form.label.first_name}
+                        title={_t("signup_form.label.first_name")}
                         autoComplete="given-name"
                         placeholder="John"
                         value={signupForm.firstName}
@@ -144,7 +151,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                     />
                     <CustomInput
                         id="last-name"
-                        title={_t.signup_form.label.last_name}
+                        title={_t("signup_form.label.last_name")}
                         autoComplete="family-name"
                         placeholder="Doe"
                         value={signupForm.lastName}
@@ -165,7 +172,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                 <div className="mb-2 text-left">
                     <CustomInput
                         id="email"
-                        title={_t.signup_form.label.email}
+                        title={_t("signup_form.label.email")}
                         type="email"
                         autoComplete="email"
                         placeholder="example@hirelight.xyz"
@@ -188,7 +195,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                 <div className="text-left mb-2">
                     <CustomInput
                         id="password"
-                        title={_t.signup_form.label.password}
+                        title={_t("signup_form.label.password")}
                         type="password"
                         autoComplete="new-password"
                         placeholder="**********"
@@ -210,7 +217,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                 <div className="text-left mb-2">
                     <CustomInput
                         id="confirm-password"
-                        title={_t.signup_form.label.confirm_password}
+                        title={_t("signup_form.label.confirm_password")}
                         type="password"
                         placeholder="**********"
                         value={confirmPassword}
@@ -230,7 +237,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                     <div className="text-left">
                         <CustomInput
                             id="verify-code"
-                            title={_t.signup_form.label.verify_code}
+                            title={_t("signup_form.label.verify_code")}
                             type="text"
                             value={signupForm.otp}
                             required
@@ -254,7 +261,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                         disabled={loading || sendLoading}
                         isLoading={loading}
                     >
-                        {_t.signup_form.btn.signup}
+                        {_t("signup_form.btn.signup")}
                     </Button>
                 )}
                 <ButtonOutline
@@ -264,14 +271,14 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                     onClick={handleSendVerifyCode}
                 >
                     {showVerify
-                        ? _t.signup_form.btn.resend_code
-                        : _t.signup_form.btn.get_verify_code}
+                        ? _t("signup_form.btn.resend_code")
+                        : _t("signup_form.btn.get_verify_code")}
                 </ButtonOutline>
 
                 <div className="flex items-center justify-between gap-2">
                     <hr className="flex-1 h-[1.5px] bg-gray-300" />
                     <span className="text-gray-500 font-medium">
-                        {_t.signup_form.or}
+                        {_t("signup_form.or")}
                     </span>
                     <hr className="flex-1 h-[1.5px] bg-gray-300" />
                 </div>
@@ -281,14 +288,14 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                     className={styles.button__signin__with}
                 >
                     <GoogleIcon className="w-6 h-6 mr-2" />
-                    <span>{_t.signup_form.btn.signup_google}</span>
+                    <span>{_t("signup_form.btn.signup_google")}</span>
                 </Link>
                 <Link
                     href={process.env.NEXT_PUBLIC_EMPLOYER_LOGIN_LINKEDIN || ""}
                     className={styles.button__signin__with}
                 >
                     <LinkedInIcon className="w-8 h-8 mr-1" />
-                    <span>{_t.signup_form.btn.signup_linkedin}</span>
+                    <span>{_t("signup_form.btn.signup_linkedin")}</span>
                 </Link>
             </div>
         </form>

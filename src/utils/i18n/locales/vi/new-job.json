@@ -1,0 +1,52 @@
+{
+    "error": {
+        "job_required": "Chức danh không thể bỏ trống",
+        "area_required": "Địa chỉ không thể bỏ trống",
+        "description_required": "Mô tả không thể bỏ trống",
+        "requirements_required": "Yều cầu công việc không thể bỏ trống",
+        "description_must_700": "Mục mô tả phải chứa ít nhất 700 kí tự",
+        "min_lower_max": "Mức lương tối thiểu phải thấp hơn mức lương tối đa",
+        "start_earlier_end": "Thời gian bắt đầu đăng tuyển phải sớm hơn thời gian kết thúc",
+        "end_must_be_future": "Thời gian kết thúc phải ở tương lai"
+    },
+    "intruction": {
+        "title": "Sử dụng các chức danh công việc phổ biến để có thể tìm kiếm Chỉ quảng cáo một công việc, ví dụ: 'Y tá', không phải 'y tá' không có cơ hội hoặc sự kiện chung",
+        "area": "Sử dụng vị trí để thu hút những ứng viên phù hợp nhất Nếu bạn đánh dấu vào ô 'hoàn toàn từ xa', hãy thêm ít nhất một quốc gia. Một số bảng công việc yêu cầu một vị trí",
+        "description": "Định dạng thành các phần và danh sách để cải thiện khả năng đọc Tránh nhắm mục tiêu vào nhóm nhân khẩu học cụ thể, ví dụ: giới tính, quốc tịch và độ tuổi Không cần thêm liên kết để đăng ký (một liên kết được thêm tự động động)"
+    },
+    "placeholder": {
+        "job_title": "Ví dụ: lập trình viên Fullstack",
+        "job_area": "Quận 7, thành phố Hồ Chí Minh",
+        "description": "Nhập mô tả công việc ở đây; bao gồm các lĩnh vực trách nhiệm chính và những gì ứng viên có thể làm trong một ngày thông thường.",
+        "benefits": "Nhập phúc lợi công việc ở đây; bao gồm các lĩnh vực trách nhiệm và những gì ứng viên có thể làm trong một ngày thông thường.",
+        "requirements": "Nhập yêu cầu công việc tại đây; bao gồm các lĩnh vực trách nhiệm và những gì ứng viên có thể làm trong một ngày thông thường."
+    },
+    "location": "Địa chỉ",
+    "job_title": "Chức danh",
+    "job_area": "Khu vực",
+    "description": "Mô tả",
+    "requirements": "Yêu cầu công việc",
+    "benefits": "Phúc lợi",
+    "about_this_role": "Về vai trò này",
+    "minimum_charaters_used": "Ít nhất 700 kí tự. <1>{{characterLength}}</1> kí tự đã được sử dụng.",
+    "start_time": "Thời gian bắt đầu",
+    "end_time": "Thời gian kết thúc",
+    "employment_details": "Chi tiết công việc",
+    "employment_type": "Loại công việc",
+    "experience": "Kinh nghiệm",
+    "keywords": "Từ khóa",
+    "cv_keywords": "Từ khóa scan CV",
+    "annual_salary": "Lương hằng năm",
+    "from": "Từ",
+    "to": "Đến",
+    "currency": "Đơn vị tiền tệ",
+    "job_available_time": "Thời gian đăng tuyển công việc",
+    "job_details": "Chi tiết công việc",
+    "tell_applicant_about_this_role": "Cho ứng viên biết về vai trò này, bao gồm chức danh, vị trí và yêu cầu.",
+    "application_form": "Đơn ứng tuyển",
+    "design_app_form": "Thiết kế mẫu đơn xin việc cho vai trò này.",
+    "team_members": "Nhóm cộng tác viên",
+    "invite_or_add": "Mời hoặc thêm đồng nghiệp cộng tác trong công việc này.",
+    "create_a_kit": "Tạo một bộ công cụ hoặc bài kiểm tra đánh giá cho một quy trình phỏng vấn có cấu trúc.",
+    "new_job": "Công việc mới"
+}

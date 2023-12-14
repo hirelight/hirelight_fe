@@ -1,0 +1,28 @@
+{
+    "new_org_form": {
+        "title": {
+            "highlight": "Tạo tài khoản công ty"
+        },
+        "subtitle": "Bắt đầu trải nghiệm {{days}} ngày dùng thử, thông tin tín dụng không bắt buộc.",
+        "almost_done": "Sắp xong rồi! Thêm một vài thông tin chi tiết để tạo tài khoản công ty của bạn và bạn có thể bắt đầu quy trình tuyển dụng",
+        "label": {
+            "org_name": "Tên công ty",
+            "domain": "Tên miền phụ"
+        },
+        "btn": {
+            "submit": "Bắt đầu trải nghiệm {{days}} ngày dùng thử"
+        },
+        "error": {
+            "domain_existed": "Tên miền phụ đã tồn tại!",
+            "domain_empty": "Tên miền phụ không được bỏ trống!",
+            "org_name_empty": "Tên công ty không được bỏ trống"
+        },
+        "success": {
+            "creat_org": "Tạo mới tài khoản công ty thành công!"
+        }
+    },
+    "make_mistake": "Đã nhập sai gì sao?",
+    "btn": {
+        "start_again": "Bắt đầu lại"
+    }
+}

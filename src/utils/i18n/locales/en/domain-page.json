@@ -1,0 +1,25 @@
+{
+    "components": {
+        "header_bar": {
+            "link": {
+                "jobs": "Jobs",
+                "candidates": "Candidates",
+                "dashboard": "Dashboard",
+                "calendar": "Calendar"
+            },
+            "avatar_menu": {
+                "settings": "Settings",
+                "help": "Help",
+                "add_company": "Add a company",
+                "sign_out": "Sign out"
+            }
+        },
+        "invitation_dropdown": {
+            "collab_message": "have invited you to coorperate in recruitment process",
+            "button": {
+                "accept": "Accept",
+                "dismiss": "Dimiss"
+            }
+        }
+    }
+}

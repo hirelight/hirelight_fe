@@ -3,14 +3,23 @@ import React from "react";
 import featureDescription from "/public/images/feature_description.png";
 
 import Image from "next/image";
+import { Trans } from "react-i18next/TransWithoutContext";
+
+import { getI18NextTranslation } from "@/utils/i18n";
+
+import { Locale } from "../../../../../../i18n.config";
 
 import styles from "./FeatureDescription.module.scss";
 
 interface IFeatureDescription {
-    _t: any;
+    lang: string;
 }
 
-const FeatureDescription: React.FC<IFeatureDescription> = ({ _t }) => {
+const FeatureDescription: React.FC<IFeatureDescription> = async ({ lang }) => {
+    const { t: _t } = await getI18NextTranslation(lang as Locale, "home", {
+        keyPrefix: "feature_description_section.title",
+    });
+
     return (
         <div className="max-w-screen-xl w-full mx-auto flex flex-col gap-16 relative px-5">
             {new Array(3).fill("").map((item, index) => {
@@ -33,7 +42,9 @@ const FeatureDescription: React.FC<IFeatureDescription> = ({ _t }) => {
                                 Borem ipsum dolor{" "}
                             </h3>
                             <h1 className=" text-4xl md:text-5xl text-neutral-700 font-semibold my-4">
-                                {_t.title.normal.replace("{{num}}", index + 1)}
+                                <Trans t={_t} i18nKey={"title"}>
+                                    Outstanding features {{ num: index + 1 }}
+                                </Trans>
                             </h1>
                             <p className="text-sm md:text-base font-medium text-neutral-500 w-3/4 md:w-full lg:w-3/4 mb-10">
                                 Vorem ipsum dolor sit amet, consectetur

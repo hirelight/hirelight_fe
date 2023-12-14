@@ -1,0 +1,15 @@
+{
+    "components": {
+        "settings_sidebar": {
+            "organization_profile": "Hồ sơ công ty",
+            "account_members": "Tài khoản thành viên",
+            "assessment_flow": "Luồng đánh giá",
+            "templates": "Mẫu",
+            "billing": "Thanh toán",
+            "integrations": "Tích hợp",
+            "your_profile": "Hồ sơ của bạn",
+            "questions_bank": "Kho câu hỏi",
+            "question_sets": "Kho đề"
+        }
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "new_org_form": {
+        "title": {
+            "highlight": "Create a organization account"
+        },
+        "subtitle": "Start your {{days}}-day trial, no credit card required.",
+        "almost_done": "Almost done! Add a few details to create your company account and you can start hiring.",
+        "label": {
+            "org_name": "Organization name",
+            "domain": "Subdomain"
+        },
+        "btn": {
+            "submit": "Start a {{days}}-day trial"
+        },
+        "error": {
+            "domain_existed": "Subdomain aldread existed!",
+            "domain_empty": "Subdomain must not empty!",
+            "org_name_empty": "Organization name must not empty"
+        },
+        "success": {
+            "creat_org": "Create org successfully!"
+        }
+    },
+    "make_mistake": "Make a mistake?",
+    "btn": {
+        "start_again": "Start again"
+    }
+}

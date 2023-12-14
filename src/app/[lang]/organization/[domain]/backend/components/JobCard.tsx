@@ -16,8 +16,8 @@ import { useOutsideClick } from "@/hooks/useClickOutside";
 import { JobPostStatus } from "@/interfaces/job-post.interface";
 import { useAppSelector } from "@/redux/reduxHooks";
 import { Roles } from "@/services";
-import { useTranslation } from "@/components/InternationalizationProvider";
 import { handleError } from "@/helpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
 
 import { Locale } from "../../../../../../../i18n.config";
 
@@ -43,7 +43,9 @@ const JobCard: React.FC<JobCardProps> = ({
     const router = useRouter();
     const { lang } = useParams();
     const queryClient = useQueryClient();
-    const _t = useTranslation(lang as Locale, "backend.components.job_card");
+    const { t } = useI18NextTranslation(lang as Locale, "backend", {
+        keyPrefix: "components.job_card",
+    });
 
     const { authUser } = useAppSelector(state => state.auth);
 
@@ -130,7 +132,7 @@ const JobCard: React.FC<JobCardProps> = ({
                                 {publishJobMutations.isPending && (
                                     <SpinLoading className="mr-2" />
                                 )}
-                                {_t.button.publish}
+                                {t("button.publish")}
                             </button>
                         )}
                     {status === JobPostStatus.ACTIVE &&
@@ -145,7 +147,7 @@ const JobCard: React.FC<JobCardProps> = ({
                                 {unpublishJobMutations.isPending && (
                                     <SpinLoading className="mr-2" />
                                 )}
-                                {_t.button.unpublish}
+                                {t("button.unpublish")}
                             </button>
                         )}
                     <div ref={actionsDropDown} className="relative">
@@ -178,7 +180,7 @@ const JobCard: React.FC<JobCardProps> = ({
                                                 setShowActions(false)
                                             }
                                         >
-                                            {_t.action_list.view_job}
+                                            {t("action_list.view_job")}
                                         </Link>
                                     </li>
                                 )}
@@ -188,7 +190,7 @@ const JobCard: React.FC<JobCardProps> = ({
                                         className="w-full px-4 py-2 block hover:bg-orange-100"
                                         onClick={() => setShowActions(false)}
                                     >
-                                        {_t.action_list.edit_job}
+                                        {t("action_list.edit_job")}
                                     </Link>
                                 </li>
                                 <li>
@@ -197,7 +199,7 @@ const JobCard: React.FC<JobCardProps> = ({
                                         className="w-full px-4 py-2 block hover:bg-orange-100"
                                         onClick={() => setShowActions(false)}
                                     >
-                                        {_t.action_list.leave_job}
+                                        {t("action_list.leave_job")}
                                     </Link>
                                 </li>
                                 <li className="list-item lg:hidden">
@@ -209,7 +211,7 @@ const JobCard: React.FC<JobCardProps> = ({
                                             id
                                         )}
                                     >
-                                        {_t.action_list.publish_job}
+                                        {t("action_list.publish_job")}
                                     </button>
                                 </li>
                             </ul>
@@ -241,7 +243,7 @@ const JobCard: React.FC<JobCardProps> = ({
                         {status === "ACTIVE" ? (
                             <span>
                                 <CheckIcon className="w-5 h-5 text-green-500 inline mr-2" />{" "}
-                                {_t.span.already_posted}
+                                {t("span.already_posted")}
                             </span>
                         ) : (
                             status

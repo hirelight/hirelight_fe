@@ -253,16 +253,6 @@ const EmailEditor: React.FC<IEmailEditor> = ({
                             : "!rounded-md !overflow-hidden",
                     ].join(" ")}
                 ></div>
-                <div id="complextype" style={{ display: "none" }}>
-                    <span contentEditable={false}>
-                        <span className="complex" spellCheck="false">
-                            <span className="inner">Format applied</span>
-                            <span className="nested">More text</span>
-                            <span className="formatting">with formatting</span>
-                            <span className="nested">dolor</span>
-                        </span>
-                    </span>
-                </div>
             </div>
         </div>
     );

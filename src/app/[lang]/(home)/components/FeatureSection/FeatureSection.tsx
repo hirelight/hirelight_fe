@@ -1,13 +1,20 @@
 import React from "react";
 import Image from "next/image";
 
+import { getI18NextTranslation } from "@/utils/i18n";
+
+import { Locale } from "../../../../../../i18n.config";
+
 import styles from "./FeatureSection.module.scss";
 
 interface IFeatureSection {
-    _t: any;
+    lang: string;
 }
 
-const FeatureSection: React.FC<IFeatureSection> = ({ _t }) => {
+const FeatureSection: React.FC<IFeatureSection> = async ({ lang }) => {
+    const { t: _t } = await getI18NextTranslation(lang as Locale, "home", {
+        keyPrefix: "feature_section",
+    });
     return (
         <div className="w-full flex min-h-screen overflow-hidden relative">
             <svg
@@ -39,15 +46,15 @@ const FeatureSection: React.FC<IFeatureSection> = ({ _t }) => {
             <div className="z-10 flex-1 w-full max-w-screen-xl mx-auto flex flex-col items-center px-6 gap-14">
                 <h1 className="text-4xl md:text-6xl font-semibold pt-10 md:pt-[30vh]">
                     <span className={styles.title__gradient}>
-                        {_t.title.normal}
+                        {_t("title.normal")}
                     </span>{" "}
-                    {_t.title.highlight}
+                    {_t("title.highlight")}
                 </h1>
                 <ul className="grid grid-rows-4 md:grid-cols-4 md:grid-rows-none gap-8 md:gap-0">
                     <li className="flex flex-col items-center gap-4 md:gap-10">
                         <div className="w-44 md:w-40 lg:w-52 aspect-square flex items-center justify-center bg-sky-200 rounded-full drop-shadow-md">
                             <Image
-                                src={"/images/feature1.png"}
+                                src={"/feature1.png"}
                                 alt="Feature Image"
                                 width={50}
                                 height={112}
@@ -55,13 +62,13 @@ const FeatureSection: React.FC<IFeatureSection> = ({ _t }) => {
                             />
                         </div>
                         <p className="w-2/3 md:w-4/5 text-base lg:text-xl text-center font-medium text-neutral-600">
-                            {_t.feature_1_description}
+                            {_t("feature_1_description")}
                         </p>
                     </li>
                     <li className="flex flex-col items-center gap-4 md:gap-10">
                         <div className="w-44 md:w-40 lg:w-52 aspect-square flex items-center justify-center bg-sky-200 rounded-full drop-shadow-md">
                             <Image
-                                src={"/images/feature2.png"}
+                                src={"/feature2.png"}
                                 alt="Feature Image"
                                 width={50}
                                 height={112}
@@ -69,13 +76,13 @@ const FeatureSection: React.FC<IFeatureSection> = ({ _t }) => {
                             />
                         </div>
                         <p className="w-2/3 md:w-4/5 text-base lg:text-xl text-center font-medium text-neutral-600">
-                            {_t.feature_2_description}
+                            {_t("feature_2_description")}
                         </p>
                     </li>
                     <li className="flex flex-col items-center gap-4 md:gap-10">
                         <div className="w-44 md:w-40 lg:w-52 aspect-square flex items-center justify-center bg-sky-200 rounded-full drop-shadow-md">
                             <Image
-                                src={"/images/feature3.png"}
+                                src={"/feature3.png"}
                                 alt="Feature Image"
                                 width={50}
                                 height={112}
@@ -83,13 +90,13 @@ const FeatureSection: React.FC<IFeatureSection> = ({ _t }) => {
                             />
                         </div>
                         <p className="w-2/3 md:w-4/5 text-base lg:text-xl text-center font-medium text-neutral-600">
-                            {_t.feature_3_description}
+                            {_t("feature_3_description")}
                         </p>
                     </li>
                     <li className="flex flex-col items-center gap-4 md:gap-10">
                         <div className="w-44 md:w-40 lg:w-52 aspect-square flex items-center justify-center bg-sky-200 rounded-full drop-shadow-md">
                             <Image
-                                src={"/images/feature4.png"}
+                                src={"/feature4.png"}
                                 alt="Feature Image"
                                 width={50}
                                 height={112}
@@ -97,7 +104,7 @@ const FeatureSection: React.FC<IFeatureSection> = ({ _t }) => {
                             />
                         </div>
                         <p className="w-2/3 md:w-4/5 text-base lg:text-xl text-center font-medium text-neutral-600">
-                            {_t.feature_4_description}
+                            {_t("feature_4_description")}
                         </p>
                     </li>
                 </ul>

@@ -1,0 +1,52 @@
+{
+    "error": {
+        "job_required": "Job title required",
+        "area_required": "Area required",
+        "description_required": "Description required",
+        "requirements_required": "Requirements required",
+        "description_must_700": "Description content must minimum 700 characters",
+        "min_lower_max": "Min salary must be lower than max salary",
+        "start_earlier_end": "Start time must be earlier than end time",
+        "end_must_be_future": "End time must be in the future"
+    },
+    "intruction": {
+        "title": "Use common job titles for searchability Advertise only one job, e.g. 'Nurse', not 'nurse' no general opportunities or events",
+        "area": "Use location to attract the most suitable candidates If you check the 'fully remote' box, add at least one country. Some job boards require a position",
+        "description": "Format into sections and lists to improve readability Avoid targeting specific demographics, e.g. gender, nationality and age No need to add a link to sign up (a link is added automatically dynamic)"
+    },
+    "placeholder": {
+        "job_title": "Example: Fullstack Developer",
+        "job_area": "Example: District 7, Ho Chi Minh",
+        "description": "Enter the job description here; include key areas of responsibility and what the candidate might do on a typical day.",
+        "benefits": "Enter the job benefits here; include ke areas of responsibility and what the candidate might do on a typical day.",
+        "requirements": "Enter the job requirements here; include ke areas of responsibility and what the candidate might do on a typical day."
+    },
+    "location": "Location",
+    "job_title": "Job title",
+    "job_area": "Job area",
+    "description": "Description",
+    "requirements": "Requirements",
+    "benefits": "Benefits",
+    "about_this_role": "About this role",
+    "minimum_charaters_used": "Minimum 700 characters. <1>{{characterLength}}</1> characters used.",
+    "start_time": "Start time",
+    "end_time": "End time",
+    "employment_details": "Employment details",
+    "employment_type": "Employment type",
+    "experience": "Experience",
+    "keywords": "Keywords",
+    "cv_keywords": "Cv screening keywords",
+    "annual_salary": "Annual salary",
+    "from": "From",
+    "to": "To",
+    "currency": "Currency",
+    "job_available_time": "Job post available time range",
+    "job_details": "Job details",
+    "tell_applicant_about_this_role": "Tells applicants about this role, including job title, location and requirements.",
+    "application_form": "Application form",
+    "design_app_form": "Design the application form for this role.",
+    "team_members": "Team members",
+    "invite_or_add": "Invite or add co-workers to collaborate on this job.",
+    "create_a_kit": "Create a kit or assessment test for a structured interview process.",
+    "new_job": "New job"
+}

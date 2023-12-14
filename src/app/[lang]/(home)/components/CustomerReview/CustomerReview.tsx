@@ -10,13 +10,23 @@ import review1 from "/public/images/review1.png";
 import review2 from "/public/images/review2.png";
 import review3 from "/public/images/review3.png";
 
+import { Trans } from "react-i18next/TransWithoutContext";
+
+import { getI18NextTranslation } from "@/utils/i18n";
+
+import { Locale } from "../../../../../../i18n.config";
+
 import styles from "./CustomerReview.module.scss";
 
 interface ICustomerReview {
-    _t: any;
+    lang: string;
 }
 
-const CustomerReview: React.FC<ICustomerReview> = ({ _t }) => {
+const CustomerReview: React.FC<ICustomerReview> = async ({ lang }) => {
+    const { t: _t } = await getI18NextTranslation(lang as Locale, "home", {
+        keyPrefix: "customer_review_section",
+    });
+
     const RatingStar = () => {
         return (
             <svg
@@ -55,9 +65,9 @@ const CustomerReview: React.FC<ICustomerReview> = ({ _t }) => {
             <section className="flex-1 flex flex-col justify-between items-center md:items-start self-stretch gap-10 md:gap-8 md:px-11 md:py-9">
                 <div className="text-center flex flex-col items-center md:items-start md:text-left">
                     <h1 className="text-4xl md:text-4xl font-semibold mb-6">
-                        {_t.title.normal}{" "}
+                        {_t("title.normal")}{" "}
                         <span className={styles.title__gradient}>
-                            {_t.title.highlight}
+                            {_t("title.highlight")}
                         </span>
                     </h1>
                     <p className="w-4/5 text-sm md:text-lg text-gray-500">
@@ -77,7 +87,7 @@ const CustomerReview: React.FC<ICustomerReview> = ({ _t }) => {
                             2,5M+
                         </h2>
                         <p className="text-gray-700 text-base">
-                            {_t.downloaded}
+                            {_t("downloaded")}
                         </p>
                     </div>
                     <div className="w-[1px] self-stretch bg-gray-500" />
@@ -91,7 +101,9 @@ const CustomerReview: React.FC<ICustomerReview> = ({ _t }) => {
                             4.8/5
                         </h2>
                         <p className="text-gray-700 text-base">
-                            {_t.rates.replace("{{numOfReviews}}", "1,258")}
+                            <Trans t={_t} i18nKey={"rates"}>
+                                Based on {{ numOfReviews: "1,258" }} reviews
+                            </Trans>
                         </p>
                     </div>
                 </div>
@@ -101,7 +113,7 @@ const CustomerReview: React.FC<ICustomerReview> = ({ _t }) => {
                         type="button"
                         className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
-                        {_t.btn.see_reviews}
+                        {_t("btn.see_reviews")}
                     </button>
 
                     <button
@@ -130,7 +142,7 @@ const CustomerReview: React.FC<ICustomerReview> = ({ _t }) => {
                             </svg>
                         </div>
 
-                        <span>{_t.btn.view_promote}</span>
+                        <span>{_t("btn.view_promote")}</span>
                     </button>
                 </div>
             </section>

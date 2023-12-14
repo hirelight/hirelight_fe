@@ -7,24 +7,16 @@ import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Button, CustomInput } from "@/components";
-import { useTranslation } from "@/components/InternationalizationProvider";
 import { ICreateEmailTemplatesDto } from "@/services/email-template/email-template.interface";
 import emailTemplateServices from "@/services/email-template/email-template.service";
 import { useAppSelector } from "@/redux/reduxHooks";
-
-import { Locale } from "../../../../../../../../../i18n.config";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 const EmailEditorNoSSR = dynamic(() => import("./EmailEditor"), {
     ssr: false,
     loading: () => (
         <div className="bg-white min-h-[220px] border border-gray-300 rounded-md"></div>
-    ),
-});
-
-const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
-    ssr: false,
-    loading: () => (
-        <div className="bg-white h-11 border border-gray-300 rounded-md"></div>
     ),
 });
 
@@ -38,10 +30,14 @@ const AddEmailTemplate: React.FC<IAddEmailTemplate> = ({
     onCancel,
 }) => {
     const { lang } = useParams();
-    const t = useTranslation(
-        lang as Locale,
-        "settings.templates.templates_header_section.add_email_template"
+    const { t } = useI18NextTranslation(
+        lang as I18Locale,
+        "settings-templates",
+        {
+            keyPrefix: "add_email_template.form",
+        }
     );
+
     const queryClient = useQueryClient();
     const mutation = useMutation({
         mutationFn: (newEmailTemplate: ICreateEmailTemplatesDto) =>
@@ -90,7 +86,7 @@ const AddEmailTemplate: React.FC<IAddEmailTemplate> = ({
             <div className="grid grid-cols-2 mb-4 gap-4">
                 <CustomInput
                     type="text"
-                    title={t.form.name.label}
+                    title={t("name.label")}
                     value={form.name}
                     onChange={(e: any) =>
                         setForm({ ...form, name: e.target.value })
@@ -112,7 +108,7 @@ const AddEmailTemplate: React.FC<IAddEmailTemplate> = ({
                     /> */}
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                         <span className="text-red-500 mr-1">*</span>
-                        {t.form.title.label}
+                        {t("title.label")}
                     </label>
                     <EmailEditorNoSSR
                         value={form.subject}
@@ -133,7 +129,7 @@ const AddEmailTemplate: React.FC<IAddEmailTemplate> = ({
             <div className="p-4 bg-slate-200 border border-gray-300 mb-4 rounded-md overflow-hidden">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                     <span className="text-red-500 mr-1">*</span>
-                    {t.form.body.label}
+                    {t("body.label")}
                 </label>
                 <EmailEditorNoSSR
                     value={form.content}
@@ -151,7 +147,7 @@ const AddEmailTemplate: React.FC<IAddEmailTemplate> = ({
                     isLoading={mutation.isPending}
                     className="mr-4"
                 >
-                    {t.form.btn.save_template}
+                    {t("btn.save_template")}
                 </Button>
 
                 <button
@@ -159,7 +155,7 @@ const AddEmailTemplate: React.FC<IAddEmailTemplate> = ({
                     onClick={onCancel}
                     className="text-sm text-neutral-500 font-semibold hover:underline"
                 >
-                    {t.form.btn.cancel}
+                    {t("btn.cancel")}
                 </button>
             </div>
         </form>

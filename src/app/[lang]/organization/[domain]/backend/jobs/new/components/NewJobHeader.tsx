@@ -1,21 +1,26 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
 
 import jobServices from "@/services/job/job.service";
 import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
 import { SpinLoading } from "@/icons";
+import { handleError } from "@/helpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
-import styles from "./NewJobHeader.module.scss";
 import { useAddJobDetailForm } from "./AddJobDetailForm";
+import styles from "./NewJobHeader.module.scss";
 
 interface NewJobHeaderProps {}
 
 const NewJobHeader = ({}: NewJobHeaderProps) => {
     const router = useRouter();
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "new-job");
+
     const { formState } = useAddJobDetailForm();
     const queryClient = useQueryClient();
     const [isLoading, setIsLoading] = useState(false);
@@ -44,7 +49,7 @@ const NewJobHeader = ({}: NewJobHeaderProps) => {
             router.push(`${res.data}/edit`);
             setIsLoading(false);
         } catch (error: any) {
-            toast.error(error.message ? error.message : "Something went wrong");
+            handleError(error);
             setIsLoading(false);
         }
     };
@@ -59,7 +64,7 @@ const NewJobHeader = ({}: NewJobHeaderProps) => {
             <div className="max-w-screen-xl mx-auto py-5 px-4 xl:px-6 flex-shrink-0">
                 <div className="w-full flex items-center justify-between mb-4">
                     <h4 className="text-2xl text-neutral-700 font-medium">
-                        {formState.title ? formState.title : "New Job"}
+                        {formState.title ? formState.title : t("new_job")}
                     </h4>
                     <div className="hidden md:block">
                         <button
@@ -68,8 +73,8 @@ const NewJobHeader = ({}: NewJobHeaderProps) => {
                             disabled={isLoading}
                             onClick={handleSaveAndContinue}
                         >
-                            {isLoading && <SpinLoading className="mr-2" />} Save
-                            & continue
+                            {isLoading && <SpinLoading className="mr-2" />}{" "}
+                            {t("common:save_and_continue")}
                         </button>
                     </div>
                 </div>
@@ -81,11 +86,10 @@ const NewJobHeader = ({}: NewJobHeaderProps) => {
                             tabIndex={-1}
                         >
                             <h3 className={styles.section__title}>
-                                Job details
+                                {t("job_details")}
                             </h3>
                             <p className={`${styles.section__description}`}>
-                                Tells applicants about this role, including job
-                                title, location and requirements.
+                                {t("tell_applicant_about_this_role")}
                             </p>
                         </button>
                     </div>
@@ -98,10 +102,10 @@ const NewJobHeader = ({}: NewJobHeaderProps) => {
                                 className={`h-full pointer-events-none`}
                             >
                                 <h3 className={styles.section__title}>
-                                    Application Form
+                                    {t("application_form")}
                                 </h3>
                                 <p className={`${styles.section__description}`}>
-                                    Design the application form for this role.
+                                    {t("design_app_form")}
                                 </p>
                             </div>
                         </div>
@@ -116,11 +120,10 @@ const NewJobHeader = ({}: NewJobHeaderProps) => {
                                 className={`h-full pointer-events-none`}
                             >
                                 <h3 className={styles.section__title}>
-                                    Team Members
+                                    {t("team_members")}
                                 </h3>
                                 <p className={`${styles.section__description}`}>
-                                    Invite or add co-workers to collaborate on
-                                    this job.
+                                    {t("invite_or_add")}
                                 </p>
                             </div>
                         </div>
@@ -134,11 +137,10 @@ const NewJobHeader = ({}: NewJobHeaderProps) => {
                                 className={`h-full pointer-events-none`}
                             >
                                 <h3 className={styles.section__title}>
-                                    Workflow
+                                    {t("common:assessment_flow")}
                                 </h3>
                                 <p className={`${styles.section__description}`}>
-                                    Create a kit or assessment test for a
-                                    structured interview process.
+                                    {t("create_a_kit")}
                                 </p>
                             </div>
                         </div>

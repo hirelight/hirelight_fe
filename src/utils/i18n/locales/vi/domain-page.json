@@ -1,0 +1,25 @@
+{
+    "components": {
+        "header_bar": {
+            "link": {
+                "jobs": "Công việc",
+                "candidates": "Ứng tuyển viên",
+                "dashboard": "Thống kê",
+                "calendar": "Lịch"
+            },
+            "avatar_menu": {
+                "settings": "Cài đặt",
+                "help": "Trợ giúp",
+                "add_company": "Tạo thêm công ty",
+                "sign_out": "Đăng xuất"
+            }
+        },
+        "invitation_dropdown": {
+            "collab_message": "đã mời bạn cộng tác trong một quy trình tuyển dụng",
+            "button": {
+                "accept": "Chấp nhận",
+                "dismiss": "Đóng"
+            }
+        }
+    }
+}

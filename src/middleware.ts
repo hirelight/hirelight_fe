@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { match as matchLocale } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
+import acceptLanguage from "accept-language";
 
-import { i18n } from "../i18n.config";
+import { fallbackLng, i18n, languages } from "../i18n.config";
+
+acceptLanguage.languages(languages);
 
 function getLocale(request: NextRequest): string | undefined {
     const negotiatorHeaders: Record<string, string> = {};
@@ -31,16 +34,15 @@ export default async function middleware(req: NextRequest) {
     const hostname = req.headers.get("host")!!;
     const pathname = url.pathname;
 
-    console.log("Call Middleware");
-
     const pathnameIsMissingLocale = i18n.locales.every(
         locale =>
             !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
     );
 
     const locale = getLocale(req);
+    const curLocale = getCurLocale(req);
 
-    // Redirect if there is no locale
+    // Redirect if there is unsupport locale
     if (pathnameIsMissingLocale) {
         return NextResponse.redirect(
             new URL(
@@ -51,8 +53,6 @@ export default async function middleware(req: NextRequest) {
             )
         );
     }
-
-    const curLocale = getCurLocale(req);
 
     if (
         hostname === "localhost:3000" ||
@@ -113,6 +113,6 @@ export const config = {
          * 3. /_static (inside /public)
          * 4. all root files inside /public (e.g. /favicon.ico)
          */
-        "/((?!api/|_next/|_static/|_vercel|_next/image|[\\w-]+\\.\\w+).*)",
+        "/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)",
     ],
 };

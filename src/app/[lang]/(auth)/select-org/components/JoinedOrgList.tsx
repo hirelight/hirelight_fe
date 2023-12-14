@@ -14,7 +14,7 @@ import authServices from "@/services/auth/auth.service";
 import { handleError, validWorkEmail } from "@/helpers";
 import organizationsServices from "@/services/organizations/organizations.service";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { useTranslation } from "@/components/InternationalizationProvider";
+import { useI18NextTranslation } from "@/utils/i18n/client";
 
 import { Locale } from "../../../../../../i18n.config";
 
@@ -26,7 +26,9 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
     const router = useRouter();
     const { lang } = useParams();
 
-    const _t = useTranslation(lang as Locale, "select_org_page.join_org_list");
+    const { t: _t } = useI18NextTranslation(lang as Locale, "select-org-page", {
+        keyPrefix: "join_org_list",
+    });
 
     const { authUser } = useAppSelector(state => state.auth);
 
@@ -40,7 +42,7 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
     const handleRedirectNewOrg = () => {
         if (authUser && validWorkEmail(authUser.emailAddress))
             router.push("organization/new");
-        else toast.error(_t.error.work_email_only);
+        else toast.error(_t("error.work_email_only"));
     };
 
     const handleRedirect = async (orgId: string, subdomain: string) => {
@@ -70,7 +72,7 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
                 )}
             </Portal>
             <div className="flex flex-col gap-4">
-                <h1 className={styles.title}>{_t.h1.organization_list}</h1>
+                <h1 className={styles.title}>{_t("h1.organization_list")}</h1>
 
                 {res &&
                     (res.data.length > 0 ? (
@@ -96,7 +98,7 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
                                             org.ownerId.toString() ===
                                                 authUser.userId && (
                                                 <span className="text-sm text-gray-500 group-hover:text-blue_primary_700">
-                                                    {_t.span.owned}
+                                                    {_t("span.owned")}
                                                 </span>
                                             )}
                                         <span>
@@ -110,11 +112,11 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
                         <div className="w-full flex flex-col items-center">
                             <BuildingOffice2Icon className="w-24 h-24 text-neutral-700 mb-2" />
                             <div className="text-sm text-gray-500 max-w-[80%] mb-6">
-                                <p>{_t.p.empty_list}</p>
+                                <p>{_t("p.empty_list")}</p>
                             </div>
 
                             <Button onClick={handleRedirectNewOrg}>
-                                {_t.button.create_new}
+                                {_t("button.create_new")}
                             </Button>
                         </div>
                     ))}

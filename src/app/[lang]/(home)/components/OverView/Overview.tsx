@@ -6,15 +6,22 @@ import lading2 from "/public/images/landing_2.jpg";
 import lading3 from "/public/images/landing_3.jpg";
 
 import Link from "next/link";
+import { Trans } from "react-i18next/TransWithoutContext";
+
+import { getI18NextTranslation } from "@/utils/i18n";
+
+import { Locale } from "../../../../../../i18n.config";
 
 import styles from "./Overview.module.scss";
 
 interface IOverviewSection {
-    _t: any;
     lang: string;
 }
 
-const OverviewSection: React.FC<IOverviewSection> = ({ _t, lang }) => {
+const OverviewSection: React.FC<IOverviewSection> = async ({ lang }) => {
+    const { t: _t } = await getI18NextTranslation(lang as Locale, "home", {
+        keyPrefix: "overview_section",
+    });
     return (
         <div className="max-w-screen-xl w-full mx-auto px-4 md:px-8  flex flex-col items-center md:flex-row justify-between gap-4 lg:gap-8 ">
             <section className="flex-1 self-stretch flex flex-col  items-center md:items-start justify-between">
@@ -44,7 +51,7 @@ const OverviewSection: React.FC<IOverviewSection> = ({ _t, lang }) => {
                         aria-label="Go to login"
                         className="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-base xl:text-lg px-5 py-2.5 text-center mr-2 mb-2 flex items-center gap-2"
                     >
-                        <span>{_t.get_started}</span>
+                        <span>{_t("get_started")}</span>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -80,7 +87,9 @@ const OverviewSection: React.FC<IOverviewSection> = ({ _t, lang }) => {
                             </svg>
                         </div>
                         <span className="text-lg text-neutral-500">
-                            {_t.free_trials.replace(`{{days}}`, 14)}
+                            <Trans t={_t} i18nKey={"free_trials"}>
+                                {{ days: 15 }} days free trials
+                            </Trans>
                         </span>
                     </div>
                     <div className="flex gap-4 items-center">
@@ -101,7 +110,7 @@ const OverviewSection: React.FC<IOverviewSection> = ({ _t, lang }) => {
                             </svg>
                         </div>
                         <span className="text-lg text-neutral-500">
-                            {_t.easy_payment}
+                            {_t("easy_payment")}
                         </span>
                     </div>
                 </div>

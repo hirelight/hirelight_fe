@@ -1,0 +1,19 @@
+{
+    "join_org_list": {
+        "error": {
+            "work_email_only": "Chỉ email doanh nghiệp có thể tạo mới tài khoản công ty"
+        },
+        "h1": {
+            "organization_list": "Danh sách công ty:"
+        },
+        "p": {
+            "empty_list": "Bạn chưa là thành viên của công ty nào. Hãy kiểm tra lời mời tham gia hoặc tạo một tài khoản công ty mới cho riêng bạn!"
+        },
+        "span": {
+            "owned": "Sở hữu"
+        },
+        "button": {
+            "create_new": "Tạo tài khoản công ty"
+        }
+    }
+}

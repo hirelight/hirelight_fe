@@ -2,6 +2,11 @@
 
 import React from "react";
 import dynamic from "next/dynamic";
+import { useParams } from "next/navigation";
+import { Trans } from "react-i18next";
+
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "./AddJobDetailForm.module.scss";
 import { useAddJobDetailForm } from "./AddJobDetailForm";
@@ -12,6 +17,9 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
 });
 
 const DescriptionSection = () => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "new-job");
+
     const {
         formErr,
         setFormErr,
@@ -23,23 +31,23 @@ const DescriptionSection = () => {
 
     return (
         <section className="relative">
-            <h2 className={`${styles.form__section__title}`}>Description</h2>
+            <h2 className={`${styles.form__section__title}`}>
+                {t("description")}
+            </h2>
             <div className={`${styles.form__section__wrapper}`}>
                 <div className="mb-4 md:mb-6">
                     <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                         <span className="text-red-500 mr-1">*</span>
-                        About this role
+                        {t("about_this_role")}
                     </h3>
                     <div className="border border-slate-600 rounded-lg min-h-[600px] p-3 md:p-6 relative overflow-hidden">
                         <div className="mb-6 flex flex-col min-h-[220px]">
                             <QuillEditorNoSSR
-                                label="Description"
+                                label={t("description")}
                                 theme="bubble"
                                 required={true}
                                 value={formState.content.description}
-                                placeholder="Enter the job description here; include key areas of
-responsibility and what the candidate might do on a typical
-day."
+                                placeholder={t("placeholder.description")}
                                 onChange={(value: string, text) => {
                                     setContentLength(prev => ({
                                         ...prev,
@@ -62,24 +70,16 @@ day."
                                     });
                                 }}
                                 className="flex-1"
+                                errorText={formErr.contentErr.descriptionErr}
                             />
-                            {formErr.contentErr.descriptionErr !== "" && (
-                                <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                                    <span className="font-medium">
-                                        {formErr.contentErr.descriptionErr}
-                                    </span>
-                                </p>
-                            )}
                         </div>
 
                         <div className="mb-6 flex flex-col min-h-[220px]">
                             <QuillEditorNoSSR
-                                label="Requirements"
+                                label={t("requirements")}
                                 theme="bubble"
                                 value={formState.content.requirements}
-                                placeholder="Enter the job description here; include key areas of
-responsibility and what the candidate might do on a typical
-day."
+                                placeholder={t("placeholder.requirements")}
                                 onChange={(value, text) => {
                                     setContentLength(prev => ({
                                         ...prev,
@@ -103,23 +103,15 @@ day."
                                 }}
                                 className="flex-1"
                                 required={true}
+                                errorText={formErr.contentErr.requirementsErr}
                             />
-                            {formErr.contentErr.requirementsErr && (
-                                <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                                    <span className="font-medium">
-                                        {formErr.contentErr.requirementsErr}{" "}
-                                    </span>
-                                </p>
-                            )}
                         </div>
                         <div className="mb-6 flex flex-col min-h-[220px]">
                             <QuillEditorNoSSR
-                                label="Benefits"
+                                label={t("benefits")}
                                 theme="bubble"
                                 value={formState.content.benefits}
-                                placeholder="Enter the job description here; include key areas of
-responsibility and what the candidate might do on a typical
-day."
+                                placeholder={t("placeholder.benefits")}
                                 onChange={(value, text) => {
                                     setContentLength(prev => ({
                                         ...prev,
@@ -152,11 +144,15 @@ day."
                             }`}
                         >
                             <span>
-                                Minimum 700 characters.{" "}
-                                {Object.values(contentLength).reduce(
-                                    (prev, cur) => prev + cur
-                                )}{" "}
-                                characters used.
+                                <Trans t={t} i18nKey={"minimum_charaters_used"}>
+                                    Minimum 700 characters.
+                                    {{
+                                        characterLength: Object.values(
+                                            contentLength
+                                        ).reduce((prev, cur) => prev + cur),
+                                    }}{" "}
+                                    characters used.
+                                </Trans>
                             </span>
                         </div>
                     </div>
@@ -165,10 +161,7 @@ day."
             <div className={styles.instruction_wrapper}>
                 <div className={styles.instruction__text}>
                     <span className="text-sm text-neutral-500">
-                        Định dạng thành các phần và danh sách để cải thiện khả
-                        năng đọc Tránh nhắm mục tiêu nhân khẩu học cụ thể, ví
-                        dụ: giới tính, quốc tịch và độ tuổi Không cần thêm liên
-                        kết để đăng ký (một liên kết được thêm tự động)
+                        {t("intruction.description")}
                     </span>
                 </div>
             </div>

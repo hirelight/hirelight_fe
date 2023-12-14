@@ -9,16 +9,21 @@ import { MenuIcon } from "@/icons";
 
 import logo from "/public/images/logo.svg";
 
+import { useI18NextTranslation } from "@/utils/i18n/client";
+
 import Sidebar from "../Sidebar";
+import { Locale } from "../../../../../../i18n.config";
 
 import styles from "./HomeHeader.module.scss";
 
-interface IHomeHeader {
-    _t: any;
-}
+interface IHomeHeader {}
 
-const HomeHeader = ({ _t }: IHomeHeader) => {
+const HomeHeader = ({}: IHomeHeader) => {
     const { lang } = useParams();
+    const { t: _t } = useI18NextTranslation(lang as Locale, "home", {
+        keyPrefix: "header",
+    });
+
     const [showMenu, setShowMenu] = React.useState(false);
 
     const handleShowMenu = (show: boolean) => {
@@ -42,19 +47,19 @@ const HomeHeader = ({ _t }: IHomeHeader) => {
             <nav className="hidden lg:block">
                 <ul className="flex gap-8 font-medium text-lg text-neutral-600">
                     <li className={`${styles.active}`}>
-                        <Link href={"#"}>{_t.nav.home}</Link>
+                        <Link href={"#"}>{_t("nav.home")}</Link>
                     </li>
                     <li className="hover:text-blue_primary_800">
-                        <Link href={"#"}>{_t.nav.pricing}</Link>
+                        <Link href={"#"}>{_t("nav.pricing")}</Link>
                     </li>
                     <li className="hover:text-blue_primary_800">
-                        <Link href={"#"}>{_t.nav.about_us}</Link>
+                        <Link href={"#"}>{_t("nav.about_us")}</Link>
                     </li>
                     <li className="hover:text-blue_primary_800">
                         <Link
                             href={`http://jobs.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}`}
                         >
-                            {_t.nav.career_center}
+                            {_t("nav.career_center")}
                         </Link>
                     </li>
                 </ul>
@@ -65,14 +70,14 @@ const HomeHeader = ({ _t }: IHomeHeader) => {
                     className="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-base font-medium text-gray-900 rounded-full group bg-gradient-to-br from-cyan-600 to-blue-700 group-hover:from-cyan-600 group-hover:to-blue-700 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800"
                 >
                     <span className="relative px-6 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-full group-hover:bg-opacity-0">
-                        {_t.btn.sign_in}
+                        {_t("btn.sign_in")}
                     </span>
                 </Link>
                 <Link
                     href={`${lang}/signup`}
                     className="text-white bg-gradient-to-r from-cyan-600 to-blue-700 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-full text-base px-6 py-2.5 text-center mr-2 mb-2"
                 >
-                    {_t.btn.sign_up}
+                    {_t("btn.sign_up")}
                 </Link>
             </div>
 

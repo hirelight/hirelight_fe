@@ -1,11 +1,13 @@
 "use client";
 
 import React from "react";
+import { useParams } from "next/navigation";
 
 import { delayFunc } from "@/helpers/shareHelpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import { Button } from "..";
-import { useTranslation } from "../InternationalizationProvider";
 
 import styles from "./styles.module.scss";
 
@@ -28,8 +30,12 @@ const PopoverWarning: React.FC<IPopoverWarning> = ({
     confirmButton,
     cancelButton,
 }) => {
+    const { lang } = useParams();
+
     const popoverRef = React.useRef<HTMLDivElement>(null);
-    const t = useTranslation("en", "common.components.popover_warning");
+    const { t } = useI18NextTranslation(lang as I18Locale, "common", {
+        keyPrefix: "components.popover_warning",
+    });
 
     const handleConfirm = async () => {
         if (popoverRef.current)
@@ -73,7 +79,7 @@ const PopoverWarning: React.FC<IPopoverWarning> = ({
                                 className="px-10 whitespace-nowrap"
                                 onClick={handleConfirm}
                             >
-                                {t.btn.confirm}
+                                {t("btn.confirm")}
                             </Button>
                         )}
                         {cancelButton ? (
@@ -84,7 +90,7 @@ const PopoverWarning: React.FC<IPopoverWarning> = ({
                                 onClick={handleCancel}
                                 className="border border-gray-600 py-2.5 px-10 rounded-md hover:bg-slate-200 text-neutral-700 whitespace-nowrap"
                             >
-                                {t.btn.cancel}
+                                {t("btn.cancel")}
                             </button>
                         )}
                     </div>

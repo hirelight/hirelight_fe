@@ -1,0 +1,93 @@
+{
+    "templates_title_section": {
+        "title": "Communication Templates",
+        "popover": {
+            "warning": {
+                "content": "You have unsaved changes that will be lost if you proceed.",
+                "btn": {
+                    "confirm": "Proceed",
+                    "cancel": "Keep"
+                }
+            }
+        },
+        "btn": {
+            "add_new_template": "Add a new template"
+        }
+    },
+    "templates_header_section": {
+        "search_input": {
+            "placeholder": "Start typing to search..."
+        },
+        "add_email_template": {
+            "form": {
+                "name": {
+                    "label": "Name"
+                },
+                "title": {
+                    "label": "Subject"
+                },
+                "industry": {
+                    "label": "Industry"
+                },
+
+                "body": {
+                    "label": "Body"
+                },
+
+                "btn": {
+                    "save_template": "Save template",
+                    "cancel": "Cancel"
+                }
+            }
+        }
+    },
+    "email_template_list": {
+        "email_template_card": {
+            "btn": {
+                "preview": "Preview",
+                "edit": "Edit",
+                "delete": "Delete"
+            },
+            "popover": {
+                "edit_warning": {
+                    "content": "You have unsaved changes that will be lost if you proceed.",
+                    "btn": {
+                        "cancel": "Keep"
+                    }
+                },
+                "delete_warning": {
+                    "content": "Are you sure you want to delete this message template?",
+                    "btn": {
+                        "confirm": "Delete",
+                        "cancel": "Keep"
+                    }
+                }
+            }
+        }
+    },
+    "preview_modal": {
+        "preview_h2": "Preview"
+    },
+    "update_email_template": {
+        "form": {
+            "name": {
+                "label": "Name"
+            },
+            "title": {
+                "label": "Subject"
+            },
+            "industry": {
+                "label": "Industry"
+            },
+
+            "body": {
+                "label": "Body"
+            },
+
+            "btn": {
+                "save_changes": "Save changes",
+                "cancel": "Cancel"
+            }
+        }
+    }
+}

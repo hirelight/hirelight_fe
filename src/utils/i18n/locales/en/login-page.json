@@ -1,0 +1,25 @@
+{
+    "login_form": {
+        "title": {
+            "highlight": "Sign in to Hirelight"
+        },
+        "label": {
+            "email": "Email address",
+            "password": "Password"
+        },
+        "or": "Or",
+        "btn": {
+            "signin": "Sign in",
+            "forgot_password": "Forgot your password?",
+            "signin_google": "Sign in with Google",
+            "signin_linkedin": "Sign in with LinkedIn"
+        },
+        "error": {
+            "personal_email_no_org": "You are using personal email. And you are not belong to any organizations. You need to use work email to create your own organization or being invited by others."
+        }
+    },
+    "dont_have_account": "Don't have a Hirelight account?",
+    "btn": {
+        "signup": "Sign up now for a {{days}}-day free trial"
+    }
+}

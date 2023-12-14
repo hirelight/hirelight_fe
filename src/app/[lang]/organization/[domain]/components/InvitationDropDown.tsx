@@ -10,7 +10,7 @@ import { useOutsideClick } from "@/hooks/useClickOutside";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
 import { useAppSelector } from "@/redux/reduxHooks";
 import { handleError } from "@/helpers";
-import { useTranslation } from "@/components/InternationalizationProvider";
+import { useI18NextTranslation } from "@/utils/i18n/client";
 
 import { Locale } from "../../../../../../i18n.config";
 
@@ -19,10 +19,9 @@ import styles from "./InvitationDropDown.module.scss";
 const InvitationDropDown = () => {
     const { lang } = useParams();
 
-    const _t = useTranslation(
-        lang as Locale,
-        "domain.components.invitation_dropdown"
-    );
+    const { t } = useI18NextTranslation(lang as Locale, "domain-page", {
+        keyPrefix: "components.invitation_dropdown",
+    });
 
     const authUser = useAppSelector(state => state.auth.authUser);
 
@@ -96,7 +95,7 @@ const InvitationDropDown = () => {
                                 </strong>
                                 <p className="mb-3">
                                     {invitation.organizationName}{" "}
-                                    {_t.collab_message}
+                                    {t("collab_message")}
                                 </p>
                                 <div>
                                     <button
@@ -110,7 +109,7 @@ const InvitationDropDown = () => {
                                             invitation.jobPostId
                                         )}
                                     >
-                                        {_t.button.accept}
+                                        {t("button.accept")}
                                     </button>
                                     <button
                                         type="button"
@@ -120,7 +119,7 @@ const InvitationDropDown = () => {
                                         }
                                         onClick={() => setShowDropdown(false)}
                                     >
-                                        {_t.button.dismiss}
+                                        {t("button.dismiss")}
                                     </button>
                                 </div>
                             </div>

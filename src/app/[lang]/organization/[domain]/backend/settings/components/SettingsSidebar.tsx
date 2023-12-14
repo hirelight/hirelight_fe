@@ -10,12 +10,11 @@ import {
     DocumentTextIcon,
     QueueListIcon,
     UserGroupIcon,
-    UserIcon,
     WrenchScrewdriverIcon,
 } from "@heroicons/react/24/outline";
 import { useParams, usePathname } from "next/navigation";
 
-import { useTranslation } from "@/components/InternationalizationProvider";
+import { useI18NextTranslation } from "@/utils/i18n/client";
 
 import { Locale } from "../../../../../../../../i18n.config";
 
@@ -25,10 +24,9 @@ const SettingsSidebar = () => {
     const pathname = usePathname();
     const { lang } = useParams();
 
-    const t = useTranslation(
-        lang as Locale,
-        "settings.components.settings_sidebar"
-    );
+    const { t } = useI18NextTranslation(lang as Locale, "settings", {
+        keyPrefix: "components.settings_sidebar",
+    });
     return (
         <aside className="min-w-[200px] w-full bg-white shadow-md rounded-md overflow-hidden">
             <ul className="w-full flex flex-col text-neutral-700">
@@ -53,7 +51,7 @@ const SettingsSidebar = () => {
                         }`}
                     >
                         <QueueListIcon className="w-6 h-6" />
-                        <span>{t.assessment_flow}</span>
+                        <span>{t("assessment_flow")}</span>
                     </Link>
                 </li>
                 <li>
@@ -66,7 +64,7 @@ const SettingsSidebar = () => {
                         }`}
                     >
                         <DocumentTextIcon className="w-6 h-6" />
-                        <span>{t.templates}</span>
+                        <span>{t("templates")}</span>
                     </Link>
                 </li>
                 <li>
@@ -81,7 +79,7 @@ const SettingsSidebar = () => {
                         }`}
                     >
                         <ClipboardDocumentListIcon className="w-6 h-6" />
-                        <span>{t.questions_bank}</span>
+                        <span>{t("questions_bank")}</span>
                     </Link>
                 </li>
                 <li>
@@ -94,7 +92,7 @@ const SettingsSidebar = () => {
                         }`}
                     >
                         <ArchiveBoxIcon className="w-6 h-6" />
-                        <span>{t.question_sets}</span>
+                        <span>{t("question_sets")}</span>
                     </Link>
                 </li>
 
@@ -119,7 +117,7 @@ const SettingsSidebar = () => {
                         }`}
                     >
                         <BuildingOffice2Icon className="w-6 h-6" />
-                        <span>{t.organization_profile}</span>
+                        <span>{t("organization_profile")}</span>
                     </Link>
                 </li>
                 <li>
@@ -132,7 +130,7 @@ const SettingsSidebar = () => {
                         }`}
                     >
                         <UserGroupIcon className="w-6 h-6" />
-                        <span>{t.account_members}</span>
+                        <span>{t("account_members")}</span>
                     </Link>
                 </li>
                 <li>
@@ -145,7 +143,7 @@ const SettingsSidebar = () => {
                         }`}
                     >
                         <CreditCardIcon className="w-6 h-6" />
-                        <span>{t.billing}</span>
+                        <span>{t("billing")}</span>
                     </Link>
                 </li>
                 <li>
@@ -158,7 +156,7 @@ const SettingsSidebar = () => {
                         }`}
                     >
                         <WrenchScrewdriverIcon className="w-6 h-6" />
-                        <span>{t.integrations}</span>
+                        <span>{t("integrations")}</span>
                     </Link>
                 </li>
 
@@ -174,7 +172,7 @@ const SettingsSidebar = () => {
                 <li>
                     <Link href={"#"} className={`${styles.tab__btn}`}>
                         <UserGroupIcon className="w-6 h-6" />
-                        <span>{t.your_profile}</span>
+                        <span>{t("your_profile")}</span>
                     </Link>
                 </li>
             </ul>

@@ -8,9 +8,8 @@ import dynamic from "next/dynamic";
 import { SearchIcon } from "@/icons";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setIsAdding, setSearchQuery } from "@/redux/slices/templates.slice";
-import { useTranslation } from "@/components/InternationalizationProvider";
-
-import { Locale } from "../../../../../../../../../i18n.config";
+import { I18Locale } from "@/interfaces/i18.interface";
+import { useI18NextTranslation } from "@/utils/i18n/client";
 
 import EditAddTemplateSkeleton from "./EditAddTemplateSkeleton";
 
@@ -21,9 +20,12 @@ const AddEmailTemplate = dynamic(() => import("./AddEmailTemplate"), {
 const TemplatesHeaderSection = () => {
     const { lang } = useParams();
     const dispatch = useAppDispatch();
-    const t = useTranslation(
-        lang as Locale,
-        "settings.templates.templates_header_section"
+    const { t } = useI18NextTranslation(
+        lang as I18Locale,
+        "settings-templates",
+        {
+            keyPrefix: "templates_header_section.search_input",
+        }
     );
 
     const { isAdding, searchQuery, editingId } = useAppSelector(
@@ -41,7 +43,7 @@ const TemplatesHeaderSection = () => {
                         <input
                             type="text"
                             className="block w-full rounded-md border-0 py-2.5 pl-10 pr-20 text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue_primary_700 sm:sm:leading-6 placeholder:text-sm"
-                            placeholder={t.search_input.placeholder}
+                            placeholder={t("placeholder")}
                             value={searchQuery}
                             onChange={e =>
                                 dispatch(setSearchQuery(e.target.value))

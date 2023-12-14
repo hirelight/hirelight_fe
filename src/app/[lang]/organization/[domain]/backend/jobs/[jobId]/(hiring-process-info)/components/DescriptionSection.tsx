@@ -1,5 +1,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
+import { useParams } from "next/navigation";
+import { Trans } from "react-i18next";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import {
@@ -8,6 +10,8 @@ import {
     setJobError,
 } from "@/redux/slices/job.slice";
 import { extractTextFromHtml } from "@/helpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "./EditJobDetailForm.module.scss";
 
@@ -17,6 +21,9 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
 });
 
 const DescriptionSection = () => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "edit-job");
+
     const dispatch = useAppDispatch();
     const {
         data: job,
@@ -25,22 +32,22 @@ const DescriptionSection = () => {
     } = useAppSelector(state => state.job);
     return (
         <section className="relative">
-            <h2 className={`${styles.form__section__title}`}>Description</h2>
+            <h2 className={`${styles.form__section__title}`}>
+                {t("description")}
+            </h2>
             <div className={`${styles.form__section__wrapper}`}>
                 <div className="mb-4 md:mb-6">
                     <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                         <span className="text-red-500 mr-1">*</span>
-                        About this role
+                        {t("about_this_role")}
                     </h3>
                     <div className="border border-slate-600 rounded-lg min-h-[600px] p-3 md:p-6 relative overflow-hidden">
                         <div className="mb-6 flex flex-col min-h-[220px]">
                             <QuillEditorNoSSR
-                                label="Description"
+                                label={t("description")}
                                 theme="bubble"
                                 value={job.content.description}
-                                placeholder="Enter the job description here; include key areas of
-                    responsibility and what the candidate might do on a typical
-                    day."
+                                placeholder={t("placeholder.description")}
                                 onChange={(value: string, text) => {
                                     dispatch(
                                         setContentLength({
@@ -76,12 +83,10 @@ const DescriptionSection = () => {
                         </div>
                         <div className="mb-6 flex flex-col min-h-[220px]">
                             <QuillEditorNoSSR
-                                label="Requirements"
+                                label={t("requirements")}
                                 theme="bubble"
                                 value={job.content.requirements}
-                                placeholder="Enter the job description here; include key areas of
-                    responsibility and what the candidate might do on a typical
-                    day."
+                                placeholder={t("placeholder.requirements")}
                                 onChange={(value: string, text) => {
                                     dispatch(
                                         setContentLength({
@@ -117,12 +122,10 @@ const DescriptionSection = () => {
                         </div>
                         <div className="mb-6 flex flex-col min-h-[220px]">
                             <QuillEditorNoSSR
-                                label="Benefits"
+                                label={t("benefits")}
                                 theme="bubble"
                                 value={job.content.benefits}
-                                placeholder="Enter the job description here; include key areas of
-                    responsibility and what the candidate might do on a typical
-                    day."
+                                placeholder={t("placeholder.benefits")}
                                 onChange={(value: string, text) => {
                                     dispatch(
                                         setContentLength({
@@ -163,11 +166,15 @@ const DescriptionSection = () => {
                             }`}
                         >
                             <span>
-                                Minimum 700 characters.{" "}
-                                {Object.values(contentLength).reduce(
-                                    (prev, cur) => prev + cur
-                                )}{" "}
-                                characters used.
+                                <Trans t={t} i18nKey={"minimum_charaters_used"}>
+                                    Minimum 700 characters.
+                                    {{
+                                        characterLength: Object.values(
+                                            contentLength
+                                        ).reduce((prev, cur) => prev + cur),
+                                    }}{" "}
+                                    characters used.
+                                </Trans>
                             </span>
                         </div>
                     </div>

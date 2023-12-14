@@ -1,7 +1,7 @@
 "use client";
 
 import React, { FormEvent, createContext, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
@@ -12,11 +12,12 @@ import {
     DatePicker,
     LocationAutocomplete,
 } from "@/components";
-import { SpinLoading } from "@/icons";
 import jobServices from "@/services/job/job.service";
 import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
 import { ICreateJobDto, JobContentJson } from "@/services";
-import { debounce } from "@/helpers";
+import { handleError } from "@/helpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "./AddJobDetailForm.module.scss";
 import NewJobHeader from "./NewJobHeader";
@@ -68,7 +69,7 @@ export const useAddJobDetailForm = (): AddJobDetailFormState => {
     const context = React.useContext(AddJobDetailFormContext);
 
     if (!context)
-        throw new Error("Please use ThemeProvider in your parent component!");
+        throw new Error("Please use AddJObProvider in your parent component!");
 
     return context;
 };
@@ -77,7 +78,10 @@ type AddJobDetailFormProps = {};
 
 const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
     const router = useRouter();
+    const { lang } = useParams();
     const queryClient = useQueryClient();
+
+    const { t } = useI18NextTranslation(lang as I18Locale, ["new-job"]);
 
     const [loading, setLoading] = React.useState(false);
 
@@ -125,39 +129,39 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
         let errors = formErr;
 
         if (title.length === 0) {
-            errors.titleErr = "Job title required";
+            errors.titleErr = t("error.job_required");
         }
 
         if (area.length === 0) {
-            errors.areaArr = "Area required";
+            errors.areaArr = t("error.area_required");
         }
 
         if (contentLength.description === 0) {
-            errors.contentErr.descriptionErr = "Description required";
+            errors.contentErr.descriptionErr = t("error.description_required");
         }
 
         if (contentLength.requirements === 0) {
-            errors.contentErr.requirementsErr = "Requirements required";
+            errors.contentErr.requirementsErr = t(
+                "error.requirements_required"
+            );
         }
 
         if (
             Object.values(contentLength).reduce((prev, cur) => prev + cur) < 700
         ) {
-            errors.contentErr.contentErr =
-                "Description content must minimum 700 characters";
+            errors.contentErr.contentErr = t("error.description_must_700");
         }
 
         if (minSalary > 0 && maxSalary > 0 && minSalary >= maxSalary) {
-            errors.salaryErr = "Min salary must be lower than max salary";
+            errors.salaryErr = t("error.min_lower_max");
         }
 
         if (moment(startTime).isAfter(endTime)) {
-            errors.jobPublishTimeErr =
-                "Start time must be earlier than end time";
+            errors.jobPublishTimeErr = t("error.start_earlier_end");
         }
 
         if (moment().isAfter(endTime)) {
-            errors.jobPublishTimeErr = "End time must be in the future";
+            errors.jobPublishTimeErr = t("error.end_must_be_future");
         }
 
         const checkError = (errs: any) => {
@@ -178,8 +182,8 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
             setFormErr({ ...errors });
             toast.error(
                 <div>
-                    <p>Invalid input</p>
-                    <p>Check issue in red!</p>
+                    <p>{t("common:error.invalid_input")}</p>
+                    <p>{t("common:error.check_red_places")}</p>
                 </div>,
                 {
                     position: "top-center",
@@ -222,7 +226,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
             queryClient.invalidateQueries({ queryKey: ["jobs"] });
             router.push(`${res.data}/edit`);
         } catch (error: any) {
-            toast.error(error.message ? error.message : "Create job failure");
+            handleError(error);
             setLoading(false);
         }
     };
@@ -245,16 +249,16 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                         {/* ***********************Job Title Section*********************************** */}
                         <section className="relative">
                             <h2 className={`${styles.form__section__title}`}>
-                                Job title
+                                {t("job_title")}
                             </h2>
                             <div className={`${styles.form__section__wrapper}`}>
                                 <div className="mb-4 md:mb-6">
                                     <CustomInput
-                                        title="Job title"
+                                        title={t("job_title")}
                                         id="job-title"
                                         name="job-title"
                                         type="text"
-                                        placeholder="Example: Fullstack Developer"
+                                        placeholder={t("placeholder.job_title")}
                                         autoComplete="organization-title"
                                         // value={formState.title}
                                         onChange={e => {
@@ -275,11 +279,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                             <div className={styles.instruction_wrapper}>
                                 <div className={styles.instruction__text}>
                                     <span className="text-sm text-neutral-500">
-                                        Sử dụng chức danh công việc phổ biến cho
-                                        khả năng tìm kiếm Chỉ quảng cáo cho một
-                                        công việc, ví dụ: &apos;Y tá&apos;,
-                                        không phải &apos;y tá&apos; Không có cơ
-                                        hội hoặc sự kiện chung
+                                        {t("intruction.title")}
                                     </span>
                                 </div>
                             </div>
@@ -288,16 +288,16 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                         {/* ***********************Location Section*********************************** */}
                         <section className="relative">
                             <h2 className={`${styles.form__section__title}`}>
-                                Location
+                                {t("location")}
                             </h2>
                             <div className={`${styles.form__section__wrapper}`}>
                                 <div className="mb-4 md:mb-6">
                                     <LocationAutocomplete
-                                        title="Job area"
+                                        title={t("job_area")}
                                         id="job-area"
                                         name="job-area"
                                         type="text"
-                                        placeholder="Example: District 7, Ho Chi Minh"
+                                        placeholder={t("placeholder.job_area")}
                                         autoComplete="street-address"
                                         value={formState.area}
                                         handlePlaceChange={(value: string) => {
@@ -318,11 +318,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                             <div className={styles.instruction_wrapper}>
                                 <div className={styles.instruction__text}>
                                     <span className="text-sm text-neutral-500">
-                                        Sử dụng vị trí để thu hút các ứng viên
-                                        phù hợp nhất Nếu bạn chọn hộp &quot;hoàn
-                                        toàn từ xa&quot;, hãy thêm ít nhất một
-                                        quốc gia. Một số bảng công việc yêu cầu
-                                        một vị trí
+                                        {t("intruction.area")}
                                     </span>
                                 </div>
                             </div>
@@ -340,13 +336,13 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                         {/* ***********************Job Post Publishcation duration*********************************** */}
                         <section className="relative">
                             <h2 className={`${styles.form__section__title}`}>
-                                Job post available time range
+                                {t("job_available_time")}
                             </h2>
                             <div className={`${styles.form__section__wrapper}`}>
                                 <div className="grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-x-8">
                                     <div>
                                         <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            Start time
+                                            {t("common:start_time")}
                                         </h3>
                                         <DatePicker
                                             value={formState.startTime}
@@ -377,7 +373,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                     </div>
                                     <div>
                                         <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                            End time
+                                            {t("common:end_time")}
                                         </h3>
                                         <DatePicker
                                             value={formState.endTime}
@@ -421,7 +417,7 @@ const AddJobDetailForm: React.FC<AddJobDetailFormProps> = ({}) => {
                                 disabled={loading}
                                 isLoading={loading}
                             >
-                                Save & continue
+                                {t("common:save_and_continue")}
                             </Button>
                         </div>
                     </div>

@@ -1,12 +1,13 @@
 import React from "react";
 import Link from "next/link";
 import { Metadata } from "next";
+import { Trans } from "react-i18next/TransWithoutContext";
 
 import { Portal } from "@/components";
 import { SpinLoading } from "@/icons";
+import { getI18NextTranslation } from "@/utils/i18n";
 
 import { Locale } from "../../../../../i18n.config";
-import { getDictionary } from "../../../../utils/dictionaries/dictionnary";
 
 import LoginForm from "./components/LoginForm";
 
@@ -21,7 +22,8 @@ const Login = async ({
     params: { lang: Locale };
     searchParams: any;
 }) => {
-    const { login_page, common } = await getDictionary(params.lang);
+    const { t } = await getI18NextTranslation(params.lang, "login-page");
+    // const days = 15;
     const showPageLoad =
         (searchParams["status"] && searchParams["loginId"]) ||
         (searchParams["authEnd"] && searchParams["authEnd"] == "true");
@@ -34,14 +36,16 @@ const Login = async ({
                 </div>
             )}
 
-            <LoginForm _t={{ login_form: login_page.login_form, common }} />
+            <LoginForm />
             <div className="mt-8 text-sm text-center relative flex flex-col items-center">
-                <p className="text-gray-500">{login_page.dont_have_account}</p>
+                <p className="text-gray-500">{t("dont_have_account")}</p>
                 <Link
                     href={`signup`}
                     className="block max-w-[280px] font-semibold text-blue-600 hover:cursor-pointer hover:underline"
                 >
-                    {login_page.btn.signup.replace("{{days}}", "15")}
+                    <Trans i18nKey={"btn.signup"} t={t} days={15}>
+                        Sign up now for a {{ days: 15 }}-day free trial
+                    </Trans>
                 </Link>
             </div>
         </div>

@@ -13,7 +13,6 @@ import "react-toastify/dist/ReactToastify.css";
 import "nprogress/nprogress.css";
 
 import ReduxProvider from "@/components/ReduxProvider/ReduxProvider";
-import InternationalizationProvider from "@/components/InternationalizationProvider";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
 
 import { i18n } from "../../i18n.config";
@@ -38,33 +37,31 @@ export async function generateStaticParams() {
 
 export default function RootLayout({
     children,
-    params,
+    params: { lng },
 }: {
     children: React.ReactNode;
     params: any;
 }) {
     return (
-        <html lang="en">
+        <html lang={lng}>
             <body className={`${inter.className} ${publicSans.className}`}>
                 <ReactQueryProvider>
-                    <InternationalizationProvider lang={params.lang}>
-                        <ReduxProvider>
-                            <ToastContainer
-                                position="top-center"
-                                autoClose={5000}
-                                hideProgressBar={false}
-                                newestOnTop={false}
-                                closeOnClick
-                                rtl={false}
-                                pauseOnFocusLoss
-                                draggable
-                                pauseOnHover
-                                theme="light"
-                            />
-                            {children}
-                            <div id="hirelight__portal"></div>
-                        </ReduxProvider>
-                    </InternationalizationProvider>
+                    <ReduxProvider>
+                        <ToastContainer
+                            position="top-center"
+                            autoClose={5000}
+                            hideProgressBar={false}
+                            newestOnTop={false}
+                            closeOnClick
+                            rtl={false}
+                            pauseOnFocusLoss
+                            draggable
+                            pauseOnHover
+                            theme="light"
+                        />
+                        {children}
+                        <div id="hirelight__portal"></div>
+                    </ReduxProvider>
                 </ReactQueryProvider>
                 <Analytics />
                 <Script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></Script>

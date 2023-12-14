@@ -5,21 +5,15 @@ import { useParams } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Button, CustomInput } from "@/components";
-import { useTranslation } from "@/components/InternationalizationProvider";
 import {
     IEditEmailTemplatesDto,
     IEmailTemplatesDto,
 } from "@/services/email-template/email-template.interface";
 import emailTemplateService from "@/services/email-template/email-template.service";
-
-import { Locale } from "../../../../../../../../../i18n.config";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 const EmailEditorNoSSR = dynamic(() => import("./EmailEditor"), {
-    ssr: false,
-    loading: () => <div className="bg-white min-h-[220px]"></div>,
-});
-
-const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     ssr: false,
     loading: () => <div className="bg-white min-h-[220px]"></div>,
 });
@@ -36,9 +30,12 @@ const UpdateEmailTemplate: React.FC<IUpdateEmailTemplate> = ({
     data,
 }) => {
     const { lang } = useParams();
-    const t = useTranslation(
-        lang as Locale,
-        "settings.templates.email_template_list.update_email_template"
+    const { t } = useI18NextTranslation(
+        lang as I18Locale,
+        "settings-templates",
+        {
+            keyPrefix: "update_email_template.form",
+        }
     );
     const queryClient = useQueryClient();
     const updateMutation = useMutation({
@@ -78,7 +75,7 @@ const UpdateEmailTemplate: React.FC<IUpdateEmailTemplate> = ({
             <div className="grid grid-cols-2 mb-4 gap-4">
                 <CustomInput
                     type="text"
-                    title={t.form.name.label}
+                    title={t("name.label")}
                     value={form.name}
                     onChange={(e: any) =>
                         setForm({ ...form, name: e.target.value })
@@ -91,7 +88,7 @@ const UpdateEmailTemplate: React.FC<IUpdateEmailTemplate> = ({
                 <div className="col-span-2">
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                         <span className="text-red-500 mr-1">*</span>
-                        {t.form.title.label}
+                        {t("title.label")}
                     </label>
                     <EmailEditorNoSSR
                         value={form.subject}
@@ -112,7 +109,7 @@ const UpdateEmailTemplate: React.FC<IUpdateEmailTemplate> = ({
             <div className="p-4 bg-slate-200 border border-gray-300 mb-4 rounded-md overflow-hidden">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                     <span className="text-red-500 mr-1">*</span>
-                    {t.form.body.label}
+                    {t("body.label")}
                 </label>
                 <EmailEditorNoSSR
                     data={data}
@@ -131,7 +128,7 @@ const UpdateEmailTemplate: React.FC<IUpdateEmailTemplate> = ({
                     onClick={handleSaveChanges}
                     className="mr-4"
                 >
-                    {t.form.btn.save_changes}
+                    {t("btn.save_changes")}
                 </Button>
 
                 <button
@@ -139,7 +136,7 @@ const UpdateEmailTemplate: React.FC<IUpdateEmailTemplate> = ({
                     onClick={onCancel}
                     className="text-sm text-neutral-500 font-semibold hover:underline"
                 >
-                    {t.form.btn.cancel}
+                    {t("btn.cancel")}
                 </button>
             </div>
         </div>

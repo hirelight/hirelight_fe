@@ -1,0 +1,37 @@
+{
+    "signup_form": {
+        "title": {
+            "highlight": "Đăng ký vào Hirelight"
+        },
+        "label": {
+            "first_name": "Họ",
+            "last_name": "Tên",
+            "email": "Email",
+            "password": "Mật khẩu",
+            "confirm_password": "Xác nhận mật khẩu",
+            "verify_code": "Mã xác thực"
+        },
+        "or": "Hoặc",
+        "btn": {
+            "signup": "Đăng ký",
+            "resend_code": "Gửi lại mã",
+            "get_verify_code": "Lấy mã xác thực",
+            "signup_google": "Đăng ký với Google",
+            "signup_linkedin": "Đăng ký với LinkedIn"
+        },
+        "error": {
+            "empty_email": "Email không được phép bỏ trống!",
+            "empty_first_name": "Họ không được phép bỏ trống!",
+            "empty_last_name": "Tên không được phép bỏ trống!",
+            "password_invalid": "Mật khẩu phải có ít nhất 8 ký tự! Mật khẩu phải chứa ít nhất 1 in hoa, 1 in thường và 1 số!",
+            "confirm_missmatch": "Mật khẩu xác thực không chính xác!",
+            "incorrect_credentials": "Email hoặc mật khẩu không chính xác!",
+            "code_require_email": "Email là cần thiết để lấy mã xác thực!",
+            "personal_email_no_org": "Bạn đang sử dụng email cá nhân. Đồng thời, bạn không thuộc về bất cứ công ty nào. Bạn cần sử dụng email doanh nghiệp để tạo công ty riêng cho mình hoặc trở thành thành viên của một công ty."
+        }
+    },
+    "have_account": "Đã có tài khoản Hirelight?",
+    "btn": {
+        "signin": "Đăng nhập"
+    }
+}

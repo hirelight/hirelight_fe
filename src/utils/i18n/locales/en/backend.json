@@ -1,0 +1,30 @@
+{
+    "components": {
+        "hiring_stage_bar": {
+            "status": {
+                "draft": "Draft",
+                "published": "Published",
+                "pending_approval": "Pending approval",
+                "pending_publish": "Pending publish"
+            },
+            "button": {
+                "create_job": "Create a new job"
+            }
+        },
+        "job_card": {
+            "button": {
+                "publish": "Publish",
+                "unpublish": "Unpublish"
+            },
+            "action_list": {
+                "view_job": "View job",
+                "edit_job": "Edit job",
+                "leave_job": "Leave job",
+                "publish_job": "Publish job"
+            },
+            "span": {
+                "already_posted": "Already posted on Hirelight platform"
+            }
+        }
+    }
+}
