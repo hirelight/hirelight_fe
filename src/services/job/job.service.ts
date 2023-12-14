@@ -39,6 +39,25 @@ const getListAsync = async (params?: any): Promise<IResponse<IJobDto[]>> => {
     }
 };
 
+const getListByGuestAsync = async (
+    params?: any
+): Promise<IResponse<IJobDto[]>> => {
+    try {
+        const res = await interceptor.get<IResponse<IJobDto[]>>(
+            endpoints.JOBPOSTS + `/guest/search`,
+            {
+                params,
+            }
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const getByIdAsync = async (id: string): Promise<IResponse<IJobDto>> => {
     try {
         const res = await interceptor.get<IResponse<IJobDto>>(
@@ -153,6 +172,7 @@ const jobServices = {
     suspendJob,
     reactivateJob,
     unpublishJobAsync,
+    getListByGuestAsync,
 };
 
 export default jobServices;

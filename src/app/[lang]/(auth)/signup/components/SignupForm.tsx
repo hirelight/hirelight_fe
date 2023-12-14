@@ -56,15 +56,16 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
         const { email, password, firstName, lastName } = signupForm;
 
         if (!email) errors.emailErr = _t.signup_form.error.empty_email;
-        if (!firstName) errors.firstNameErr = "First name is required!";
-        if (!lastName) errors.lastNameErr = "Last name is required!";
+        if (!firstName)
+            errors.firstNameErr = _t.signup_form.error.empty_first_name;
+        if (!lastName)
+            errors.lastNameErr = _t.signup_form.error.empty_last_name;
 
         if (!regex.test(password))
-            errors.passwordErr = `Password must have at least 8 characters!
-            Password must have at least one uppercase, one lowercase and one number!`;
+            errors.passwordErr = _t.signup_form.error.password_invalid;
 
         if (confirmPassword !== password)
-            errors.confirmPasswordErr = "Confirm password miss match!";
+            errors.confirmPasswordErr = _t.signup_form.error.confirm_missmatch;
         if (isInvalidForm(errors)) {
             setSignupFormErr(errors);
             return false;
@@ -76,7 +77,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
         if (!signupForm.email)
             return setSignupFormErr({
                 ...signupFormErr,
-                emailErr: "Email is required for getting verify code",
+                emailErr: _t.signup_form.error.code_require_email,
             });
 
         setSendLoading(true);
@@ -98,8 +99,8 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
         if (!validInputs())
             return toast.error(
                 <div>
-                    <p>Invalid input!</p>
-                    <p>Please check red places!</p>
+                    <p>{_t.common.error.invalid_input}</p>
+                    <p>{_t.common.error.check_red_places}</p>
                 </div>
             );
 
@@ -124,7 +125,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                 <div className="mb-2 text-left grid grid-cols-2 gap-4">
                     <CustomInput
                         id="first-name"
-                        title="First name"
+                        title={_t.signup_form.label.first_name}
                         autoComplete="given-name"
                         placeholder="John"
                         value={signupForm.firstName}
@@ -143,7 +144,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                     />
                     <CustomInput
                         id="last-name"
-                        title="Last name"
+                        title={_t.signup_form.label.last_name}
                         autoComplete="family-name"
                         placeholder="Doe"
                         value={signupForm.lastName}
@@ -164,7 +165,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                 <div className="mb-2 text-left">
                     <CustomInput
                         id="email"
-                        title="Email"
+                        title={_t.signup_form.label.email}
                         type="email"
                         autoComplete="email"
                         placeholder="example@hirelight.xyz"
@@ -187,7 +188,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                 <div className="text-left mb-2">
                     <CustomInput
                         id="password"
-                        title="Password"
+                        title={_t.signup_form.label.password}
                         type="password"
                         autoComplete="new-password"
                         placeholder="**********"
@@ -209,7 +210,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                 <div className="text-left mb-2">
                     <CustomInput
                         id="confirm-password"
-                        title="Confirm password"
+                        title={_t.signup_form.label.confirm_password}
                         type="password"
                         placeholder="**********"
                         value={confirmPassword}
@@ -229,7 +230,7 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                     <div className="text-left">
                         <CustomInput
                             id="verify-code"
-                            title="Verify code"
+                            title={_t.signup_form.label.verify_code}
                             type="text"
                             value={signupForm.otp}
                             required
@@ -262,12 +263,16 @@ const SignupForm: React.FC<ISignupForm> = ({ _t }) => {
                     isLoading={sendLoading}
                     onClick={handleSendVerifyCode}
                 >
-                    {showVerify ? "Resend code" : "Get verify code"}
+                    {showVerify
+                        ? _t.signup_form.btn.resend_code
+                        : _t.signup_form.btn.get_verify_code}
                 </ButtonOutline>
 
                 <div className="flex items-center justify-between gap-2">
                     <hr className="flex-1 h-[1.5px] bg-gray-300" />
-                    <span className="text-gray-500 font-medium">OR</span>
+                    <span className="text-gray-500 font-medium">
+                        {_t.signup_form.or}
+                    </span>
                     <hr className="flex-1 h-[1.5px] bg-gray-300" />
                 </div>
 

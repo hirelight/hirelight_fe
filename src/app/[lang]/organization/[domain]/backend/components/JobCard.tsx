@@ -2,21 +2,24 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CheckIcon } from "@heroicons/react/24/solid";
 import dynamic from "next/dynamic";
 
 import { EllipsisVertical, SpinLoading } from "@/icons";
 import { IJobDto } from "@/services/job/job.interface";
-import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
 import jobServices from "@/services/job/job.service";
 import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import { JobPostStatus } from "@/interfaces/job-post.interface";
 import { useAppSelector } from "@/redux/reduxHooks";
 import { Roles } from "@/services";
+import { useTranslation } from "@/components/InternationalizationProvider";
+import { handleError } from "@/helpers";
+
+import { Locale } from "../../../../../../../i18n.config";
 
 const TooltipNoSSR = dynamic(
     () => import("flowbite-react").then(mod => mod.Tooltip),
@@ -38,7 +41,9 @@ const JobCard: React.FC<JobCardProps> = ({
     data: { title, area, status, id, assessmentFlowId, assessmentFlow },
 }) => {
     const router = useRouter();
+    const { lang } = useParams();
     const queryClient = useQueryClient();
+    const _t = useTranslation(lang as Locale, "backend.components.job_card");
 
     const { authUser } = useAppSelector(state => state.auth);
 
@@ -63,11 +68,7 @@ const JobCard: React.FC<JobCardProps> = ({
             setIsLoading(false);
         },
         onError: error => {
-            console.error(error);
-            toast.error("Publish failure", {
-                position: "bottom-right",
-                autoClose: 1000,
-            });
+            handleError(error);
             setIsLoading(false);
         },
     });
@@ -87,11 +88,7 @@ const JobCard: React.FC<JobCardProps> = ({
             setIsLoading(false);
         },
         onError: error => {
-            console.error(error);
-            toast.error("Publish failure", {
-                position: "bottom-right",
-                autoClose: 1000,
-            });
+            handleError(error);
             setIsLoading(false);
         },
     });
@@ -133,7 +130,7 @@ const JobCard: React.FC<JobCardProps> = ({
                                 {publishJobMutations.isPending && (
                                     <SpinLoading className="mr-2" />
                                 )}
-                                Publish
+                                {_t.button.publish}
                             </button>
                         )}
                     {status === JobPostStatus.ACTIVE &&
@@ -148,7 +145,7 @@ const JobCard: React.FC<JobCardProps> = ({
                                 {unpublishJobMutations.isPending && (
                                     <SpinLoading className="mr-2" />
                                 )}
-                                Unpublish
+                                {_t.button.unpublish}
                             </button>
                         )}
                     <div ref={actionsDropDown} className="relative">
@@ -181,7 +178,7 @@ const JobCard: React.FC<JobCardProps> = ({
                                                 setShowActions(false)
                                             }
                                         >
-                                            View job
+                                            {_t.action_list.view_job}
                                         </Link>
                                     </li>
                                 )}
@@ -191,7 +188,7 @@ const JobCard: React.FC<JobCardProps> = ({
                                         className="w-full px-4 py-2 block hover:bg-orange-100"
                                         onClick={() => setShowActions(false)}
                                     >
-                                        Edit job
+                                        {_t.action_list.edit_job}
                                     </Link>
                                 </li>
                                 <li>
@@ -200,7 +197,7 @@ const JobCard: React.FC<JobCardProps> = ({
                                         className="w-full px-4 py-2 block hover:bg-orange-100"
                                         onClick={() => setShowActions(false)}
                                     >
-                                        Leave job
+                                        {_t.action_list.leave_job}
                                     </Link>
                                 </li>
                                 <li className="list-item lg:hidden">
@@ -212,7 +209,7 @@ const JobCard: React.FC<JobCardProps> = ({
                                             id
                                         )}
                                     >
-                                        Publish job
+                                        {_t.action_list.publish_job}
                                     </button>
                                 </li>
                             </ul>
@@ -222,7 +219,7 @@ const JobCard: React.FC<JobCardProps> = ({
             </div>
             <ul className="hidden w-full md:flex items-center justify-between mt-2 mb-6 overflow-hidden">
                 {assessmentFlow &&
-                    assessmentFlow.assessments?.map((assessment, index) => (
+                    assessmentFlow.assessments?.map(assessment => (
                         <li
                             key={assessment.id}
                             className="min-w-[160px] flex-shrink-0 flex flex-col items-center p-4"
@@ -244,20 +241,12 @@ const JobCard: React.FC<JobCardProps> = ({
                         {status === "ACTIVE" ? (
                             <span>
                                 <CheckIcon className="w-5 h-5 text-green-500 inline mr-2" />{" "}
-                                Already posted on Hirelight system
+                                {_t.span.already_posted}
                             </span>
                         ) : (
                             status
                         )}
                     </span>
-                </div>
-                <div className="flex gap-5">
-                    {/* <span className="text-blue_primary_700 text-sm">
-                        Candidates: 0
-                    </span>
-                    <span className="text-green-500 text-sm">
-                        In progress: 0
-                    </span> */}
                 </div>
             </div>
         </div>

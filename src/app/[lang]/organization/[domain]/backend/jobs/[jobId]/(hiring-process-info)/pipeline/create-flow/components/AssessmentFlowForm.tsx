@@ -18,7 +18,7 @@ import {
 import { ICreateAssessmentFlowDto } from "@/services/assessment-flows/assessment-flows.interface";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
-import { isInvalidForm } from "@/helpers";
+import { handleError, isInvalidForm } from "@/helpers";
 
 import AssessmentFlowCard from "./AssessmentFlowCard";
 import FlowStageForm from "./FlowStageForm";
@@ -119,7 +119,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
             router.push(`config-pipeline/${res.data.id}`);
             setIsLoading(false);
         } catch (error) {
-            toast.error("Create flow error");
+            handleError(error);
             setIsLoading(false);
         }
     };

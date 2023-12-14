@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
-import jwtDecode from "jwt-decode";
 import { toast } from "react-toastify";
 import { ChevronRightIcon } from "@heroicons/react/24/solid";
 import { BuildingOffice2Icon } from "@heroicons/react/24/outline";
@@ -11,12 +10,13 @@ import { useQuery } from "@tanstack/react-query";
 
 import { Button, Portal } from "@/components";
 import { SpinLoading } from "@/icons";
-import { IOrganizationDto } from "@/services/organizations/organizations.interface";
 import authServices from "@/services/auth/auth.service";
-import { handleError, isDevMode, validWorkEmail } from "@/helpers";
+import { handleError, validWorkEmail } from "@/helpers";
 import organizationsServices from "@/services/organizations/organizations.service";
-import { decryptData } from "@/helpers/authHelpers";
 import { useAppSelector } from "@/redux/reduxHooks";
+import { useTranslation } from "@/components/InternationalizationProvider";
+
+import { Locale } from "../../../../../../i18n.config";
 
 import styles from "./JoinedOrgList.module.scss";
 
@@ -25,6 +25,8 @@ type JoinedOrgListProps = {};
 const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
     const router = useRouter();
     const { lang } = useParams();
+
+    const _t = useTranslation(lang as Locale, "select_org_page.join_org_list");
 
     const { authUser } = useAppSelector(state => state.auth);
 
@@ -38,7 +40,7 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
     const handleRedirectNewOrg = () => {
         if (authUser && validWorkEmail(authUser.emailAddress))
             router.push("organization/new");
-        else toast.error("Only work email can create organization");
+        else toast.error(_t.error.work_email_only);
     };
 
     const handleRedirect = async (orgId: string, subdomain: string) => {
@@ -68,7 +70,7 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
                 )}
             </Portal>
             <div className="flex flex-col gap-4">
-                <h1 className={styles.title}>Organization List:</h1>
+                <h1 className={styles.title}>{_t.h1.organization_list}</h1>
 
                 {res &&
                     (res.data.length > 0 ? (
@@ -94,7 +96,7 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
                                             org.ownerId.toString() ===
                                                 authUser.userId && (
                                                 <span className="text-sm text-gray-500 group-hover:text-blue_primary_700">
-                                                    Owned
+                                                    {_t.span.owned}
                                                 </span>
                                             )}
                                         <span>
@@ -108,15 +110,11 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
                         <div className="w-full flex flex-col items-center">
                             <BuildingOffice2Icon className="w-24 h-24 text-neutral-700 mb-2" />
                             <div className="text-sm text-gray-500 max-w-[80%] mb-6">
-                                <p>
-                                    You have not been member of any
-                                    organization. Please check your invitation
-                                    or create your organization!
-                                </p>
+                                <p>{_t.p.empty_list}</p>
                             </div>
 
                             <Button onClick={handleRedirectNewOrg}>
-                                Create new organization
+                                {_t.button.create_new}
                             </Button>
                         </div>
                     ))}

@@ -28,8 +28,10 @@ function getCurLocale(req: NextRequest): string {
 
 export default async function middleware(req: NextRequest) {
     const url = req.nextUrl;
-    const hostname = req.headers.get("host")!;
+    const hostname = req.headers.get("host")!!;
     const pathname = url.pathname;
+
+    console.log("Call Middleware");
 
     const pathnameIsMissingLocale = i18n.locales.every(
         locale =>
@@ -111,6 +113,6 @@ export const config = {
          * 3. /_static (inside /public)
          * 4. all root files inside /public (e.g. /favicon.ico)
          */
-        "/((?!api/|_next/|_static/|_vercel|[\\w-]+\\.\\w+).*)",
+        "/((?!api/|_next/|_static/|_vercel|_next/image|[\\w-]+\\.\\w+).*)",
     ],
 };

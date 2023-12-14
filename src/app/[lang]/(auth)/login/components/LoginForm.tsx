@@ -5,17 +5,15 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import jwtDecode from "jwt-decode";
-import { toast } from "react-toastify";
 
-import { GoogleIcon, LinkedInIcon, SpinLoading } from "@/icons";
+import { GoogleIcon, LinkedInIcon } from "@/icons";
 import { LoginEmployerDto } from "@/services/auth/auth.interface";
-import { fetchAccessToken, loginEmailPwd } from "@/redux/thunks/auth.thunk";
+import { fetchAccessToken } from "@/redux/thunks/auth.thunk";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
-import { decryptData } from "@/helpers/authHelpers";
 import { handleError } from "@/helpers";
 import authServices from "@/services/auth/auth.service";
 import { setToken } from "@/redux/slices/auth.slice";
-import { Portal } from "@/components";
+import { Button } from "@/components";
 
 import styles from "./LoginForm.module.scss";
 
@@ -198,13 +196,13 @@ const LoginForm: React.FC<ILoginForm> = ({ _t }) => {
                             {_t.login_form.btn.forgot_password}
                         </p>
                     </Link>
-                    <button
+                    <Button
                         type="submit"
-                        className="flex items-center gap-1 justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-full px-5 py-2.5 mt-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        disabled={loading}
+                        isLoading={loading}
                     >
-                        {loading && <SpinLoading />}
                         {_t.login_form.btn.signin}
-                    </button>
+                    </Button>
                     <div className="flex items-center justify-between gap-2">
                         <hr className="flex-1 h-[1.5px] bg-gray-300" />
                         <span className="text-gray-500 font-medium">

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { UserIcon } from "@heroicons/react/24/solid";
 import { toast } from "react-toastify";
 
@@ -16,11 +16,18 @@ import { IResponse } from "@/interfaces/service.interface";
 import authServices from "@/services/auth/auth.service";
 import { useAppSelector } from "@/redux/reduxHooks";
 import { UserAvatar } from "@/components";
+import { useTranslation } from "@/components/InternationalizationProvider";
+import { handleError } from "@/helpers";
+
+import { Locale } from "../../../../../../i18n.config";
 
 import styles from "./NewOrganizationForm.module.scss";
 
 const NewOrganizationForm = () => {
     const router = useRouter();
+    const { lang } = useParams();
+    const _t = useTranslation(lang as Locale, "new_org_page.new_org_form");
+
     const { authUser } = useAppSelector(state => state.auth);
 
     const [newOrgFormErr, setNewOrgFormErr] = React.useState({
@@ -47,26 +54,24 @@ const NewOrganizationForm = () => {
                 const { subdomain, id } = data.data;
                 const resOrgToken = await authServices.getOrgAccessToken(id);
 
-                toast.success("Create org successfully!");
+                toast.success(_t.success);
 
                 router.replace(
                     `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/backend?accessToken=${resOrgToken.data.accessToken}`
                 );
             }
         } catch (error: any) {
-            toast.error(error.message ? error.message : "Create org failure!", {
-                position: "bottom-left",
-            });
+            handleError(error);
             setLoading(false);
         }
     };
 
     const validateFormInput = () => {
         let valid = false;
-        if (newOrgForm.name === "") {
+        if (!newOrgForm.name) {
             setNewOrgFormErr(prev => ({
                 ...prev,
-                nameErr: "Org must not empty!",
+                nameErr: _t.error.org_name_empty,
             }));
             valid = true;
         }
@@ -78,11 +83,9 @@ const NewOrganizationForm = () => {
         <div>
             <div className="flex flex-col gap-4">
                 <div className="pt-6 px-6">
-                    <h1 className={styles.title}>
-                        Create a organization account
-                    </h1>
+                    <h1 className={styles.title}>{_t.title.highlight}</h1>
                     <p className="text-sm text-gray-500">
-                        Start your 15-day trial, no credit card required.
+                        {_t.subtitle.replace("{{days}}", 15)}
                     </p>
                 </div>
                 <hr className="flex-1 h-[1.5px] w-4/5 bg-gray-300 self-center" />
@@ -101,8 +104,7 @@ const NewOrganizationForm = () => {
                         </div>
                     </div>
                     <p className="p-2 max-w-[280px] text-sm text-left self-center">
-                        Almost done! Add a few details to create your company
-                        account and you can start hiring.
+                        {_t.almost_done}
                     </p>
                 </div>
                 <hr className="flex-1 h-[1.5px] bg-gray-300" />
@@ -115,7 +117,7 @@ const NewOrganizationForm = () => {
                             htmlFor="organization-name"
                             className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
                         >
-                            Organization name
+                            {_t.label.org_name}
                         </label>
                         <input
                             type="text"
@@ -140,7 +142,7 @@ const NewOrganizationForm = () => {
                             htmlFor="domain"
                             className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
                         >
-                            Subdomain
+                            {_t.label.domain}
                         </label>
                         <input
                             type="text"
@@ -167,7 +169,6 @@ const NewOrganizationForm = () => {
                             whileInView={{ opacity: 1 }}
                             className="w-full border-2 border-red-500 bg-red-50 p-6 rounded-md text-center text-red-700 text-sm font-medium"
                         >
-                            <p>Opps! Something went wrong!!!</p>
                             <p>{newOrgFormErr.nameErr}</p>
                         </motion.div>
                     )}
@@ -177,7 +178,7 @@ const NewOrganizationForm = () => {
                         disabled={loading}
                     >
                         {loading && <SpinLoading />}
-                        Start a 15-day trial
+                        {_t.btn.submit.replace("{{days}}", 15)}
                     </button>
                 </form>
             </div>

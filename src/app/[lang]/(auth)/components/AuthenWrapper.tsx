@@ -28,21 +28,18 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
             if (authEnd && authEnd === "true") handleLogout();
             else {
                 dispatch(setToken(token));
+                setPageLoading(false);
             }
-        }
-
-        setPageLoading(false);
+        } else setPageLoading(false);
     }, [authEnd, dispatch, handleLogout, lang, router, token]);
 
     return (
         <>
-            <Portal>
-                {pageLoading && (
-                    <div className="fixed inset-0 z-[2000] w-full h-screen backdrop-brightness-50 backdrop-blur-sm flex items-center justify-center">
-                        <SpinLoading className="w-32 h-32 text-blue_primary_600" />
-                    </div>
-                )}
-            </Portal>
+            {pageLoading && (
+                <div className="fixed inset-0 z-[2000] w-full h-screen backdrop-brightness-50 backdrop-blur-sm flex items-center justify-center">
+                    <SpinLoading className="w-32 h-32 text-blue_primary_600" />
+                </div>
+            )}
             {children}
         </>
     );

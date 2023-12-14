@@ -6,7 +6,9 @@
         "test": "Xin chào",
         "error": {
             "noti": "Có lỗi xảy ra!!!",
-            "internal_server": "Lỗi máy chủ"
+            "internal_server": "Lỗi máy chủ",
+            "invalid_input": "Thông tin không hợp lệ!",
+            "check_red_places": "Hãy kiểm tra lỗi!"
         },
         "notification": {
             "success": {
@@ -153,18 +155,26 @@
                 "first_name": "Họ",
                 "last_name": "Tên",
                 "email": "Email",
-                "password": "Mật khẩu"
+                "password": "Mật khẩu",
+                "confirm_password": "Xác nhận mật khẩu",
+                "verify_code": "Mã xác thực"
             },
             "or": "Hoặc",
             "btn": {
                 "signup": "Đăng ký",
-
+                "resend_code": "Gửi lại mã",
+                "get_verify_code": "Lấy mã xác thực",
                 "signup_google": "Đăng ký với Google",
                 "signup_linkedin": "Đăng ký với LinkedIn"
             },
             "error": {
                 "empty_email": "Email không được phép bỏ trống!",
+                "empty_first_name": "Họ không được phép bỏ trống!",
+                "empty_last_name": "Tên không được phép bỏ trống!",
+                "password_invalid": "Mật khẩu phải có ít nhất 8 ký tự! Mật khẩu phải chứa ít nhất 1 in hoa, 1 in thường và 1 số!",
+                "confirm_missmatch": "Mật khẩu xác thực không chính xác!",
                 "incorrect_credentials": "Email hoặc mật khẩu không chính xác!",
+                "code_require_email": "Email là cần thiết để lấy mã xác thực!",
                 "personal_email_no_org": "Bạn đang sử dụng email cá nhân. Đồng thời, bạn không thuộc về bất cứ công ty nào. Bạn cần sử dụng email doanh nghiệp để tạo công ty riêng cho mình hoặc trở thành thành viên của một công ty."
             }
         },
@@ -173,6 +183,27 @@
             "signin": "Đăng nhập"
         }
     },
+
+    "select_org_page": {
+        "join_org_list": {
+            "error": {
+                "work_email_only": "Chỉ email doanh có thể tạo mới tổ chức"
+            },
+            "h1": {
+                "organization_list": "Danh sách tổ chức:"
+            },
+            "p": {
+                "empty_list": "Bạn chưa là thành viên của tổ chức nào. Hãy kiểm tra lời mời tham gia hoặc tạo một tổ chức mới cho riêng bạn!"
+            },
+            "span": {
+                "owned": "Sở hữu"
+            },
+            "button": {
+                "create_new": "Tạo mới tổ chức"
+            }
+        }
+    },
+
     "new_org_page": {
         "new_org_form": {
             "title": {
@@ -191,6 +222,9 @@
                 "domain_existed": "Tên miền phụ đã tồn tại!",
                 "domain_empty": "Tên miền phụ không được bỏ trống!",
                 "org_name_empty": "Tên công ty không được bỏ trống"
+            },
+            "success": {
+                "creat_org": "Tạo mới tài khoản công ty thành công!"
             }
         },
         "make_mistake": "Đã nhập sai gì sao?",
@@ -198,6 +232,62 @@
             "start_again": "Bắt đầu lại"
         }
     },
+    "domain": {
+        "components": {
+            "header_bar": {
+                "link": {
+                    "jobs": "Công việc",
+                    "candidates": "Ứng tuyển viên",
+                    "dashboard": "Thống kê",
+                    "calendar": "Lịch"
+                },
+                "avatar_menu": {
+                    "settings": "Cài đặt",
+                    "help": "Trợ giúp",
+                    "add_company": "Tạo thêm công ty",
+                    "sign_out": "Đăng xuất"
+                }
+            },
+            "invitation_dropdown": {
+                "collab_message": "đã mời bạn cộng tác trong một quy trình tuyển dụng",
+                "button": {
+                    "accept": "Chấp nhận",
+                    "dismiss": "Đóng"
+                }
+            }
+        }
+    },
+    "backend": {
+        "components": {
+            "hiring_stage_bar": {
+                "status": {
+                    "draft": "Bản nháp",
+                    "published": "Đã đăng",
+                    "pending_approval": "Đợi chấp thuận",
+                    "pending_publish": "Đợi đăng bài"
+                },
+                "button": {
+                    "create_job": "Tạo một bài đăng tuyển mới"
+                }
+            },
+            "job_card": {
+                "button": {
+                    "publish": "Đăng tuyển",
+                    "unpublish": "Gỡ bài đăng"
+                },
+                "action_list": {
+                    "view_job": "Xem quy trình",
+                    "edit_job": "Chỉnh sửa",
+                    "leave_job": "Rời quy trình",
+                    "publish_job": "Đăng tuyển"
+                },
+                "span": {
+                    "already_posted": "Bài viết đã được đăng trên nền tảng Hirelight"
+                }
+            }
+        }
+    },
+
     "settings": {
         "templates": {
             "templates_title_section": {

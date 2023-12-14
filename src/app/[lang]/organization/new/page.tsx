@@ -7,17 +7,19 @@ import { Locale } from "../../../../../i18n.config";
 import NewOrganizationForm from "./components/NewOrganizationForm";
 
 const NewOrganization = async ({ params }: { params: { lang: Locale } }) => {
-    const {} = await getDictionary(params.lang);
+    const { new_org_page } = await getDictionary(params.lang);
     return (
         <div className="max-w-[400px] min-h-[400px] relative bg-white shadow-lg rounded-md mx-0 md:mx-6 text-center">
             <NewOrganizationForm />
             <div className="mt-2 mb-8 text-sm text-center relative">
-                <span className="text-gray-500 mr-1">Make a mistake?</span>
+                <span className="text-gray-500 mr-1">
+                    {new_org_page.make_mistake}
+                </span>
                 <Link
                     href={"/signup"}
                     className="font-semibold text-blue-600 hover:cursor-pointer hover:underline"
                 >
-                    Start again
+                    {new_org_page.btn.start_again}
                 </Link>
             </div>
         </div>

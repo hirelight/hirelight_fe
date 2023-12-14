@@ -14,6 +14,9 @@ import { useOutsideClick } from "@/hooks/useClickOutside";
 import { LocaleSwitcher, UserAvatar } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { logout } from "@/redux/slices/auth.slice";
+import { useTranslation } from "@/components/InternationalizationProvider";
+
+import { Locale } from "../../../../../../i18n.config";
 
 import styles from "./HeaderBar.module.scss";
 import InvitationDropDown from "./InvitationDropDown";
@@ -23,6 +26,8 @@ const HeaderBar = () => {
     const router = useRouter();
     const { lang } = useParams();
     const cite = pathname.split("/")[1];
+
+    const _t = useTranslation(lang as Locale, "domain.components.header_bar");
 
     const dispatch = useAppDispatch();
 
@@ -65,7 +70,7 @@ const HeaderBar = () => {
                                         : "text-blue_primary_600"
                                 } hover:text-blue_primary_800 font-medium`}
                             >
-                                Jobs
+                                {_t.link.jobs}
                             </Link>
                         </li>
                         <li>
@@ -77,7 +82,7 @@ const HeaderBar = () => {
                                         : "text-blue_primary_600"
                                 } hover:text-blue_primary_800 font-medium`}
                             >
-                                Candidates
+                                {_t.link.candidates}
                             </Link>
                         </li>
                         <li>
@@ -89,7 +94,7 @@ const HeaderBar = () => {
                                         : "text-blue_primary_600"
                                 } hover:text-blue_primary_800 font-medium`}
                             >
-                                Dashboard
+                                {_t.link.dashboard}
                             </Link>
                         </li>
                         <li>
@@ -101,7 +106,7 @@ const HeaderBar = () => {
                                         : "text-blue_primary_600"
                                 } hover:text-blue_primary_800 font-medium`}
                             >
-                                Calendar
+                                {_t.link.calendar}
                             </Link>
                         </li>
                     </ul>
@@ -165,7 +170,7 @@ const HeaderBar = () => {
                                             setShowAvatarDropdown(false)
                                         }
                                     >
-                                        Settings
+                                        {_t.avatar_menu.settings}
                                     </Link>
                                     <a
                                         href="#"
@@ -173,7 +178,7 @@ const HeaderBar = () => {
                                         role="menuitem"
                                         tabIndex={-1}
                                     >
-                                        Help
+                                        {_t.avatar_menu.help}
                                     </a>
                                     <Link
                                         href={`${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/organization/new`}
@@ -184,7 +189,7 @@ const HeaderBar = () => {
                                             setShowAvatarDropdown(false)
                                         }
                                     >
-                                        Add a company
+                                        {_t.avatar_menu.add_company}
                                     </Link>
                                     <button
                                         type="button"
@@ -193,7 +198,7 @@ const HeaderBar = () => {
                                         tabIndex={-1}
                                         onClick={handleLogout}
                                     >
-                                        Sign out
+                                        {_t.avatar_menu.sign_out}
                                     </button>
                                 </div>
                             </div>

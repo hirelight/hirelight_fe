@@ -19,7 +19,7 @@ const JobList = () => {
 
     const { data: jobsRes } = useQuery({
         queryKey: ["jobs"],
-        queryFn: () => jobServices.getListAsync(),
+        queryFn: () => jobServices.getListByGuestAsync(),
     });
 
     return (

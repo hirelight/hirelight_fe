@@ -4,14 +4,26 @@ import { EnvelopeIcon, InboxIcon } from "@heroicons/react/24/outline";
 import React from "react";
 import { toast } from "react-toastify";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 
 import { useOutsideClick } from "@/hooks/useClickOutside";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
 import { useAppSelector } from "@/redux/reduxHooks";
+import { handleError } from "@/helpers";
+import { useTranslation } from "@/components/InternationalizationProvider";
+
+import { Locale } from "../../../../../../i18n.config";
 
 import styles from "./InvitationDropDown.module.scss";
 
 const InvitationDropDown = () => {
+    const { lang } = useParams();
+
+    const _t = useTranslation(
+        lang as Locale,
+        "domain.components.invitation_dropdown"
+    );
+
     const authUser = useAppSelector(state => state.auth.authUser);
 
     const [showDropdown, setShowDropdown] = React.useState(false);
@@ -36,10 +48,7 @@ const InvitationDropDown = () => {
             });
         },
         onError: error => {
-            console.error(error);
-            toast.error(
-                error.message ? error.message : "Accept invitation failure"
-            );
+            handleError(error);
         },
     });
 
@@ -48,7 +57,7 @@ const InvitationDropDown = () => {
             await acceptInvitationMutation.mutateAsync(jobPostId);
             setShowDropdown(false);
         } catch (error) {
-            console.error(error);
+            handleError(error);
         }
     };
 
@@ -86,8 +95,8 @@ const InvitationDropDown = () => {
                                             .replace("_", " ")}
                                 </strong>
                                 <p className="mb-3">
-                                    {invitation.organizationName} have invited
-                                    you to coorperate in recruitment process
+                                    {invitation.organizationName}{" "}
+                                    {_t.collab_message}
                                 </p>
                                 <div>
                                     <button
@@ -101,7 +110,7 @@ const InvitationDropDown = () => {
                                             invitation.jobPostId
                                         )}
                                     >
-                                        Accept
+                                        {_t.button.accept}
                                     </button>
                                     <button
                                         type="button"
@@ -111,7 +120,7 @@ const InvitationDropDown = () => {
                                         }
                                         onClick={() => setShowDropdown(false)}
                                     >
-                                        Dismiss
+                                        {_t.button.dismiss}
                                     </button>
                                 </div>
                             </div>

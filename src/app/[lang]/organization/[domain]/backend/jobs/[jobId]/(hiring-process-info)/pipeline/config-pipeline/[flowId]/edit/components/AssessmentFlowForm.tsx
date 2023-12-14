@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
-import { produce } from "immer";
 
 import { Button, CustomInput, DatePicker } from "@/components";
 import {
@@ -102,8 +101,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
     };
 
     const handleDeleteStage = async (
-        assessment: IAssessmentFlow & { id?: string },
-        pos: number
+        assessment: IAssessmentFlow & { id?: string }
     ) => {
         if (assessment.id) {
             try {
@@ -111,12 +109,6 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                 await queryClient.invalidateQueries({
                     queryKey: [`assessmentFlow`, flowId],
                 });
-                // setFormState(prev => ({
-                //     ...prev,
-                //     assessments: prev.assessments.filter(
-                //         (_, assessmentPos) => assessmentPos !== pos
-                //     ),
-                // }));
             } catch (error) {
                 handleError(error);
             }
@@ -145,20 +137,9 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
             await queryClient.invalidateQueries({
                 queryKey: [`assessmentFlow`],
             });
-
-            // setFormState(prev =>
-            //     produce(prev, draft => {
-
-            //         draft.assessments.splice(
-            //             draft.assessments.length - 1,
-            //             0,
-            //             res.data
-            //         );
-            //     })
-            // );
             setShowAddStage(false);
         } catch (error) {
-            console.error(error);
+            handleError(error);
         }
     };
     useEffect(() => {
@@ -263,7 +244,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                                     handleUpdateStage(updateStage, index)
                                 }
                                 deleteStage={() =>
-                                    handleDeleteStage(assessment, index)
+                                    handleDeleteStage(assessment)
                                 }
                             />
                         ))}

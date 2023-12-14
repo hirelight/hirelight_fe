@@ -14,7 +14,7 @@ import {
 } from "@/services/assessment-flows/assessment-flows.interface";
 import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
-import { isInvalidForm } from "@/helpers";
+import { handleError, isInvalidForm } from "@/helpers";
 import { useAppSelector } from "@/redux/reduxHooks";
 
 const initialData: ICreateAssessmentFlowDto = {
@@ -120,7 +120,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
             toast.success(res.message);
             router.push(`config-pipeline/${res.data.id}`);
         } catch (error) {
-            toast.error("Create flow error");
+            handleError(error);
             setIsLoading(false);
         }
     };

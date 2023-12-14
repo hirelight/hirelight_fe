@@ -9,6 +9,9 @@ import { useOutsideClick } from "@/hooks/useClickOutside";
 import { Plus } from "@/icons";
 import { JobPostStatus } from "@/interfaces/job-post.interface";
 import { IJobDto } from "@/services";
+import { useTranslation } from "@/components/InternationalizationProvider";
+
+import { Locale } from "../../../../../../../i18n.config";
 
 import styles from "./HiringStageBar.module.scss";
 
@@ -24,6 +27,10 @@ const HiringStageBar: React.FC<HiringStageBarProps> = ({
     jobList = [],
 }) => {
     const { lang } = useParams();
+    const _t = useTranslation(
+        lang as Locale,
+        "backend.components.hiring_stage_bar"
+    );
 
     const numOfDrafts = useMemo(
         () => jobList.filter(job => job.status === JobPostStatus.DRAFT).length,
@@ -98,7 +105,7 @@ const HiringStageBar: React.FC<HiringStageBarProps> = ({
                                 JobPostStatus.DRAFT
                             )}
                         >
-                            Draft
+                            {_t.status.draft}
                         </button>
                         {numOfDrafts > 0 && (
                             <span className={styles.stageButtonBadge}>
@@ -119,7 +126,7 @@ const HiringStageBar: React.FC<HiringStageBarProps> = ({
                                 JobPostStatus.ACTIVE
                             )}
                         >
-                            Published
+                            {_t.status.published}
                             {numOfPublished > 0 && (
                                 <span className={styles.stageButtonBadge}>
                                     {numOfPublished}
@@ -140,7 +147,7 @@ const HiringStageBar: React.FC<HiringStageBarProps> = ({
                                 JobPostStatus.PENDING_APPROVAL
                             )}
                         >
-                            Pending approval
+                            {_t.status.pending_approval}
                             {numOfPending > 0 && (
                                 <span className={styles.stageButtonBadge}>
                                     {numOfPending}
@@ -161,7 +168,7 @@ const HiringStageBar: React.FC<HiringStageBarProps> = ({
                                 JobPostStatus.INACTIVE
                             )}
                         >
-                            Pending publish
+                            {_t.status.pending_publish}
                             {numOfWaiting > 0 && (
                                 <span className={styles.stageButtonBadge}>
                                     {numOfWaiting}
@@ -176,7 +183,9 @@ const HiringStageBar: React.FC<HiringStageBarProps> = ({
                 className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm p-2 md:p-0 md:px-5 md:py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 ml-auto flex items-center gap-1"
             >
                 <Plus className="w-6 h-6" />
-                <span className="hidden md:inline-block">Create a new job</span>
+                <span className="hidden md:inline-block">
+                    {_t.button.create_job}
+                </span>
             </Link>
         </div>
     );
