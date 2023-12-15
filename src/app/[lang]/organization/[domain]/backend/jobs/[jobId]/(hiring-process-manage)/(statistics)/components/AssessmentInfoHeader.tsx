@@ -137,13 +137,17 @@ const AssessmentInfoHeader = () => {
                                 {job.minSalary === 0 && job.maxSalary === 0
                                     ? "Negotiate"
                                     : `${job.minSalary}${
-                                          currencies[
-                                              job.currency as CurrencyKey
-                                          ].symbol
+                                          job.currency
+                                              ? currencies[
+                                                    job.currency as CurrencyKey
+                                                ].symbol
+                                              : ""
                                       } - ${job.maxSalary}${
-                                          currencies[
-                                              job.currency as CurrencyKey
-                                          ].symbol
+                                          job.currency
+                                              ? currencies[
+                                                    job.currency as CurrencyKey
+                                                ].symbol
+                                              : ""
                                       }`}
                             </span>
                         </div>
