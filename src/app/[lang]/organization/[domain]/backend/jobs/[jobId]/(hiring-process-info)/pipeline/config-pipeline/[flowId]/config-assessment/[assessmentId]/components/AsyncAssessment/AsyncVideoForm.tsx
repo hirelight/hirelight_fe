@@ -18,6 +18,7 @@ import {
 } from "@/components";
 import {
     IAssessmentDto,
+    IEditAssessmentDto,
     IEditAsyncVideoInterviewDto,
     IQuestionAnswerDto,
 } from "@/services";
@@ -39,7 +40,7 @@ export type AsyncQuestionType = Omit<IQuestionAnswerDto, "content"> & {
     content: QuestionAnswerContentJson;
 };
 
-type AsyncVideoForm = Omit<IEditAsyncVideoInterviewDto, "content"> & {
+type AsyncVideoForm = Omit<IEditAssessmentDto, "content"> & {
     content: {
         welcomeNote: string;
     };
@@ -120,12 +121,14 @@ const AsyncVideoForm = () => {
         try {
             const sumOfDuration =
                 questions.reduce((prev, cur) => {
+                    if (!cur.content.config) return prev;
+
                     const sum =
-                        cur.content.config!!.duration *
-                            cur.content.config!!.numOfTakes +
-                        cur.content.config!!.numOfTakes * 3 +
-                        cur.content.config!!.thinkTime *
-                            cur.content.config!!.numOfTakes;
+                        cur.content.config.duration *
+                            cur.content.config.numOfTakes +
+                        cur.content.config.numOfTakes * 3 +
+                        cur.content.config.thinkTime *
+                            cur.content.config.numOfTakes;
                     return prev + sum;
                 }, 0) +
                 10 * 60;
@@ -220,6 +223,35 @@ const AsyncVideoForm = () => {
                             errorText={formErr.nameErr}
                             required
                         />
+
+                        <div>
+                            <Selection
+                                title="Due date"
+                                value={
+                                    formState.invitationDuration
+                                        ? `${formState.invitationDuration} ${
+                                              formState.invitationDuration > 1
+                                                  ? "days"
+                                                  : "day"
+                                          }`
+                                        : ""
+                                }
+                                items={[1, 3, 5, 7, 10, 15, 20, 25, 30].map(
+                                    item => ({
+                                        label: `${item} ${
+                                            item > 1 ? "days" : "day"
+                                        }`,
+                                        value: item,
+                                    })
+                                )}
+                                onChange={value =>
+                                    setFormState({
+                                        ...formState,
+                                        invitationDuration: value,
+                                    })
+                                }
+                            />
+                        </div>
                     </div>
 
                     <div className="flex flex-col gap-4 mb-6 px-4 xl:px-6">

@@ -133,17 +133,20 @@ const QuestionSection = ({
                     </div>
                     <div className="flex-1 flex-shrink-0 flex items-center justify-end gap-2 w-fit ml-auto text-sm uppercase font-semibold whitespace-nowrap">
                         <span className="py-1 px-2.5 rounded-full bg-green-200 text-green-700">
-                            {thinkTime.get(data.content.config!!.thinkTime)}
+                            {thinkTime.get(data.content.config?.thinkTime ?? 0)}
                         </span>
                         <span className="py-1 px-2.5 rounded-full bg-blue-200 text-blue_primary_800">
                             {
-                                humanReadable(data.content.config!!.duration)
-                                    .minutes
+                                humanReadable(
+                                    data.content.config?.duration ?? 0
+                                ).minutes
                             }{" "}
                             mins to answer
                         </span>
                         <span className="py-1 px-2.5 rounded-full bg-gray-200 text-gray-700">
-                            {numOfTakes.get(data.content.config!!.numOfTakes)}{" "}
+                            {numOfTakes.get(
+                                data.content.config?.numOfTakes ?? 0
+                            )}{" "}
                             takes
                         </span>
                     </div>

@@ -19,7 +19,7 @@ const MeetingList = () => {
     const { data: meetings } = useQuery({
         queryKey: ["meetings"],
         queryFn: () =>
-            meetingServices.getListByAssessmentId(undefined, authUser!!.userId),
+            meetingServices.getListByAssessmentId(undefined, authUser?.userId),
     });
 
     return (

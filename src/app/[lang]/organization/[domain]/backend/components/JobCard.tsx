@@ -60,7 +60,7 @@ const JobCard: React.FC<JobCardProps> = ({
         mutationFn: (id: string) => jobServices.publishJobAsync(id),
         onSuccess: async res => {
             await queryClient.invalidateQueries({
-                queryKey: ["jobs", authUser!!.organizationId],
+                queryKey: ["jobs", authUser?.organizationId],
             });
             toast.success(res.message, {
                 position: "bottom-right",
@@ -80,7 +80,7 @@ const JobCard: React.FC<JobCardProps> = ({
         mutationFn: (id: string) => jobServices.unpublishJobAsync(id),
         onSuccess: async res => {
             await queryClient.invalidateQueries({
-                queryKey: ["jobs", authUser!!.organizationId],
+                queryKey: ["jobs", authUser?.organizationId],
             });
             toast.success(res.message, {
                 position: "bottom-right",
@@ -103,18 +103,27 @@ const JobCard: React.FC<JobCardProps> = ({
         unpublishJobMutations.mutate(id);
     };
 
+    const handleRedirect = () => {
+        if (assessmentFlowId)
+            router.push(
+                `backend/jobs/${id}/hiring-process/${
+                    assessmentFlow?.assessments[0].id ?? ""
+                }`
+            );
+        else toast.error("Please define assessment flow for this job first!");
+    };
+
     return (
         <div className="w-full p-6 bg-white shadow-md rounded-lg">
             <div className="w-full flex  items-center justify-between mb-6">
-                <div className="flex  flex-wrap sm:flex-nowrap items-start sm:items-center sm:flex-row gap-3">
-                    <Link
-                        href={`backend/jobs/${id}/hiring-process/${
-                            assessmentFlow?.assessments[0].id ?? ""
-                        }`}
+                <div className="flex flex-wrap sm:flex-nowrap items-start sm:items-center sm:flex-row gap-3">
+                    <div
+                        role="button"
                         className="text-blue_primary_700 text-xl font-medium whitespace-nowrap hover:underline"
+                        onClick={handleRedirect}
                     >
                         {title}
-                    </Link>
+                    </div>
                     <span className="text-sm text-neutral-500 whitespace-nowrap">
                         {area}
                     </span>

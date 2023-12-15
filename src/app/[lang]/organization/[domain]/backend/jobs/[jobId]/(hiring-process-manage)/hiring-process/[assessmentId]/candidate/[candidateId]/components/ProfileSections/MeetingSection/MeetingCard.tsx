@@ -49,17 +49,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
     const { data: applicantAssessmentDetail } = useAppSelector(
         state => state.applicantAssessmentDetail
     );
-    const avaterDetail = useRef<IAppFormField | undefined>(
-        (
-            JSON.parse(
-                applicantAssessmentDetail!!.applicantProfile.content
-            ) as ApplicationFormJSON
-        ).form_structure
-            .find(
-                item => item.id === AppFormDefaultSection.PERSONAL_INFORMATION
-            )!!
-            .fields.find(field => field.id === "avatar")
-    );
+
     const [showEdit, setShowEdit] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
     const [showCandidateTime, setShowCandidateTime] = useState(false);
@@ -79,16 +69,19 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
     });
 
     const handleInviteCandidate = async () => {
-        if (!applicantAssessmentDetail!!.applicantProfile.candidateId)
-            toast.error("Please select a candidate");
+        if (
+            (applicantAssessmentDetail &&
+                !applicantAssessmentDetail.applicantProfile.candidateId) ||
+            !applicantAssessmentDetail
+        )
+            return toast.error("Please select a candidate");
         try {
             const res = await toast.promise(
                 meetingServices.editMeeting({
                     id: data.id,
                     assessmentId: data.assessmentId,
                     candidateId:
-                        applicantAssessmentDetail!!.applicantProfile
-                            .candidateId,
+                        applicantAssessmentDetail.applicantProfile.candidateId,
                     startTime: data.startTime,
                     endTime: data.endTime,
                     name: data.name,

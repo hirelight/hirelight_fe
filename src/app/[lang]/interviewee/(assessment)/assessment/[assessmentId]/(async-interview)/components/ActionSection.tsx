@@ -182,10 +182,10 @@ const ActionSection: React.FC<ActionSectionProps> = ({
                             },
                         ];
                     else {
-                        draft.content.files!![
-                            draft.content.files!!.length - 1
+                        draft.content.files[
+                            draft.content.files.length - 1
                         ].isChosen = false;
-                        draft.content.files!!.push({
+                        draft.content.files.push({
                             name: myFile.name,
                             src: url,
                             type: "video/mp4",
@@ -203,7 +203,7 @@ const ActionSection: React.FC<ActionSectionProps> = ({
                 if (
                     selectedAnswer &&
                     selectedAnswer.content.files &&
-                    selectedAnswer.content.files!!.length ===
+                    selectedAnswer.content.files.length ===
                         selectedAnswer.content.config!!.numOfTakes - 1
                 ) {
                     handleMoveNext();
@@ -386,7 +386,7 @@ const ActionSection: React.FC<ActionSectionProps> = ({
                     recordingStatus === "inactive" &&
                     !isUploading &&
                     (selectedAnswer.content.files &&
-                    selectedAnswer.content.files!!.length > 0 ? (
+                    selectedAnswer.content.files.length > 0 ? (
                         <RetakeCountDown
                             onClick={() => {
                                 setIsRetake(false);

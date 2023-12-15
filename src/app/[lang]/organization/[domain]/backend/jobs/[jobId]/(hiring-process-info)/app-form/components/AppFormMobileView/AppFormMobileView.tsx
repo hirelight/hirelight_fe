@@ -31,10 +31,10 @@ const AppFormMobileView: React.FC<AppFormMobileViewProps> = ({}) => {
         document.addEventListener(
             "scroll",
             debounce(() => {
-                if (containerRef.current) {
+                if (containerRef.current && wrapperRef.current) {
                     const rect = containerRef.current.getBoundingClientRect();
                     const validDy =
-                        wrapperRef.current!!.getBoundingClientRect()!!.height -
+                        wrapperRef.current.getBoundingClientRect().height -
                         rect.height;
                     if (rect.top < 0) {
                         setTranslateY(prev =>
@@ -44,8 +44,7 @@ const AppFormMobileView: React.FC<AppFormMobileViewProps> = ({}) => {
                         let dy = Math.min(
                             rect.top,
                             Math.abs(
-                                wrapperRef.current!!.getBoundingClientRect()!!
-                                    .top
+                                wrapperRef.current.getBoundingClientRect().top
                             )
                         );
 

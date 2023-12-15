@@ -120,7 +120,7 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                 answers: answers,
             });
             await queryClient.invalidateQueries({
-                queryKey: [`my-assessment`, assesmentData!!.id],
+                queryKey: [`my-assessment`, assesmentData?.id],
             });
             toast.success(res.message);
             stopAutoTask();

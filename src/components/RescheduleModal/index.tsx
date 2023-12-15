@@ -106,7 +106,7 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
         setLoading(true);
         try {
             let res;
-            if (authUser!!.role === Roles.CANDIDATE) {
+            if (authUser && authUser.role === Roles.CANDIDATE) {
                 res = await meetingServices.candidateReScheduleMeeting(
                     meetingId,
                     JSON.stringify(sections)

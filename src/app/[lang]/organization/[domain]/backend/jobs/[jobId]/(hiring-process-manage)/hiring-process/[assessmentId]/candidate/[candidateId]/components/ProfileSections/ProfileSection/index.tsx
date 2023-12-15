@@ -30,8 +30,11 @@ const ProfileSection = () => {
     const applicantAssessmentDetail = useAppSelector(
         state => state.applicantAssessmentDetail.data
     );
-    const formDetails = useRef<ApplicationFormJSON>(
-        JSON.parse(applicantAssessmentDetail!!.applicantProfile.content!!)
+    const formDetails = useRef<ApplicationFormJSON | null>(
+        applicantAssessmentDetail &&
+            applicantAssessmentDetail.applicantProfile.content
+            ? JSON.parse(applicantAssessmentDetail.applicantProfile.content)
+            : null
     );
 
     const getDetailByField = (field: IAppFormTemplateField) => {
@@ -53,8 +56,8 @@ const ProfileSection = () => {
         if (field.id === "resume")
             return field.value ? (
                 <PDFViewer
-                    src={field.value!!.value as string}
-                    fileName={field.value!!.name}
+                    src={field.value.value as string}
+                    fileName={field.value.name}
                 />
             ) : null;
         else if (field.type === "group") {
@@ -128,14 +131,14 @@ const ProfileSection = () => {
                 let profileLayout = JSON.parse(res.data.content)
                     .profile as IAppFormTemplateProfileSection[];
                 const fieldMap = new Map<string, any>();
-
-                formDetails.current.form_structure
-                    .map(section => section.fields)
-                    .flat(1)
-                    .forEach(field => {
-                        if (!fieldMap.has(field.id))
-                            fieldMap.set(field.id, field);
-                    });
+                if (formDetails.current)
+                    formDetails.current.form_structure
+                        .map(section => section.fields)
+                        .flat(1)
+                        .forEach(field => {
+                            if (!fieldMap.has(field.id))
+                                fieldMap.set(field.id, field);
+                        });
 
                 profileLayout = profileLayout
                     .map(section => ({
@@ -164,7 +167,7 @@ const ProfileSection = () => {
         };
 
         fetchLayout();
-    }, [formDetails.current.form_structure]);
+    }, []);
     return (
         <div className="">
             <section>
@@ -199,32 +202,33 @@ const ProfileSection = () => {
                 })}
             </section>
 
-            {formDetails.current.questions.length > 0 && (
-                <section>
-                    <div className="w-full border-b border-gray-300 mb-6">
-                        <h3
-                            className={`inline-block ${styles.profile__tab__btn} ${styles.active}`}
-                        >
-                            <span>Answers</span>
-                        </h3>
-                    </div>
-                    {formDetails.current.questions.map((answer, index) => {
-                        return (
-                            <div
-                                key={index}
-                                className="mb-4 text-sm border-b border-gray-300 pb-6 last:pb-0 last:border-none"
+            {formDetails.current &&
+                formDetails.current.questions.length > 0 && (
+                    <section>
+                        <div className="w-full border-b border-gray-300 mb-6">
+                            <h3
+                                className={`inline-block ${styles.profile__tab__btn} ${styles.active}`}
                             >
-                                <div className="lg:basis-40 mr-6 text-neutral-500 flex gap-2 mb-2">
-                                    <span>{answer.label}</span>
+                                <span>Answers</span>
+                            </h3>
+                        </div>
+                        {formDetails.current?.questions.map((answer, index) => {
+                            return (
+                                <div
+                                    key={index}
+                                    className="mb-4 text-sm border-b border-gray-300 pb-6 last:pb-0 last:border-none"
+                                >
+                                    <div className="lg:basis-40 mr-6 text-neutral-500 flex gap-2 mb-2">
+                                        <span>{answer.label}</span>
+                                    </div>
+                                    <div className="border-l-2 border-gray-300 pl-4 text-neutral-600">
+                                        {getCustomQuesVal(answer)}
+                                    </div>
                                 </div>
-                                <div className="border-l-2 border-gray-300 pl-4 text-neutral-600">
-                                    {getCustomQuesVal(answer)}
-                                </div>
-                            </div>
-                        );
-                    })}
-                </section>
-            )}
+                            );
+                        })}
+                    </section>
+                )}
         </div>
     );
 };

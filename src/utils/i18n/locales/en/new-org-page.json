@@ -18,7 +18,7 @@
             "org_name_empty": "Organization name must not empty"
         },
         "success": {
-            "creat_org": "Create org successfully!"
+            "create_org": "Create org successfully!"
         }
     },
     "make_mistake": "Make a mistake?",

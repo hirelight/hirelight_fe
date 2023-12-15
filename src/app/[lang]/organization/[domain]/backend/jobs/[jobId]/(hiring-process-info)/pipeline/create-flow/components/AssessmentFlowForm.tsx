@@ -201,9 +201,15 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                                 setFormState(prev => ({
                                     ...prev,
                                     startTime: date,
-                                    endTime: moment(date).isAfter(prev.endTime)
-                                        ? moment(date).add(7, "days").toDate()
-                                        : prev.endTime,
+                                    endTime:
+                                        moment(prev.endTime).diff(
+                                            date,
+                                            "days"
+                                        ) < 7
+                                            ? moment(date)
+                                                  .add(7, "days")
+                                                  .toDate()
+                                            : prev.endTime,
                                 }));
                                 setFormErr({ ...formErr, flowTimelineErr: "" });
                             }}

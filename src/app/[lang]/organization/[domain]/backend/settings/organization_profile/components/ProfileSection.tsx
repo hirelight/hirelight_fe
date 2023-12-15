@@ -13,6 +13,7 @@ import {
 import { industries } from "@/utils/shared/initialDatas";
 import organizationsServices from "@/services/organizations/organizations.service";
 import { IEditOrganizationDto } from "@/services";
+import { handleError } from "@/helpers";
 
 import styles from "../styles.module.scss";
 
@@ -32,7 +33,7 @@ const ProfileSection = () => {
 
             toast.success(res.message);
         } catch (error) {
-            console.error(error);
+            handleError(error);
         }
         setLoading(false);
     };

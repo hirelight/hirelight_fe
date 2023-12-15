@@ -129,9 +129,10 @@ const QuillEditor = ({
     }, []);
 
     const insertImage = (imageUrl: any) => {
-        const range = quillInstance.current!!.getSelection();
+        if (!quillInstance.current) return;
+        const range = quillInstance.current.getSelection();
         if (range && quillInstance.current) {
-            quillInstance.current!!.insertEmbed(
+            quillInstance.current.insertEmbed(
                 range.index,
                 "image",
                 imageUrl,
@@ -161,6 +162,8 @@ const QuillEditor = ({
                 quillInstance.current = quill;
 
                 quill.root.innerHTML = value;
+            } else if (value && !quillInstance.current.root.textContent) {
+                quillInstance.current.root.innerHTML = value;
             }
 
             quillInstance.current.on("text-change", handleTextChange);
@@ -185,12 +188,13 @@ const QuillEditor = ({
                 className={`${styles.quill__wrapper} ${
                     styles[theme]
                 } ${className} ${fullscreen ? styles.full__screen : ""}`}
-                onFocusCapture={() =>
-                    toolbarRef.current!!.setAttribute(
+                onFocusCapture={() => {
+                    if (!toolbarRef.current) return;
+                    toolbarRef.current.setAttribute(
                         "style",
                         "height: 42px; visibility: visible"
-                    )
-                }
+                    );
+                }}
                 onClick={e => {
                     quillInstance.current?.focus();
                 }}

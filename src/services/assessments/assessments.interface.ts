@@ -19,6 +19,7 @@ export interface IEditAssessmentDto {
     query: string;
     duration: number;
     index: number;
+    invitationDuration?: number;
     assessmentQuestionAnswerSetContent: string;
 }
 

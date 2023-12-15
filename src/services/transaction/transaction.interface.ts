@@ -8,7 +8,7 @@ export interface ITracsactionDto {
     content: string;
     currency: string;
     createdTime: Date | string;
-    status: string;
+    status: "INACTIVE" | "IDLE" | "ACTIVE";
     organization: {
         id: string;
         name: string;

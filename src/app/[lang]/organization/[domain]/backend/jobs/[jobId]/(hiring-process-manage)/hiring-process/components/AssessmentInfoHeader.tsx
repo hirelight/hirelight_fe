@@ -1,14 +1,13 @@
 "use client";
 
 import {
-    ArchiveBoxIcon,
     ArrowPathIcon,
-    ChatBubbleLeftRightIcon,
-    ClipboardDocumentListIcon,
+    ChatBubbleBottomCenterTextIcon,
     ClockIcon,
     CurrencyDollarIcon,
     PencilIcon,
     PresentationChartLineIcon,
+    FlagIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -17,12 +16,11 @@ import dynamic from "next/dynamic";
 import moment from "moment";
 import { useQuery } from "@tanstack/react-query";
 
-import { AvatarGroup, ButtonOutline, Selection } from "@/components";
+import { AvatarGroup, ButtonOutline } from "@/components";
 import { useAppSelector } from "@/redux/reduxHooks";
 import currencies from "@/utils/shared/currencies.json";
 import { CurrencyKey } from "@/interfaces/job-post.interface";
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
-import { Calendar } from "@/icons";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
 
 import styles from "./AssessmentInfoHeader.module.scss";
@@ -89,23 +87,25 @@ const AssessmentInfoHeader = () => {
                                     <Link
                                         href={`/${lang}/backend/jobs/${job.id}/edit`}
                                     >
-                                        <PencilIcon className="w-5 h-5" />
+                                        <PencilIcon className="w-6 h-6" />
                                     </Link>
                                 </Tooltip>
                             </li>
                             <li>
-                                <Tooltip content="Activity logs">
-                                    <Link href={"#"}>
-                                        <ClipboardDocumentListIcon className="w-5 h-5" />
-                                    </Link>
-                                </Tooltip>
-                            </li>
-                            <li>
-                                <Tooltip content="Job events">
+                                <Tooltip content="Reports">
                                     <Link
-                                        href={`/${lang}/backend/jobs/${job.id}/calendar`}
+                                        href={`/${lang}/backend/jobs/${job.id}/reports`}
                                     >
-                                        <Calendar className="w-5 h-5" />
+                                        <FlagIcon className="w-6 h-6" />
+                                    </Link>
+                                </Tooltip>
+                            </li>
+                            <li>
+                                <Tooltip content="Feedbacks">
+                                    <Link
+                                        href={`/${lang}/backend/jobs/${job.id}/feedbacks`}
+                                    >
+                                        <ChatBubbleBottomCenterTextIcon className="w-6 h-6" />
                                     </Link>
                                 </Tooltip>
                             </li>
@@ -114,7 +114,7 @@ const AssessmentInfoHeader = () => {
                                     <Link
                                         href={`/${lang}/backend/jobs/${job.id}/activities`}
                                     >
-                                        <PresentationChartLineIcon className="w-5 h-5" />
+                                        <PresentationChartLineIcon className="w-6 h-6" />
                                     </Link>
                                 </Tooltip>
                             </li>

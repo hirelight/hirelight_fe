@@ -58,16 +58,18 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
         },
     });
     const sendInvitationMutate = useMutation({
-        mutationFn: () =>
-            collaboratorsServices.sendInvitation({
-                jobPostId: jobId as string,
-                employerId: selectEmployer!!.employerDto.id,
-                permissions: currentPermissions.map(item => ({
-                    permissionId: item.id,
-                    permissionName: item.name,
-                    assessmentId: item.assessmentId ?? "",
-                })),
-            }),
+        mutationFn: selectEmployer
+            ? () =>
+                  collaboratorsServices.sendInvitation({
+                      jobPostId: jobId as string,
+                      employerId: selectEmployer.employerDto.id,
+                      permissions: currentPermissions.map(item => ({
+                          permissionId: item.id,
+                          permissionName: item.name,
+                          assessmentId: item.assessmentId ?? "",
+                      })),
+                  })
+            : undefined,
         onSuccess: res => {
             toast.success(res.message);
             setSelectEmployer(undefined);

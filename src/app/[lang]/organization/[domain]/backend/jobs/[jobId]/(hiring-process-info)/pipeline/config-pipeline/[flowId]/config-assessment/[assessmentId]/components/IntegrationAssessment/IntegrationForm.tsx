@@ -12,7 +12,7 @@ import integrationServices from "@/services/integration/integration.service";
 import { Logo } from "@/icons";
 import { extractTextFromHtml, isInvalidForm } from "@/helpers";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { ThirdPartyAssessment } from "@/services";
+import { IEditAssessmentDto, ThirdPartyAssessment } from "@/services";
 
 import styles from "./IntergationForm.module.scss";
 import IntegrationCard from "./IntegrationCard";
@@ -22,20 +22,13 @@ const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
     loading: () => <div className="min-h-[300px] border border-gray-300"></div>,
 });
 
-type IPutAssessment = {
-    id: string;
-    name: string;
-    description: string;
+type IPutAssessment = Omit<IEditAssessmentDto, "content"> & {
     content: {
         service: string;
         orgName: string;
         assessmentId: string;
         assessmentName: string;
     };
-    query: string;
-    duration: number;
-    index: number;
-    assessmentQuestionAnswerSetContent: string;
 };
 
 const IntegrationForm = () => {
@@ -162,6 +155,35 @@ const IntegrationForm = () => {
                         required
                         errorText={formErr.nameErr}
                     />
+
+                    <div>
+                        <Selection
+                            title="Due date"
+                            value={
+                                formState.invitationDuration
+                                    ? `${formState.invitationDuration} ${
+                                          formState.invitationDuration > 1
+                                              ? "days"
+                                              : "day"
+                                      }`
+                                    : ""
+                            }
+                            items={[1, 3, 5, 7, 10, 15, 20, 25, 30].map(
+                                item => ({
+                                    label: `${item} ${
+                                        item > 1 ? "days" : "day"
+                                    }`,
+                                    value: item,
+                                })
+                            )}
+                            onChange={value =>
+                                setFormState({
+                                    ...formState,
+                                    invitationDuration: value,
+                                })
+                            }
+                        />
+                    </div>
                 </div>
 
                 <div className="flex flex-col gap-4 mb-6 px-4 xl:px-6">

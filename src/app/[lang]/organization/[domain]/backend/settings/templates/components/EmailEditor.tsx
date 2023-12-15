@@ -93,9 +93,8 @@ const EmailEditor: React.FC<IEmailEditor> = ({
             if (source == "api") {
                 // console.log("An API call triggered this change.");
             } else if (source == "user") {
-                if (onChange) {
-                    const editorContent =
-                        quillInstance.current!!.root.innerHTML;
+                if (onChange && quillInstance.current) {
+                    const editorContent = quillInstance.current.root.innerHTML;
                     onChange(editorContent);
                 }
             }
@@ -134,9 +133,11 @@ const EmailEditor: React.FC<IEmailEditor> = ({
     }, []);
 
     const insertImage = (imageUrl: any) => {
-        const range = quillInstance.current!!.getSelection();
+        if (!quillInstance.current) return;
+
+        const range = quillInstance.current.getSelection();
         if (range) {
-            quillInstance.current!!.insertEmbed(
+            quillInstance.current.insertEmbed(
                 range.index + 1,
                 "image",
                 imageUrl
@@ -209,12 +210,13 @@ const EmailEditor: React.FC<IEmailEditor> = ({
             className={`${styles.quill__wrapper} ${
                 styles[theme]
             } ${className} ${fullscreen ? styles.full__screen : ""}`}
-            onFocusCapture={() =>
-                toolbarRef.current!!.setAttribute(
+            onFocusCapture={() => {
+                if (!toolbarRef.current) return;
+                toolbarRef.current.setAttribute(
                     "style",
                     "height: 42px; visibility: visible"
-                )
-            }
+                );
+            }}
             onClick={e => {
                 quillInstance.current?.focus();
             }}

@@ -61,7 +61,9 @@ const ThirpatyAssessments: React.FC<ThirpatyAssessmentsProps> = ({
                                 if (e.currentTarget.checked) {
                                     onSelect({
                                         service: service,
-                                        orgName: token!!.payload.split(",")[0],
+                                        orgName: token
+                                            ? token.payload.split(",")[0]
+                                            : "",
                                         assessmentId: assessment.id,
                                         assessmentName: assessment.name,
                                     });

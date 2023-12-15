@@ -22,7 +22,7 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
         if (!token) {
             if (accessToken) {
                 dispatch(setToken(accessToken));
-                router.push(`/${lang}`);
+                router.push(`/${lang}/organizations`);
             } else {
                 router.replace(
                     `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/login?authEnd=true`

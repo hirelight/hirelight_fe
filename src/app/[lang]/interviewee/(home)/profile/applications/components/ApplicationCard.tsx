@@ -11,12 +11,17 @@ import { Calendar, Clock, DollarCurrency, MapPin } from "@/icons";
 import logo from "/public/images/logo.svg";
 
 import { IApplicantProfileDto } from "@/services";
+import { ButtonOutline } from "@/components";
 
 interface ApplicationCardProps {
     data: IApplicantProfileDto;
+    onSelect: (applicantProfileId: string) => void;
 }
 
-const ApplicationCard: React.FC<ApplicationCardProps> = ({ data }) => {
+const ApplicationCard: React.FC<ApplicationCardProps> = ({
+    data,
+    onSelect,
+}) => {
     const { lang } = useParams();
     return (
         <div className="flex gap-4 p-4 sm:p-6 bg-white border border-gray-200 rounded-lg shadow">
@@ -71,12 +76,21 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ data }) => {
                         </span>
                     </div>
                 </div>
-                <Link
-                    href={`applications/${data.jobPost.id}/notifications`}
-                    className="inline-block text-blue-700 hover:text-white border border-blue_primary_800 hover:bg-blue_primary_800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-6 py-2 text-center mt-4 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
-                >
-                    View progress
-                </Link>
+                <div className="space-x-4">
+                    <Link
+                        href={`applications/${data.jobPost.id}/notifications`}
+                        className="inline-block text-blue-700 hover:text-white border border-blue_primary_800 hover:bg-blue_primary_800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-6 py-2 text-center mt-4 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
+                    >
+                        View progress
+                    </Link>
+                    <button
+                        type="button"
+                        className="inline-block text-blue-700 hover:text-white border border-blue_primary_800 hover:bg-blue_primary_800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-6 py-2 text-center mt-4 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:hover:bg-blue-500 dark:focus:ring-blue-800"
+                        onClick={() => onSelect(data.id)}
+                    >
+                        Feedback
+                    </button>
+                </div>
             </div>
         </div>
     );

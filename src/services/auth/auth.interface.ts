@@ -32,9 +32,10 @@ export interface IUserDto {
 
 export interface IUpdateInfoDto {
     password?: string;
+    oldPassword?: string;
     firstName?: string;
     lastName?: string;
-    avatarUrl?: string;
+    avatarUrl?: string | null;
     timeZone?: number;
     certificates?: string;
     educations?: string;

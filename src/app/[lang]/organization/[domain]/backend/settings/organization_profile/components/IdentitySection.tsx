@@ -9,7 +9,7 @@ import { produce } from "immer";
 import { toast } from "react-toastify";
 
 import { Button, CustomTextArea } from "@/components";
-import { uploadFile } from "@/helpers";
+import { handleError, uploadFile } from "@/helpers";
 import organizationsServices from "@/services/organizations/organizations.service";
 import { IEditOrganizationDto } from "@/services";
 
@@ -71,7 +71,10 @@ const IdentitySection = () => {
                     if (file) {
                         handleFileChange([file]);
                     }
-                    wrapperRef.current!!.classList.remove(styles.file__active);
+                    if (wrapperRef.current)
+                        wrapperRef.current.classList.remove(
+                            styles.file__active
+                        );
                 }
             });
         } else {
@@ -91,7 +94,7 @@ const IdentitySection = () => {
 
             toast.success(res.message);
         } catch (error) {
-            console.error(error);
+            handleError(error);
         }
         setLoading(false);
     };

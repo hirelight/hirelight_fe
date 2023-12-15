@@ -16,6 +16,14 @@ export interface IOrganizationDto {
     address: string | null;
     location: string | null;
     ownerId: string;
+    owner: {
+        id: string;
+        email: string;
+        firstName?: string;
+        lastName?: string;
+        avatarUrl?: string;
+        status: string;
+    };
     createdTime: Date | string;
     updatedTime: Date | string;
     status: string;

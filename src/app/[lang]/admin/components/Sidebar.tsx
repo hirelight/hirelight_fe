@@ -28,23 +28,28 @@ const orgManageItems = [
         url: (lang: string) => `/${lang}/job-posts`,
         icon: <BriefcaseIcon />,
     },
-    {
-        label: "Email Template",
-        url: (lang: string) => `#`,
-        icon: <DocumentTextIcon />,
-    },
+    // {
+    //     label: "Email Template",
+    //     url: (lang: string) => `#`,
+    //     icon: <DocumentTextIcon />,
+    // },
 ];
 
 const hirelight = [
+    // {
+    //     label: "Account",
+    //     url: (lang: string) => `/${lang}/accounts`,
+    //     icon: <UserCircleIcon />,
+    // },
+    // {
+    //     label: "Dashboard",
+    //     url: (lang: string) => `/${lang}/dashboard`,
+    //     icon: <BriefcaseIcon />,
+    // },
     {
-        label: "Account",
-        url: (lang: string) => `/${lang}/accounts`,
-        icon: <UserCircleIcon />,
-    },
-    {
-        label: "Dashboard",
-        url: (lang: string) => `/${lang}/dashboard`,
-        icon: <BriefcaseIcon />,
+        label: "Transactions",
+        url: (lang: string) => `/${lang}/transactions`,
+        icon: <DocumentTextIcon />,
     },
     {
         label: "Subscription",

@@ -36,7 +36,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
     const avatar = useRef<any | undefined>(
         parsedContent.form_structure[0].fields.find(
             item => item.id === "avatar"
-        )!!.value
+        )?.value ?? ""
     );
     const headline = useRef<any | undefined>(
         parsedContent.form_structure[0].fields.find(

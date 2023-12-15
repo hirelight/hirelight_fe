@@ -40,7 +40,7 @@ const JobHeader = ({}: IJobHeader) => {
         mutationFn: (id: string) => jobServices.requestPublishJob(id),
         onSuccess: async res => {
             await queryClient.invalidateQueries({
-                queryKey: ["jobs", authUser!!.organizationId],
+                queryKey: ["jobs", authUser?.organizationId],
             });
 
             await queryClient.invalidateQueries({
@@ -65,7 +65,7 @@ const JobHeader = ({}: IJobHeader) => {
         mutationFn: (id: string) => jobServices.publishJobAsync(id),
         onSuccess: async res => {
             await queryClient.invalidateQueries({
-                queryKey: ["jobs", authUser!!.organizationId],
+                queryKey: ["jobs", authUser?.organizationId],
             });
 
             await queryClient.invalidateQueries({
@@ -91,7 +91,7 @@ const JobHeader = ({}: IJobHeader) => {
         mutationFn: (id: string) => jobServices.unpublishJobAsync(id),
         onSuccess: async res => {
             await queryClient.invalidateQueries({
-                queryKey: ["jobs", authUser!!.organizationId],
+                queryKey: ["jobs", authUser?.organizationId],
             });
             toast.success(res.message, {
                 position: "bottom-right",

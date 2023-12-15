@@ -90,7 +90,7 @@ const EmailTemplateCard: React.FC<IEmailTemplateCard> = ({ data }) => {
                 }`}
             >
                 <h4 className="text-sm text-neutral-700 font-semibold">
-                    {data.name}
+                    {data.name.charAt(0).toUpperCase() + data.name.substring(1)}
                 </h4>
                 {editingId !== data.id && (
                     <div

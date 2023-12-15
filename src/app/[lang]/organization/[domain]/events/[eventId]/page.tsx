@@ -43,7 +43,7 @@ const EventInfoPage = () => {
     const employerData = useMemo(() => {
         if (meeting)
             return meeting.data.employerMeetingRefs.find(
-                employer => employer.employerId === authUser!!.userId
+                employer => authUser && employer.employerId === authUser.userId
             );
         else return;
     }, [authUser, meeting]);

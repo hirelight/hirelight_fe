@@ -76,7 +76,10 @@ const UpdateEmailTemplate: React.FC<IUpdateEmailTemplate> = ({
                 <CustomInput
                     type="text"
                     title={t("name.label")}
-                    value={form.name}
+                    value={
+                        form.name.charAt(0).toUpperCase() +
+                        form.name.substring(1)
+                    }
                     onChange={(e: any) =>
                         setForm({ ...form, name: e.target.value })
                     }

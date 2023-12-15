@@ -30,7 +30,7 @@ const PurchaseModal = ({
         if (!selectedBank)
             return toast.error("Please select a payment method!");
         try {
-            const res: any = await transactionServices.createPayment({
+            const res = await transactionServices.createPayment({
                 bankCode: selectedBank,
                 planId: plan.id,
                 redirectUrl: window.location.href.replace(
@@ -39,7 +39,7 @@ const PurchaseModal = ({
                 ),
             });
             close();
-            router.replace(res.order_url);
+            router.replace(res.data.order_url);
         } catch (error) {
             handleError(error);
         }
@@ -129,9 +129,8 @@ const PurchaseModal = ({
                                         );
                                     }
                                     return (
-                                        <>
+                                        <React.Fragment key={key}>
                                             <div
-                                                key={key}
                                                 role="button"
                                                 className=" py-4 px-6 border-b border-gray-300 last:border-b-0 relative hover:bg-slate-100 transition-all cursor-pointer"
                                                 onClick={() =>
@@ -216,7 +215,7 @@ const PurchaseModal = ({
                                                     </motion.ul>
                                                 )}
                                             </AnimatePresence>
-                                        </>
+                                        </React.Fragment>
                                     );
                                 })}
                             </div>

@@ -61,7 +61,7 @@ const CustomFlowCard: React.FC<CustomFlowCardProps> = ({ data }) => {
                 name: newFlow.name,
                 content: newFlow.content,
             });
-        else toast.error("Template id and orgId required!");
+        else toast.error("System's default template cannot be modified!");
         setShowEditing(false);
     };
 

@@ -113,7 +113,10 @@ const JobDescriptionBeside: React.FC<JobDescriptionBesideProps> = ({
                     <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-500">
                             Posted{" "}
-                            {moment(data.updatedTime).locale(lang).fromNow()}
+                            {moment
+                                .utc(data.updatedTime)
+                                .locale(lang)
+                                .fromNow()}
                         </span>
                         <div className="flex items-center gap-1">
                             <ButtonOutline>Share job</ButtonOutline>

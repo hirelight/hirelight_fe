@@ -6,6 +6,7 @@ import interceptor from "../interceptor";
 
 import {
     AuthResponse,
+    IUpdateInfoDto,
     IVerifyCodeDto,
     LoginCandidateDto,
     LoginEmployerDto,
@@ -77,6 +78,22 @@ const registerEmployee = async (
     }
 };
 
+const updateProfile = async (
+    updateProfileDto: IUpdateInfoDto
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.put<IResponse<any>>(
+            `/identity/info`,
+            updateProfileDto
+        );
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const sendVerifyCode = async (
     verifyDto: IVerifyCodeDto
 ): Promise<IResponse<any>> => {
@@ -138,6 +155,7 @@ const authServices = {
     loginCandidate,
     registerCandidate,
     sendVerifyCode,
+    updateProfile,
 };
 
 export default authServices;

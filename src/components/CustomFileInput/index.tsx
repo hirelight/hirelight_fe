@@ -77,7 +77,10 @@ const CustomFileInput = (props: ICustomFileInput) => {
                     if (file) {
                         handleFileChange([file]);
                     }
-                    wrapperRef.current!!.classList.remove(styles.file__active);
+                    if (wrapperRef.current)
+                        wrapperRef.current.classList.remove(
+                            styles.file__active
+                        );
                 }
             });
         } else {
@@ -115,8 +118,8 @@ const CustomFileInput = (props: ICustomFileInput) => {
                   ].join(",")
                 : "";
         document.body.appendChild(inputFile);
-        inputFile.addEventListener("change", e => {
-            handleFileChange(Array.from((e.target as any)!!.files));
+        inputFile.addEventListener("change", (e: any) => {
+            if (e.target.files) handleFileChange(Array.from(e.target.files));
         });
 
         inputFile.click();

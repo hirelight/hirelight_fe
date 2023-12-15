@@ -75,13 +75,6 @@ const QuestionList = ({
     assesmentData: IMCAppliAssessmentDto;
     answers: ICandidateMCDto[];
 }) => {
-    const targetDate = useRef<Date>(
-        moment
-            .utc(assesmentData!!.startTime)
-            .add(assesmentData!!.assessment.duration, "s")
-            .toDate()
-    );
-
     return (
         <div className="flex gap-6 relative">
             <ul className="space-y-4 mb-6">
@@ -98,7 +91,7 @@ const QuestionList = ({
                             .utc(assesmentData?.startTime)
                             .add(1800, "s")
                             .diff(
-                                moment.utc(assesmentData!!.updatedTime),
+                                moment.utc(assesmentData?.updatedTime),
                                 "seconds"
                             )
                     )}

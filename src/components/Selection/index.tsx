@@ -64,20 +64,21 @@ const Selection = <T extends object | any>(props: ISelection<T>) => {
     const [selected, setSelected] = React.useState<string[]>([]);
     const dropdownWrapperRef = useOutsideClick<HTMLDivElement>(() => {
         setShow(false);
-        dropdownRef.current!!.removeAttribute("style");
+        if (dropdownRef.current) dropdownRef.current.removeAttribute("style");
     });
     const dropdownRef = React.useRef<HTMLDivElement>(null);
 
     const expandSelection = (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => {
+        if (!dropdownRef.current) return;
         setShow(!show);
         if (
             e.currentTarget.getBoundingClientRect().bottom + 252 >
                 window.innerHeight &&
             !show
         ) {
-            dropdownRef.current!!.setAttribute(
+            dropdownRef.current.setAttribute(
                 "style",
                 "top: auto;bottom: 100%;border-top-width: 1px;border-bottom: 0; margin-top: 0;margin-bottom: -0.25rem;border-radius: 0.375rem 0.375rem 0 0;flex-direction: column-reverse;height: auto;visibility: visible;"
             );
@@ -86,12 +87,12 @@ const Selection = <T extends object | any>(props: ISelection<T>) => {
                 window.innerHeight &&
             !show
         ) {
-            dropdownRef.current!!.setAttribute(
+            dropdownRef.current.setAttribute(
                 "style",
                 "height: auto; visibility: visible"
             );
         } else {
-            dropdownRef.current!!.removeAttribute("style");
+            dropdownRef.current.removeAttribute("style");
         }
     };
 
@@ -106,7 +107,7 @@ const Selection = <T extends object | any>(props: ISelection<T>) => {
         }
         onChange(value);
         setShow(false);
-        dropdownRef.current!!.removeAttribute("style");
+        if (dropdownRef.current) dropdownRef.current.removeAttribute("style");
 
         if (props.id) {
             const selectEl = document.getElementById(

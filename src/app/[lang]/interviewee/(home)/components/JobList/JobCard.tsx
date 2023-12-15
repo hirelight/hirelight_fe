@@ -68,7 +68,10 @@ const JobCard: React.FC<JobCardProps> = ({ data }) => {
                     <div className="hidden xl:flex items-center">
                         <Calendar className="w-4 h-4 inline-block mr-1" />
                         <span className="text-xs sm:text-sm whitespace-nowrap">
-                            {moment(data.updatedTime).locale(lang).fromNow()}
+                            {moment
+                                .utc(data.updatedTime)
+                                .locale(lang)
+                                .fromNow()}
                         </span>
                     </div>
                 </div>

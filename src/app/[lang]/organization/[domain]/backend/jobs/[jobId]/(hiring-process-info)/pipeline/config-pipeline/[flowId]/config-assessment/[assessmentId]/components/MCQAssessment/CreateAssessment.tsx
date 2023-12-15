@@ -229,6 +229,34 @@ const CreateAssessment = () => {
                             required
                             errorText={formErr.nameErr}
                         />
+                        <div>
+                            <Selection
+                                title="Due date"
+                                value={
+                                    formState.invitationDuration
+                                        ? `${formState.invitationDuration} ${
+                                              formState.invitationDuration > 1
+                                                  ? "days"
+                                                  : "day"
+                                          }`
+                                        : ""
+                                }
+                                items={[1, 3, 5, 7, 10, 15, 20, 25, 30].map(
+                                    item => ({
+                                        label: `${item} ${
+                                            item > 1 ? "days" : "day"
+                                        }`,
+                                        value: item,
+                                    })
+                                )}
+                                onChange={value =>
+                                    setFormState({
+                                        ...formState,
+                                        invitationDuration: value,
+                                    })
+                                }
+                            />
+                        </div>
 
                         <div>
                             <Timer

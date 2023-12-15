@@ -18,7 +18,7 @@
             "org_name_empty": "Tên công ty không được bỏ trống"
         },
         "success": {
-            "creat_org": "Tạo mới tài khoản công ty thành công!"
+            "create_org": "Tạo mới tài khoản công ty thành công!"
         }
     },
     "make_mistake": "Đã nhập sai gì sao?",

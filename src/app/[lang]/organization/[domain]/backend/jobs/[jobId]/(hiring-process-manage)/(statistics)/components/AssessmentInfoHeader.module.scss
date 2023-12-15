@@ -1,0 +1,52 @@
+.assessment__btn {
+    &:hover .assessment__btn__text {
+        @apply bg-gray-200 bg-opacity-75;
+    }
+    // &:hover .assessment__btn__text.active {
+    //     color: white;
+    //     @apply bg-blue_primary_700;
+    //     span {
+    //         color: white;
+    //     }
+    // }
+}
+
+.assessment__btn__text {
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
+    @apply rounded-md text-sm font-semibold text-neutral-600;
+
+    &.active {
+        color: white;
+        @apply bg-blue_primary_700;
+        span {
+            color: white;
+        }
+
+        &:hover {
+            @apply bg-blue_primary_800;
+        }
+    }
+}
+
+.assessment_tab_wrapper {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: visible;
+    padding: 0.75rem 0;
+
+    &::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: rgb(222, 222, 222);
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: rgb(151, 151, 151);
+        border-radius: 12px;
+    }
+}

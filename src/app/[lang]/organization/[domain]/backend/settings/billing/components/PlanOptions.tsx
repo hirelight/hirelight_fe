@@ -2,38 +2,21 @@
 
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 
 import { Button, Portal } from "@/components";
 import transactionServices from "@/services/transaction/transaction.service";
-import { handleError } from "@/helpers";
 import { IPlanDto } from "@/services";
 
 import styles from "./PlanOptions.module.scss";
 import PurchaseModal from "./PurchaseModal";
 
 const PlanOptions = () => {
-    const router = useRouter();
-
     const { data: plansRes, isLoading } = useQuery({
         queryKey: ["plans"],
         queryFn: transactionServices.getPlans,
     });
     const [selected, setSelected] = useState<IPlanDto>();
-
-    const handlePurchase = async (plan: IPlanDto) => {
-        try {
-            const res = await transactionServices.createPayment({
-                bankCode: "zalopayapp",
-                planId: 0,
-                redirectUrl: "",
-            });
-            router.replace(res.data.order_url);
-        } catch (error) {
-            handleError(error);
-        }
-    };
 
     return (
         <div className="w-full bg-white rounded-md drop-shadow-md border border-gray-300">

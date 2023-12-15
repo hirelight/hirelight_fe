@@ -139,42 +139,34 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
 
             // console.log(element.id, element, element.innerText);
 
-            if (fieldMap.has(element.id)) {
-                const type = fieldMap.get(element.id)!!.type;
+            const isExist = fieldMap.get(element.id);
+
+            if (isExist) {
+                const type = isExist.type;
                 switch (type) {
                     case "file":
-                        fieldMap.get(element.id)!!.value = {
+                        isExist.value = {
                             value: element.value,
                             name: elements[element.id + "_fileName"].value,
                         };
                         break;
                     case "boolean":
-                        fieldMap.get(element.id)!!.value = formData.getAll(
-                            element.id
-                        );
+                        isExist.value = formData.getAll(element.id);
                         break;
                     case "multiple_choice":
-                        const single = (
-                            fieldMap.get(element.id)!! as ICustomField
-                        ).single_answer;
-                        if (single)
-                            fieldMap.get(element.id)!!.value = formData.get(
-                                element.id
-                            );
-                        else
-                            fieldMap.get(element.id)!!.value = formData.getAll(
-                                element.id
-                            );
+                        const single = (isExist as ICustomField).single_answer;
+                        if (single) isExist.value = formData.get(element.id);
+                        else isExist.value = formData.getAll(element.id);
                         break;
                     case "group":
                         if (element.value)
-                            fieldMap.get(element.id)!!.value = JSON.parse(
-                                element.value
-                            );
+                            isExist.value = JSON.parse(element.value);
                         break;
                     default:
-                        fieldMap.get(element.id)!!.value = element.value;
+                        isExist.value = element.value;
                 }
+
+                fieldMap.set(element.id, isExist);
             }
         }
         // const div = document.createElement("div");
@@ -198,12 +190,14 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
         //     })),
         // });
 
-        const name = fieldMap.get("name")!!.value!! as string;
+        const nameField = fieldMap.get("name");
         setLoading(true);
         try {
             const dto = {
-                firstName: name.split(" ")[0],
-                lastName: name.split(" ").slice(1).join(" "),
+                firstName: nameField ? nameField.value.split(" ")[0] : "",
+                lastName: nameField
+                    ? nameField.value.split(" ").slice(1).join(" ")
+                    : "",
                 jobPostId: jobPostId,
                 content: JSON.stringify({
                     form_structure: data.form_structure.map(sec => ({

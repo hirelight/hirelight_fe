@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { handleError } from "@/helpers";
 import authServices from "@/services/auth/auth.service";
 import { setToken } from "@/redux/slices/auth.slice";
-import { Button } from "@/components";
+import { Button, CustomInput } from "@/components";
 import { useI18NextTranslation } from "@/utils/i18n/client";
 
 import { Locale } from "../../../../../../i18n.config";
@@ -134,16 +134,10 @@ const LoginForm: React.FC<ILoginForm> = () => {
                         </motion.div>
                     )}
                     <div className="mb-2 text-left">
-                        <label
-                            htmlFor="email"
-                            className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
-                        >
-                            {_t("login_form.label.email")}
-                        </label>
-                        <input
+                        <CustomInput
+                            title={_t("login_form.label.email")}
                             type="email"
                             id="email"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="example@gmail.com"
                             required
                             value={loginForm.email}
@@ -161,16 +155,10 @@ const LoginForm: React.FC<ILoginForm> = () => {
                         />
                     </div>
                     <div className="text-left">
-                        <label
-                            htmlFor="password"
-                            className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
-                        >
-                            {_t("login_form.label.password")}
-                        </label>
-                        <input
+                        <CustomInput
+                            title={_t("login_form.label.password")}
                             type="password"
                             id="password"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             required
                             value={loginForm.password}
                             onChange={e => {

@@ -103,13 +103,15 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                     <p>Check issue in red!</p>
                 </div>
             );
+
+        if (!selectedTemplate) return;
         setIsLoading(true);
         try {
             const res = await assessmentFlowsServices.createAsync({
                 ...formState,
                 startTime: moment.parseZone(formState.startTime).utc().format(),
                 endTime: moment.parseZone(formState.endTime).utc().format(),
-                assessments: selectedTemplate!!.slice(1, -1).map(item => ({
+                assessments: selectedTemplate.slice(1, -1).map(item => ({
                     name: item.name,
                     assessmentType: item.assessmentTypeName,
                 })),
@@ -166,9 +168,13 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                             setFormState({
                                 ...formState,
                                 startTime: date,
-                                endTime: moment(date).isAfter(formState.endTime)
-                                    ? moment(date).add(7, "days").toDate()
-                                    : formState.endTime,
+                                endTime:
+                                    moment(formState.endTime).diff(
+                                        date,
+                                        "days"
+                                    ) < 7
+                                        ? moment(date).add(7, "days").toDate()
+                                        : formState.endTime,
                             });
                             setFormErr({
                                 ...formErr,

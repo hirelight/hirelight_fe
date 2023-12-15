@@ -84,6 +84,9 @@ const OrganizationList = () => {
                             Subdomain
                         </th>
                         <th scope="col" className="px-6 py-3">
+                            Owner
+                        </th>
+                        <th scope="col" className="px-6 py-3">
                             Industry
                         </th>
 
@@ -110,6 +113,7 @@ const OrganizationList = () => {
                             </td>
                             <td className="px-6 py-4">{org.name}</td>
                             <td className="px-6 py-4">{org.subdomain}</td>
+                            <td className="px-6 py-4">{org.owner.email}</td>
                             <td className="px-6 py-4">
                                 {org.industry ?? "Not provided"}
                             </td>

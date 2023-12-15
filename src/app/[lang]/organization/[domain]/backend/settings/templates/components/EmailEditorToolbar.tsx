@@ -53,66 +53,71 @@ const EmailEditorToolbar: React.FC<IEmailEditorToolbar> = ({
     const handleShowSelection = (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => {
+        if (!selectionRef.current) return;
         const isExpand =
-            selectionRef.current!!.classList.contains(styles.showTop) ||
-            selectionRef.current!!.classList.contains(styles.show);
+            selectionRef.current.classList.contains(styles.showTop) ||
+            selectionRef.current.classList.contains(styles.show);
         if (
             e.currentTarget.getBoundingClientRect().bottom + 252 >
                 window.innerHeight &&
             !isExpand
         ) {
-            selectionRef.current!!.classList.add(styles.showTop);
+            selectionRef.current.classList.add(styles.showTop);
         } else if (
             e.currentTarget.getBoundingClientRect().bottom + 252 <
                 window.innerHeight &&
             !isExpand
         ) {
-            selectionRef.current!!.classList.add(styles.show);
+            selectionRef.current.classList.add(styles.show);
         } else {
-            selectionRef.current!!.classList.remove(styles.showTop);
-            selectionRef.current!!.classList.remove(styles.show);
+            selectionRef.current.classList.remove(styles.showTop);
+            selectionRef.current.classList.remove(styles.show);
         }
     };
 
     const expandSelection = (
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => {
+        if (!emailTypesSelectionRef.current) return;
+
         const isExpand =
-            emailTypesSelectionRef.current!!.classList.contains(
-                styles.showTop
-            ) ||
-            emailTypesSelectionRef.current!!.classList.contains(styles.show);
+            emailTypesSelectionRef.current.classList.contains(styles.showTop) ||
+            emailTypesSelectionRef.current.classList.contains(styles.show);
 
         if (
             e.currentTarget.getBoundingClientRect().bottom + 252 >
                 window.innerHeight &&
             !isExpand
         ) {
-            emailTypesSelectionRef.current!!.classList.add(styles.showTop);
+            emailTypesSelectionRef.current.classList.add(styles.showTop);
         } else if (
             e.currentTarget.getBoundingClientRect().bottom + 252 <
                 window.innerHeight &&
             !isExpand
         ) {
-            emailTypesSelectionRef.current!!.classList.add(styles.show);
+            emailTypesSelectionRef.current.classList.add(styles.show);
         } else {
-            emailTypesSelectionRef.current!!.classList.remove(styles.showTop);
-            emailTypesSelectionRef.current!!.classList.remove(styles.show);
+            emailTypesSelectionRef.current.classList.remove(styles.showTop);
+            emailTypesSelectionRef.current.classList.remove(styles.show);
         }
     };
 
     const handleSelectVars = (value: string) => {
         handleVarChange(value);
-        selectionRef.current!!.classList.remove(styles.showTop);
-        selectionRef.current!!.classList.remove(styles.show);
+        if (selectionRef.current) {
+            selectionRef.current.classList.remove(styles.showTop);
+            selectionRef.current.classList.remove(styles.show);
+        }
     };
 
     const handleSelectEmailType = (value: IEmailTemplateTypeDto) => {
         onEmailTemplateTypeChange(value.id);
         setEmailType(value);
         setEmailParams(value.parameters.split(", ").map(item => `[${item}]`));
-        emailTypesSelectionRef.current!!.classList.remove(styles.showTop);
-        emailTypesSelectionRef.current!!.classList.remove(styles.show);
+        if (emailTypesSelectionRef.current) {
+            emailTypesSelectionRef.current.classList.remove(styles.showTop);
+            emailTypesSelectionRef.current.classList.remove(styles.show);
+        }
     };
 
     useEffect(() => {

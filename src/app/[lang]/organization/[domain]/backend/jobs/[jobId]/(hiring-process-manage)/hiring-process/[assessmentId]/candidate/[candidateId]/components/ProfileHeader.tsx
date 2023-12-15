@@ -13,14 +13,18 @@ const ProfileHeader = () => {
         state => state.applicantAssessmentDetail.data
     );
 
-    const personalDetail = useRef<IAppFormSection>(
-        (
-            JSON.parse(
-                applicantProfile!!.applicantProfile.content
-            ) as ApplicationFormJSON
-        ).form_structure.find(
-            item => item.id === AppFormDefaultSection.PERSONAL_INFORMATION
-        )!!
+    const personalDetail = useRef<IAppFormSection | undefined>(
+        (applicantProfile
+            ? (
+                  JSON.parse(
+                      applicantProfile.applicantProfile.content
+                  ) as ApplicationFormJSON
+              ).form_structure
+            : []
+        ).find(
+            (item: any) =>
+                item.id === AppFormDefaultSection.PERSONAL_INFORMATION
+        )
     );
     return (
         <div className="bg-white rounded-md border border-gray-300 mb-4 overflow-hidden">
@@ -28,7 +32,7 @@ const ProfileHeader = () => {
             <div className="p-4 xl:px-6 flex gap-4">
                 <div>
                     <div className="w-20 aspect-square flex items-center justify-center rounded-full bg-white border border-gray-300 overflow-hidden">
-                        {personalDetail.current.fields.find(
+                        {personalDetail.current?.fields.find(
                             item => item.id === "avatar"
                         )?.value ? (
                             <Image
@@ -55,7 +59,7 @@ const ProfileHeader = () => {
                         <div>
                             <span>
                                 {" "}
-                                {personalDetail.current.fields.find(
+                                {personalDetail.current?.fields.find(
                                     item => item.id === "headline"
                                 )?.value ?? ""}
                             </span>
@@ -69,7 +73,7 @@ const ProfileHeader = () => {
                             <span className="flex items-center gap-1">
                                 <MapPinIcon className="w-4 h-4" />
                                 <span>
-                                    {personalDetail.current.fields.find(
+                                    {personalDetail.current?.fields.find(
                                         item => item.id === "address"
                                     )?.value ?? ""}
                                 </span>
@@ -78,7 +82,7 @@ const ProfileHeader = () => {
                                 <PhoneIcon className="w-4 h-4" />
                                 <span>
                                     {" "}
-                                    {personalDetail.current.fields.find(
+                                    {personalDetail.current?.fields.find(
                                         item => item.id === "phone"
                                     )?.value ?? ""}
                                 </span>

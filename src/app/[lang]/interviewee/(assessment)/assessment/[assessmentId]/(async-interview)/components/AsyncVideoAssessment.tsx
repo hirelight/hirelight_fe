@@ -248,7 +248,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
             });
 
             await queryClient.invalidateQueries({
-                queryKey: [`my-assessment`, assessmentData!!.id],
+                queryKey: [`my-assessment`, assessmentData?.id],
             });
             toast.success(res.message);
             localStorage.removeItem(data.id);

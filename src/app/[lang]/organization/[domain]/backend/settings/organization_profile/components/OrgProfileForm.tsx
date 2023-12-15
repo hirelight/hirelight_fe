@@ -45,6 +45,11 @@ const OrgProfileForm: React.FC<OrgProfileFormProps> = ({ children }) => {
         createdTime: new Date(),
         updatedTime: new Date(),
         status: "",
+        owner: {
+            email: "",
+            id: "",
+            status: "",
+        },
     });
 
     useEffect(() => {

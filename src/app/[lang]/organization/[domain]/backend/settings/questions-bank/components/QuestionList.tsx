@@ -43,7 +43,7 @@ const QuestionList: React.FC<QuestionListProps> = ({}) => {
                     </li>
                 ))}
             </ul>
-            {res?.data && res.data.length > 10 && <Pagination />}
+            {/* {res?.data && res.data.length > 10 && <Pagination />} */}
         </>
     );
 };

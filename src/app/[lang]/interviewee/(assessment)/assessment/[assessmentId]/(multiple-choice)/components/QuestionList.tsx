@@ -22,8 +22,8 @@ const QuestionList = () => {
 
     const targetDate = useRef<Date>(
         moment
-            .utc(assesmentData!!.startTime)
-            .add(assesmentData!!.assessment.duration, "s")
+            .utc(assesmentData?.startTime)
+            .add(assesmentData?.assessment.duration, "s")
             .toDate()
     );
 
@@ -50,21 +50,12 @@ const QuestionList = () => {
                         />
                     ) : (
                         <div>
-                            {/* {moment(
-                                new Date(
-                                    targetDate.current.getTime() -
-                                        moment
-                                            .utc(assesmentData!!.updatedTime)
-                                            .toDate()
-                                            .getTime()
-                                )
-                            ).format("HH:mm:ss")} */}
                             {hhmmss(
                                 moment
                                     .utc(assesmentData?.startTime)
                                     .add(1800, "s")
                                     .diff(
-                                        moment.utc(assesmentData!!.updatedTime),
+                                        moment.utc(assesmentData?.updatedTime),
                                         "seconds"
                                     )
                             )}

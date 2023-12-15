@@ -51,7 +51,7 @@ const AssessmentsSlider = () => {
                 setSwipeVisible(prev => ({ ...prev, swipeLeft: false }));
             }
 
-            sliderWrapperRef.current!!.scrollLeft -= dx;
+            sliderWrapperRef.current.scrollLeft -= dx;
             setSwipeVisible(prev => ({ ...prev, swipeRight: true }));
         }
     };
@@ -71,7 +71,7 @@ const AssessmentsSlider = () => {
                 setSwipeVisible(prev => ({ ...prev, swipeRight: false }));
             }
 
-            sliderWrapperRef.current!!.scrollLeft += dx;
+            sliderWrapperRef.current.scrollLeft += dx;
             setSwipeVisible(prev => ({ ...prev, swipeLeft: true }));
         }
     };

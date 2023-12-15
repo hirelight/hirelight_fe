@@ -13,6 +13,7 @@ import {
     IAssessmentFlTempDto,
     ICreateAssessmentFlTempDto,
 } from "@/services/assessment-flow-templates/assessment-flow-templates.interface";
+import { handleError } from "@/helpers";
 
 import pageStyles from "../../styles.module.scss";
 
@@ -35,7 +36,7 @@ const AssessmentFlowSection = () => {
             });
         },
         onError: err => {
-            toast.error(err.message);
+            handleError(err);
         },
     });
 

@@ -170,7 +170,10 @@ const SettingsSidebar = () => {
                     </div>
                 </li>
                 <li>
-                    <Link href={"#"} className={`${styles.tab__btn}`}>
+                    <Link
+                        href={`/${lang}/backend/settings/my-profile`}
+                        className={`${styles.tab__btn}`}
+                    >
                         <UserGroupIcon className="w-6 h-6" />
                         <span>{t("your_profile")}</span>
                     </Link>

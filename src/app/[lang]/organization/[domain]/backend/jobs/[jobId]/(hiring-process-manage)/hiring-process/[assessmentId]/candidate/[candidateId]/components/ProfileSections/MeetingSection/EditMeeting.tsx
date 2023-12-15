@@ -16,6 +16,7 @@ import {
     CustomTextArea,
     DatePicker,
     TimerPicker,
+    UserAvatar,
 } from "@/components";
 import { CloseIcon } from "@/icons";
 import { useAppSelector } from "@/redux/reduxHooks";
@@ -35,20 +36,8 @@ interface IEditMeeting {
 const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
     const { assessmentId, candidateId } = useParams();
 
-    const authUser = useAppSelector(state => state.auth.authUser);
     const { data: applicantAssessmentDetail } = useAppSelector(
         state => state.applicantAssessmentDetail
-    );
-    const avaterDetail = useRef<IAppFormField | undefined>(
-        (
-            JSON.parse(
-                applicantAssessmentDetail!!.applicantProfile.content
-            ) as ApplicationFormJSON
-        ).form_structure
-            .find(
-                item => item.id === AppFormDefaultSection.PERSONAL_INFORMATION
-            )!!
-            .fields.find(field => field.id === "avatar")
     );
 
     const queryClient = useQueryClient();
@@ -458,26 +447,15 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                         {formState.candidate && (
                                             <li>
                                                 <div className="flex items-center gap-2">
-                                                    {avaterDetail.current &&
-                                                    avaterDetail.current
-                                                        .value ? (
-                                                        <Image
-                                                            src={
-                                                                avaterDetail
-                                                                    .current
-                                                                    .value.value
+                                                    <div className="w-8 h-8">
+                                                        <UserAvatar
+                                                            avatarUrl={
+                                                                formState
+                                                                    .candidate
+                                                                    .avatarUrl
                                                             }
-                                                            alt="Collaborator avatar"
-                                                            width={300}
-                                                            height={300}
-                                                            className="w-8 h-8 rounded-full object-cover"
-                                                            unoptimized
                                                         />
-                                                    ) : (
-                                                        <div className="w-10 h-10 rounded-full text-neutral-600">
-                                                            <UserCircleIcon />
-                                                        </div>
-                                                    )}
+                                                    </div>
                                                     <div className="flex-1 text-sm">
                                                         <h3 className="font-semibold">
                                                             {applicantAssessmentDetail

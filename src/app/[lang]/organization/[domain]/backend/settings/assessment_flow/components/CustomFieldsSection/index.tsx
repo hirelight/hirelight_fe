@@ -25,6 +25,7 @@ import {
 } from "@/interfaces/app-form-template.interface";
 import { Button } from "@/components";
 import { IAppFormTemplateDto } from "@/services/app-form-template/app-form-template.interface";
+import { handleError } from "@/helpers";
 
 import pageStyles from "../../styles.module.scss";
 
@@ -121,7 +122,7 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
                 toast.success(res.message);
             }
         } catch (error) {
-            toast.error("Save failure!");
+            handleError(error);
         }
         setLoading(false);
     };

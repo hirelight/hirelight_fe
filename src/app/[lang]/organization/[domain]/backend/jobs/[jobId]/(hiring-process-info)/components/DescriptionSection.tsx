@@ -30,6 +30,7 @@ const DescriptionSection = () => {
         contentLength,
         error: jobErr,
     } = useAppSelector(state => state.job);
+
     return (
         <section className="relative">
             <h2 className={`${styles.form__section__title}`}>

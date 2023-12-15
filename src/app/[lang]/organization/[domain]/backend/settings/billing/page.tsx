@@ -1,5 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
+import Link from "next/link";
 
 import settingStyles from "../styles.module.scss";
 
@@ -14,8 +15,19 @@ const OrganizationBilling = () => {
     return (
         <div>
             <section>
-                <h3 className={settingStyles.section_title}>
+                <h3
+                    className={
+                        settingStyles.section_title +
+                        " flex justify-between items-center md:w-2/3"
+                    }
+                >
                     Your current plan
+                    <Link
+                        href={"transactions"}
+                        className="text-sm normal-case font-normal text-blue_primary_600 hover:text-blue_primary_800 hover:underline"
+                    >
+                        View purchases
+                    </Link>
                 </h3>
                 <CurrentPlan />
             </section>

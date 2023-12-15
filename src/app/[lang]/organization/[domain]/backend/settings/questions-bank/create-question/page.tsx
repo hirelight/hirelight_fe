@@ -12,6 +12,7 @@ import {
     TrashIcon,
 } from "@heroicons/react/24/outline";
 import { Tooltip } from "flowbite-react";
+import Link from "next/link";
 
 import {
     Button,
@@ -264,13 +265,13 @@ const CreateQuestionPage = () => {
                     </button> */}
                     <div className="flex gap-4 absolute top-1/2 right-0 -translate-y-1/2">
                         <Tooltip content="Download file template">
-                            <button
-                                type="button"
-                                onClick={downloadFileAtUrl}
+                            <a
+                                href={`http://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/questions-template.xlsx`}
+                                download
                                 className="w-6 h-6 block"
                             >
                                 <ArrowDownTrayIcon />
-                            </button>
+                            </a>
                         </Tooltip>
                         <Tooltip content="Upload questions file">
                             <label className="w-6 h-6 block cursor-pointer">

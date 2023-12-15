@@ -92,13 +92,13 @@ const JobList = () => {
                         <th scope="col" className="px-6 py-3">
                             Status
                         </th>
-                        <th scope="col" className="px-6 py-3">
-                            Reports
-                        </th>
-                        <th scope="col" className="px-6 py-3">
+
+                        <th scope="col" className="px-6 py-3 text-center">
                             Actions
                         </th>
-                        <th scope="col" className="px-6 py-3"></th>
+                        <th scope="col" className="px-6 py-3 text-center">
+                            Details
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -125,7 +125,6 @@ const JobList = () => {
                                 {(job as any).organization.name}
                             </td>
                             <td className="px-6 py-4">{job.status}</td>
-                            <td className="px-6 py-4">{0}</td>
                             <td className="px-6 py-4 text-center">
                                 <button
                                     type="button"
@@ -147,7 +146,7 @@ const JobList = () => {
                                     )}
                                 </button>
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-6 py-4 text-center">
                                 <Link
                                     href={`job-posts/${job.id}`}
                                     type="button"

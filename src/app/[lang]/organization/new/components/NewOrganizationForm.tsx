@@ -56,7 +56,7 @@ const NewOrganizationForm = () => {
                 const { subdomain, id } = data.data;
                 const resOrgToken = await authServices.getOrgAccessToken(id);
 
-                toast.success(t("success"));
+                toast.success(t("success.create_org"));
 
                 router.replace(
                     `${window.location.protocol}//${subdomain}.${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/backend?accessToken=${resOrgToken.data.accessToken}`
