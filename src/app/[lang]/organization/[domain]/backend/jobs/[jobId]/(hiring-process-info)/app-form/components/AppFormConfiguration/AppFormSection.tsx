@@ -2,11 +2,10 @@
 
 import React from "react";
 
-import { IAppFormField, IAppFormSection, ICustomField } from "@/interfaces";
+import { IAppFormSection } from "@/interfaces";
 
 import styles from "./AppFormSection.module.scss";
 import AppFormSectionField from "./AppFormSectionField";
-import CustomFieldOnType from "./CustomFieldOnType";
 
 interface AppFormSectionProps {
     data: IAppFormSection;

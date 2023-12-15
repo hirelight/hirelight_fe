@@ -17,6 +17,8 @@ import assessmentFlowsServices from "@/services/assessment-flows/assessment-flow
 import { handleError, isInvalidForm } from "@/helpers";
 import { useAppSelector } from "@/redux/reduxHooks";
 import assessmentsServices from "@/services/assessments/assessments.service";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import AssessmentFlowCard from "./AssessmentFlowCard";
 import FlowStageForm from "./FlowStageForm";
@@ -26,8 +28,10 @@ type AssessmentFlowFormProps = {
 };
 
 const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
-    const { flowId, jobId } = useParams();
+    const { flowId, jobId, lang } = useParams();
     const router = useRouter();
+
+    const { t } = useI18NextTranslation(lang as I18Locale, "flow");
 
     const job = useAppSelector(state => state.job.data);
 
@@ -46,28 +50,25 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
         const errors = formErr;
         const { name, startTime, endTime } = formState;
 
-        if (name === "") errors.nameErr = "Flow name must not be blank!";
+        if (name === "") errors.nameErr = t("flow_not_blank");
 
         if (moment(startTime).isAfter(endTime))
-            errors.flowTimelineErr =
-                "Start time must be earlier than end time!";
+            errors.flowTimelineErr = t("common:error.start_time_earlier");
         if (moment(startTime).isBefore(job.startTime))
-            errors.flowTimelineErr =
-                "Assessment flow must start after job post start time!";
+            errors.flowTimelineErr = t("flow_start_after_job");
 
         if (moment().isAfter(endTime))
-            errors.flowTimelineErr = "End time must be in the future!";
+            errors.flowTimelineErr = t("common:error.end_time_be_future");
 
         if (formState.assessments.length < 3)
-            errors.flowErr =
-                "Except from Sourced and Hired. Assessment flow need at least one assessment";
+            errors.flowErr = t("flow_need_at_least_one_assessment");
 
         if (isInvalidForm(errors)) {
             setFormErr({ ...errors });
             toast.error(
                 <div>
-                    <p>Invalid input</p>
-                    <p>Check issue in red!</p>
+                    <p>{t("common:error.invalid_input")}</p>
+                    <p>{t("common:error.check_red_places")}</p>
                 </div>
             );
             return true;
@@ -95,7 +96,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
             toast.success(res.message);
             router.back();
         } catch (error: any) {
-            toast.error(error.message ? error.message : "Update flow failure!");
+            toast.error(t("update_flow_failure"));
             setIsLoading(false);
         }
     };
@@ -126,7 +127,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
 
     const handleAddNewStage = async (newStage: IAssessmentFlow) => {
         if (formState.assessments.find(item => item.name === newStage.name))
-            return toast.error("Assessment name already existed!");
+            return toast.error(t("assessment_name_already_existed"));
         try {
             const res = await assessmentsServices.addAssessment({
                 jobPostId: jobId as string,
@@ -151,7 +152,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
             <div className="p-4">
                 <div className="mb-4">
                     <CustomInput
-                        title="Name"
+                        title={t("common:name")}
                         value={formState.name}
                         onChange={e =>
                             setFormState(prev => ({
@@ -166,7 +167,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div>
                         <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            Start time
+                            {t("common:start_time")}
                         </h3>
                         <DatePicker
                             value={formState.startTime as Date}
@@ -194,7 +195,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                     </div>
                     <div>
                         <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            End time
+                            {t("common:end_time")}
                         </h3>
                         <DatePicker
                             value={formState.endTime as Date}
@@ -223,7 +224,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
 
                 <section className="text-sm">
                     <strong className="block mb-6">
-                        Add or edit flow stages
+                        {t("add_or_edit_flow_stages")}
                     </strong>
                     <Reorder.Group
                         axis="y"
@@ -276,7 +277,7 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                             onClick={() => setShowAddStage(true)}
                         >
                             <PlusCircleIcon className="w-6 h-6" />
-                            <span>Add new assessment</span>
+                            <span>{t("add_new_assessment")}</span>
                         </button>
                     )}
                 </section>
@@ -289,14 +290,14 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
                     isLoading={isLoading}
                     onClick={handleUpdateFlow}
                 >
-                    Save changes
+                    {t("common:save_changes")}
                 </Button>
                 <button
                     type="button"
                     className="font-semibold text-neutral-500 hover:underline hover:text-neutral-700"
                     onClick={() => router.back()}
                 >
-                    Cancel
+                    {t("common:cancel")}
                 </button>
             </div>
         </div>

@@ -4,8 +4,10 @@ import React, { FormEvent, Fragment, useState } from "react";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import { toast } from "react-toastify";
 import jwtDecode from "jwt-decode";
+import { useParams } from "next/navigation";
 
 import {
+    Button,
     CustomFileInput,
     CustomInput,
     CustomTextArea,
@@ -14,11 +16,14 @@ import {
     ExperienceSection,
     Selection,
 } from "@/components";
-import { IAppFormField, IAppFormSection, ICustomField } from "@/interfaces";
-import interceptor from "@/services/interceptor";
-import { ApplicationFormJSON } from "@/services";
+import { IAppFormField, ICustomField } from "@/interfaces";
+import { ApplicationFormJSON, IApplyJobDto } from "@/services";
 import { decryptData } from "@/helpers/authHelpers";
 import { SpinLoading } from "@/icons";
+import { handleError } from "@/helpers";
+import applicantProfileServices from "@/services/applicant-profile/applicant-profile.service";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 type AppFormSectionProps = {
     jobPostId: string;
@@ -31,6 +36,8 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
     data,
     onApply,
 }) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "app-form");
     const token = decryptData("hirelight_access_token");
     const [loading, setLoading] = useState(false);
 
@@ -169,31 +176,11 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                 fieldMap.set(element.id, isExist);
             }
         }
-        // const div = document.createElement("div");
-        // div.innerText
-
-        // for (const [key, value] of Array.from(fieldMap.entries())) {
-        //     console.log(`Key: ${key}, Value:`, value);
-        // }
-
-        // console.log({
-        //     form_structure: data.form_structure.map(sec => ({
-        //         ...sec,
-        //         fields: sec.fields.map(f => ({
-        //             ...f,
-        //             value: fieldMap.get(f.id)?.value,
-        //         })),
-        //     })),
-        //     questions: data.questions.map(f => ({
-        //         ...f,
-        //         value: fieldMap.get(f.id)?.value,
-        //     })),
-        // });
 
         const nameField = fieldMap.get("name");
         setLoading(true);
         try {
-            const dto = {
+            const dto: IApplyJobDto = {
                 firstName: nameField ? nameField.value.split(" ")[0] : "",
                 lastName: nameField
                     ? nameField.value.split(" ").slice(1).join(" ")
@@ -213,27 +200,25 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                     })),
                 } as ApplicationFormJSON),
             };
-            // console.log(dto);
-            // console.log(JSON.parse(dto.content));
-            const res = await interceptor.post("/applicant-profiles", dto);
-            toast.success(res.data.message);
+
+            const res = await applicantProfileServices.applyJob(dto);
+            toast.success(res.message);
+            const formEl = document.getElementById(
+                "apply-job-form"
+            ) as HTMLFormElement;
+            if (formEl) formEl.reset();
+            if (onApply) onApply();
         } catch (error: any) {
-            toast.error(error.message ? error.message : "Something went wrong");
+            handleError(error);
         }
         setLoading(false);
-
-        const formEl = document.getElementById(
-            "apply-job-form"
-        ) as HTMLFormElement;
-        if (formEl) formEl.reset();
-        if (onApply) onApply();
     };
 
     return (
         <form id="apply-job-form" onSubmit={handleSubmit}>
             <h4 className="text-sm text-neutral-700 py-4 md:py-8">
                 <span className="text-red-500 mr-1">*</span>
-                Required fields
+                {t("required_fields")}
             </h4>
             <div className="space-y-8">
                 {data.form_structure.map(section => {
@@ -243,7 +228,7 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                                 <h2 className="text-xl">{section.name}</h2>
                                 <div className="flex gap-1 items-center text-neutral-500 text-sm">
                                     <TrashIcon className="w-4 h-4" />
-                                    Clear
+                                    {t("common:clear")}
                                 </div>
                             </div>
                             <div className="space-y-6">
@@ -283,17 +268,12 @@ const AppFormSection: React.FC<AppFormSectionProps> = ({
                     type="reset"
                     className="px-5 py-2.5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                 >
-                    Reset
+                    {t("common:reset")}
                 </button>
 
-                <button
-                    type="submit"
-                    className="text-white bg-blue_primary_700 hover:bg-blue_primary_800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue_primary_600 dark:hover:bg-blue_primary_700 focus:outline-none dark:focus:ring-blue_primary_800 disabled:cursor-not-allowed disabled:opacity-80"
-                    disabled={loading}
-                >
-                    {loading && <SpinLoading className="mr-2" />}
-                    Submit application
-                </button>
+                <Button type="submit" disabled={loading} isLoading={loading}>
+                    {t("submit_application")}
+                </Button>
             </div>
         </form>
     );
@@ -322,6 +302,8 @@ const DateInput = ({ field }: { field: ICustomField }) => {
 };
 
 const SelectionInput = ({ field }: { field: ICustomField }) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "common");
     return (
         <Selection
             title={field.label}
@@ -331,7 +313,7 @@ const SelectionInput = ({ field }: { field: ICustomField }) => {
                 label: item.name,
                 value: item.name,
             }))}
-            placeholder="Selection an option..."
+            placeholder={t("select_an_option")}
             onChange={() => {}}
             required={field.required}
         />
@@ -381,6 +363,9 @@ const MultipleChoiceInpuit = ({ field }: { field: ICustomField }) => {
 };
 
 const YesNoInput = ({ field }: { field: ICustomField }) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "common");
+
     return (
         <>
             <label
@@ -410,7 +395,7 @@ const YesNoInput = ({ field }: { field: ICustomField }) => {
                         htmlFor={`${field.id}-yes`}
                         className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                     >
-                        Yes
+                        {t("yes")}
                     </label>
                 </div>
                 <div className="flex items-center px-4 border border-gray-300 dark:border-gray-700 rounded-tr rounded-br">
@@ -427,7 +412,7 @@ const YesNoInput = ({ field }: { field: ICustomField }) => {
                         htmlFor={`${field.id}-no`}
                         className="w-full py-4 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                     >
-                        No
+                        {t("no")}
                     </label>
                 </div>
             </fieldset>

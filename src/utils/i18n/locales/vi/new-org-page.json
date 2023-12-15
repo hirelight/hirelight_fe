@@ -19,7 +19,11 @@
         },
         "success": {
             "create_org": "Tạo mới tài khoản công ty thành công!"
-        }
+        },
+        "subdomain_not_contain_special": "Tên miền con không thể chứa ký tự đặc biệt",
+        "subdomain_not_end_with": "Tên miền con không thể kết thúc bằng ký tự đặc biệt",
+        "create_new_org": "Tạo tổ chức mới",
+        "create_new_org_warning": "Vui lòng xem xét thông tin của bạn. Sau khi tạo tổ chức, bạn không thể chỉnh sửa tên miền con!"
     },
     "make_mistake": "Đã nhập sai gì sao?",
     "btn": {

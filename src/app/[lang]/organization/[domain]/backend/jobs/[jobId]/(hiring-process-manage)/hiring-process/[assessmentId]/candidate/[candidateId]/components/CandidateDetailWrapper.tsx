@@ -6,8 +6,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
-import { getProfileById } from "@/redux/thunks/applicant-profile.thunk";
-import { getAppDetailByProfileId } from "@/redux/thunks/applicant-assessment-detail.slice.thunk";
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
 import { setApplicantDetail } from "@/redux/slices/applicant-assessment-detail.slice";
 import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";

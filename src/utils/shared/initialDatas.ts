@@ -66,3 +66,5 @@ export const experienceLevels = [
     { id: 4, name: "Director" },
     { id: 5, name: "Executive" },
 ];
+
+export const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;

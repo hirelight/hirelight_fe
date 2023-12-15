@@ -22,6 +22,8 @@ import currencies from "@/utils/shared/currencies.json";
 import { CurrencyKey } from "@/interfaces/job-post.interface";
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "./AssessmentInfoHeader.module.scss";
 import AssignAssessorModal from "./AssignAssessorModal";
@@ -38,6 +40,7 @@ const Tooltip = dynamic(
 
 const AssessmentInfoHeader = () => {
     const { assessmentId, jobId, lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "hiring-process");
 
     const [assignModal, setAssignModal] = useState(false);
 
@@ -72,18 +75,16 @@ const AssessmentInfoHeader = () => {
                 <div className="flex items-center justify-between mb-4">
                     <div>
                         <h1 className="inline text-blue-800 text-4xl font-medium mr-2">
-                            {job.title ? job.title : "Job title"}
+                            {job.title ? job.title : t("job_title")}
                         </h1>
                         <span className="text-sm text-gray-500">
-                            {job.area
-                                ? job.area
-                                : "Quận 9, TP Hồ Chí Minh, Hồ Chí Minh(Location)"}
+                            {job.area ? job.area : ""}
                         </span>
                     </div>
                     <div className="inline-flex items-center gap-8">
                         <ul className="flex gap-6">
                             <li>
-                                <Tooltip content="Edit job">
+                                <Tooltip content={t("edit_job")}>
                                     <Link
                                         href={`/${lang}/backend/jobs/${job.id}/edit`}
                                     >
@@ -92,7 +93,7 @@ const AssessmentInfoHeader = () => {
                                 </Tooltip>
                             </li>
                             <li>
-                                <Tooltip content="Reports">
+                                <Tooltip content={t("reports")}>
                                     <Link
                                         href={`/${lang}/backend/jobs/${job.id}/reports`}
                                     >
@@ -101,7 +102,7 @@ const AssessmentInfoHeader = () => {
                                 </Tooltip>
                             </li>
                             <li>
-                                <Tooltip content="Feedbacks">
+                                <Tooltip content={t("feedbacks")}>
                                     <Link
                                         href={`/${lang}/backend/jobs/${job.id}/feedbacks`}
                                     >
@@ -110,7 +111,7 @@ const AssessmentInfoHeader = () => {
                                 </Tooltip>
                             </li>
                             <li>
-                                <Tooltip content="Activities">
+                                <Tooltip content={t("activities")}>
                                     <Link
                                         href={`/${lang}/backend/jobs/${job.id}/activities`}
                                     >
@@ -121,17 +122,17 @@ const AssessmentInfoHeader = () => {
                         </ul>
 
                         <ButtonOutline onClick={() => setAssignModal(true)}>
-                            Assign assessors
+                            {t("assign_assessors")}
                         </ButtonOutline>
                     </div>
                 </div>
                 <div className="mb-8 w-full flex items-center">
                     <span className="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-4 py-1 rounded dark:bg-blue-900 dark:text-blue-300">
-                        Num of candidates:{" "}
+                        {t("num_of_candidates")}:{" "}
                         <span>{profileList?.data.length ?? 0}</span>
                     </span>
                     <span className="bg-green-100 text-green-800 text-sm font-medium mr-2 px-4 py-1 rounded dark:bg-green-900 dark:text-green-300">
-                        In progress:{" "}
+                        {t("in_progress")}:{" "}
                         <span>
                             {profileList?.data.filter(
                                 candidate =>
@@ -143,13 +144,13 @@ const AssessmentInfoHeader = () => {
                     <div className="inline-flex items-center gap-2 text-sm text-neutral-500">
                         <div className="flex items-center gap-1">
                             <ClockIcon className="w-4 h-4" />
-                            <span>{job.workModality ?? "Work modality"}</span>
+                            <span>{job.workModality ?? ""}</span>
                         </div>
                         <div className="flex items-center gap-1">
                             <CurrencyDollarIcon className="w-4 h-4" />
                             <span>
                                 {job.minSalary === 0 && job.maxSalary === 0
-                                    ? "Negotiate"
+                                    ? t("negotiate")
                                     : `${job.minSalary}${
                                           job.currency
                                               ? currencies[
@@ -209,7 +210,7 @@ const AssessmentInfoHeader = () => {
                                                 : ""
                                         }`}
                                     >
-                                        All
+                                        {t("common:all")}
                                     </span>
                                 </Link>
                             </div>

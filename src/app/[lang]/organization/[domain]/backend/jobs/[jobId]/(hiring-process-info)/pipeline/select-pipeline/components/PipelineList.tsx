@@ -8,11 +8,15 @@ import { useQuery } from "@tanstack/react-query";
 
 import { ButtonOutline } from "@/components";
 import assessmentFlowTemplatesServices from "@/services/assessment-flow-templates/assessment-flow-templates.service";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import ChangePipeline from "./ChangePipeline";
 
 const PipelineList = () => {
     const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "select-pipeline");
+
     const { data: flowTemplateRes } = useQuery({
         queryKey: ["flow-templates"],
         queryFn: assessmentFlowTemplatesServices.getListAsync,
@@ -31,17 +35,18 @@ const PipelineList = () => {
                     <div className="w-full flex flex-col items-center py-6">
                         <Square3Stack3DIcon className="text-gray-600 w-14 h-14 mb-6" />
                         <h2 className="text-2xl text-neutral-700 font-semibold mb-2">
-                            No templates available in your organization
+                            {t("no_templates_available")}
                         </h2>
                         <p className="text-sm text-center text-neutral-700 mb-6">
-                            There are no assessment flow template in your
-                            organization. <br /> You can create a new one to use
-                            in furthur job recruitment process.
+                            {t("there_no_assessment_flow")} <br />{" "}
+                            {t("you_can_create_new_one")}
                         </p>
                         <Link
                             href={`/${lang}/backend/settings/assessment_flow`}
                         >
-                            <ButtonOutline>Create new template</ButtonOutline>
+                            <ButtonOutline>
+                                {t("create_new_template")}
+                            </ButtonOutline>
                         </Link>
                     </div>
                 ))}

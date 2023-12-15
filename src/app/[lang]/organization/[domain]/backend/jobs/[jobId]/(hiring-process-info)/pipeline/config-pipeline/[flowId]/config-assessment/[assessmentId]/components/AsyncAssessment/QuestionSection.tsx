@@ -2,27 +2,23 @@ import {
     ArrowDownIcon,
     ArrowUpIcon,
     PencilIcon,
-    QuestionMarkCircleIcon,
     TrashIcon,
     VideoCameraIcon,
 } from "@heroicons/react/24/solid";
 import React from "react";
-import dynamic from "next/dynamic";
 import { produce } from "immer";
+import { useParams } from "next/navigation";
 
 import { humanReadable } from "@/helpers";
 import { sanitizeHtml } from "@/helpers/sanitizeHTML";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import AddNewQuestionSection, {
     numOfTakes,
     thinkTime,
 } from "./AddNewQuestionSection";
 import { AsyncQuestionType } from "./AsyncVideoForm";
-
-const QuillEditorNoSSR = dynamic(() => import("@/components/QuillEditor"), {
-    ssr: false,
-    loading: () => <p>Loading ...</p>,
-});
 
 interface IQuestionSection {
     data: AsyncQuestionType;
@@ -39,6 +35,8 @@ const QuestionSection = ({
     onReorder,
     onDelete,
 }: IQuestionSection) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "assessment");
     const [showEdit, setShowEdit] = React.useState(false);
 
     const handleMoveUp = () => {
@@ -82,17 +80,6 @@ const QuestionSection = ({
     return (
         <div className="border border-slate-200 rounded-md">
             <div className="flex justify-between items-center py-6 px-4 border-b border-slate-200">
-                {/* <h4 className="text-lg text-neutral-700 flex items-center gap-1">
-                    {data.topic}{" "}
-                    <div className="inline-flex items-center gap-1 text-neutral-500">
-                        <span className="">
-                            <QuestionMarkCircleIcon className="w-6 h-6" />
-                        </span>
-                        <span className="text-sm">
-                            {data.questions.length} questions
-                        </span>
-                    </div>
-                </h4> */}
                 <div className="w-full flex items-center gap-4 text-neutral-500">
                     <button type="button" onClick={handleMoveUp}>
                         <ArrowUpIcon className="w-6 h-6" />
@@ -141,13 +128,12 @@ const QuestionSection = ({
                                     data.content.config?.duration ?? 0
                                 ).minutes
                             }{" "}
-                            mins to answer
+                            {t("mis_to_answer")}
                         </span>
                         <span className="py-1 px-2.5 rounded-full bg-gray-200 text-gray-700">
                             {numOfTakes.get(
                                 data.content.config?.numOfTakes ?? 0
                             )}{" "}
-                            takes
                         </span>
                     </div>
                 </div>

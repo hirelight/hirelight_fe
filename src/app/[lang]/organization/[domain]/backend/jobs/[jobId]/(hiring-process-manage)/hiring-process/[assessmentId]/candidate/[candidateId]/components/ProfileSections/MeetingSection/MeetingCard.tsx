@@ -22,16 +22,13 @@ import { toast } from "react-toastify";
 import { Tooltip } from "flowbite-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import {
-    ApplicationFormJSON,
-    IMeetingDto,
-    MeetingEmployer,
-    MeetingStatus,
-} from "@/services";
-import { AppFormDefaultSection, IAppFormField } from "@/interfaces";
+import { IMeetingDto, MeetingEmployer, MeetingStatus } from "@/services";
 import { useAppSelector } from "@/redux/reduxHooks";
 import meetingServices from "@/services/meeting/meeting.service";
 import { DeleteModal, Portal, UserAvatar } from "@/components";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
+import { handleError } from "@/helpers";
 
 import styles from "./MeetingCard.module.scss";
 import EditMeeting from "./EditMeeting";
@@ -43,6 +40,7 @@ type MeetingCardProps = {
 
 const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
     const { lang, assessmentId, candidateId } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "candidate");
 
     const queryClient = useQueryClient();
 
@@ -74,9 +72,9 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                 !applicantAssessmentDetail.applicantProfile.candidateId) ||
             !applicantAssessmentDetail
         )
-            return toast.error("Please select a candidate");
+            return toast.error(t("please_select_a_candidate"));
         try {
-            const res = await toast.promise(
+            await toast.promise(
                 meetingServices.editMeeting({
                     id: data.id,
                     assessmentId: data.assessmentId,
@@ -91,19 +89,16 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                     location: data.location,
                 }),
                 {
-                    pending: "Sending meeting to candidate",
-                    success: "Meeting sent!",
+                    pending: t("sending_meeting_to_candidate"),
+                    success: t("meeting_sent"),
                 }
             );
 
             await queryClient.invalidateQueries({
                 queryKey: ["meeting-list", assessmentId, candidateId],
             });
-        } catch (error) {
-            // handleError(error);
-            await queryClient.invalidateQueries({
-                queryKey: ["meeting-list", assessmentId, candidateId],
-            });
+        } catch (error: any) {
+            handleError(error);
         }
     };
 
@@ -120,11 +115,9 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
             />
             <Portal>
                 <DeleteModal
-                    title="Delete meeting"
+                    title={t("delete_meeting")}
                     show={showDelete}
-                    description="Are you sure you want to delete
-                    this meeting? This action
-                    cannot be undone."
+                    description={t("delete_meeting_warning")}
                     onClose={() => setShowDelete(false)}
                     loading={deleteMeetingMutate.isPending}
                     onConfirm={handleDeleteMeeting}
@@ -142,9 +135,9 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                                     ? data.creator.firstName +
                                       " " +
                                       (data.creator.lastName ?? "")
-                                    : "Recruiter"}
+                                    : ""}
                             </strong>{" "}
-                            schedule a{" "}
+                            {t("schedule_a")}{" "}
                             <Link
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -152,7 +145,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                                 className="inline-flex items-center gap-1 text-blue_primary_800 group mr-3"
                             >
                                 <strong className="group-hover:underline">
-                                    meeting
+                                    {t("meeting")}
                                 </strong>
                                 <ArrowTopRightOnSquareIcon className="w-5 h-5" />
                             </Link>
@@ -167,7 +160,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                     </div>
 
                     {!data.candidate && (
-                        <Tooltip content="Invite candidate">
+                        <Tooltip content={t("invite_candidate")}>
                             <button
                                 type="button"
                                 className="p-1 rounded hover:bg-slate-200/80 text-neutral-700"
@@ -197,7 +190,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
 
                 <div className={styles.content__wrapper}>
                     {/* ************************************Meeting date section**************************************** */}
-                    <div>From</div>
+                    <div>{t("common:from")}</div>
                     <div>
                         {moment
                             .utc(data.startTime)
@@ -207,7 +200,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                     </div>
 
                     {/* ************************************Meeting slot section**************************************** */}
-                    <div>To</div>
+                    <div>{t("common:to")}</div>
                     <div>
                         {moment
                             .utc(data.endTime)
@@ -217,7 +210,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                     </div>
 
                     {/* ************************************Attendees Section**************************************** */}
-                    <div>Attendees</div>
+                    <div>{t("attendees")}</div>
                     <div className="flex gap-4 flex-wrap">
                         {data.candidate && (
                             <div className="flex items-center gap-2 basis-56">
@@ -237,7 +230,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                                         </span>
                                     </p>
 
-                                    <span>Candidate</span>
+                                    <span>{t("candidate")}</span>
                                 </div>
 
                                 {data.scheduleTime &&
@@ -277,7 +270,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                     {/* ************************************Meeting link section**************************************** */}
                     {data.meetingLink && (
                         <>
-                            <div>Meeting link</div>
+                            <div>{t("meeting_link")}</div>
                             <div>
                                 <Link
                                     href={
@@ -310,20 +303,20 @@ const MeetingCard: React.FC<MeetingCardProps> = ({ data }) => {
                     )}
 
                     {/* ************************************Meeting title section**************************************** */}
-                    <div>Title</div>
+                    <div>{t("common:title")}</div>
                     <div className="ql-editor !p-0">{data.name}</div>
 
                     {/* ************************************Meeting description section**************************************** */}
-                    <div>Description</div>
+                    <div>{t("common:description")}</div>
                     <div className="ql-editor !p-0">{data.description}</div>
 
-                    <div>Organizer</div>
+                    <div>{t("organizer")}</div>
                     <div className="ql-editor !p-0">
                         {data.creator
                             ? data.creator.firstName +
                               " " +
                               (data.creator.lastName ?? "")
-                            : "Recruiter"}
+                            : ""}
                     </div>
                 </div>
             </div>

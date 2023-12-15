@@ -6,6 +6,8 @@ import { DocumentMinusIcon } from "@heroicons/react/24/outline";
 
 import { IIntegrationToken } from "@/services";
 import assessmentsServices from "@/services/assessments/assessments.service";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 type ThirpatyAssessmentsProps = {
     service: string;
@@ -31,6 +33,8 @@ const ThirpatyAssessments: React.FC<ThirpatyAssessmentsProps> = ({
     onSelect,
 }) => {
     const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "assessment");
+
     const {
         data: res,
         isLoading,
@@ -99,20 +103,21 @@ const LoadingSkeleton = () => {
 };
 
 const ErrorAssessment = ({ lang }: any) => {
+    const { t } = useI18NextTranslation(lang, "assessment");
     return (
         <div className="p-6 flex flex-col justify-center items-center">
             <div className="w-16 h-16 text-neutral-700 mb-4">
                 <DocumentMinusIcon />
             </div>
             <p>
-                Seem like your provided token is expired or not correct!{" "}
+                {t("seem_token_expired")}{" "}
                 <Link
                     target="_blank"
                     rel="noopener noreferrer"
                     href={`/${lang}/backend/settings/integrations`}
                     className="text-blue_primary_600 font-semibold hover:text-blue_primary_800 hover:underline"
                 >
-                    <strong>Set up integration</strong>
+                    <strong>{t("set_up_integration")}</strong>
                 </Link>{" "}
             </p>
         </div>

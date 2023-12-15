@@ -77,7 +77,6 @@ const JobHeader = ({}: IJobHeader) => {
             });
         },
         onError: error => {
-            console.error(error);
             toast.error("Publish failure", {
                 position: "bottom-right",
                 autoClose: 1000,
@@ -101,7 +100,6 @@ const JobHeader = ({}: IJobHeader) => {
             setIsLoading(false);
         },
         onError: error => {
-            console.error(error);
             toast.error("Publish failure", {
                 position: "bottom-right",
                 autoClose: 1000,
@@ -120,7 +118,6 @@ const JobHeader = ({}: IJobHeader) => {
             });
         },
         onError: error => {
-            console.error(error);
             toast.error("Publish failure", {
                 position: "bottom-right",
                 autoClose: 1000,

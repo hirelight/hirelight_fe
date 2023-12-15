@@ -9,14 +9,16 @@ import { Dialog, Transition } from "@headlessui/react";
 
 import reportServices from "@/services/report/report.service";
 import { IReportDto } from "@/services";
+import feedbackServices from "@/services/feedback/feedback.service";
+import { IFeedbackDto } from "@/services/feedback/feedback.interface";
 
 const FeedbackList = () => {
     const { jobId, lang } = useParams();
     const { data: reportRes } = useQuery({
         queryKey: ["reports", jobId],
-        queryFn: () => reportServices.getListByJobPost(jobId as string),
+        queryFn: () => feedbackServices.getListByJobPost(jobId as string),
     });
-    const [selected, setSelected] = useState<IReportDto>();
+    const [selected, setSelected] = useState<IFeedbackDto>();
 
     return (
         <section className="bg-white dark:bg-gray-900">
@@ -99,49 +101,37 @@ const FeedbackList = () => {
                                         Created Time
                                     </th>
 
-                                    <th scope="col" className="px-4 py-3">
-                                        Actions
-                                    </th>
                                     <th scope="col" className="px-4 py-3"></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {reportRes?.data.map(report => (
+                                {reportRes?.data.map(feedback => (
                                     <tr
-                                        key={report.id}
+                                        key={feedback.id}
                                         className="border-b dark:border-gray-700"
                                     >
                                         <th
                                             scope="row"
                                             className="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                                         >
-                                            {JSON.parse(report.content).type}
+                                            {/* {JSON.parse(feedback.content).type} */}
                                         </th>
                                         <td className="px-4 py-3">
-                                            {JSON.parse(report.content).content}
+                                            {feedback.content}
                                         </td>
 
                                         <td className="px-4 py-3">
                                             {moment
-                                                .utc(report.createdTime)
+                                                .utc(feedback.createdTime)
                                                 .locale(lang)
                                                 .fromNow()}
                                         </td>
+
                                         <td className="px-4 py-3">
                                             <button
                                                 type="button"
                                                 onClick={() =>
-                                                    setSelected(report)
-                                                }
-                                            >
-                                                Disalbe
-                                            </button>
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            <button
-                                                type="button"
-                                                onClick={() =>
-                                                    setSelected(report)
+                                                    setSelected(feedback)
                                                 }
                                             >
                                                 <EyeIcon className="w-5 h-5" />
@@ -267,7 +257,7 @@ const FeedbackDetail = ({
 }: {
     isOpen: boolean;
     closeModal: () => void;
-    data?: IReportDto;
+    data?: IFeedbackDto;
 }) => {
     return (
         <Transition appear show={isOpen} as={Fragment}>
@@ -304,8 +294,7 @@ const FeedbackDetail = ({
                                 </Dialog.Title>
                                 <div className="mt-2">
                                     <p className="text-sm text-gray-500">
-                                        {data &&
-                                            JSON.parse(data.content).content}
+                                        {data && data.content}
                                     </p>
                                 </div>
 

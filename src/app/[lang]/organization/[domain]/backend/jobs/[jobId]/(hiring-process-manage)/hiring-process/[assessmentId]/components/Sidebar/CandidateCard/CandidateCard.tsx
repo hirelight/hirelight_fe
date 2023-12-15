@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import Image from "next/image";
@@ -10,6 +9,8 @@ import moment from "moment";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setSelectCandidate } from "@/redux/slices/candidates.slice";
 import { ApplicationFormJSON, IJobPostAppAssDetailDto } from "@/services";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import MatchSkillsModal from "./MatchSkillsModal";
 
@@ -21,13 +22,13 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
     const { jobId, assessmentId, lang } = useParams();
     const router = useRouter();
 
+    const { t } = useI18NextTranslation(lang as I18Locale, "hiring-process");
+
     const dispatch = useAppDispatch();
     const selectedCandidates = useAppSelector(
         state => state.candidates.selectedCandidates
     );
-    const applicantDetail = useAppSelector(
-        state => state.applicantAssessmentDetail.data
-    );
+
     const parsedContent = JSON.parse(
         profile.applicantProfile.content
     ) as ApplicationFormJSON;
@@ -129,7 +130,7 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
                                             ).length
                                         }
                                     </strong>{" "}
-                                    skills matched
+                                    {t("skill_matched")}
                                 </button>
                             )}
                     </div>

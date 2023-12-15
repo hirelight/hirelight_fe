@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import dynamic from "next/dynamic";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { useParams } from "next/navigation";
@@ -8,24 +8,19 @@ import { produce } from "immer";
 
 import {
     Button,
-    ButtonOutline,
     CustomInput,
     Modal,
     Portal,
     QuestionPicker,
     Selection,
-    Timer,
 } from "@/components";
-import {
-    IAssessmentDto,
-    IEditAssessmentDto,
-    IEditAsyncVideoInterviewDto,
-    IQuestionAnswerDto,
-} from "@/services";
+import { IEditAssessmentDto, IQuestionAnswerDto } from "@/services";
 import assessmentsServices from "@/services/assessments/assessments.service";
 import { useAppSelector } from "@/redux/reduxHooks";
 import { QuestionAnswerContentJson } from "@/interfaces/questions.interface";
-import { extractTextFromHtml, isInvalidForm } from "@/helpers";
+import { extractTextFromHtml, handleError, isInvalidForm } from "@/helpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import QuestionSection from "./QuestionSection";
 
@@ -47,7 +42,9 @@ type AsyncVideoForm = Omit<IEditAssessmentDto, "content"> & {
 };
 
 const AsyncVideoForm = () => {
-    const { flowId, assessmentId } = useParams();
+    const { flowId, assessmentId, lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "assessment");
+
     const assessment = useAppSelector(state => state.assessment.data);
 
     const queryClient = useQueryClient();
@@ -88,20 +85,20 @@ const AsyncVideoForm = () => {
 
         let error = formErr;
 
-        if (!name) error.nameErr = "Assessment name must not be blank";
+        if (!name) error.nameErr = t("assessment_name_not_blank");
 
         if (questions.length < 1)
-            error.questionsErr = "Please select at least 1 question";
+            error.questionsErr = t("please_select_at_least_1_ques");
 
         if (extractTextFromHtml(description).length < 100)
-            error.descriptionErr = "Description must at least 100 characters";
+            error.descriptionErr = t("descrip_at_least_100");
 
         if (isInvalidForm(error)) {
             setFormErr({ ...error });
             toast.error(
                 <div>
-                    <p>Invalid input</p>
-                    <p>Check issue in red!</p>
+                    <p>{t("common:error.invalid_input")}</p>
+                    <p>{t("common:error.check_red_places")}</p>
                 </div>,
                 {
                     position: "top-center",
@@ -147,7 +144,7 @@ const AsyncVideoForm = () => {
             });
             toast.success(res.message);
         } catch (error: any) {
-            toast.error(error.message ? error.message : "Something went wrong");
+            handleError(error);
         }
 
         setIsLoading(false);
@@ -199,16 +196,16 @@ const AsyncVideoForm = () => {
             <form onSubmit={handleCreateOneWay} className="flex flex-col gap-8">
                 <section>
                     <h3 className="text-lg text-neutral-700 font-semibold bg-slate-100 p-4 xl:px-6 mb-6">
-                        Welcome page info
+                        {t("welcome_page_info")}
                     </h3>
 
                     <div className="flex items-start gap-6 mb-6 px-4 xl:px-6">
                         <CustomInput
-                            title="Title"
+                            title={t("common:title")}
                             id="one-way-assessment__title"
                             name="one-way-assessment__title"
                             type="text"
-                            placeholder="One-way interview - UX researcher at 123"
+                            placeholder={t("async_title_placeholder")}
                             value={formState.name}
                             onChange={e => {
                                 setFormState({
@@ -226,7 +223,7 @@ const AsyncVideoForm = () => {
 
                         <div>
                             <Selection
-                                title="Due date"
+                                title={t("due_date")}
                                 value={
                                     formState.invitationDuration
                                         ? `${formState.invitationDuration} ${
@@ -256,12 +253,10 @@ const AsyncVideoForm = () => {
 
                     <div className="flex flex-col gap-4 mb-6 px-4 xl:px-6">
                         <h3 className="text-neutral-700 font-medium">
-                            Description
+                            {t("common:description")}
                         </h3>
                         <QuillEditorNoSSR
-                            placeholder="Enter the job description here; include key areas of
-        responsibility and what the candidate might do on a typical
-        day."
+                            placeholder={t("new-job:placeholder.description")}
                             value={formState.description}
                             onChange={(value: string) => {
                                 setFormState({
@@ -283,7 +278,7 @@ const AsyncVideoForm = () => {
                 <section>
                     <div className="text-neutral-700 font-medium mb-4 p-4 flex items-center justify-between xl:px-6 bg-slate-100">
                         <h3 className="flex items-center gap-4">
-                            Questions{" "}
+                            {t("common:questions")}{" "}
                             {formErr.questionsErr !== "" && (
                                 <p className="ml-auto text-sm text-red-600 dark:text-red-500">
                                     <span className="font-medium">
@@ -297,7 +292,7 @@ const AsyncVideoForm = () => {
                             className="text-sm font-semibold text-blue_primary_700 hover:text-blue_primary_800 hover:underline"
                             onClick={() => setShowPicker(true)}
                         >
-                            Import questions
+                            {t("import_questions")}
                         </button>
                     </div>
 
@@ -362,7 +357,7 @@ const AsyncVideoForm = () => {
                             >
                                 <span className="relative py-4 px-5 flex items-center">
                                     <PlusCircleIcon className="w-5 h-5 mr-1" />
-                                    Create new question
+                                    {t("create_new_question")}
                                 </span>
                             </button>
                         )}
@@ -375,7 +370,7 @@ const AsyncVideoForm = () => {
                         disabled={isLoading}
                         isLoading={isLoading}
                     >
-                        Save all changes
+                        {t("common:save_changes")}
                     </Button>
                 </div>
             </form>

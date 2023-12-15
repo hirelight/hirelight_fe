@@ -4,6 +4,7 @@ import React, { useMemo, useState } from "react";
 import { AnimatePresence, m, LazyMotion, domAnimation } from "framer-motion";
 import { EyeIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { MinusIcon } from "@heroicons/react/24/solid";
+import { useParams } from "next/navigation";
 
 import { IQuestionAnswerDto } from "@/services/questions/questions.interface";
 import {
@@ -11,6 +12,8 @@ import {
     QuestionDifficulty,
 } from "@/interfaces/questions.interface";
 import { sanitizeHtml } from "@/helpers/sanitizeHTML";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import DifficultyBadge from "../DifficultyBadge";
 
@@ -29,6 +32,9 @@ const QuestionPickerCard: React.FC<QuestionPickerCardProps> = ({
     pickedQuestions,
     onChange,
 }) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "assessment");
+
     const { content, tagList, difficulty, id } = data;
     const parsedContent = useMemo(
         () => JSON.parse(content),
@@ -54,7 +60,7 @@ const QuestionPickerCard: React.FC<QuestionPickerCardProps> = ({
                 <div className="flex-1">
                     <h3 className="text-neutral-700 font-semibold flex flex-wrap gap-1">
                         <p className="whitespace-nowrap">
-                            Question {questionNo + 1}:
+                            {t("common:question")} {questionNo + 1}:
                         </p>
                         <div
                             className="inline-block"
@@ -118,9 +124,7 @@ const QuestionPickerCard: React.FC<QuestionPickerCardProps> = ({
                                                                     answer.name
                                                                 ),
                                                             }}
-                                                        >
-                                                            {/* {answer.name} */}
-                                                        </label>
+                                                        ></label>
                                                     </div>
                                                 )
                                             )}
@@ -130,7 +134,7 @@ const QuestionPickerCard: React.FC<QuestionPickerCardProps> = ({
                                         parsedContent.description && (
                                             <div>
                                                 <h4 className="font-medium text-sm mb-1">
-                                                    Description
+                                                    {t("common:description")}
                                                 </h4>
                                                 <p
                                                     dangerouslySetInnerHTML={{
@@ -144,7 +148,7 @@ const QuestionPickerCard: React.FC<QuestionPickerCardProps> = ({
                                         )}
                                     <div className="flex items-center gap-2">
                                         <h4 className="text-sm text-gray-500">
-                                            Difficulty:
+                                            {t("common:difficulty")}:
                                         </h4>
                                         <span>
                                             <DifficultyBadge
@@ -154,7 +158,7 @@ const QuestionPickerCard: React.FC<QuestionPickerCardProps> = ({
                                     </div>
                                     <div className="flex items-center gap-2 text-sm text-neutral-500">
                                         <h4 className="text-sm text-gray-500">
-                                            Tags:
+                                            {t("common:tags")}:
                                         </h4>
                                         {tagList.map(tag => (
                                             <span

@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 
 import questionAnswerServices from "@/services/questions/questions.service";
 import { MinusBigIcon, SearchIcon } from "@/icons";
@@ -11,6 +12,8 @@ import {
 } from "@/interfaces/questions.interface";
 import { IQuestionAnswerDto } from "@/services";
 import { Button, ButtonOutline } from "@/components";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import QuestionPickerCard from "./QuestionPickerCard";
 import styles from "./styles.module.scss";
@@ -29,6 +32,8 @@ const QuestionPicker: React.FC<QuestionPickerProps> = ({
     pickedQuestions,
     onPickedChange,
 }) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "assessment");
     const {
         data: questionsRes,
         error,
@@ -75,7 +80,7 @@ const QuestionPicker: React.FC<QuestionPickerProps> = ({
                     htmlFor={"question-set-search"}
                     className="block mb-2 text-sm font-medium text-neutral-900 dark:text-white"
                 >
-                    Search
+                    {t("common:search")}
                 </label>
                 <div className="flex items-center gap-6">
                     <div className="flex-1 relative rounded-md shadow-sm">
@@ -143,10 +148,10 @@ const QuestionPicker: React.FC<QuestionPickerProps> = ({
                     className="mr-4"
                     onClick={() => onPickedChange(curPicks)}
                 >
-                    Save
+                    {t("common:save")}
                 </Button>
                 <ButtonOutline onClick={() => onPickedChange(curPicks)}>
-                    Cancel
+                    {t("common:cancel")}
                 </ButtonOutline>
             </div>
         </>

@@ -3,26 +3,26 @@
 import React, { useRef, useState } from "react";
 import moment from "moment";
 import { useParams } from "next/navigation";
-import { Ultra } from "next/font/google";
 
-import { PdfViewer } from "@/components";
 import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
 import {
     IAppFormTemplateField,
     IAppFormTemplateProfileSection,
 } from "@/interfaces/app-form-template.interface";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { IAppFormField, IAppFormSection, ICustomField } from "@/interfaces";
+import { ICustomField } from "@/interfaces";
 import PDFViewer from "@/components/PdfViewer";
 import { ApplicationFormJSON } from "@/services";
 import { EducationFormState } from "@/components/EducationSection";
 import { ExperienceType } from "@/components/ExperienceSection";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
-import { profileDatas, profileLayout, candidateSection } from "./data";
 import styles from "./styles.module.scss";
 
 const ProfileSection = () => {
     const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "candidate");
 
     const [sections, setSections] = useState<IAppFormTemplateProfileSection[]>(
         []
@@ -175,7 +175,7 @@ const ProfileSection = () => {
                     <h3
                         className={`inline-block ${styles.profile__tab__btn} ${styles.active}`}
                     >
-                        <span>Details</span>
+                        <span>{t("common:details")}</span>
                     </h3>
                 </div>
 
@@ -209,7 +209,7 @@ const ProfileSection = () => {
                             <h3
                                 className={`inline-block ${styles.profile__tab__btn} ${styles.active}`}
                             >
-                                <span>Answers</span>
+                                <span>{t("common:answers")}</span>
                             </h3>
                         </div>
                         {formDetails.current?.questions.map((answer, index) => {

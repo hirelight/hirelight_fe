@@ -99,9 +99,6 @@ const ReportList = () => {
                                         Created Time
                                     </th>
 
-                                    <th scope="col" className="px-4 py-3">
-                                        Actions
-                                    </th>
                                     <th scope="col" className="px-4 py-3"></th>
                                 </tr>
                             </thead>
@@ -127,16 +124,7 @@ const ReportList = () => {
                                                 .locale(lang)
                                                 .fromNow()}
                                         </td>
-                                        <td className="px-4 py-3">
-                                            <button
-                                                type="button"
-                                                onClick={() =>
-                                                    setSelected(report)
-                                                }
-                                            >
-                                                Disalbe
-                                            </button>
-                                        </td>
+
                                         <td className="px-4 py-3">
                                             <button
                                                 type="button"

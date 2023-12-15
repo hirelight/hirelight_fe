@@ -77,6 +77,8 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
 
     const handleTrackTest = useCallback(
         async function () {
+            if (data.status !== ApplicantAssessmentDetailStatus.IN_PROGRESS)
+                return;
             try {
                 await mcAssessmentServices.trackMCAssessment({
                     applicantAssessmentDetailId: data.id,
@@ -86,7 +88,7 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                 console.error(error);
             }
         },
-        [answers, data.id]
+        [answers, data]
     );
 
     const handleJoinTest = async () => {
@@ -113,7 +115,6 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
 
     const handleSubmitTest = useCallback(async () => {
         setIsLoading(true);
-
         try {
             const res = await mcAssessmentServices.submitMCAssessment({
                 applicantAssessmentDetailId: data.id,
@@ -123,19 +124,13 @@ const MultipleChoiceAssessment: React.FC<MultipleChoiceAssessmentProps> = ({
                 queryKey: [`my-assessment`, assesmentData?.id],
             });
             toast.success(res.message);
-            stopAutoTask();
+
             router.push(`${data.id}/review`);
         } catch (error: any) {
             handleError(error);
         }
         setIsLoading(false);
-    }, [answers, assesmentData, data.id, queryClient, router, stopAutoTask]);
-
-    useEffect(() => {
-        if (displayTest) {
-            startAutoTask();
-        }
-    }, [displayTest, startAutoTask]);
+    }, [answers, assesmentData, data.id, queryClient, router]);
 
     useEffect(() => {
         const trackBeforeUnload = (e: BeforeUnloadEvent) => {

@@ -16,6 +16,8 @@ import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
 import assessmentFlowsServices from "@/services/assessment-flows/assessment-flows.service";
 import { handleError, isInvalidForm } from "@/helpers";
 import { useAppSelector } from "@/redux/reduxHooks";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 const initialData: ICreateAssessmentFlowDto = {
     name: "",
@@ -41,8 +43,10 @@ interface IChangePipeline {
 }
 
 const ChangePipeline = ({ datas }: IChangePipeline) => {
-    const { jobId } = useParams();
+    const { jobId, lang } = useParams();
     const router = useRouter();
+
+    const { t } = useI18NextTranslation(lang as I18Locale, "select-pipeline");
 
     const job = useAppSelector(state => state.job.data);
 
@@ -72,20 +76,19 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
         const errors = formErr;
         const { name, startTime, endTime } = formState;
 
-        if (name === "") errors.nameErr = "Flow name must not be blank!";
+        if (name === "") errors.nameErr = t("create-flow:flow_not_blank");
 
         if (moment(startTime).isAfter(endTime))
-            errors.flowTimelineErr =
-                "Start time must be earlier than end time!";
+            errors.flowTimelineErr = t("common:error.start_time_earlier");
 
         if (moment(startTime).isBefore(job.startTime))
-            errors.flowTimelineErr =
-                "Assessment flow must start after job post start time!";
+            errors.flowTimelineErr = t("create-flow:flow_start_after_job");
 
         if (moment().isAfter(endTime))
-            errors.flowTimelineErr = "End time must be in the future!";
+            errors.flowTimelineErr = t("common:error.end_time_be_future");
 
-        if (!selectedTemplate) errors.flowErr = "Select at least one template!";
+        if (!selectedTemplate)
+            errors.flowErr = t("select_at_least_one_template");
 
         if (isInvalidForm(errors)) {
             setFormErr({ ...errors });
@@ -99,8 +102,8 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
         if (inValidInput())
             return toast.error(
                 <div>
-                    <p>Invalid input</p>
-                    <p>Check issue in red!</p>
+                    <p>{t("common:error.invalid_input")}</p>
+                    <p>{t("common:error.check_red_places")}</p>
                 </div>
             );
 
@@ -134,12 +137,12 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                 isLoading={isLoading}
                 closeModal={() => setShowWarning(false)}
                 onConfirm={handleCreateFlow}
-                content="Please review your information. Once you create flow you can only edit flow order or assessment name. This action cannot be undone!"
-                title="Create new assessment flow"
+                content={t("create-flow:please_review_flow_info")}
+                title={t("create-flow:create_new_assessment_flow")}
             />
             <div className="mb-4 grid grid-cols-1 md:grid-cols-2">
                 <CustomInput
-                    title="Name"
+                    title={t("common:name")}
                     value={formState.name}
                     onChange={e => {
                         setFormState({
@@ -158,10 +161,8 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div>
-                    <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                        Start time
-                    </h3>
                     <DatePicker
+                        title={t("common:start_time")}
                         value={formState.startTime}
                         minDate={new Date()}
                         onChange={date => {
@@ -184,10 +185,8 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                     />
                 </div>
                 <div>
-                    <h3 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                        End time
-                    </h3>
                     <DatePicker
+                        title={t("common:end_time")}
                         value={formState.endTime}
                         minDate={moment(formState.startTime)
                             .add(7, "days")
@@ -273,7 +272,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                 })}
 
                 {formErr.flowErr && (
-                    <p className="mt-2 text-sm text-red-600 dark:text-red-500 mt-2">
+                    <p className="mt-2 text-sm text-red-600 dark:text-red-500">
                         <span className="font-medium">{formErr.flowErr}</span>
                     </p>
                 )}
@@ -283,7 +282,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
                         disabled={isLoading}
                         onClick={() => setShowWarning(true)}
                     >
-                        Save changes
+                        {t("common:save_changes")}
                     </Button>
                 </div>
             </React.Fragment>

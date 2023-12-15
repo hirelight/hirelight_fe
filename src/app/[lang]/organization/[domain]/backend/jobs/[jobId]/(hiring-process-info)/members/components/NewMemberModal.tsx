@@ -1,19 +1,19 @@
 "use client";
 
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { XCircleIcon } from "@heroicons/react/24/solid";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { Button, Modal, Selection } from "@/components";
 import { IOrgEmployerDto, IPermissionDto } from "@/services";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
-import { useAppSelector } from "@/redux/reduxHooks";
-import { SpinLoading } from "@/icons";
 import employerOrgServices from "@/services/employer-organization/employer-organization.service";
 import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
 import { handleError } from "@/helpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import PermissionTable from "./PermissionTable";
 
@@ -21,23 +21,21 @@ interface NewMemberModalProps {
     collabList: ICollaboratorDto[];
     isOpen: boolean;
     onClose: () => void;
-    onSendInvitation: (newMember: any) => void;
 }
 
 const NewMemberModal: React.FC<NewMemberModalProps> = ({
     isOpen = false,
     onClose,
-    onSendInvitation,
     collabList,
 }) => {
-    const { jobId } = useParams();
+    const { jobId, lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "job-member");
 
     const [selectEmployer, setSelectEmployer] =
         React.useState<IOrgEmployerDto>();
     const [currentPermissions, setCurrentPermissions] = useState<
         IPermissionDto[]
     >([]);
-    const { authUser }: any = useAppSelector(state => state.auth);
 
     const { data: memberRes, isLoading } = useQuery({
         queryKey: ["members"],
@@ -83,7 +81,8 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
 
     const handleSendInvitation = async (e: FormEvent) => {
         e.preventDefault();
-        if (!selectEmployer) return toast.error("Select at least one employer");
+        if (!selectEmployer)
+            return toast.error(t("select_at_least_one_employer"));
 
         sendInvitationMutate.mutate();
     };
@@ -98,7 +97,7 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
             <form onSubmit={handleSendInvitation}>
                 <div className="p-6 border-b border-gray-300 relative">
                     <h1 className="text-2xl font-medium text-neutral-900">
-                        Invite a new member
+                        {t("invite_new_member")}
                     </h1>
                     <button
                         type="button"
@@ -113,18 +112,9 @@ const NewMemberModal: React.FC<NewMemberModalProps> = ({
                 </div>
                 <div className="p-6">
                     <div className="mb-6">
-                        {/* <CustomInput
-                            id="member-email"
-                            title="Email"
-                            type="email"
-                            placeholder="Email"
-                            value={email}
-                            onChange={(e: any) => setEmail(e.target.value)}
-                            required
-                        /> */}
                         <Selection
-                            title="Email"
-                            placeholder="Select a member"
+                            title={t("common:email")}
+                            placeholder={t("select_a_member")}
                             value={
                                 selectEmployer
                                     ? selectEmployer?.employerDto.email

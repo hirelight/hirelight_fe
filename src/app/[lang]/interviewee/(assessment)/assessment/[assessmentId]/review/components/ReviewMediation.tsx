@@ -37,7 +37,8 @@ const ReviewMediation = () => {
             "ASYNC_VIDEO_INTERVIEW_ASSESSMENT" ? (
                 <AsyncReviewPageNoSSR data={assessmentRes.data as any} />
             ) : assessmentRes.data.assessment.assessmentTypeName ===
-              "MULTIPLE_CHOICE_QUESTION_ASSESSMENT" ? (
+                  "MULTIPLE_CHOICE_QUESTION_ASSESSMENT" &&
+              assessmentRes.data.result !== null ? (
                 <MCQReviewPage data={assessmentRes.data} />
             ) : (
                 <div>Review page</div>

@@ -5,6 +5,7 @@ import { Reorder } from "framer-motion";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { v4 as uuid } from "uuid";
 import { TrashIcon } from "@heroicons/react/24/outline";
+import { useParams } from "next/navigation";
 
 import {
     Button,
@@ -18,6 +19,8 @@ import { AppFormInputTypes, ICustomField } from "@/interfaces";
 import { addCustomField, editCustomField } from "@/redux/slices/job.slice";
 import { DragIndicatorIcon } from "@/icons";
 import { isInvalidForm } from "@/helpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 interface IAddQuestionModal {
     data?: ICustomField;
@@ -25,6 +28,9 @@ interface IAddQuestionModal {
 }
 
 const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "app-form");
+
     const [questionField, setQuestionField] = React.useState<ICustomField>(
         data
             ? data
@@ -62,13 +68,13 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
         const { label, type, choices_attributes } = questionField;
         const errors = questionErr;
 
-        if (!label) errors.labelErr = "Question name must not be blank!";
+        if (!label) errors.labelErr = t("question_not_blank");
 
         if (type === "dropdown" || type === "multiple_choice") {
             if (choices_attributes.length < 2)
-                errors.choicesErr = "Question must have at least 2 choices!";
+                errors.choicesErr = t("question_at_least_2_choices");
             if (choices_attributes.some(choice => !choice.name))
-                errors.choiceLabelErr = "Choice label must not be blank!";
+                errors.choiceLabelErr = t("choice_label_not_blank");
         }
         const allFields = appForm.form_structure
             .map(sec => sec.fields)
@@ -76,7 +82,7 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
             .concat(appForm.questions)
             .filter(field => field.id !== questionField.id);
         if (allFields.find(item => item.label === questionField.label))
-            errors.labelErr = "Question name is already existed!";
+            errors.labelErr = t("question_already_existed");
 
         const isInvalid = isInvalidForm(errors);
         if (isInvalid) setQuestionErr({ ...errors });
@@ -149,7 +155,7 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                 }}
             >
                 <h2 className="text-xl font-semibold uppercase mb-2">
-                    Add other require informations
+                    {t("add_other_require_info")}
                 </h2>
                 {/* <p className="text-neutral-500 text-sm mb-6">
                     Ứng viên sau khi chuyển sang giai đoạn khác, giai đoạn hiện
@@ -157,7 +163,7 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                 </p> */}
                 <div className="mb-6">
                     <Selection
-                        title="Input type"
+                        title={t("common:input_type")}
                         items={AppFormInputTypes.map(item => ({
                             label: item.label,
                             value: item.type,
@@ -179,8 +185,8 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                     />
 
                     <CustomTextArea
-                        title="Question"
-                        placeholder="Tell me something about you"
+                        title={t("common:question")}
+                        placeholder={t("common:tell_sth_about_you")}
                         value={questionField.label}
                         required={true}
                         onChange={(e: any) => {
@@ -204,7 +210,7 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                                 htmlFor="choice"
                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                             >
-                                Choices
+                                {t("common:choices")}
                             </label>
                             <Reorder.Group
                                 values={questionField.choices_attributes}
@@ -292,29 +298,6 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                         </div>
                     )}
 
-                    {/* {questionField.type === "boolean" && (
-                        <div className="flex items-center pt-4">
-                            <input
-                                id="custom-field-disqualify"
-                                type="checkbox"
-                                defaultChecked={questionField.rejecting}
-                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                onChange={e =>
-                                    setQuestionField({
-                                        ...questionField,
-                                        rejecting: e.currentTarget.checked,
-                                    })
-                                }
-                            />
-                            <label
-                                htmlFor="custom-field-disqualify"
-                                className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                            >
-                                Disqualify candidate if answer is no
-                            </label>
-                        </div>
-                    )} */}
-
                     {questionField.type === "multiple_choice" && (
                         <div className="flex items-center pt-4">
                             <input
@@ -333,16 +316,18 @@ const AddQuestionModal = ({ closeModal, data }: IAddQuestionModal) => {
                                 htmlFor="one-answer-enable"
                                 className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                             >
-                                Only one answer allowed
+                                {t("only_one_ans_allow")}
                             </label>
                         </div>
                     )}
                 </div>
 
                 <div className="w-full flex items-center gap-4">
-                    <ButtonOutline onClick={closeModal}>Cancel</ButtonOutline>
+                    <ButtonOutline onClick={closeModal}>
+                        {t("common:cancel")}
+                    </ButtonOutline>
                     <Button type="submit">
-                        {data ? "Save changes" : "Add"}
+                        {data ? t("common:save_changes") : t("common:add")}
                     </Button>
                 </div>
             </form>

@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { LightBulbIcon, NoSymbolIcon } from "@heroicons/react/24/outline";
+import { LightBulbIcon } from "@heroicons/react/24/outline";
 import { CheckIcon } from "@heroicons/react/24/solid";
+import { useParams } from "next/navigation";
 
 import { IPermissionDto } from "@/services";
 import permissionServices from "@/services/permission/permission.service";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import PermissionLoadingTable from "./PermissionLoadingTable";
 
@@ -23,6 +26,9 @@ const PermissionTable: React.FC<PermissionTableProps> = ({
     curPemissions,
     onChange,
 }) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "job-member");
+
     const [permissions, setPermissions] = useState<IPermissionDto[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -47,35 +53,8 @@ const PermissionTable: React.FC<PermissionTableProps> = ({
         <div className="relative">
             <div className="mb-4">
                 <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    User permissions
+                    {t("user_permissions")}
                 </span>
-                {/* <div className="flex flex-col gap-4 md:flex-row md:gap-6 mb-2">
-                    {templatePermissions.map((template, index) => (
-                        <div key={template.label} className="flex items-center">
-                            <input
-                                id={`permission-${template.label}`}
-                                type="radio"
-                                name="hiring-process-member-permission"
-                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                onChange={e => {
-                                    if (e.currentTarget.checked)
-                                        onChange(template.permissions);
-                                }}
-                            />
-                            <label
-                                htmlFor={`permission-${template.label}`}
-                                className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                            >
-                                {template.label}
-                            </label>
-                        </div>
-                    ))}
-                </div>
-                <p className="text-xs text-gray-500 hidden md:block">
-                    This is the most versatile option. Based on job or
-                    department these users can: create jobs and hiring teams,
-                    assign roles in a team, move and comment on candidates.
-                </p> */}
             </div>
 
             <div className="border border-blue-500 rounded-sm p-2 items-start gap-2 my-2 hidden md:flex">
@@ -83,8 +62,7 @@ const PermissionTable: React.FC<PermissionTableProps> = ({
                     <LightBulbIcon className="text-blue-700 w-6 h-6" />
                 </span>
                 <p className="flex-1 text-sm text-neutral-700">
-                    Invited members will automatically become collaborators for
-                    this job, once they sign up.
+                    {t("invited_members_will_automatically")}
                 </p>
             </div>
 
@@ -95,13 +73,13 @@ const PermissionTable: React.FC<PermissionTableProps> = ({
                     <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" className="px-6 py-3 rounded-l-lg">
-                                Capabilities
+                                {t("capabilities")}
                             </th>
                             <th scope="col" className="px-6 py-3 text-center">
-                                View
+                                {t("common:view")}
                             </th>
                             <th scope="col" className="px-6 py-3 text-center">
-                                Manage
+                                {t("common:manage")}
                             </th>
                         </tr>
                     </thead>
@@ -157,72 +135,6 @@ const PermissionTable: React.FC<PermissionTableProps> = ({
                                 </td>
                             </tr>
                         ))}
-
-                        {/* {fields.map(field => (
-                            <tr
-                                key={field}
-                                className="bg-white dark:bg-gray-800"
-                            >
-                                <th
-                                    scope="row"
-                                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                                >
-                                    {field}
-                                </th>
-                                {sortOrder.map((action, index) => {
-                                    const isHaving = permissions.find(
-                                        item =>
-                                            item.name ===
-                                            `${action}_${field
-                                                .toUpperCase()
-                                                .replace(" ", "_")}`
-                                    );
-                                    return isHaving ? (
-                                        <td
-                                            key={index}
-                                            className="px-6 py-4 text-center"
-                                        >
-                                            <input
-                                                id={isHaving.id.toString()}
-                                                type="checkbox"
-                                                value={isHaving.name}
-                                                checked={
-                                                    curPemissions.find(
-                                                        _ =>
-                                                            _.name ===
-                                                            isHaving.name
-                                                    ) !== undefined
-                                                }
-                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                                                onChange={e => {
-                                                    if (e.currentTarget.checked)
-                                                        onChange(
-                                                            curPemissions.concat(
-                                                                isHaving
-                                                            )
-                                                        );
-                                                    else
-                                                        onChange(
-                                                            curPemissions.filter(
-                                                                _ =>
-                                                                    _.id !==
-                                                                    isHaving.id
-                                                            )
-                                                        );
-                                                }}
-                                            />
-                                        </td>
-                                    ) : (
-                                        <td
-                                            key={index}
-                                            className="px-6 py-4 text-center"
-                                        >
-                                            <NoSymbolIcon className="w-4 h-4 inline" />
-                                        </td>
-                                    );
-                                })}
-                            </tr>
-                        ))} */}
                     </tbody>
                 </table>
             )}

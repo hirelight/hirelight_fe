@@ -1,0 +1,13 @@
+{
+    "no_account_members": "Không có thành viên nào trong quy trình tuyển dụng này",
+    "there_no_members_collab": "Không có thành viên nào hợp tác trong quy trình. Bạn có thể thêm người từ công ty của bạn hoặc mời một thành viên mới.",
+    "invite_new_member": "Mời thành viên mới",
+    "member_name": "Tên thành viên",
+    "select_at_least_one_employer": "Chọn ít nhất một thành viên",
+    "select_a_member": "Chọn một thành viên",
+    "user_permissions": "Quyền hạn",
+    "invited_members_will_automatically": "Những thành viên được mời sẽ tự động trở thành cộng tác viên cho công việc này, khi họ đăng ký.",
+    "capabilities": "Khả năng",
+    "remove_collaborator": "Xóa cộng tác viên",
+    "are_you_sure_remove_collaborator": "Bạn có chắc muốn xóa cộng tác viên này không? Hành động này không thể được hoàn tác."
+}

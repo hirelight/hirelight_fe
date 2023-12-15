@@ -23,7 +23,9 @@ import { useAppSelector } from "@/redux/reduxHooks";
 import { ApplicationFormJSON, IMeetingDto } from "@/services";
 import { AppFormDefaultSection, IAppFormField } from "@/interfaces";
 import meetingServices from "@/services/meeting/meeting.service";
-import { isInvalidForm } from "@/helpers";
+import { handleError, isInvalidForm } from "@/helpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import SelectAttendeeList from "./SelectAttendeeList";
 
@@ -34,7 +36,8 @@ interface IEditMeeting {
 }
 
 const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
-    const { assessmentId, candidateId } = useParams();
+    const { assessmentId, candidateId, lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "candidate");
 
     const { data: applicantAssessmentDetail } = useAppSelector(
         state => state.applicantAssessmentDetail
@@ -85,16 +88,16 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
         let errors = formErr;
 
         if (name.length === 0) {
-            errors.nameErr = "Subject is required";
+            errors.nameErr = t("subject_required");
         }
 
         if (isOffline) {
             if (!location) {
-                errors.locationErr = "Location is required";
+                errors.locationErr = t("location_required");
             }
         } else {
             if (meetingLink.length === 0) {
-                errors.meetingLinkErr = "Meeting link is required";
+                errors.meetingLinkErr = t("meeting_link_required");
             }
         }
 
@@ -103,19 +106,30 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                 moment(startTime).isSame(endTime, "dates")) ||
             moment(startTime).isAfter(endTime, "dates")
         ) {
-            errors.timeErr = "Start time must not greator than end time";
+            errors.timeErr = t("common:error.start_time_earlier");
         } else if (
             moment(meetingTime.endTime).diff(
                 moment(meetingTime.startTime),
                 "minute"
             ) < 10
         ) {
-            errors.timeErr = "Meeting duration must at least 10 minutes";
+            errors.timeErr = t("meeting_at_least_10_mins");
+        }
+
+        if (
+            Math.abs(
+                moment(meetingTime.startTime).diff(
+                    meetingTime.endTime,
+                    "milliseconds"
+                )
+            ) >
+            24 * 60 * 60 * 1000
+        ) {
+            errors.timeErr = t("meeting_within_24_hours");
         }
 
         if (!selected.length)
-            errors.attendeeErr =
-                "Select at least one employer to attend meeting";
+            errors.attendeeErr = t("selct_at_least_one_employer");
 
         if (isInvalidForm(errors)) {
             setFormErr({ ...errors });
@@ -180,7 +194,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
 
             onClose();
         } catch (error: any) {
-            toast.error(error.message ? error.message : "Something went wrong");
+            handleError(error);
         }
 
         setLoading(false);
@@ -222,7 +236,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                 >
                                     <strong className="inline-flex items-center gap-1 text-2xl font-semibold text-neutral-700 dark:text-gray-400 ">
                                         <span id="drawer-label">
-                                            Schedule face-to-face interview
+                                            {t("schedule_ftf_interview")}
                                         </span>
                                     </strong>
                                     <button type="button" onClick={onClose}>
@@ -232,9 +246,11 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                 <div className="p-6 flex-1 overflow-y-auto space-y-6">
                                     <div>
                                         <CustomInput
-                                            title="Subject"
+                                            title={t("common:subject")}
                                             type="text"
-                                            placeholder="Interview with candidate - Position"
+                                            placeholder={t(
+                                                "subject_placeholder"
+                                            )}
                                             value={formState.name}
                                             onChange={e => {
                                                 setFormState(prev =>
@@ -255,7 +271,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                             className="cursor-pointer"
                                         >
                                             <span className="text-sm font-medium text-gray-900 dark:text-gray-300">
-                                                Meeting offline
+                                                {t("meeting_offline")}
                                             </span>
                                         </label>
                                         <label className="relative cursor-pointer">
@@ -309,7 +325,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                             />
                                         ) : (
                                             <CustomInput
-                                                title="Location"
+                                                title={t("common:location")}
                                                 id="location"
                                                 type="text"
                                                 placeholder="Ho Chi Minh"
@@ -337,13 +353,13 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                     </div>
 
                                     <h4 className="block text-sm font-medium text-neutral-900 dark:text-white">
-                                        Schedule
+                                        {t("common:schedule")}
                                     </h4>
                                     <div>
                                         <div className="w-full flex flex-col gap-2 mb-6">
                                             <div className="flex items-end gap-2">
                                                 <DatePicker
-                                                    title="From"
+                                                    title={t("common:from")}
                                                     value={formState.startTime}
                                                     minDate={new Date()}
                                                     onChange={date => {
@@ -393,7 +409,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                             </div>
                                             <div className="flex items-end gap-2">
                                                 <DatePicker
-                                                    title="To"
+                                                    title={t("common:to")}
                                                     value={formState.endTime}
                                                     minDate={
                                                         formState.startTime
@@ -467,7 +483,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                                                     .lastName}
                                                         </h3>
                                                         <p className="text-gray-500">
-                                                            Candidate
+                                                            {t("candidate")}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -506,7 +522,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                     <hr className="h-[1px] w-full my-8 bg-gray-300" />
 
                                     <CustomTextArea
-                                        title="Description"
+                                        title={t("common:description")}
                                         className="mt-6 overflow-y-auto ql-editor"
                                         rows={4}
                                         value={formState.description}
@@ -526,7 +542,7 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
                                         disabled={loading}
                                         isLoading={loading}
                                     >
-                                        Save meeting
+                                        {t("common:save_changes")}
                                     </Button>
                                 </div>
                             </Dialog.Panel>
@@ -555,6 +571,8 @@ const AttendeeCard = ({
     onRemove: (id: string) => void;
 }) => {
     const authUser = useAppSelector(state => state.auth.authUser);
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "candidate");
 
     return (
         <div className="flex items-center gap-2">
@@ -577,7 +595,7 @@ const AttendeeCard = ({
                     {data.firstName + " " + (data.lastName ?? "")}
                 </h3>
                 {authUser && data.id === authUser.userId && (
-                    <p className="text-gray-500">Organizer</p>
+                    <p className="text-gray-500">{t("organizer")}</p>
                 )}
             </div>
             <button

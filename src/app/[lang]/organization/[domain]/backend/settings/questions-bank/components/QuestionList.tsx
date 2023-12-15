@@ -1,13 +1,12 @@
 "use client";
 
 import React from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
 import questionAnswerServices from "@/services/questions/questions.service";
 
 import QuestionCard from "./QuestionCard";
-import Pagination from "./Pagination";
 import QuestionSkeleton from "./QuestionSkeleton";
 
 type QuestionListProps = {};
@@ -21,7 +20,6 @@ const QuestionList: React.FC<QuestionListProps> = ({}) => {
         queryKey: ["questions"],
         queryFn: questionAnswerServices.getListAsync,
     });
-    if (error) toast.error("Fetch question failure");
 
     if (isLoading)
         return (

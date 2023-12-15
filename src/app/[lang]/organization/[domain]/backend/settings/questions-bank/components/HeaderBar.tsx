@@ -5,6 +5,9 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
+
 const breadcrumbStructure: { [pathName: string]: string } = {
     "/questions-bank": "Questions Bank",
     "/questions-bank/create-question": "Create Question",
@@ -47,7 +50,8 @@ function buildBreadcrumbs(
 
 const HeaderBar = () => {
     const pathname = usePathname();
-    const { lang, questionId } = useParams();
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "question-bank");
 
     return (
         <nav
@@ -101,7 +105,7 @@ const HeaderBar = () => {
                     className="flex items-center gap-1 text-sm text-blue_primary_700 font-semibold hover:underline hover:text-blue_primary_800"
                 >
                     <PlusCircleIcon className="w-5 g-5" />
-                    <span>Add new question</span>
+                    <span>{t("Add new question")}</span>
                 </Link>
             )}
         </nav>

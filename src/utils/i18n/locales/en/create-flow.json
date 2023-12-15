@@ -1,0 +1,16 @@
+{
+    "custom_flow": "Custom flow",
+    "apply_template": "Apply template",
+    "create_new_flow": "Create new flow",
+    "flow_not_blank": "Flow name must not be blank!",
+    "flow_start_after_job": "Assessment flow must start after job post start time!",
+    "flow_need_at_least_one_assessment": "Except from Sourced and Hired. Assessment flow need at least one assessment",
+    "maximum_assessments": "Maximum assessments: 10",
+    "please_review_flow_info": "Please review your information. Once you create flow you can only edit flow order or assessment name. This action cannot be undone!",
+    "create_new_assessment_flow": "Create new assessment flow",
+    "add_or_edit_flow_stages": "Add or edit flow stages",
+    "add_new_assessment": "Add new assessment",
+    "add_a_stage_name": "Add a stage name",
+    "assessment_name": "Assessment name",
+    "assessment_type": "Assessment type"
+}

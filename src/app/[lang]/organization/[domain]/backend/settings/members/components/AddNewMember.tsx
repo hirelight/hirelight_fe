@@ -5,12 +5,17 @@ import { AnimatePresence, LazyMotion, domAnimation, m } from "framer-motion";
 import { toast } from "react-toastify";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 
 import { Button, CustomInput } from "@/components";
 import employerOrgServices from "@/services/employer-organization/employer-organization.service";
 import roleServices from "@/services/role/role.service";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 const AddNewMember = () => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "org-members");
     const [showAdd, setShowAdd] = useState(false);
 
     const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +31,7 @@ const AddNewMember = () => {
     const handleAddEmployer = async (e: FormEvent) => {
         e.preventDefault();
 
-        if (!formState.roleId) return toast.error("Please select role!");
+        if (!formState.roleId) return toast.error(t("please_select_role"));
 
         setIsLoading(true);
         try {
@@ -38,7 +43,7 @@ const AddNewMember = () => {
             });
             toast.success(res.message);
         } catch (error) {
-            toast.error("Add new member failure");
+            toast.error(t("add_member_failure"));
         }
         setIsLoading(false);
     };
@@ -60,7 +65,7 @@ const AddNewMember = () => {
                 onClick={() => setShowAdd(!showAdd)}
             >
                 <PlusCircleIcon className="w-5 h-5" />
-                <span>Invite a new member</span>
+                <span>{t("invite_new_member")}</span>
             </button>
 
             <LazyMotion features={domAnimation}>
@@ -101,7 +106,7 @@ const AddNewMember = () => {
                             <form onSubmit={handleAddEmployer}>
                                 <div className="grid grid-cols-2 gap-6">
                                     <CustomInput
-                                        title="Email"
+                                        title={t("common:email")}
                                         type="email"
                                         autoComplete="email"
                                         value={formState.employerEmail}
@@ -115,7 +120,7 @@ const AddNewMember = () => {
                                     />
                                     <div className="mb-2">
                                         <h3 className="block mb-2 text-sm font-medium text-neutral-900 dark:text-white">
-                                            User permissions
+                                            {t("common:role")}
                                         </h3>
                                         <div className="flex items-center gap-4">
                                             {roleRes?.data?.map(role => (
@@ -161,11 +166,7 @@ const AddNewMember = () => {
                                             ))}
                                         </div>
                                         <p className="text-sm text-neutral-500">
-                                            This is the most versatile option.
-                                            Based on job or department these
-                                            users can: create jobs and hiring
-                                            teams, assign roles in a team, move
-                                            and comment on candidates.
+                                            {t("this_the_most_versatile")}
                                         </p>
                                     </div>
                                 </div>
@@ -176,7 +177,7 @@ const AddNewMember = () => {
                                         disabled={isLoading}
                                         isLoading={isLoading}
                                     >
-                                        Invite member
+                                        {t("invite_member")}
                                     </Button>
                                     <button
                                         type="button"
@@ -184,7 +185,7 @@ const AddNewMember = () => {
                                         onClick={() => setShowAdd(false)}
                                         disabled={isLoading}
                                     >
-                                        Cancel
+                                        {t("common:cancel")}
                                     </button>
                                 </div>
                             </form>

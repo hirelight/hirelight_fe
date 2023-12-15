@@ -6,13 +6,15 @@ import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { Button, ButtonOutline, CustomInput, Selection } from "@/components";
+import { Button, CustomInput, Selection } from "@/components";
 import assessmentsServices from "@/services/assessments/assessments.service";
 import integrationServices from "@/services/integration/integration.service";
 import { Logo } from "@/icons";
-import { extractTextFromHtml, isInvalidForm } from "@/helpers";
+import { extractTextFromHtml, handleError, isInvalidForm } from "@/helpers";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { IEditAssessmentDto, ThirdPartyAssessment } from "@/services";
+import { IEditAssessmentDto } from "@/services";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "./IntergationForm.module.scss";
 import IntegrationCard from "./IntegrationCard";
@@ -32,7 +34,8 @@ type IPutAssessment = Omit<IEditAssessmentDto, "content"> & {
 };
 
 const IntegrationForm = () => {
-    const { assessmentId, flowId } = useParams();
+    const { assessmentId, flowId, lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "assessment");
 
     const assessment = useAppSelector(state => state.assessment.data);
 
@@ -77,19 +80,19 @@ const IntegrationForm = () => {
         let error = formErr;
 
         if (!selectedAssessment)
-            error.questionsErr = "Please select at least one assessment";
+            error.questionsErr = t("please_select_at_least_1_ques");
 
-        if (!formState.name) error.nameErr = "Name must not not be blank";
+        if (!formState.name) error.nameErr = t("assessment_name_not_blank");
 
         if (extractTextFromHtml(formState.description).length < 100)
-            error.descriptionErr = "Description must at least 100 characters";
+            error.descriptionErr = t("descrip_at_least_100");
 
         if (isInvalidForm(error)) {
             setFormErr({ ...error });
             toast.error(
                 <div>
-                    <p>Invalid input</p>
-                    <p>Check issue in red!</p>
+                    <p>{t("common:error.invalid_input")}</p>
+                    <p>{t("common:error.check_red_places")}</p>
                 </div>,
                 {
                     position: "top-center",
@@ -121,7 +124,7 @@ const IntegrationForm = () => {
             toast.success(res.message);
             setIsLoading(false);
         } catch (error: any) {
-            toast.error(error.message ? error.message : "Something went wrong");
+            handleError(error);
             setIsLoading(false);
         }
     };
@@ -131,16 +134,16 @@ const IntegrationForm = () => {
             <section>
                 <h3 className={styles.section__h3}>
                     <Logo className="w-6 h-6 text-blue_primary_300" />
-                    Welcome page info
+                    {t("welcome_page_info")}
                 </h3>
 
                 <div className="flex items-start gap-6 mb-6 px-4 xl:px-6">
                     <CustomInput
-                        title="Title"
+                        title={t("common:title")}
                         id="multiple-choice-assessment__title"
                         name="multiple-choice-assessment__title"
                         type="text"
-                        placeholder="Assessment title"
+                        placeholder={t("assessment_title")}
                         value={formState.name}
                         onChange={e => {
                             setFormState({
@@ -158,20 +161,22 @@ const IntegrationForm = () => {
 
                     <div>
                         <Selection
-                            title="Due date"
+                            title={t("due_date")}
                             value={
                                 formState.invitationDuration
                                     ? `${formState.invitationDuration} ${
                                           formState.invitationDuration > 1
-                                              ? "days"
-                                              : "day"
+                                              ? t("common:days")
+                                              : t("common:day")
                                       }`
                                     : ""
                             }
                             items={[1, 3, 5, 7, 10, 15, 20, 25, 30].map(
                                 item => ({
                                     label: `${item} ${
-                                        item > 1 ? "days" : "day"
+                                        item > 1
+                                            ? t("common:days")
+                                            : t("common:day")
                                     }`,
                                     value: item,
                                 })
@@ -188,12 +193,10 @@ const IntegrationForm = () => {
 
                 <div className="flex flex-col gap-4 mb-6 px-4 xl:px-6">
                     <h3 className="text-neutral-700 font-medium">
-                        Description
+                        {t("common:description")}
                     </h3>
                     <QuillEditorNoSSR
-                        placeholder="Enter the job description here; include key areas of
-                    responsibility and what the candidate might do on a typical
-                    day."
+                        placeholder={t("new-job:placeholder.description")}
                         className="min-h-[320px]"
                         theme="snow"
                         value={formState.description}
@@ -215,7 +218,7 @@ const IntegrationForm = () => {
             <section>
                 <h3 className={styles.section__h3}>
                     <Logo className="w-6 h-6 text-blue_primary_300" />
-                    Third party assessment providers
+                    {t("third_party_providers")}
                 </h3>
                 {!thirpartyLoading ? (
                     <ul>
@@ -241,7 +244,7 @@ const IntegrationForm = () => {
                     disabled={isLoading}
                     isLoading={isLoading}
                 >
-                    Save all changes
+                    {t("common:save_changes")}
                 </Button>
             </div>
         </form>

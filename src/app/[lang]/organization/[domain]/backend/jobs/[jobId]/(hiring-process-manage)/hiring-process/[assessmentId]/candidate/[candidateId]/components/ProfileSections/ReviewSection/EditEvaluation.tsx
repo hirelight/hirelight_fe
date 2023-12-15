@@ -16,7 +16,9 @@ import {
 } from "@/services/evaluation/evaluation.interface";
 import evaluationServices from "@/services/evaluation/evaluation.service";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { isInvalidForm } from "@/helpers";
+import { handleError, isInvalidForm } from "@/helpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "./AddEvaluation.module.scss";
 
@@ -26,6 +28,8 @@ type EditEvaluationProps = {
 };
 
 const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "candidate");
     const queryClient = useQueryClient();
 
     const applicantAssessmentDetail = useAppSelector(
@@ -42,12 +46,12 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
     const inValidAddInput = (): boolean => {
         const errors = { ...editErr };
         if (!editState.evaluation)
-            errors.evaluationErr = "Evaluation comment required!";
+            errors.evaluationErr = t("evaluation_comment_required");
         if (editState.rating < 0)
-            errors.ratingErr = "Please select at least one rating!";
+            errors.ratingErr = t("select_at_least_one_rating");
 
         if (isInvalidForm(errors)) {
-            toast.error("Invalid input");
+            toast.error(t("common:error.invalid_input"));
             setEditErr(errors);
             return true;
         }
@@ -69,9 +73,7 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
             });
             toast.success(res.message);
         } catch (error: any) {
-            toast.error(
-                error.message ? error.message : "Something went wrong!"
-            );
+            handleError(error);
         }
         setLoading(false);
         close();
@@ -110,11 +112,11 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
         >
             <section className="p-6">
                 <h4 className="text-neutral-700 font-semibold mb-3">
-                    Should this candidate proceed to next assessment?
+                    {t("should_candidate_proceed_next")}
                 </h4>
                 <div className="flex flex-col border border-gray-300 rounded-md focus-within:border-gray-500 transition-all p-2 min-h-[100px] relative">
                     <textarea
-                        placeholder="Add note"
+                        placeholder={t("add_note")}
                         className="w-full text-sm placeholder:text-sm outline-none border-none focus:border-none focus:outline-none focus:ring-0 resize-none"
                         value={editState.evaluation}
                         onChange={e => {
@@ -177,14 +179,14 @@ const EditEvaluation: React.FC<EditEvaluationProps> = ({ close, data }) => {
                     className="text-neutral-600 font-semibold text-sm mr-4 hover:underline"
                     onClick={close}
                 >
-                    Cancel
+                    {t("common:cancel")}
                 </button>
                 <Button
                     disabled={loading}
                     isLoading={loading}
                     onClick={handleEditEvaluation}
                 >
-                    Save evaluation
+                    {t("common:save")}
                 </Button>
             </div>
         </m.div>

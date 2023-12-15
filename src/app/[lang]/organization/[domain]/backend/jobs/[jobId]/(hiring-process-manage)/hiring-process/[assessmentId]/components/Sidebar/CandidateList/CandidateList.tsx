@@ -2,9 +2,9 @@
 
 import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 
-import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
+import { useAppDispatch } from "@/redux/reduxHooks";
 import { setCandidates } from "@/redux/slices/candidates.slice";
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
 
@@ -15,13 +15,10 @@ type CandidateListProps = {
 };
 
 const CandidateList = ({ disqualify }: CandidateListProps) => {
-    const { lang, jobId, assessmentId, candidateId } = useParams();
-    const router = useRouter();
+    const { jobId, assessmentId } = useParams();
 
     const dispatch = useAppDispatch();
-    const applicantAssessmentDetail = useAppSelector(
-        state => state.applicantAssessmentDetail.data
-    );
+
     const {
         data: applicantDetail,
         isLoading,

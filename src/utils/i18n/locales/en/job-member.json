@@ -1,0 +1,13 @@
+{
+    "no_account_members": "No account members in this hiring team",
+    "there_no_members_collab": "There are no members collaborating on this job. You can add someone from your team or invite a new member.",
+    "invite_new_member": "Invite a new member",
+    "member_name": "Member name",
+    "select_at_least_one_employer": "Select at least one employer",
+    "select_a_member": "Select a member",
+    "user_permissions": "User permissions",
+    "invited_members_will_automatically": "Invited members will automatically become collaborators for this job, once they sign up.",
+    "capabilities": "Capabilities",
+    "remove_collaborator": "Remove collaborator",
+    "are_you_sure_remove_collaborator": "Are you sure you want to remove this collaborator? This action cannot be undone."
+}

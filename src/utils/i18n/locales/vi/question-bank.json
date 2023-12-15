@@ -1,0 +1,19 @@
+{
+    "add_new_question": "Thêm câu hỏi mới",
+    "difficulty_between_1_to_5": "Độ khó phải nằm trong khoảng từ 1 đến 5",
+    "question_name_required": "Yêu cầu tên câu hỏi!",
+    "select_at_least_one_type": "Chọn ít nhất một loại câu hỏi!",
+    "at_least_two_ans_for_mcq": "Ít nhất 2 câu trả lời cho câu hỏi nhiều lựa chọn",
+    "select_at_least_one_correct": "Chọn ít nhất một câu trả lời đúng",
+    "question_has_at_least_4_ans": "Câu hỏi có ít nhất 4 câu trả lời",
+    "uploading_question": "Đang tải câu hỏi lên",
+    "upload_question_successfully": "Tải câu hỏi lên thành công!",
+    "download_file_template": "Tải xuống mẫu tệp",
+    "upload_ques_file": "Tải lên tệp câu hỏi",
+    "answer_number": "Số câu trả lời ",
+    "add_more_answer": "Thêm câu trả lời",
+    "add_new_question_tag": "Thêm nhãn câu hỏi mới",
+    "delete_question": "Xóa câu hỏi",
+    "delete_question_warning": "Bạn có chắc chắn muốn xóa câu hỏi này không? Tất cả dữ liệu của bạn sẽ bị xóa vĩnh viễn. Hành động này không thể được hoàn tác.",
+    "edit_question": "Chỉnh sửa câu hỏi"
+}

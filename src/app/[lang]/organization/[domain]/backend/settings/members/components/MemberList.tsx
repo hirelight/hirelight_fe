@@ -1,19 +1,19 @@
 "use client";
 
-import { TrashIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { toast } from "react-toastify";
+import { useParams } from "next/navigation";
 
-import { DeleteModal, Pagination, Portal } from "@/components";
 import employerOrgServices from "@/services/employer-organization/employer-organization.service";
-import { Roles } from "@/services";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "./MemberList.module.scss";
 import MemberCard from "./MemberCard";
 
 const MemberList = () => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "org-members");
     const {
         data: res,
         error,
@@ -33,18 +33,18 @@ const MemberList = () => {
                         </th>
                         <th scope="col">
                             <div className={styles.table__th__wrapper}>
-                                Fullname
+                                {t("common:fullname")}
                             </div>
                         </th>
                         <th scope="col" className="hidden lg:table-cell">
                             <div className={styles.table__th__wrapper}>
-                                Email
+                                {t("common:email")}
                             </div>
                         </th>
 
                         <th scope="col" className="hidden lg:table-cell">
                             <div className={styles.table__th__wrapper}>
-                                Role
+                                {t("common:role")}
                             </div>
                         </th>
                         <th className="hidden lg:table-cell">

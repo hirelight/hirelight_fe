@@ -77,7 +77,7 @@ const QuestionList = ({
 }) => {
     return (
         <div className="flex gap-6 relative">
-            <ul className="space-y-4 mb-6">
+            <ul className="flex-1 space-y-4 mb-6">
                 {answers?.map((item, index) => (
                     <li key={item.id}>
                         <QuestionCard data={item} index={index} />
@@ -87,12 +87,14 @@ const QuestionList = ({
             <div className="w-80 h-fit sticky top-4 bg-white border border-gray-200 rounded-md drop-shadow-lg">
                 <div className="text-center text-xl font-semibold">
                     {hhmmss(
-                        moment
-                            .utc(assesmentData?.startTime)
-                            .add(1800, "s")
-                            .diff(
-                                moment.utc(assesmentData?.updatedTime),
-                                "seconds"
+                        (assesmentData.assessment?.duration ?? 0) -
+                            Math.abs(
+                                moment
+                                    .utc(assesmentData?.updatedTime)
+                                    .diff(
+                                        moment.utc(assesmentData?.startTime),
+                                        "seconds"
+                                    )
                             )
                     )}
                 </div>
