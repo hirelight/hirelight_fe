@@ -1,21 +1,17 @@
-import {
-    ArrowDownTrayIcon,
-    PlusCircleIcon,
-    TrashIcon,
-    XMarkIcon,
-} from "@heroicons/react/24/solid";
-import React, { FormEvent, useState } from "react";
-import { AnimatePresence, Reorder } from "framer-motion";
+import { XMarkIcon } from "@heroicons/react/24/solid";
+import React, { useState } from "react";
 import { v4 as uuid } from "uuid";
 import dynamic from "next/dynamic";
 import { produce } from "immer";
 import { toast } from "react-toastify";
+import { useParams } from "next/navigation";
 
-import { Button, CustomInput, Selection } from "@/components";
-import { DragIndicatorIcon } from "@/icons";
+import { Button, Selection } from "@/components";
 import questionAnswerServices from "@/services/questions/questions.service";
-import { extractTextFromHtml, humanReadable } from "@/helpers";
+import { extractTextFromHtml, handleError } from "@/helpers";
 import fileServices from "@/services/file-service/file.service";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import { AsyncQuestionType } from "./AsyncVideoForm";
 
@@ -54,6 +50,9 @@ const AddNewQuestionSection = ({
     onSaveTopic,
     data,
 }: AddNewQuestionSectionProps) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "assessment");
+
     const [error, setError] = React.useState({
         nameErr: "",
     });
@@ -87,8 +86,8 @@ const AddNewQuestionSection = ({
 
     const handleAddNewSection = async () => {
         if (extractTextFromHtml(question.content.name).length < 20) {
-            setError({ ...error, nameErr: "Name is at least 20 letters!" });
-            return toast.error("Invalid input!");
+            setError({ ...error, nameErr: t("name_at_least_20") });
+            return toast.error(t("common:error.invalid_input"));
         }
         setLoading(true);
         try {
@@ -133,7 +132,8 @@ const AddNewQuestionSection = ({
         const fileList = e.currentTarget.files;
         if (fileList && fileList.length) {
             const fileSize = fileList[0].size / 1024 / 1024;
-            if (fileSize > 200) return toast.error("Maximum file is 200MB");
+            if (fileSize > 200)
+                return toast.error(t("common:error.maximum_200MB"));
             const formData = new FormData();
             formData.append("formFile", fileList[0]);
             setUploading(true);
@@ -154,9 +154,7 @@ const AddNewQuestionSection = ({
                     })
                 );
             } catch (error: any) {
-                toast.error(
-                    error.message ? error.message : "Something went error"
-                );
+                handleError(error);
             }
             setUploading(false);
         }
@@ -165,13 +163,13 @@ const AddNewQuestionSection = ({
     return (
         <div className="border border-gray-300 rounded-md">
             <div className="border-b border-gray-300 p-4 text-xl text-neutral-700">
-                <h4>Questions</h4>
+                <h4>{t("common:questions")}</h4>
             </div>
             <div className="p-4 bg-blue_primary_050">
                 <div className={`flex gap-2 items-stretch h-full mb-4`}>
                     <div className="min-w-[400px] flex-1">
                         <QuillEditorNoSSR
-                            placeholder={"Question number "}
+                            placeholder={"Question number"}
                             onChange={(value: string) => {
                                 setQuestion({
                                     ...question,
@@ -200,9 +198,9 @@ const AddNewQuestionSection = ({
                         }}
                     >
                         <h3 className="text-blue_primary_800 font-medium">
-                            Add a video to this question
+                            {t("add_vid_to_ques")}
                             <p className="text-gray-500 text-sm mt-1">
-                                (File size maximum 200MB)
+                                ({t("common:error.file_max_200MB")})
                             </p>
                             {progress > 0 && (
                                 <div className="mt-1 w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
@@ -265,7 +263,7 @@ const AddNewQuestionSection = ({
                                 label: thinkTime.get(key)!!,
                                 value: key,
                             }))}
-                            placeholder="Think time"
+                            placeholder={t("think_time")}
                             onChange={value =>
                                 setQuestion(prev =>
                                     produce(prev, draft => {
@@ -291,12 +289,12 @@ const AddNewQuestionSection = ({
                                 value: item * 60,
                             }))}
                             labelClassName="bg-white"
-                            placeholder="Duration"
+                            placeholder={t("duration")}
                             value={
                                 question.content.config
                                     ? (
                                           question.content.config.duration / 60
-                                      ).toString() + " minutes"
+                                      ).toString() + t("minutes")
                                     : ""
                             }
                             onChange={(value: number) =>
@@ -324,7 +322,7 @@ const AddNewQuestionSection = ({
                                     })
                                 )
                             }
-                            placeholder="Num of takes"
+                            placeholder={t("num_of_takes")}
                             labelClassName="bg-white"
                             value={
                                 question.content.config
@@ -345,7 +343,7 @@ const AddNewQuestionSection = ({
                         isLoading={loading}
                         onClick={handleAddNewSection}
                     >
-                        Save question
+                        {t("common:save")}
                     </Button>
                     <button
                         type="button"
@@ -353,7 +351,7 @@ const AddNewQuestionSection = ({
                         className="text-neutral-500 font-semibold text-sm hover:text-neutral-700 disabled:cursor-not-allowed disabled:opacity-80"
                         onClick={() => onFinish()}
                     >
-                        Cancel
+                        {t("common:cancel")}
                     </button>
                 </div>
             </div>

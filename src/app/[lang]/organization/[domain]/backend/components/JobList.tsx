@@ -10,6 +10,7 @@ import { JobPostStatus } from "@/interfaces/job-post.interface";
 import { IJobDto } from "@/services";
 import { useAppSelector } from "@/redux/reduxHooks";
 import { IResponse } from "@/interfaces/service.interface";
+import { Pagination } from "@/components";
 
 import HiringStageBar from "./HiringStageBar";
 import JobCard from "./JobCard";
@@ -21,6 +22,7 @@ type JobListProps = {
 
 const JobList: React.FC<JobListProps> = ({ initialData }) => {
     const authUser = useAppSelector(state => state.auth.authUser);
+    const [curPage, setCurPage] = useState(1);
 
     const {
         data: jobsRes,
@@ -64,6 +66,15 @@ const JobList: React.FC<JobListProps> = ({ initialData }) => {
                             </li>
                         ))}
                 </ul>
+            )}
+
+            {jobsRes && jobsRes.data && jobsRes.data.length > 10 && (
+                <div className="flex justify-center items-center mt-6">
+                    <Pagination
+                        numOfPages={Math.floor(jobsRes.data.length / 10)}
+                        onChangePage={page => setCurPage(page)}
+                    />
+                </div>
             )}
         </React.Fragment>
     );

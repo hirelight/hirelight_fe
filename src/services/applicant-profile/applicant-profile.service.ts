@@ -10,12 +10,12 @@ import {
     IJobPostProfileDto,
 } from "./applicant-profile.interface";
 
-const applyJob = async (applyDto: IApplyJobDto): Promise<IResponse<number>> => {
+const applyJob = async (applyDto: IApplyJobDto): Promise<IResponse<any>> => {
     try {
-        const res = await interceptor.post(endpoints.APPLICANT_PROFILES, {
-            ...applyDto,
-            jobPostId: parseInt(applyDto.jobPostId),
-        });
+        const res = await interceptor.post(
+            endpoints.APPLICANT_PROFILES,
+            applyDto
+        );
 
         checkResErr(res.data);
 
@@ -73,11 +73,28 @@ const getMyApplicantProfiles = async (
     }
 };
 
+const reconsiderAsync = async (
+    applicantProfileId: string
+): Promise<IResponse<any>> => {
+    try {
+        const res = await interceptor.put<IResponse<any>>(
+            endpoints.APPLICANT_PROFILES + `/reconsider/${applicantProfileId}`
+        );
+
+        checkResErr(res.data);
+
+        return res.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const applicantProfileServices = {
     applyJob,
     getJobPostProfiles,
     getMyApplicantProfiles,
     getProfileById,
+    reconsiderAsync,
 };
 
 export default applicantProfileServices;

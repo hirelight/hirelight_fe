@@ -1,7 +1,6 @@
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
 import { useParams } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
@@ -9,6 +8,8 @@ import collaboratorsServices from "@/services/collaborators/collaborators.servic
 import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
 import { DeleteModal, Portal, UserAvatar } from "@/components";
 import { useAppSelector } from "@/redux/reduxHooks";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import EditMemberPermission from "./EditMemberPermission";
 
@@ -17,7 +18,9 @@ type CollaboratorCardProps = {
 };
 
 const CollaboratorCard: React.FC<CollaboratorCardProps> = ({ member }) => {
-    const { jobId } = useParams();
+    const { jobId, lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "job-member");
+
     const [showDeleteAlert, setShowDeleteAlert] = React.useState(false);
     const [showEditModal, setShowEditModal] = React.useState(false);
 
@@ -48,9 +51,8 @@ const CollaboratorCard: React.FC<CollaboratorCardProps> = ({ member }) => {
         <>
             <Portal>
                 <DeleteModal
-                    title="Remove collaborator"
-                    description={`Are you sure you want to remove this collaborator?
-                    This action cannot be undone.`}
+                    title={t("remove_collaborator")}
+                    description={t("are_you_sure_remove_collaborator")}
                     show={showDeleteAlert}
                     loading={deleteMemberMutation.isPending}
                     onClose={() => setShowDeleteAlert(false)}

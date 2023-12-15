@@ -1,29 +1,22 @@
 "use client";
 
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
-import { AnimatePresence } from "framer-motion";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 import { produce } from "immer";
 
-import {
-    Button,
-    ButtonOutline,
-    CustomInput,
-    Modal,
-    Portal,
-    Selection,
-    Timer,
-} from "@/components";
-import { Logo, SpinLoading } from "@/icons";
+import { Button, CustomInput, Portal, Selection, Timer } from "@/components";
+import { Logo } from "@/icons";
 import { IEditAssessmentDto, IQuestionAnswerDto } from "@/services";
 import QuestionPickerCard from "@/components/QuestionPicker/QuestionPickerCard";
 import assessmentsServices from "@/services/assessments/assessments.service";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { extractTextFromHtml, isInvalidForm } from "@/helpers";
+import { extractTextFromHtml, handleError, isInvalidForm } from "@/helpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "./CreateAssessment.module.scss";
 import QuestionPickerModal from "./QuestionPickerModal";
@@ -56,7 +49,8 @@ type ICreateMCAssessment = Omit<IEditAssessmentDto, "content" | "query"> & {
 };
 
 const CreateAssessment = () => {
-    const { assessmentId, flowId } = useParams();
+    const { assessmentId, flowId, lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "assessment");
 
     const assessment = useAppSelector(state => state.assessment.data);
     const queryClient = useQueryClient();
@@ -105,23 +99,23 @@ const CreateAssessment = () => {
 
         let error = formErr;
 
-        if (!name) error.nameErr = "Assessment name must not be blank";
+        if (!name) error.nameErr = t("assessment_name_not_blank");
 
         if (duration < 60)
-            error.durationErr = "Duration must at least 1 minute";
+            error.durationErr = t("duration_at_least_one_minute");
 
         if (pickedQuestions.length < 5)
-            error.questionsErr = "Please select at least 5 question";
+            error.questionsErr = t("please_select_at_least_5_ques");
 
         if (extractTextFromHtml(description).length < 100)
-            error.descriptionErr = "Description must at least 100 characters";
+            error.descriptionErr = t("descrip_at_least_100");
 
         if (isInvalidForm(error)) {
             setFormErr({ ...error });
             toast.error(
                 <div>
-                    <p>Invalid input</p>
-                    <p>Check issue in red!</p>
+                    <p>{t("common:error.invalid_input")}</p>
+                    <p>{t("common:error.check_red_places")}</p>
                 </div>,
                 {
                     position: "top-center",
@@ -156,9 +150,7 @@ const CreateAssessment = () => {
             toast.success(res.message);
             setIsLoading(false);
         } catch (error: any) {
-            toast.error(
-                error.message ? error.message : "Something went wrong!"
-            );
+            handleError(error);
             setIsLoading(false);
         }
     };
@@ -205,16 +197,16 @@ const CreateAssessment = () => {
                 <section>
                     <h3 className={styles.section__h3}>
                         <Logo className="w-6 h-6 text-blue_primary_300" />
-                        Welcome page info
+                        {t("welcome_page_info")}
                     </h3>
 
                     <div className="flex items-start gap-6 mb-6 px-4 xl:px-6">
                         <CustomInput
-                            title="Title"
+                            title={t("common:title")}
                             id="multiple-choice-assessment__title"
                             name="multiple-choice-assessment__title"
                             type="text"
-                            placeholder="Assessment title"
+                            placeholder={t("assessment_title")}
                             value={formState.name}
                             onChange={e => {
                                 setFormState({
@@ -231,20 +223,22 @@ const CreateAssessment = () => {
                         />
                         <div>
                             <Selection
-                                title="Due date"
+                                title={t("due_date")}
                                 value={
                                     formState.invitationDuration
                                         ? `${formState.invitationDuration} ${
                                               formState.invitationDuration > 1
-                                                  ? "days"
-                                                  : "day"
+                                                  ? t("common:days")
+                                                  : t("common:day")
                                           }`
                                         : ""
                                 }
                                 items={[1, 3, 5, 7, 10, 15, 20, 25, 30].map(
                                     item => ({
                                         label: `${item} ${
-                                            item > 1 ? "days" : "day"
+                                            item > 1
+                                                ? t("common:days")
+                                                : t("common:day")
                                         }`,
                                         value: item,
                                     })
@@ -280,12 +274,10 @@ const CreateAssessment = () => {
 
                     <div className="flex flex-col gap-4 mb-6 px-4 xl:px-6">
                         <h3 className="text-neutral-700 font-medium">
-                            Description
+                            {t("common:description")}
                         </h3>
                         <QuillEditorNoSSR
-                            placeholder="Enter the job description here; include key areas of
-                    responsibility and what the candidate might do on a typical
-                    day."
+                            placeholder={t("new-job:placeholder.description")}
                             className="min-h-[320px]"
                             theme="snow"
                             value={formState.description}
@@ -307,7 +299,7 @@ const CreateAssessment = () => {
                 <section>
                     <h3 className={`${styles.section__h3} w-full`}>
                         <Logo className="w-6 h-6 text-blue_primary_300" />
-                        Question
+                        {t("common:question")}
                         {formErr.questionsErr !== "" && (
                             <p className="ml-auto text-sm text-red-600 dark:text-red-500">
                                 <span className="font-medium">
@@ -335,7 +327,7 @@ const CreateAssessment = () => {
                         >
                             <span className="relative py-4 px-5 flex items-center">
                                 <PlusCircleIcon className="w-5 h-5 mr-1" />
-                                Choose questions
+                                {t("choose_questions")}
                             </span>
                         </button>
                     </div>
@@ -343,17 +335,17 @@ const CreateAssessment = () => {
                 <section>
                     <h3 className={styles.section__h3}>
                         <Logo className="w-6 h-6 text-blue_primary_300" />
-                        Configuration
+                        {t("configuration")}
                     </h3>
                     <div className="flex flex-col gap-8 mb-4 px-4 xl:px-6">
                         <div className="flex justify-between items-start">
-                            <strong>Auto evaluate</strong>
+                            <strong>{t("auto_evaluation")}</strong>
                             <div className="max-w-[400px] w-1/2">
                                 <Selection
                                     title=""
                                     items={[
                                         {
-                                            label: "Disable",
+                                            label: t("disable"),
                                             value: 0,
                                         },
                                     ].concat(
@@ -389,11 +381,11 @@ const CreateAssessment = () => {
                             </div>
                         </div>
                         <div className="flex justify-between items-start">
-                            <strong>Random questions configuration</strong>
+                            <strong>{t("random_ques_configuration")}</strong>
                             <div className="max-w-[400px] w-1/2 flex flex-col gap-6">
                                 <div className="relative">
                                     <span className={styles.selection__label}>
-                                        Easy
+                                        {t("easy")}
                                     </span>
                                     <CustomInput
                                         title=""
@@ -410,7 +402,7 @@ const CreateAssessment = () => {
                                             ).length
                                         }
                                         min={0}
-                                        placeholder="Enter a quantity"
+                                        placeholder={t("enter_quantity")}
                                         onChange={e => {
                                             handleNumQuestion(
                                                 "easy",
@@ -425,7 +417,7 @@ const CreateAssessment = () => {
                                 </div>
                                 <div className="relative">
                                     <span className={styles.selection__label}>
-                                        Medium
+                                        {t("medium")}
                                     </span>
                                     <CustomInput
                                         title=""
@@ -442,7 +434,7 @@ const CreateAssessment = () => {
                                             ).length
                                         }
                                         min={0}
-                                        placeholder="Enter a quantity"
+                                        placeholder={t("enter_quantity")}
                                         onChange={e => {
                                             handleNumQuestion(
                                                 "medium",
@@ -457,7 +449,7 @@ const CreateAssessment = () => {
                                 </div>
                                 <div className="relative">
                                     <span className={styles.selection__label}>
-                                        Hard
+                                        {t("hard")}
                                     </span>
 
                                     <CustomInput
@@ -475,7 +467,7 @@ const CreateAssessment = () => {
                                             ).length
                                         }
                                         min={0}
-                                        placeholder="Enter a quantity"
+                                        placeholder={t("enter_quantity")}
                                         onChange={e => {
                                             handleNumQuestion(
                                                 "hard",
@@ -490,12 +482,12 @@ const CreateAssessment = () => {
                                 </div>
                                 <div className="relative">
                                     <span className={styles.selection__label}>
-                                        Advance
+                                        {t("advance")}
                                     </span>
                                     <CustomInput
                                         title=""
                                         type="number"
-                                        placeholder="Enter a quantity"
+                                        placeholder={t("enter_quantity")}
                                         value={
                                             formState.query
                                                 ? formState.query.numOfQuestions
@@ -528,7 +520,7 @@ const CreateAssessment = () => {
                                 htmlFor="shuffle-questions"
                                 className="cursor-pointer"
                             >
-                                <strong>Shuffle questions</strong>
+                                <strong>{t("shuffle_questions")}</strong>
                             </label>
                             <label
                                 htmlFor="shuffle-questions"
@@ -559,7 +551,7 @@ const CreateAssessment = () => {
                                 htmlFor="shuffle-answers"
                                 className="cursor-pointer"
                             >
-                                <strong>Shuffle answers</strong>
+                                <strong>{t("shuffle_answers")}</strong>
                             </label>
                             <label
                                 htmlFor="shuffle-answers"
@@ -593,7 +585,7 @@ const CreateAssessment = () => {
                         disabled={isLoading}
                         isLoading={isLoading}
                     >
-                        Save all changes
+                        {t("common:save_changes")}
                     </Button>
                 </div>
             </form>

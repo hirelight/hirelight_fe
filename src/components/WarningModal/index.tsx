@@ -2,6 +2,10 @@
 
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
+import { useParams } from "next/navigation";
+
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import { Button } from "..";
 
@@ -22,6 +26,9 @@ const WarningModal: React.FC<WarningModalProps> = ({
     content,
     isLoading,
 }) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale);
+
     const handleConfirm = async () => {
         if (onConfirm) await onConfirm();
         closeModal();
@@ -58,7 +65,7 @@ const WarningModal: React.FC<WarningModalProps> = ({
                                     as="h3"
                                     className="text-lg font-medium leading-6 text-gray-900"
                                 >
-                                    {title ?? "Information"}
+                                    {title ?? t("common:information")}
                                 </Dialog.Title>
                                 <div className="mt-2">
                                     <p className="text-sm text-gray-500">
@@ -76,7 +83,7 @@ const WarningModal: React.FC<WarningModalProps> = ({
                                         disabled={isLoading}
                                         onClick={handleConfirm}
                                     >
-                                        Confirm
+                                        {t("common:confirm")}
                                     </Button>
 
                                     <button
@@ -84,7 +91,7 @@ const WarningModal: React.FC<WarningModalProps> = ({
                                         className="ml-2 font-semibold text-sm text-neutral-700 hover:text-neutral-900 hover:underline"
                                         onClick={closeModal}
                                     >
-                                        Cancel
+                                        {t("common:cancel")}
                                     </button>
                                 </div>
                             </Dialog.Panel>

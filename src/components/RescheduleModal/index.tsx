@@ -65,13 +65,6 @@ const RescheduleModal: React.FC<RescheduleModalProps> = ({
         if (moment(from).isSameOrBefore(moment()))
             errors.fromErr = "Free time must start in the future";
 
-        if (
-            Math.abs(moment(from).diff(to, "milliseconds")) >
-            24 * 60 * 60 * 1000
-        ) {
-            errors.durationErr = "Meeting duration must within 24 hours!";
-        }
-
         if (isInvalidForm(errors)) {
             toast.error("Invalid input");
             setFormErr(errors);

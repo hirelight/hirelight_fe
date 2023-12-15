@@ -2,9 +2,9 @@
 
 import React from "react";
 
-import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
+import { useAppDispatch } from "@/redux/reduxHooks";
 import { IAppFormField } from "@/interfaces";
-import { editAppFormField, setAppForm } from "@/redux/slices/job.slice";
+import { editAppFormField } from "@/redux/slices/job.slice";
 
 import styles from "./AppFormSectionField.module.scss";
 
@@ -27,35 +27,31 @@ const AppFormSectionField: React.FC<AppFormSectionFieldProps> = ({
             : "Optional"
     );
     const dispatch = useAppDispatch();
-    const appForms = useAppSelector(
-        state => state.job.data.applicationForm.form_structure
-    );
 
     const handleSelectType = (option: "Mandatory" | "Optional" | "Off") => {
         setSelected(option);
-        const newAppForm = appForms.map(section => {
-            if (section.id === sectionId) {
-                return {
-                    ...section,
-                    fields: section.fields.map(field => {
-                        if (field.label === data.label)
-                            return {
-                                ...field,
-                                required:
-                                    option === "Off"
-                                        ? undefined
-                                        : option === "Mandatory"
-                                        ? true
-                                        : false,
-                            };
-                        return field;
-                    }),
-                };
-            }
+        // const newAppForm = appForms.map(section => {
+        //     if (section.id === sectionId) {
+        //         return {
+        //             ...section,
+        //             fields: section.fields.map(field => {
+        //                 if (field.label === data.label)
+        //                     return {
+        //                         ...field,
+        //                         required:
+        //                             option === "Off"
+        //                                 ? undefined
+        //                                 : option === "Mandatory"
+        //                                 ? true
+        //                                 : false,
+        //                     };
+        //                 return field;
+        //             }),
+        //         };
+        //     }
 
-            return section;
-        });
-        // dispatch(setAppForm(newAppForm));
+        //     return section;
+        // });
         dispatch(
             editAppFormField({
                 sectionId: sectionId,

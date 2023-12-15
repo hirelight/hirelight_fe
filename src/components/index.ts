@@ -32,6 +32,7 @@ import UserAvatar from "./UserAvatar";
 import EducationSection from "./EducationSection";
 import ExperienceSection from "./ExperienceSection";
 import AvatarGroup from "./AvatarGroup";
+import SelectCollaborators from "./SelectCollaborators";
 
 export {
     AvatarGroup,
@@ -68,4 +69,5 @@ export {
     UserAvatar,
     EducationSection,
     ExperienceSection,
+    SelectCollaborators,
 };

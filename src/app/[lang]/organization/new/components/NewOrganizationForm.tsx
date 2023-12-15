@@ -1,5 +1,7 @@
 "use client";
 
+import { error } from "console";
+
 import React from "react";
 import { motion } from "framer-motion";
 import { useParams, useRouter } from "next/navigation";
@@ -15,7 +17,7 @@ import {
 import { IResponse } from "@/interfaces/service.interface";
 import authServices from "@/services/auth/auth.service";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { UserAvatar } from "@/components";
+import { Button, CustomInput, UserAvatar, WarningModal } from "@/components";
 import { handleError } from "@/helpers";
 import { useI18NextTranslation } from "@/utils/i18n/client";
 
@@ -41,11 +43,11 @@ const NewOrganizationForm = () => {
         subdomain: "",
     });
     const [loading, setLoading] = React.useState(false);
+    const [showWarning, setShowWarning] = React.useState(false);
 
-    const handleCreateNewOrg = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        if (validateFormInput()) return;
+    const handleCreateNewOrg = async () => {
+        if (validateFormInput())
+            return toast.error(t("common:error.invalid_input"));
 
         setLoading(true);
         try {
@@ -70,10 +72,38 @@ const NewOrganizationForm = () => {
 
     const validateFormInput = () => {
         let valid = false;
+        const regex = /[`~,<>;':"\[\]\|{}()=_#\.+]/;
+        if (regex.test(newOrgForm.subdomain)) {
+            setNewOrgFormErr(prev => ({
+                ...prev,
+                domainErr: "Subdomain cannot contain special characters",
+            }));
+            valid = true;
+        }
+        if (
+            ["-"].includes(
+                newOrgForm.subdomain.charAt(newOrgForm.subdomain.length - 1)
+            )
+        ) {
+            setNewOrgFormErr(prev => ({
+                ...prev,
+                domainErr: "Subdomain cannot end with special characters",
+            }));
+            valid = true;
+        }
+
         if (!newOrgForm.name) {
             setNewOrgFormErr(prev => ({
                 ...prev,
                 nameErr: t("error.org_name_empty"),
+            }));
+            valid = true;
+        }
+
+        if (!newOrgForm.subdomain) {
+            setNewOrgFormErr(prev => ({
+                ...prev,
+                domainErr: "Domain cannot empty",
             }));
             valid = true;
         }
@@ -83,6 +113,14 @@ const NewOrganizationForm = () => {
 
     return (
         <div>
+            <WarningModal
+                isOpen={showWarning}
+                isLoading={loading}
+                closeModal={() => setShowWarning(false)}
+                onConfirm={handleCreateNewOrg}
+                content="Please review your information. Once you create org you cannot edit the subdomain!"
+                title="Create new organization"
+            />
             <div className="flex flex-col gap-4">
                 <div className="pt-6 px-6">
                     <h1 className={styles.title}>{t("title.highlight")}</h1>
@@ -113,21 +151,12 @@ const NewOrganizationForm = () => {
                     </p>
                 </div>
                 <hr className="flex-1 h-[1.5px] bg-gray-300" />
-                <form
-                    onSubmit={handleCreateNewOrg}
-                    className="px-6 flex flex-col gap-4"
-                >
+                <div className="px-6 flex flex-col gap-4">
                     <div className="mb-2 text-left">
-                        <label
-                            htmlFor="organization-name"
-                            className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
-                        >
-                            {t("label.org_name")}
-                        </label>
-                        <input
+                        <CustomInput
+                            title={t("label.org_name")}
                             type="text"
                             id="organization-name"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Hirelight Corperation"
                             onChange={e => {
                                 setNewOrgForm({
@@ -140,19 +169,14 @@ const NewOrganizationForm = () => {
                                 });
                             }}
                             required
+                            errorText={newOrgFormErr.nameErr}
                         />
                     </div>
                     <div className="text-left">
-                        <label
-                            htmlFor="domain"
-                            className="block mb-2 text-sm font-semibold text-gray-900 dark:text-white"
-                        >
-                            {t("label.domain")}
-                        </label>
-                        <input
+                        <CustomInput
+                            title={t("label.domain")}
                             type="text"
                             id="domain"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             value={newOrgForm.subdomain}
                             placeholder="hirelight-co"
                             required
@@ -166,6 +190,7 @@ const NewOrganizationForm = () => {
                                     domainErr: "",
                                 });
                             }}
+                            errorText={newOrgFormErr.domainErr}
                         />
                     </div>
                     {newOrgFormErr.nameErr && (
@@ -177,17 +202,15 @@ const NewOrganizationForm = () => {
                             <p>{newOrgFormErr.nameErr}</p>
                         </motion.div>
                     )}
-                    <button
-                        type="submit"
-                        className="flex items-center gap-1 justify-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-md text-sm w-full px-5 py-2.5 mt-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
+                    <Button
                         disabled={loading}
+                        onClick={() => setShowWarning(true)}
                     >
-                        {loading && <SpinLoading />}
                         <Trans t={t} i18nKey={"btn.submit"}>
                             Start a {{ days: 15 }}-day trial
                         </Trans>
-                    </button>
-                </form>
+                    </Button>
+                </div>
             </div>
         </div>
     );

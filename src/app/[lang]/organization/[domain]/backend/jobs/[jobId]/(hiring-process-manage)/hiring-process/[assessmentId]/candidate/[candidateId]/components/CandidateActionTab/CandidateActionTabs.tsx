@@ -25,6 +25,7 @@ import meetingServices from "@/services/meeting/meeting.service";
 import { handleError } from "@/helpers";
 import { DeleteModal, Portal, WarningModal } from "@/components";
 import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
+import applicantProfileServices from "@/services/applicant-profile/applicant-profile.service";
 
 import MoveCandidateDialog from "./MoveCandidateDialog";
 import styles from "./CandidateActionTabs.module.scss";
@@ -81,6 +82,26 @@ const CandidateActionTabs = () => {
         ],
         mutationFn: (id: string) =>
             applicantAssessmentDetailServices.disqualifyCandidate(id),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({
+                queryKey: ["job-profiles", jobId],
+            });
+            router.push(
+                `/${lang}/backend/jobs/${jobId}/hiring-process/${assessmentId}`
+            );
+        },
+        onError: err => {
+            toast.error(err.message);
+        },
+    });
+
+    const reconsiderMutation = useMutation({
+        mutationKey: [
+            "disqualify",
+            applicantAssessmentDetail.applicantProfileId,
+        ],
+        mutationFn: (id: string) =>
+            applicantProfileServices.reconsiderAsync(id),
         onSuccess: async () => {
             await queryClient.invalidateQueries({
                 queryKey: ["job-profiles", jobId],
@@ -168,7 +189,21 @@ const CandidateActionTabs = () => {
         }
     };
 
-    const handleRestoreCandidate = () => {};
+    const handleRestoreCandidate = async () => {
+        try {
+            await toast.promise(
+                reconsiderMutation.mutateAsync(
+                    applicantAssessmentDetail.applicantProfileId
+                ),
+                {
+                    pending: "Reconsider candidate",
+                    success: "Reconsider candidate success!",
+                }
+            );
+        } catch (error) {
+            handleError(error);
+        }
+    };
 
     return (
         <>
@@ -240,14 +275,14 @@ const CandidateActionTabs = () => {
                             </button>
                         </Tooltip>
                     ) : (
-                        <Tooltip content="Restore candidate">
+                        <Tooltip content="Reconsider candidate">
                             <button
                                 type="button"
                                 className={
                                     styles.candidate__action__btn +
                                     " disabled:cursor-not-allowed disabled:opacity-80"
                                 }
-                                disabled={disqualifyMutate.isPending}
+                                disabled={reconsiderMutation.isPending}
                                 onClick={handleRestoreCandidate}
                             >
                                 <ArrowPathIcon className="w-6 h-6 text-green-500" />

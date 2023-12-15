@@ -7,7 +7,7 @@ import styles from "./styles.module.scss";
 type PaginationProps = {
     numOfPages: number;
     maxPages?: number;
-    onChangePage?: () => void;
+    onChangePage?: (page: number) => void;
 };
 
 const Pagination: React.FC<PaginationProps> = ({
@@ -33,6 +33,11 @@ const Pagination: React.FC<PaginationProps> = ({
         }
         setPages(subarrays);
     }, [numOfPages]);
+
+    useEffect(() => {
+        if (onChangePage) onChangePage(curPage);
+    }, [curPage, onChangePage]);
+
     return (
         <nav
             aria-label="Page navigation example"

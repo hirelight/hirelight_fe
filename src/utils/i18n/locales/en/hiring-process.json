@@ -1,0 +1,18 @@
+{
+    "job_title": "Job title",
+    "edit_job": "Edit job",
+    "reports": "Reports",
+    "feedbacks": "Feedbacks",
+    "activities": "Activities",
+    "assign_assessors": "Assign assessors",
+    "num_of_candidates": "Num of candidates",
+    "num_of_evaluations": "Num of evaluations",
+    "in_progress": "In progress",
+    "negotiate": "Negotiate",
+    "update_evaluators_success": "Update evaluators successfully!",
+    "no_candidate_selected": "No candidate selected",
+    "qualified": "Qualified",
+    "disqualified": "Disqualified",
+    "newest": "Newest",
+    "skill_matched": "skills matched"
+}

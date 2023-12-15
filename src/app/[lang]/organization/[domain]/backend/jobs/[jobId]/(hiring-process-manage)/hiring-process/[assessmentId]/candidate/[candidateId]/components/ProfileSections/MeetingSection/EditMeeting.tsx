@@ -113,6 +113,18 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
             errors.timeErr = "Meeting duration must at least 10 minutes";
         }
 
+        if (
+            Math.abs(
+                moment(meetingTime.startTime).diff(
+                    meetingTime.endTime,
+                    "milliseconds"
+                )
+            ) >
+            24 * 60 * 60 * 1000
+        ) {
+            errors.timeErr = "Meeting duration must within 24 hours!";
+        }
+
         if (!selected.length)
             errors.attendeeErr =
                 "Select at least one employer to attend meeting";

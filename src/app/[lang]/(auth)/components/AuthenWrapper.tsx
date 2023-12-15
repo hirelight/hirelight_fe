@@ -24,13 +24,15 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
     }, [dispatch, lang, router]);
 
     useEffect(() => {
-        if (token) {
-            if (authEnd && authEnd === "true") handleLogout();
-            else {
-                dispatch(setToken(token));
-                setPageLoading(false);
-            }
-        } else setPageLoading(false);
+        if (typeof window !== "undefined") {
+            if (token) {
+                if (authEnd && authEnd === "true") handleLogout();
+                else {
+                    dispatch(setToken(token));
+                    setPageLoading(false);
+                }
+            } else setPageLoading(false);
+        }
     }, [authEnd, dispatch, handleLogout, lang, router, token]);
 
     return (

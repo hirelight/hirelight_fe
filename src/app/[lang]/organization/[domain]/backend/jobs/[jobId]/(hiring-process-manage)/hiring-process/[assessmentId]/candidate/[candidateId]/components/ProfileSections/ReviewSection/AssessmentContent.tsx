@@ -23,7 +23,11 @@ const AssessmentContent = () => {
         state => state.applicantAssessmentDetail.data!!
     );
 
-    const { data: profileResults, isLoading } = useQuery({
+    const {
+        data: profileResults,
+        isLoading,
+        isFetching,
+    } = useQuery({
         queryKey: ["profile-results", candidateId],
         queryFn: () =>
             applicantAssessmentDetailServices.employeeGetApplicantAssessDetailsList(
@@ -32,7 +36,7 @@ const AssessmentContent = () => {
             ),
     });
 
-    if (isLoading) return <AssessmentSkeleton />;
+    if (isLoading || isFetching) return <AssessmentSkeleton />;
 
     return (
         <div className="mt-8">
@@ -76,14 +80,6 @@ const AssessmentContent = () => {
                         detail =>
                             detail.result !== null &&
                             detail.id !== applicantDetail.id
-                        // !defaultAsessment.includes(
-                        //     detail.assessment.assessmentTypeName
-                        // ) &&
-                        // detail.questionAnswerSet &&
-                        // ![
-                        //     ApplicantAssessmentDetailStatus.INVITED,
-                        //     ApplicantAssessmentDetailStatus.IN_PROGRESS,
-                        // ].includes(detail.status)
                     )
 
                     .map(detail => (
@@ -106,11 +102,13 @@ const AssessmentCard = ({ data }: { data: IJobPostAppAssDetailDto }) => {
 
     return (
         <>
-            <ResultPreview
-                data={data}
-                isOpen={showPreview}
-                close={() => setShowPreview(false)}
-            />
+            {data.questionAnswerSet && (
+                <ResultPreview
+                    data={data}
+                    isOpen={showPreview}
+                    close={() => setShowPreview(false)}
+                />
+            )}
 
             <div className="py-4 flex gap-4 relative">
                 <div className="w-6 h-6">
@@ -122,8 +120,12 @@ const AssessmentCard = ({ data }: { data: IJobPostAppAssDetailDto }) => {
                     {data.assessment.name}
                 </h4>
                 <div className="absolute right-0 top-1/2 -translate-y-1/2">
-                    {data.assessment.assessmentTypeName !==
-                    "THIRD_PARTY_ASSESSMENT" ? (
+                    {!data.questionAnswerSet ? (
+                        <div>
+                            <strong>Non attendance</strong>
+                        </div>
+                    ) : data.assessment.assessmentTypeName !==
+                      "THIRD_PARTY_ASSESSMENT" ? (
                         <button
                             type="button"
                             onClick={() => setShowPreview(true)}

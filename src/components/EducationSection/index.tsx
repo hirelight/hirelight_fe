@@ -13,11 +13,15 @@ import { Button, CustomInput, DatePicker } from "..";
 
 type EducationSectionProps = {
     data: IAppFormField;
+    datas?: EducationFormState[];
 };
 
-const EducationSection: React.FC<EducationSectionProps> = ({ data }) => {
+const EducationSection: React.FC<EducationSectionProps> = ({
+    data,
+    datas = [],
+}) => {
     const [showForm, setShowForm] = useState(false);
-    const [educations, setEducations] = useState<EducationFormState[]>([]);
+    const [educations, setEducations] = useState<EducationFormState[]>(datas);
 
     const onSave = (newData: EducationFormState) => {
         setEducations(educations.concat([newData]));
@@ -119,6 +123,11 @@ const FormInput = ({
     const handleAddEducation = () => {
         if (!formState.school)
             return setFormErr({ ...formErr, school: "Field is required!" });
+        if (moment(formState.endDate).isBefore(formState.startDate, "date"))
+            return setFormErr({
+                ...formErr,
+                startDate: "Start date must lower than end date!",
+            });
         onSave({
             ...formState,
             startDate: formState.startDate
@@ -157,11 +166,13 @@ const FormInput = ({
                         title="Start date"
                         value={formState.startDate}
                         onChange={date => handleFormChange("startDate", date)}
+                        errorText={formErr.startDate}
                     />
 
                     <DatePicker
                         title="End date"
                         value={formState.endDate}
+                        maxDate={new Date()}
                         onChange={date => handleFormChange("endDate", date)}
                     />
                 </div>

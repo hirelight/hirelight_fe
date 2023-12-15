@@ -1,19 +1,14 @@
 "use client";
 
 import React from "react";
-import {
-    DevicePhoneMobileIcon,
-    EyeSlashIcon,
-    TrashIcon,
-} from "@heroicons/react/24/solid";
-import {
-    ClipboardDocumentListIcon,
-    DocumentTextIcon,
-} from "@heroicons/react/24/outline";
+import { DevicePhoneMobileIcon } from "@heroicons/react/24/solid";
+import { DocumentTextIcon } from "@heroicons/react/24/outline";
+import { useParams } from "next/navigation";
 
 import { useAppSelector } from "@/redux/reduxHooks";
 import { debounce } from "@/helpers/shareHelpers";
-import { IAppFormSection } from "@/interfaces";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "./AppFormMobileView.module.scss";
 import AppFormMobileSection from "./AppFormMobileSection";
@@ -21,6 +16,9 @@ import AppFormMobileSection from "./AppFormMobileSection";
 type AppFormMobileViewProps = {};
 
 const AppFormMobileView: React.FC<AppFormMobileViewProps> = ({}) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "app-form");
+
     const [show, setShow] = React.useState(false);
     const job = useAppSelector(state => state.job.data);
     const containerRef = React.useRef<HTMLDivElement>(null);
@@ -103,9 +101,11 @@ const AppFormMobileView: React.FC<AppFormMobileViewProps> = ({}) => {
                             </div>
                             <div className="w-full drop-shadow-md bg-white">
                                 <div className="flex gap-5 w-fit text-sm font-medium uppercase text-neutral-500 mx-auto">
-                                    <span className="py-2 ">Overview</span>
+                                    <span className="py-2 ">
+                                        {t("common:overview")}
+                                    </span>
                                     <span className='py-2 text-blue_primary_700 relative after:content-[""] after:absolute after:w-full after:left-0 after:bottom-0 after:h-0.5 rounded-full after:bg-blue_primary_800'>
-                                        Application
+                                        {t("common:application")}
                                     </span>
                                 </div>
                             </div>

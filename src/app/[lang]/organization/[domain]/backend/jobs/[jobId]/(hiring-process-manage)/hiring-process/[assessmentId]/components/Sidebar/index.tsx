@@ -5,13 +5,15 @@ import {
     InformationCircleIcon,
     MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
-import { useParams } from "next/navigation";
-import { ChevronDownIcon, MinusIcon } from "@heroicons/react/24/solid";
+import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { Tab } from "@headlessui/react";
+import { useParams } from "next/navigation";
 
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { setSelectAllCandidates } from "@/redux/slices/candidates.slice";
 import { MinusBigIcon } from "@/icons";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "./styles.module.scss";
 import CandidateList from "./CandidateList/CandidateList";
@@ -21,6 +23,9 @@ function classNames(...classes: any[]) {
 }
 
 const Sidebar = () => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "hiring-process");
+
     const dispatch = useAppDispatch();
     const selectedCandidates = useAppSelector(
         state => state.candidates.selectedCandidates
@@ -45,7 +50,7 @@ const Sidebar = () => {
                         }
                         onClick={() => setDisqualify(false)}
                     >
-                        <span>Qualified</span>
+                        <span>{t("qualified")}</span>
                     </Tab>
                     <Tab
                         className={({ selected }) =>
@@ -56,7 +61,7 @@ const Sidebar = () => {
                         }
                         onClick={() => setDisqualify(true)}
                     >
-                        <span>Disqualified</span>
+                        <span>{t("disqualified")}</span>
                     </Tab>
                 </Tab.List>
             </Tab.Group>
@@ -107,7 +112,7 @@ const Sidebar = () => {
                             className="flex items-center gap-2 group hover:underline text-neutral-700"
                         >
                             <span className="text-sm font-semibold">
-                                Newest
+                                {t("newest")}
                             </span>
                             <ChevronDownIcon className="w-4 h-4 group-hover:rotate-180 transition-all" />
                         </button>

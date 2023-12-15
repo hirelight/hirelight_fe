@@ -46,3 +46,14 @@ export interface IVerifyCodeDto {
     email: string;
     type: "REGISTER" | "RESET_PASSWORD";
 }
+
+export interface IIdentityDto {
+    id: string;
+    email: string;
+    firstName?: string;
+    lastName?: string;
+    avatarUrl?: string;
+    timeZone?: string;
+    createdTime?: Date | string;
+    updatedTime?: Date | string;
+}

@@ -2,23 +2,19 @@
 
 import React from "react";
 import { useParams, useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 
 import { useAppSelector } from "@/redux/reduxHooks";
-import { JobPostStatus } from "@/interfaces/job-post.interface";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 const PipelineHeader = () => {
     const { lang, jobId } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "flow");
 
     const assessmentFlow = useAppSelector(state => state.assessmentFlow.data);
     const router = useRouter();
-    const job = useAppSelector(state => state.job.data);
 
     const handleNavigate = () => {
-        // if (job.status === JobPostStatus.ACTIVE)
-        //     return toast.error(
-        //         "Job is publish! Please unpublish job before edit"
-        //     );
         router.push(
             `/${lang}/backend/jobs/${jobId}/pipeline/config-pipeline/${assessmentFlow.id}/edit`
         );
@@ -34,7 +30,7 @@ const PipelineHeader = () => {
                 className="text-sm font-medium hover:underline"
                 onClick={handleNavigate}
             >
-                Edit flow
+                {t("edit_flow")}
             </button>
         </div>
     );

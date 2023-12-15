@@ -1,28 +1,44 @@
 "use client";
 
-import React, { FormEvent, Fragment, useState } from "react";
-import Image from "next/image";
+import React, { FormEvent, Fragment, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { useParams } from "next/navigation";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { CloseIcon, Plus, Upload } from "@/icons";
-
-import logo from "/public/images/logo.svg";
-
-import { CustomInput, UserAvatar } from "@/components";
+import {
+    CustomInput,
+    EducationSection,
+    ExperienceSection,
+    UserAvatar,
+} from "@/components";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { handleError, uploadFile } from "@/helpers";
-import accountServices from "@/services/account/account.service";
+import { handleError, isInvalidForm, uploadFile } from "@/helpers";
 import authServices from "@/services/auth/auth.service";
 import { IUpdateInfoDto } from "@/services";
+import { passwordRegex } from "@/utils/shared/initialDatas";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 const InfoForm = () => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale);
+
     const [fileName, setFileName] = useState("");
     const resumeRef = React.useRef<HTMLInputElement>(null);
     const { authUser } = useAppSelector(state => state.auth);
-    const [formState, setFormState] = useState<IUpdateInfoDto>({
-        firstName: authUser?.firstName,
-        lastName: authUser?.lastName,
-        avatarUrl: authUser?.avatarUrl,
+    const [formState, setFormState] = useState<IUpdateInfoDto>({});
+    const [formError, setFormError] = useState<IUpdateInfoDto>({
+        password: "",
+        firstName: "",
+        lastName: "",
+        oldPassword: "",
+    });
+
+    const queryClient = useQueryClient();
+    const { data: indentityRes } = useQuery({
+        queryKey: ["identity"],
+        queryFn: authServices.getUserInfo,
     });
 
     const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,11 +46,72 @@ const InfoForm = () => {
             setFileName(e.target.files[0].name);
     };
 
+    const handleFieldChange = (key: string, value: any) => {
+        setFormState(prev => ({
+            ...prev,
+            [key]: value,
+        }));
+
+        setFormError(prev => ({
+            ...prev,
+            [key]: "",
+        }));
+    };
+
+    const validInputs = () => {
+        const errors = { ...formError };
+        const { password, oldPassword } = formState;
+
+        if (password && !passwordRegex.test(password))
+            errors.password = `Password must have at least 8 characters!
+            Password must have at least one uppercase, one lowercase and one number!`;
+
+        if (oldPassword && !passwordRegex.test(oldPassword))
+            errors.oldPassword = `Password must have at least 8 characters!
+            Password must have at least one uppercase, one lowercase and one number!`;
+
+        if (isInvalidForm(errors)) {
+            setFormError(errors);
+            return false;
+        }
+
+        return true;
+    };
+
     const handleUpdateAccount = async (e: FormEvent) => {
         e.preventDefault();
+        if (!validInputs())
+            return toast.error(
+                <div>
+                    <p>{t("common:error.invalid_input")}</p>
+                    <p>{t("common:error.check_red_places")}</p>
+                </div>
+            );
         try {
-            const res = await authServices.updateProfile(formState);
+            const formData = { ...formState };
+
+            const educationEl = document.getElementById(
+                "education"
+            ) as HTMLTextAreaElement;
+            const experienceEl = document.getElementById(
+                "experience"
+            ) as HTMLTextAreaElement;
+            if (educationEl && educationEl.value) {
+                formData.educations = JSON.parse(educationEl.value);
+            }
+            if (experienceEl && experienceEl.value) {
+                formData.educations = JSON.parse(experienceEl.value);
+            }
+            const res = await authServices.updateProfile(formData);
+
+            await queryClient.invalidateQueries({ queryKey: ["indentity"] });
             toast.success(res.message);
+
+            setFormState({
+                ...formState,
+                oldPassword: "",
+                password: "",
+            });
         } catch (error) {
             handleError(error);
         }
@@ -58,6 +135,16 @@ const InfoForm = () => {
         e.target.files = null;
         e.target.value = "";
     };
+
+    useEffect(() => {
+        if (indentityRes) {
+            setFormState({
+                firstName: indentityRes.data.firstName,
+                lastName: indentityRes.data.lastName,
+                avatarUrl: indentityRes.data.avatarUrl,
+            });
+        }
+    }, [indentityRes]);
 
     return (
         <Fragment>
@@ -84,13 +171,14 @@ const InfoForm = () => {
                             <CustomInput
                                 id="first-name"
                                 title="First name"
-                                value={formState?.firstName}
+                                defaultValue={formState?.firstName}
                                 onChange={e =>
-                                    setFormState({
-                                        ...formState,
-                                        firstName: e.target.value,
-                                    })
+                                    handleFieldChange(
+                                        "firstName",
+                                        e.target.value
+                                    )
                                 }
+                                errorText={formError.firstName}
                                 required
                             />
                         </div>
@@ -98,17 +186,18 @@ const InfoForm = () => {
                             <CustomInput
                                 id="last-name"
                                 title="Last name"
-                                value={formState?.lastName}
+                                defaultValue={formState?.lastName}
                                 onChange={e =>
-                                    setFormState({
-                                        ...formState,
-                                        lastName: e.target.value,
-                                    })
+                                    handleFieldChange(
+                                        "lastName",
+                                        e.target.value
+                                    )
                                 }
+                                errorText={formError.lastName}
                                 required
                             />
                         </div>
-                        <div className="relative">
+                        <div className="relative col-span-2">
                             <CustomInput
                                 id="email"
                                 title="Email"
@@ -117,43 +206,68 @@ const InfoForm = () => {
                                 required
                             />
                         </div>
-                        <div className="relative"></div>
+                        <div className="relative col-span-2">
+                            <CustomInput
+                                id="old-password"
+                                title="Old password"
+                                type="password"
+                                onChange={e => {
+                                    handleFieldChange(
+                                        "oldPassword",
+                                        e.target.value
+                                    );
+                                }}
+                                errorText={formError.oldPassword}
+                                required
+                            />
+                        </div>
+                        <div className="relative col-span-2">
+                            <CustomInput
+                                id="new-password"
+                                title="New password"
+                                type="password"
+                                onChange={e => {
+                                    handleFieldChange(
+                                        "password",
+                                        e.target.value
+                                    );
+                                }}
+                                errorText={formError.password}
+                                required
+                            />
+                        </div>
                     </div>
                 </section>
 
                 <section className="p-6">
                     <h4 className="mb-3">Profile</h4>
                     <div className="mb-6 flex flex-col gap-6">
-                        <div className="flex justify-between">
-                            <span className="text-gray-600 text-sm">
-                                Education
-                                <span className="text-gray-400">
-                                    (not required)
-                                </span>
-                            </span>
-                            <button
-                                type="button"
-                                className="bg-white text-blue_primary_800 border-2 border-blue_primary_800 hover:bg-blue_primary_800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-3 py-2 text-center inline-flex items-center"
-                            >
-                                <Plus className="w-4 h-4 mr-2" />
-                                Add
-                            </button>
-                        </div>
-                        <div className="flex justify-between">
-                            <span className="text-gray-600 text-sm">
-                                Experience
-                                <span className="text-gray-400">
-                                    (not required)
-                                </span>
-                            </span>
-                            <button
-                                type="button"
-                                className="bg-white text-blue_primary_800 border-2 border-blue_primary_800 hover:bg-blue_primary_800 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-3 py-2 text-center inline-flex items-center"
-                            >
-                                <Plus className="w-4 h-4 mr-2" />
-                                Add
-                            </button>
-                        </div>
+                        <EducationSection
+                            data={{
+                                id: "education",
+                                custom: true,
+                                label: "education",
+                                type: "group",
+                            }}
+                            datas={
+                                formState.educations
+                                    ? JSON.parse(formState.educations)
+                                    : []
+                            }
+                        />
+                        <ExperienceSection
+                            data={{
+                                id: "experience",
+                                custom: true,
+                                label: "experience",
+                                type: "group",
+                            }}
+                            datas={
+                                formState.educations
+                                    ? JSON.parse(formState.educations)
+                                    : []
+                            }
+                        />
                         <div className="flex justify-between">
                             <span className="text-gray-600 text-sm">
                                 CV/Resume

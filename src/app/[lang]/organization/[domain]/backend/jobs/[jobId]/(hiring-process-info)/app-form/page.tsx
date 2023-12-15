@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     title: "Hirelight - Backend | Job Application Form",
 };
 
-const JobApplicationForm = async () => {
+const JobApplicationForm = () => {
     return (
         <main>
             <AppForm />

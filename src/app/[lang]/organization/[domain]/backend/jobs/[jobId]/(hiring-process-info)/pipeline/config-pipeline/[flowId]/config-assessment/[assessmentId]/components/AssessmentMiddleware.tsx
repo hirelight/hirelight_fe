@@ -1,12 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { t } from "i18next";
 
 import { useAppSelector } from "@/redux/reduxHooks";
 import { ButtonOutline } from "@/components";
 import { FileCircleMinus } from "@/icons";
 import { defaulAssessmentStages } from "@/utils/shared/initialDatas";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import PipelineConfigAssessment from "../../../components/PipelineConfigAssessment";
 import PipelineStages from "../../../components/PipelineStages";
@@ -16,7 +19,9 @@ import AsyncAssessmentConfig from "./AsyncAssessment";
 import IntegrationAssessmentConfig from "./IntegrationAssessment";
 
 const AssessmentMiddleware = () => {
-    const router = useRouter();
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "flow");
+
     const { loading, data } = useAppSelector(state => state.assessment);
     const [show, setShow] = useState(
         data.assessmentQuestionAnswerSetId ? true : false
@@ -29,9 +34,7 @@ const AssessmentMiddleware = () => {
                     <FileCircleMinus className="text-neutral-700 w-24 h-24 mb-4" />
                 </div>
                 <p className="max-w-[50%] text-center">
-                    This assessment no need furthur detail definition. Please
-                    click bellow button and fill neccessary information for
-                    furthur actions.
+                    {t("this_assessment_no_need_furthur")}
                 </p>
             </div>
         );
@@ -43,16 +46,14 @@ const AssessmentMiddleware = () => {
                     <FileCircleMinus className="text-neutral-700 w-24 h-24 mb-4" />
                 </div>
                 <p className="max-w-[50%] text-center">
-                    You haven&apos;t define assessment in detail. Please click
-                    bellow button and fill neccessary information for furthur
-                    actions.
+                    {t("you_have_not_define_assessment")}
                 </p>
                 <ButtonOutline
                     type="button"
                     className="mt-8"
                     onClick={() => setShow(true)}
                 >
-                    Fill details
+                    {t("common:fill_details")}
                 </ButtonOutline>
             </div>
         );

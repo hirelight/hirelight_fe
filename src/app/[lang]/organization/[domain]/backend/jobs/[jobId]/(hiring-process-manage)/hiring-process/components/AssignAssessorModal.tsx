@@ -7,15 +7,20 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { UserCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 
-import { Button, CustomInput, UserAvatar } from "@/components";
+import {
+    Button,
+    CustomInput,
+    SelectCollaborators,
+    UserAvatar,
+} from "@/components";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
 import { handleError } from "@/helpers";
 import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
 import permissionServices from "@/services/permission/permission.service";
 import { useAppSelector } from "@/redux/reduxHooks";
 import assessmentsServices from "@/services/assessments/assessments.service";
-
-import SelectCollaborators from "./SelectCollaborators";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 type AssignAssessorModalProps = {
     isOpen: boolean;
@@ -28,17 +33,20 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
     closeModal,
     assessors,
 }) => {
-    const { jobId, assessmentId } = useParams();
+    const { jobId, assessmentId, lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "hiring-process");
 
     const queryClient = useQueryClient();
 
     const { data: assessmentData } = useAppSelector(state => state.assessment);
 
+    const [loading, setLoading] = useState(false);
     const [selected, setSelected] = useState<ICollaboratorDto[]>([]);
     const [numEvaluations, setNumEvaluations] = useState<string>("");
     const oldSelected = useMemo(() => assessors, [assessors]);
 
     const handleAssignAssessors = async () => {
+        setLoading(true);
         try {
             const [unassigns, assigns] = getAssessorList(oldSelected, selected);
             const promises = [];
@@ -75,11 +83,13 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
                 queryKey: ["assessment", assessmentId],
             });
 
-            toast.success("Update evaluators successfully!");
+            toast.success(t("update_evaluators_success"));
+            setLoading(false);
             closeModal();
         } catch (error) {
             handleError(error);
         }
+        setLoading(false);
     };
 
     const getAssessorList = (
@@ -150,7 +160,7 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
                                     as="h3"
                                     className="text-lg font-medium leading-6 text-gray-900 mb-4"
                                 >
-                                    Number of evaluations
+                                    {t("num_of_evaluations")}
                                 </Dialog.Title>
                                 <div className="mt-2">
                                     <CustomInput
@@ -166,7 +176,7 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
                                     as="h3"
                                     className="text-lg font-medium leading-6 text-gray-900 mb-4 mt-6"
                                 >
-                                    Assign assessors
+                                    {t("assign_assessors")}
                                 </Dialog.Title>
                                 <div className="mt-2">
                                     <ul className="space-y-4">
@@ -193,15 +203,6 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
                                                                     .lastName ??
                                                                     "")}
                                                         </h3>
-                                                        {/* {authUser &&
-                                                            selectAttendee
-                                                                .employerDto
-                                                                .id ===
-                                                                authUser.userId && (
-                                                                <p className="text-gray-500">
-                                                                    Organizer
-                                                                </p>
-                                                            )} */}
                                                     </div>
                                                     <button
                                                         type="button"
@@ -228,16 +229,18 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
                                     <Button
                                         type="button"
                                         onClick={handleAssignAssessors}
+                                        disabled={loading}
                                     >
-                                        Save changes
+                                        {t("common:save_changes")}
                                     </Button>
 
                                     <button
                                         type="button"
-                                        className="ml-2 font-semibold text-sm text-neutral-700 hover:text-neutral-900 hover:underline"
+                                        className="ml-2 font-semibold text-sm text-neutral-700 hover:text-neutral-900 hover:underline disabled:opacity-80 disabled:cursor-not-allowed"
                                         onClick={closeModal}
+                                        disabled={loading}
                                     >
-                                        Cancel
+                                        {t("common:cancel")}
                                     </button>
                                 </div>
                             </Dialog.Panel>

@@ -16,6 +16,7 @@ const JobList = () => {
     const [showJD, setShowJD] = useState(false);
     const [selectedJob, setSelectedJob] = useState<IJobDto>();
     const [searchString, setSearchString] = useState("");
+    const [curPage, setCurPage] = useState(1);
 
     const { data: jobsRes } = useQuery({
         queryKey: ["jobs"],
@@ -53,6 +54,7 @@ const JobList = () => {
                                                     .toLowerCase()
                                                     .includes(searchString)
                                             )
+                                            .slice(curPage, curPage + 4)
                                             .map((job, index) => (
                                                 <li
                                                     key={index}
@@ -121,7 +123,12 @@ const JobList = () => {
 
                     {jobsRes && jobsRes.data && jobsRes.data.length > 10 && (
                         <div className="flex justify-center items-center mt-6">
-                            <Pagination numOfPages={5} />
+                            <Pagination
+                                numOfPages={Math.floor(
+                                    jobsRes.data.length / 10
+                                )}
+                                onChangePage={page => setCurPage(page)}
+                            />
                         </div>
                     )}
                 </div>

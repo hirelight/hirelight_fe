@@ -2,20 +2,23 @@
 
 import React from "react";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
+import { useParams } from "next/navigation";
 
 import Portal from "@/components/Portal";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { IAppFormSection } from "@/interfaces";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import AppFormSection from "./AppFormSection";
 import AddQuestionModal from "./AddQuestionModal";
 import CustomFieldOnType from "./CustomFieldOnType";
 
-type AppFormConfigurationProps = {
-    // appFormSections: IAppFormSection[];
-};
+type AppFormConfigurationProps = {};
 
 const AppFormConfiguration: React.FC<AppFormConfigurationProps> = ({}) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "app-form");
+
     const [show, setShow] = React.useState(false);
     const appFormSections = useAppSelector(
         state => state.job.data.applicationForm
@@ -49,7 +52,7 @@ const AppFormConfiguration: React.FC<AppFormConfigurationProps> = ({}) => {
                             <span>
                                 <PlusCircleIcon className="w-5 h-5 mr-1" />
                             </span>
-                            Add a question
+                            {t("add_a_question")}
                         </button>
                     </div>
                 </div>

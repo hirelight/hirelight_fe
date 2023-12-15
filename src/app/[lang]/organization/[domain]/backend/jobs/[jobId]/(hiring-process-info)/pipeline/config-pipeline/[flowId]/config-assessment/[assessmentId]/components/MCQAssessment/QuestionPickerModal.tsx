@@ -1,11 +1,8 @@
 import React from "react";
-import { XMarkIcon } from "@heroicons/react/24/solid";
 
-import { Button, ButtonOutline, Modal, QuestionPicker } from "@/components";
+import { Modal, QuestionPicker } from "@/components";
 import { IModalProps } from "@/components/Modal";
 import { IQuestionAnswerDto } from "@/services";
-
-import styles from "./QuestionPickerModal.module.scss";
 
 interface QuestionPickerModalProps extends IModalProps {
     isOpen: boolean;

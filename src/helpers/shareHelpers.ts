@@ -30,6 +30,7 @@ export function pad(num: number) {
     return ("0" + num).slice(-2);
 }
 export function hhmmss(seconds: number) {
+    if (seconds < 0) return "00:00:00";
     let h = parseInt((seconds / 3600).toString());
     let m = parseInt((seconds / 60).toString()) % 60;
     let s = seconds % 60;

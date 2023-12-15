@@ -1,0 +1,18 @@
+{
+    "edit_flow": "Edit flow",
+    "flow_not_blank": "Flow name must not be blank!",
+    "flow_start_after_job": "Assessment flow must start after job post start time!",
+    "flow_need_at_least_one_assessment": "Except from Sourced and Hired. Assessment flow need at least one assessment",
+    "maximum_assessments": "Maximum assessments: 10",
+    "please_review_flow_info": "Please review your information. Once you create flow you can only edit flow order or assessment name. This action cannot be undone!",
+    "create_new_assessment_flow": "Create new assessment flow",
+    "add_or_edit_flow_stages": "Add or edit flow stages",
+    "add_new_assessment": "Add new assessment",
+    "add_a_stage_name": "Add a stage name",
+    "assessment_name": "Assessment name",
+    "assessment_type": "Assessment type",
+    "update_flow_failure": "Update flow failure!",
+    "assessment_name_already_existed": "Assessment name already existed!",
+    "this_assessment_no_need_furthur": "This assessment no need furthur detail definition. Please click bellow button and fill neccessary information for furthur actions.",
+    "you_have_not_define_assessment": "You haven't define assessment in detail. Please click bellow button and fill neccessary information for furthur actions."
+}

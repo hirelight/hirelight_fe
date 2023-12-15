@@ -9,6 +9,7 @@ import {
     domAnimation,
 } from "framer-motion";
 import React, { useState } from "react";
+import { useParams } from "next/navigation";
 
 import { useRaisedShadow } from "@/hooks/use-raised-boxshadow";
 import {
@@ -16,6 +17,8 @@ import {
     AssessmentTypes,
 } from "@/interfaces/assessment.interface";
 import { IAssessmentFlow } from "@/services/assessment-flows/assessment-flows.interface";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import FlowStageForm from "./FlowStageForm";
 
@@ -35,6 +38,8 @@ const AssessmentFlowCard: React.FC<AssessmentFlowCardProps> = ({
     updateStage,
     deleteStage,
 }) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale);
     const dragControls = useDragControls();
     const y = useMotionValue(0);
     const boxShadow = useRaisedShadow(y);
@@ -82,14 +87,14 @@ const AssessmentFlowCard: React.FC<AssessmentFlowCardProps> = ({
                                 className="text-blue_primary_700 hover:text-blue_primary_800 hover:underline "
                                 onClick={() => setShowEdit(true)}
                             >
-                                Edit
+                                {t("common:edit")}
                             </button>
                             <button
                                 type="button"
                                 className="text-red-600 hover:underline hover:text-red-700"
                                 onClick={deleteStage}
                             >
-                                Delete
+                                {t("common:Delete")}
                             </button>
                         </div>
                     )}

@@ -3,6 +3,7 @@
 import React, { FormEvent, useState } from "react";
 import { produce } from "immer";
 import { toast } from "react-toastify";
+import { useParams } from "next/navigation";
 
 import {
     Button,
@@ -14,17 +15,33 @@ import { industries } from "@/utils/shared/initialDatas";
 import organizationsServices from "@/services/organizations/organizations.service";
 import { IEditOrganizationDto } from "@/services";
 import { handleError } from "@/helpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "../styles.module.scss";
 
 import { useOrgProfileForm } from "./OrgProfileForm";
 
 const ProfileSection = () => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale);
+
     const { orgData, setOrgData } = useOrgProfileForm();
     const [loading, setLoading] = useState(false);
 
     const handleSaveProfileChanges = async (e: FormEvent) => {
         e.preventDefault();
+        const regex = /[`~,<>;':"\[\]\|{}()=_#\.+]/;
+
+        if (regex.test(orgData.subdomain))
+            return toast.error("Subdomain cannot contain special characters!");
+        if (
+            ["-"].includes(
+                orgData.subdomain.charAt(orgData.subdomain.length - 1)
+            )
+        )
+            return toast.error("Subdomain cannot end with special characters!");
+
         setLoading(true);
         try {
             const res = await organizationsServices.editOrgProfile({
@@ -88,15 +105,9 @@ const ProfileSection = () => {
                                 id="org-domain"
                                 title="Domain"
                                 value={orgData.subdomain ?? ""}
-                                onChange={e =>
-                                    setOrgData(
-                                        produce(orgData, draft => {
-                                            draft.subdomain = e.target.value;
-                                        })
-                                    )
-                                }
                                 className="pr-20"
                                 required
+                                readOnly
                             />
                             <div className="absolute right-2.5 bottom-2.5 text-sm text-gray-500">
                                 <span>.hirelight.xyz</span>

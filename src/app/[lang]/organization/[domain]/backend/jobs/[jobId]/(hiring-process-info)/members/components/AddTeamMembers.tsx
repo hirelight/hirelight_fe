@@ -1,27 +1,24 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { toast } from "react-toastify";
+import React from "react";
 import { UsersIcon } from "@heroicons/react/24/outline";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import { Button, Portal } from "@/components";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
-import { IUserDto } from "@/services";
-import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
-import { useAppSelector } from "@/redux/reduxHooks";
 import queryKeyConst from "@/utils/constants/query-key.constant";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "./AddTeamMembers.module.scss";
 import NewMemberModal from "./NewMemberModal";
 import CollaboratorList from "./CollaboratorList";
 
 const AddTeamMebers = () => {
-    const { jobId } = useParams();
-    const userData = useAppSelector(state => state.auth.authUser);
+    const { jobId, lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "job-member");
 
-    const [datas, setDatas] = React.useState<ICollaboratorDto[]>([]);
     const [showModal, setShowModal] = React.useState(false);
     const {
         data: res,
@@ -32,13 +29,6 @@ const AddTeamMebers = () => {
         queryFn: () =>
             collaboratorsServices.getCollaboratorList(jobId as string),
     });
-
-    const handleAddMemeber = (newMember: any) => {
-        const existingMember = datas.find(
-            member => member.employerDto.email === newMember.email
-        );
-        if (existingMember) return toast.error("Member already added");
-    };
 
     if (isLoading) {
         return (
@@ -55,7 +45,6 @@ const AddTeamMebers = () => {
                     isOpen={showModal}
                     collabList={res ? res.data : []}
                     onClose={() => setShowModal(false)}
-                    onSendInvitation={handleAddMemeber}
                 />
             </Portal>
             {res && res.data.length > 0 ? (
@@ -66,11 +55,10 @@ const AddTeamMebers = () => {
                 <div className="w-full flex flex-col items-center py-6">
                     <UsersIcon className="text-gray-600 w-14 h-14 mb-8" />
                     <h2 className="text-2xl text-neutral-700 font-semibold mb-2">
-                        No account members in this hiring team
+                        {t("no_account_members")}
                     </h2>
                     <p className="text-sm text-neutral-700">
-                        There are no members collaborating on this job. You can
-                        add someone from your team or invite a new member.
+                        {t("there_no_members_collab")}
                     </p>
                 </div>
             )}
@@ -82,7 +70,7 @@ const AddTeamMebers = () => {
                         disabled={isLoading}
                         onClick={() => setShowModal(true)}
                     >
-                        Invite a new member
+                        {t("invite_new_member")}
                     </Button>
                 </div>
             </div>
@@ -93,18 +81,21 @@ const AddTeamMebers = () => {
 export default AddTeamMebers;
 
 const CollaboratorListLoading = () => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "job-member");
+
     return (
         <table className="w-full text-sm text-left text-gray-500  dark:text-gray-400 overflow-hidden">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b dark:border-gray-700 relative shadow-md">
                 <tr>
                     <th scope="col" className="p-6 hidden md:table-cell">
-                        Member name
+                        {t("member_name")}
                     </th>
                     <th scope="col" className="p-6">
-                        Email
+                        {t("common:email")}
                     </th>
                     <th scope="col" className="p-6 hidden lg:table-cell">
-                        Status
+                        {t("common:status")}
                     </th>
                     <th></th>
                 </tr>

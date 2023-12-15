@@ -1,0 +1,18 @@
+{
+    "edit_flow": "Chỉnh sửa quy trình",
+    "flow_not_blank": "Tên luồng không được để trống!",
+    "flow_start_after_job": "Luồng đánh giá phải bắt đầu sau thời gian bắt đầu công việc!",
+    "flow_need_at_least_one_assessment": "Ngoại trừ Sourced và Hired. Luồng đánh giá cần có thêm ít nhất một bài đánh giá",
+    "maximum_assessments": "Số đánh giá tối đa: 10",
+    "please_review_flow_info": "Vui lòng xem xét thông tin của bạn. Sau khi bạn tạo quy trình. Hành động này không thể được hoàn tác!",
+    "create_new_assessment_flow": "Tạo quy trình đánh giá mới",
+    "add_or_edit_flow_stages": "Thêm hoặc chỉnh sửa các giai đoạn của quy trình",
+    "add_new_assessment": "Thêm đánh giá mới",
+    "add_a_stage_name": "Thêm tên giai đoạn",
+    "assessment_name": "Tên bài đánh giá",
+    "assessment_type": "Loại bài đánh giá",
+    "update_flow_failure": "Cập nhật quy trình thất bại!",
+    "assessment_name_already_existed": "Tên bài đánh giá đã tồn tại!",
+    "this_assessment_no_need_furthur": "Bài đánh giá này không cần định rõ chi tiết hơn. Vui lòng nhấp vào nút bên dưới và điền thông tin cần thiết cho các hành động tiếp theo.",
+    "you_have_not_define_assessment": "Bạn chưa thêm thông tin chi tiết bài đánh giá. Vui lòng nhấp vào nút bên dưới và điền thông tin cần thiết cho các hành động tiếp theo."
+}

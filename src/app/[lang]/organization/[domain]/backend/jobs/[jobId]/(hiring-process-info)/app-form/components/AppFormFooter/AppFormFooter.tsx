@@ -2,14 +2,21 @@
 
 import React from "react";
 import { toast } from "react-toastify";
+import { useParams } from "next/navigation";
 
 import { ButtonOutline, DeleteModal, Portal } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { updateJob } from "@/redux/thunks/job.thunk";
 import { JobPostStatus } from "@/interfaces/job-post.interface";
 import jobServices from "@/services/job/job.service";
+import { handleError } from "@/helpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 const AppFormFooter = () => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "app-form");
+
     const dispatch = useAppDispatch();
     const [showModal, setShowModal] = React.useState(false);
     const [loading, setLoading] = React.useState(false);
@@ -17,29 +24,24 @@ const AppFormFooter = () => {
 
     const handleShowConfirmModal = () => {
         setShowModal(true);
-        // dispatch(clearAppForm);
     };
 
     const handleDeleteJob = async () => {
         if (job.status === JobPostStatus.ACTIVE) {
-            return toast.error(
-                `Job is publishing! Please unpublish job before detele`
-            );
+            return toast.error(t("common:error.jobpost_is_publishing"));
         }
 
         try {
             const res = await jobServices.deleteByIdAsync(job.id);
             toast.success(res.message);
         } catch (error: any) {
-            toast.error(error.message ? error.message : "Something went wrong");
+            handleError(error);
         }
     };
 
     const handleSaveDraft = async () => {
         if (job.status === JobPostStatus.ACTIVE)
-            return toast.error(
-                "Job post is publishing! Please unpublish before perform any changes!"
-            );
+            return toast.error(t("common:error.jobpost_is_publishing"));
 
         setLoading(true);
         await dispatch(
@@ -72,15 +74,15 @@ const AppFormFooter = () => {
                     disabled={loading}
                     isLoading={loading}
                 >
-                    Save draft
+                    {t("common:save_draft")}
                 </ButtonOutline>
-                <button
+                {/* <button
                     type="button"
                     className="text-xs font-medium text-red-600 hover:text-red-800 hover:font-semibold hover:underline"
                     onClick={handleShowConfirmModal}
                 >
                     Delete job
-                </button>
+                </button> */}
             </div>
         </>
     );

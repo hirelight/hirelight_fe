@@ -18,18 +18,10 @@ const SelectCollaborators: React.FC<SelectAttendeeListProps> = ({
 }) => {
     const { jobId } = useParams();
 
-    const { data: collabRes } = useQuery({
+    const { data: collabRes, isLoading } = useQuery({
         queryKey: ["collaborators", jobId],
         queryFn: () =>
             collaboratorsServices.getCollaboratorList(jobId as string),
-        select(data) {
-            return {
-                ...data,
-                data: data.data.filter(
-                    collab => !selected.find(item => item.id === collab.id)
-                ),
-            };
-        },
     });
 
     return (
@@ -45,44 +37,48 @@ const SelectCollaborators: React.FC<SelectAttendeeListProps> = ({
                     leaveTo="opacity-0"
                 >
                     <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
-                        {collabRes?.data.map(person => (
-                            <Listbox.Option
-                                key={person.id}
-                                className={({ active }) =>
-                                    `relative cursor-pointer select-none py-2 pl-10 pr-4 ${
-                                        active
-                                            ? "bg-blue-200/60 text-blue_primary_800"
-                                            : "text-gray-900"
-                                    }`
-                                }
-                                value={person}
-                            >
-                                {({ selected }) => (
-                                    <>
-                                        <span
-                                            className={`block truncate ${
-                                                selected
-                                                    ? "font-medium"
-                                                    : "font-normal"
-                                            }`}
-                                        >
-                                            {person.employerDto.firstName +
-                                                " " +
-                                                (person.employerDto.lastName ??
-                                                    "")}
-                                        </span>
-                                        {selected ? (
-                                            <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue_primary_800">
-                                                <CheckIcon
-                                                    className="h-5 w-5"
-                                                    aria-hidden="true"
-                                                />
+                        {isLoading ? (
+                            <AttendeeSkeleton />
+                        ) : (
+                            collabRes?.data.map(person => (
+                                <Listbox.Option
+                                    key={person.id}
+                                    className={({ active }) =>
+                                        `relative cursor-pointer select-none py-2 pl-10 pr-4 ${
+                                            active
+                                                ? "bg-blue-200/60 text-blue_primary_800"
+                                                : "text-gray-900"
+                                        }`
+                                    }
+                                    value={person}
+                                >
+                                    {({ selected }) => (
+                                        <>
+                                            <span
+                                                className={`block truncate ${
+                                                    selected
+                                                        ? "font-medium"
+                                                        : "font-normal"
+                                                }`}
+                                            >
+                                                {person.employerDto.firstName +
+                                                    " " +
+                                                    (person.employerDto
+                                                        .lastName ?? "")}
                                             </span>
-                                        ) : null}
-                                    </>
-                                )}
-                            </Listbox.Option>
-                        ))}
+                                            {selected ? (
+                                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-blue_primary_800">
+                                                    <CheckIcon
+                                                        className="h-5 w-5"
+                                                        aria-hidden="true"
+                                                    />
+                                                </span>
+                                            ) : null}
+                                        </>
+                                    )}
+                                </Listbox.Option>
+                            ))
+                        )}
                     </Listbox.Options>
                 </Transition>
             </div>
@@ -91,3 +87,16 @@ const SelectCollaborators: React.FC<SelectAttendeeListProps> = ({
 };
 
 export default SelectCollaborators;
+
+const AttendeeSkeleton = () => {
+    return (
+        <div className="space-y-2">
+            {new Array(3).fill("").map((_, index) => (
+                <div
+                    key={index}
+                    className="animate-pulse h-6 rounded w-40"
+                ></div>
+            ))}
+        </div>
+    );
+};

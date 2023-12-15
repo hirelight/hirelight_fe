@@ -1,11 +1,13 @@
 import endpoints from "@/utils/constants/service-endpoint";
 import { IResponse } from "@/interfaces/service.interface";
 import { checkResErr } from "@/helpers";
+import { IUserInfo } from "@/interfaces/user.interface";
 
 import interceptor from "../interceptor";
 
 import {
     AuthResponse,
+    IIdentityDto,
     IUpdateInfoDto,
     IVerifyCodeDto,
     LoginCandidateDto,
@@ -132,9 +134,9 @@ const getOrgAccessToken = async (id: string) => {
     }
 };
 
-const getUserInfo = async () => {
+const getUserInfo = async (): Promise<IResponse<IIdentityDto>> => {
     try {
-        const res = await interceptor.get<IResponse<any>>(
+        const res = await interceptor.get<IResponse<IIdentityDto>>(
             endpoints.IDENTITY_GET_INFO
         );
 

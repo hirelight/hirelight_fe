@@ -13,11 +13,15 @@ import { Button, CustomInput, CustomTextArea, DatePicker } from "..";
 
 type ExperienceSectionProps = {
     data: IAppFormField;
+    datas?: ExperienceType[];
 };
 
-const ExperienceSection: React.FC<ExperienceSectionProps> = ({ data }) => {
+const ExperienceSection: React.FC<ExperienceSectionProps> = ({
+    data,
+    datas = [],
+}) => {
     const [showForm, setShowForm] = useState(false);
-    const [experiences, setExperiences] = useState<ExperienceType[]>([]);
+    const [experiences, setExperiences] = useState<ExperienceType[]>(datas);
 
     const onSave = (newData: ExperienceType) => {
         setExperiences(experiences.concat([newData]));
@@ -122,6 +126,11 @@ const FormInput = ({
     const handleAddEducation = () => {
         if (!formState.title)
             return setFormErr({ ...formErr, title: "Field is required!" });
+        if (moment(formState.endDate).isBefore(formState.startDate, "date"))
+            return setFormErr({
+                ...formErr,
+                startDate: "Start date must lower than end date!",
+            });
         onSave({
             ...formState,
             startDate: formState.startDate
@@ -165,12 +174,14 @@ const FormInput = ({
                         title="Start date"
                         value={formState.startDate}
                         onChange={date => handleFormChange("startDate", date)}
+                        errorText={formErr.startDate}
                     />
 
                     <DatePicker
                         title="End date"
                         value={formState.endDate}
                         onChange={date => handleFormChange("endDate", date)}
+                        maxDate={new Date()}
                         disabled={formState.currentlyWork}
                     />
                 </div>

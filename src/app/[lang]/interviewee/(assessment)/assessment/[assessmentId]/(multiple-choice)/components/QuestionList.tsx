@@ -32,15 +32,15 @@ const QuestionList = () => {
     }, [handleSubmitTest]);
 
     return (
-        <div className="flex gap-6 relative">
-            <ul className="space-y-4 mb-6">
+        <div className="w-full flex gap-6 relative">
+            <ul className="flex-1 space-y-4 mb-6">
                 {answers?.map((item, index) => (
                     <li key={item.id}>
                         <QuestionCard data={item} index={index} />
                     </li>
                 ))}
             </ul>
-            <div className="w-80 h-fit sticky top-4 bg-white border border-gray-200 rounded-md drop-shadow-lg">
+            <div className="w-80 h-fit sticky top-4 right-0 bg-white border border-gray-200 rounded-md drop-shadow-lg">
                 <div className="text-center text-xl font-semibold">
                     {assesmentData?.status ===
                     ApplicantAssessmentDetailStatus.IN_PROGRESS ? (

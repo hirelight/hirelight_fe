@@ -5,6 +5,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { IIntegrationDto } from "@/services";
 import { supportServices } from "@/utils/constants/integrations";
 import { HackerrankIcon, TestlifyLogo } from "@/icons";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import ThirpatyAssessments from "./ThirpatyAssessments";
 
@@ -31,6 +33,8 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({
 }) => {
     const { lang } = useParams();
     const router = useRouter();
+
+    const { t } = useI18NextTranslation(lang as I18Locale, "assessment");
 
     const [showList, setShowList] = useState(false);
 
@@ -64,13 +68,8 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({
                     </h3>
                     <p className="text-gray-600">
                         {data.service === supportServices.HACKERRANK
-                            ? "HackerRank is the industry standard, end-to-end technical skills assessment platform that helps companies across industries to better evaluate, interview, and hire software developers."
-                            : `Criteria is an assessment company dedicated to helping
-                        organizations make better talent decisions using
-                        objective, multidimensional data. By combining
-                        leading-edge data science with rigorous validation
-                        backed by I/O psychologists, we provide the most precise
-                        assessments available.`}
+                            ? t("hackerrank_helper")
+                            : t("testlify_helper")}
                     </p>
                 </div>
                 <div className="self-center px-4">
@@ -80,8 +79,8 @@ const IntegrationCard: React.FC<IntegrationCardProps> = ({
                         onClick={handleShowAssessment}
                     >
                         {data.token
-                            ? "Select assessment"
-                            : "Set up integration"}
+                            ? t("select_assessment")
+                            : t("set_up_integration")}
                     </button>
                 </div>
             </div>

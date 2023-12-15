@@ -1,0 +1,16 @@
+{
+    "customize_your_app_form": "Customize your application form",
+    "view_mobile_mode": "View mobile mode",
+    "view_desktop_mode": "View desktop mode",
+    "company_name": "Company name",
+    "required_fields": "Required fields",
+    "submit_application": "Submit application",
+    "add_a_question": "Add a question",
+    "question_not_blank": "Question name must not be blank!",
+    "question_at_least_2_choices": "Question must have at least 2 choices!",
+    "choice_label_not_blank": "Choice label must not be blank!",
+    "question_already_existed": "Question name is already existed!",
+    "add_other_require_info": "Add other require informations",
+    "only_one_ans_allow": "Only one answer allowed",
+    "delete_job": "Delete job"
+}

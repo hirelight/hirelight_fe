@@ -1,0 +1,16 @@
+{
+    "customize_your_app_form": "Điều chỉnh mẫu đơn ứng tuyển",
+    "view_mobile_mode": "Xem bản điện thoại",
+    "view_desktop_mode": "Xem bản máy tính bàn",
+    "company_name": "Tên công ty",
+    "required_fields": "Phần bắt buộc",
+    "submit_application": "Lưu đơn",
+    "add_a_question": "Thêm câu hỏi",
+    "question_not_blank": "Tên câu hỏi không được để trống!",
+    "question_at_least_2_choices": "Câu hỏi phải có ít nhất 2 lựa chọn!",
+    "choice_label_not_blank": "Nhãn không được để trống!",
+    "question_already_existed": "Tên câu hỏi đã tồn tại!",
+    "add_other_require_info": "Thêm thông tin yêu cầu khác",
+    "only_one_ans_allow": "Chỉ cho phép một câu trả lời",
+    "delete_job": "Xóa công việc"
+}
