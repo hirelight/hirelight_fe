@@ -226,11 +226,7 @@ const CreateAssessment = () => {
                                 title={t("due_date")}
                                 value={
                                     formState.invitationDuration
-                                        ? `${formState.invitationDuration} ${
-                                              formState.invitationDuration > 1
-                                                  ? t("common:days")
-                                                  : t("common:day")
-                                          }`
+                                        ? formState.invitationDuration.toString()
                                         : ""
                                 }
                                 items={[1, 3, 5, 7, 10, 15, 20, 25, 30].map(
@@ -254,7 +250,7 @@ const CreateAssessment = () => {
 
                         <div>
                             <Timer
-                                title="Duration"
+                                title={t("duration")}
                                 data={formState.duration}
                                 onChange={second => {
                                     setFormState(prev => ({

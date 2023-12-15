@@ -32,7 +32,6 @@ export const thinkTime = new Map<number, string>([
 ]);
 
 export const numOfTakes = new Map<number, string>([
-    [0, "No takes"],
     [1, "One take"],
     [2, "2 takes"],
     [3, "3 takes"],

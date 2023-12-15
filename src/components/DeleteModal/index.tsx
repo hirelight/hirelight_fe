@@ -1,9 +1,12 @@
 "use client";
 
 import React from "react";
+import { useParams } from "next/navigation";
 
 import { delayFunc } from "@/helpers/shareHelpers";
 import { SpinLoading } from "@/icons";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "./styles.module.scss";
 
@@ -26,6 +29,8 @@ const DeleteModal = ({
     show = false,
     loading,
 }: IDeleteModal) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale);
     const backdropRef = React.useRef<HTMLDivElement>(null);
     const panelRef = React.useRef<HTMLDivElement>(null);
 
@@ -63,16 +68,6 @@ const DeleteModal = ({
             role="dialog"
             aria-modal="true"
         >
-            {/* <!--
-    Background backdrop, show/hide based on modal state.
-
-    Entering: "ease-out duration-300"
-      From: "opacity-0"
-      To: "opacity-100"
-    Leaving: "ease-in duration-200"
-      From: "opacity-100"
-      To: "opacity-0"
-  --> */}
             <div
                 ref={backdropRef}
                 className={`${styles.backdrop} ${styles.entering}`}
@@ -83,16 +78,6 @@ const DeleteModal = ({
                 onClick={closeModal}
             >
                 <div className="flex min-h-full items-center justify-center p-4 text-center sm:items-center sm:p-0">
-                    {/* <!--
-        Modal panel, show/hide based on modal state.
-
-        Entering: "ease-out duration-300"
-          From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-          To: "opacity-100 translate-y-0 sm:scale-100"
-        Leaving: "ease-in duration-200"
-          From: "opacity-100 translate-y-0 sm:scale-100"
-          To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-      --> */}
                     <div
                         ref={panelRef}
                         className={`${styles.modal__panel} ${styles.entering}`}
@@ -143,7 +128,7 @@ const DeleteModal = ({
                                 onClick={handleConfirm}
                                 disabled={loading}
                             >
-                                Proceed
+                                {t("common:proceed")}
                                 {loading && <SpinLoading className="ml-2" />}
                             </button>
                             <button
@@ -151,7 +136,7 @@ const DeleteModal = ({
                                 className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                                 onClick={handleCancel}
                             >
-                                Cancel
+                                {t("common:cancel")}
                             </button>
                         </div>
                     </div>

@@ -9,13 +9,16 @@ import { AnimatePresence, LazyMotion, domAnimation } from "framer-motion";
 import evaluationServices from "@/services/evaluation/evaluation.service";
 import { Button } from "@/components";
 import { useAppSelector } from "@/redux/reduxHooks";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "./styles.module.scss";
 import AddEvaluationSection from "./AddEvaluationSection";
 import EvaluationCard, { getRating } from "./EvaluationCard";
 
 const ReviewContent = () => {
-    const { candidateId } = useParams();
+    const { candidateId, lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "candidate");
 
     const [showAdd, setShowAdd] = useState(false);
     const applicantAssessmentDetail = useAppSelector(
@@ -56,21 +59,20 @@ const ReviewContent = () => {
                     <BookmarkSlashIcon className="w-16 h-16 text-neutral-700" />
                     <div className="ml-6 p-2">
                         <h3 className="mb-2 text-lg font-semibold">
-                            There is no evaluations for current assessment yet
+                            {t("there_is_no_evaluations")}
                         </h3>
                         <p className="mb-6 text-sm">
-                            Evaluations you or other team members add will
-                            appear here.
+                            {t("evaluations_you_or_other")}
                         </p>
                         <Button onClick={() => setShowAdd(true)}>
-                            Add evaluation
+                            {t("add_evaluation")}
                         </Button>
                     </div>
                 </div>
             ) : (
                 <div>
                     <h3 className="text-lg text-neutral-700 mb-2 font-semibold">
-                        Current submission
+                        {t("current_submission")}
                     </h3>
                     <section
                         key={applicantAssessmentDetail.id}
@@ -138,7 +140,7 @@ const ReviewContent = () => {
                             item.id !== applicantAssessmentDetail.id
                     ).length > 0 && (
                         <h3 className="text-lg text-neutral-700 mb-2 font-semibold">
-                            Previous submissions
+                            {t("prev_submissions")}
                         </h3>
                     )}
                 <div className="space-y-4">
@@ -215,7 +217,7 @@ const ReviewContent = () => {
                     applicantAssessmentDetail.id
                 )}
             >
-                Add evaluation for this candidate
+                {t("add_evaluation_for_candidate")}
             </button>
 
             <LazyMotion features={domAnimation}>

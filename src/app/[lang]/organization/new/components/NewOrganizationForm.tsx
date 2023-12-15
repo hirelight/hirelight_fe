@@ -76,7 +76,7 @@ const NewOrganizationForm = () => {
         if (regex.test(newOrgForm.subdomain)) {
             setNewOrgFormErr(prev => ({
                 ...prev,
-                domainErr: "Subdomain cannot contain special characters",
+                domainErr: t("subdomain_not_contain_special"),
             }));
             valid = true;
         }
@@ -87,7 +87,7 @@ const NewOrganizationForm = () => {
         ) {
             setNewOrgFormErr(prev => ({
                 ...prev,
-                domainErr: "Subdomain cannot end with special characters",
+                domainErr: t("subdomain_not_end_with"),
             }));
             valid = true;
         }
@@ -118,8 +118,8 @@ const NewOrganizationForm = () => {
                 isLoading={loading}
                 closeModal={() => setShowWarning(false)}
                 onConfirm={handleCreateNewOrg}
-                content="Please review your information. Once you create org you cannot edit the subdomain!"
-                title="Create new organization"
+                content={t("create_new_org_warning")}
+                title={t("create_new_org")}
             />
             <div className="flex flex-col gap-4">
                 <div className="pt-6 px-6">

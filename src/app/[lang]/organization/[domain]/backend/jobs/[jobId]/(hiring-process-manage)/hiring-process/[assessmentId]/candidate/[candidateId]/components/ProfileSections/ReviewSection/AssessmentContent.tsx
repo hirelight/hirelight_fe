@@ -1,23 +1,23 @@
+"use client";
+
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import React, { useState } from "react";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
-import moment from "moment";
 
 import applicantAssessmentDetailServices from "@/services/applicant-assessment-detail/applicant-assessment-detail.service";
 import { useAppSelector } from "@/redux/reduxHooks";
 import { IJobPostAppAssDetailDto } from "@/services";
-import {
-    ApplicantAssessmentDetailStatus,
-    defaultAsessment,
-} from "@/interfaces/assessment.interface";
 import { getIconBaseOnAssessmentType } from "@/helpers/getIconBaseType";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import ResultPreview from "./ResultPreview";
 
 const AssessmentContent = () => {
-    const { candidateId, jobId } = useParams();
+    const { candidateId, jobId, lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "candidate");
 
     const applicantDetail = useAppSelector(
         state => state.applicantAssessmentDetail.data!!
@@ -48,7 +48,7 @@ const AssessmentContent = () => {
                 ) && (
                     <>
                         <h3 className="text-lg text-neutral-700 mb-2 font-semibold">
-                            Current submission
+                            {t("current_submission")}
                         </h3>
                         <div>
                             <AssessmentCard
@@ -71,7 +71,7 @@ const AssessmentContent = () => {
                         detail.id !== applicantDetail.id
                 ).length > 0 && (
                     <h3 className="text-lg text-neutral-700 mb-2 mt-6 font-semibold">
-                        Previous submissions
+                        {t("prev_submissions")}
                     </h3>
                 )}
             <ul className="space-y-4">
@@ -98,6 +98,8 @@ const AssessmentContent = () => {
 export default AssessmentContent;
 
 const AssessmentCard = ({ data }: { data: IJobPostAppAssDetailDto }) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "candidate");
     const [showPreview, setShowPreview] = useState(false);
 
     return (
@@ -122,7 +124,7 @@ const AssessmentCard = ({ data }: { data: IJobPostAppAssDetailDto }) => {
                 <div className="absolute right-0 top-1/2 -translate-y-1/2">
                     {!data.questionAnswerSet ? (
                         <div>
-                            <strong>Non attendance</strong>
+                            <strong>{t("non_attendance")}</strong>
                         </div>
                     ) : data.assessment.assessmentTypeName !==
                       "THIRD_PARTY_ASSESSMENT" ? (
@@ -143,7 +145,7 @@ const AssessmentCard = ({ data }: { data: IJobPostAppAssDetailDto }) => {
                             title="Integration result"
                             className="text-sm font-semibold text-blue_primary_600 hover:text-blue_primary_800 hover:underline"
                         >
-                            Report
+                            {t("common:report")}
                         </Link>
                     ) : null}
                 </div>

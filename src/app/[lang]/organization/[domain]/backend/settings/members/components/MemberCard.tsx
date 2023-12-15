@@ -5,10 +5,14 @@ import { toast } from "react-toastify";
 import Image from "next/image";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 
 import { DeleteModal, Portal } from "@/components";
 import { IOrgEmployerDto, Roles } from "@/services";
 import employerOrgServices from "@/services/employer-organization/employer-organization.service";
+import { handleError } from "@/helpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "./MemberList.module.scss";
 
@@ -18,6 +22,9 @@ type MemberCardProps = {
 };
 
 const MemberCard: React.FC<MemberCardProps> = ({ employer, index }) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "org-members");
+
     const [showDeleteAlert, setShowDeleteAlert] = useState(false);
     const queryClient = useQueryClient();
     const deleteMutation = useMutation({
@@ -30,7 +37,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ employer, index }) => {
             });
         },
         onError: error => {
-            console.error(error);
+            handleError(error);
         },
     });
 
@@ -38,7 +45,7 @@ const MemberCard: React.FC<MemberCardProps> = ({ employer, index }) => {
         <>
             <Portal>
                 <DeleteModal
-                    title="Remove employer"
+                    title={t("remove_employer")}
                     description={`Are you sure you want to remove this ${
                         employer.employerDto.firstName
                     } ${
@@ -59,17 +66,6 @@ const MemberCard: React.FC<MemberCardProps> = ({ employer, index }) => {
                     <div
                         className={`${styles.row__wrapper} flex items-center gap-2`}
                     >
-                        {/* <span className="inline-block h-8 w-8 flex-shrink-0 rounded-full bg-white border border-slate-500 overflow-auto">
-                            <Image
-                                src={
-                                    process.env.NEXT_PUBLIC_AVATAR_URL as string
-                                }
-                                alt="member avatar"
-                                width={32}
-                                height={32}
-                                unoptimized
-                            />
-                        </span> */}
                         {employer.employerDto.firstName}{" "}
                         {employer.employerDto.lastName ?? ""}
                     </div>

@@ -1,0 +1,19 @@
+{
+    "add_new_question": "Add new question",
+    "difficulty_between_1_to_5": "Difficulty must between 1 and 5",
+    "question_name_required": "Question name required!",
+    "select_at_least_one_type": "Select at least one type of question!",
+    "at_least_two_ans_for_mcq": "At least 2 answer for multiple choice question",
+    "select_at_least_one_correct": "Select at least on correct answer",
+    "question_has_at_least_4_ans": "Question has at least 4 answers",
+    "uploading_question": "Uploading question",
+    "upload_question_successfully": "Upload question successfully!",
+    "download_file_template": "Download file template",
+    "upload_ques_file": "Upload questions file",
+    "answer_number": "Answer number ",
+    "add_more_answer": "Add more answer",
+    "add_new_question_tag": "Add new question tag",
+    "delete_question": "Delete question",
+    "delete_question_warning": "Are you sure you want to delete this question? All of your data will be permanently removed. This action cannot be undone.",
+    "edit_question": "Edit question"
+}

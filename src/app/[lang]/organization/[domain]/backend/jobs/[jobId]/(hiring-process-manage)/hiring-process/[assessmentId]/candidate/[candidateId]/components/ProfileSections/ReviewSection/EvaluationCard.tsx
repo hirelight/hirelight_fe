@@ -1,11 +1,11 @@
-import Image from "next/image";
+"use client";
+
 import React, { useState } from "react";
-import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { PencilIcon } from "@heroicons/react/24/outline";
 import {
     HandThumbDownIcon,
     HandThumbUpIcon,
     StarIcon,
-    UserCircleIcon,
 } from "@heroicons/react/24/solid";
 import moment from "moment";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -15,13 +15,14 @@ import { AnimatePresence, LazyMotion, domAnimation } from "framer-motion";
 
 import { IApplicantAssessmentDetailDto, IEvaluationDto } from "@/services";
 import { useAppSelector } from "@/redux/reduxHooks";
-import employerOrgServices from "@/services/employer-organization/employer-organization.service";
 import collaboratorsServices from "@/services/collaborators/collaborators.service";
 import { DeleteModal, Portal, UserAvatar } from "@/components";
 import evaluationServices from "@/services/evaluation/evaluation.service";
 import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
+import { handleError } from "@/helpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
-import AddEvaluationSection from "./AddEvaluationSection";
 import EditEvaluation from "./EditEvaluation";
 
 export const getRating = (value: number, children?: React.ReactNode) => {
@@ -61,6 +62,7 @@ type EvaluationCardProps = {
 
 const EvaluationCard: React.FC<EvaluationCardProps> = ({ data }) => {
     const { jobId, candidateId, lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "candidate");
 
     const userInfo = useAppSelector(state => state.auth.authUser);
 
@@ -86,7 +88,7 @@ const EvaluationCard: React.FC<EvaluationCardProps> = ({ data }) => {
             });
             toast.success(res.message);
         } catch (error: any) {
-            toast.error(error.message ? error.message : "Something went wrong");
+            handleError(error);
         }
     };
 
@@ -106,23 +108,14 @@ const EvaluationCard: React.FC<EvaluationCardProps> = ({ data }) => {
         <React.Fragment>
             <Portal>
                 <DeleteModal
-                    title="Delete evaluation"
+                    title={t("delete_evaluation")}
                     show={showDelete}
-                    description="Are you sure you want to delete
-                    this evaluation? This action
-                    cannot be undone."
+                    description={t("delete_evaluation_warning")}
                     onClose={() => setShowDelete(false)}
                     onConfirm={handleDeleteEvaluation}
                 />
             </Portal>
             <div className="flex items-center gap-4 mb-4">
-                {/* <Image
-                    src={process.env.NEXT_PUBLIC_AVATAR_URL as string}
-                    alt="Collaborator avatar"
-                    width={30}
-                    height={30}
-                    className="w-8 h-8 rounded-full object-cover"
-                /> */}
                 <div className="w-10 h-10 rounded-full text-neutral-600">
                     <UserAvatar avatarUrl={data.collaboratorAvatarUrl} />
                 </div>
@@ -143,13 +136,6 @@ const EvaluationCard: React.FC<EvaluationCardProps> = ({ data }) => {
                     data.applicantAssessmentDetail.status !==
                         ApplicantAssessmentDetailStatus.MOVED && (
                         <div className="flex items-center gap-2 text-neutral-700">
-                            {/* <button
-                                type="button"
-                                className="block p-1 hover:bg-slate-200 bg-opacity-70 rounded"
-                                onClick={() => setShowDelete(true)}
-                            >
-                                <TrashIcon className="w-5 h-5" />
-                            </button> */}
                             <button
                                 type="button"
                                 className="block p-1 hover:bg-slate-200 bg-opacity-70 rounded"

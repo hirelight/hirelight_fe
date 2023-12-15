@@ -28,6 +28,9 @@ import {
     QuestionTypes,
 } from "@/interfaces/questions.interface";
 import LoadingIndicator from "@/components/LoadingIndicator";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
+import { handleError } from "@/helpers";
 
 import AddQuestionTagModal from "../../../create-question/components/AddQuestionTagModal";
 
@@ -44,6 +47,7 @@ type EditQuestionFormProps = {
 const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
     const router = useRouter();
     const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "question-bank");
 
     const queryClient = useQueryClient();
     const updateMutation = useMutation({
@@ -55,8 +59,7 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
             router.replace(`/${lang}/backend/settings/questions-bank`);
         },
         onError: err => {
-            console.error(err);
-            toast.error("Update question failure");
+            handleError(err);
         },
     });
 
@@ -145,24 +148,22 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
             },
         };
         if (data.difficulty === 0)
-            err.difficultyErr = "Difficulty must between 1 and 5";
+            err.difficultyErr = t("difficulty_between_1_to_5");
 
         if (data.content.name === "")
-            err.contentErr.nameErr = "Question name required!";
+            err.contentErr.nameErr = t("question_name_required");
 
         if (data.content.type.toString() === "")
-            err.contentErr.typeErr = "Select at least one type of question!";
+            err.contentErr.typeErr = t("select_at_least_one_type");
 
         if (
             data.content.type === "one-answer" ||
             data.content.type === "multiple-answers"
         ) {
             if (data.content.answers.length < 2)
-                err.contentErr.answersErr =
-                    "At least 2 answer for multiple choice question";
+                err.contentErr.answersErr = t("at_least_two_ans_for_mcq");
             if (data.content.answers.every(ans => ans.correct === false))
-                err.contentErr.correctAnswer =
-                    "Select at least on correct answer";
+                err.contentErr.correctAnswer = t("select_at_least_one_correct");
         }
 
         let isErr = false;
@@ -258,7 +259,7 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
             <form onSubmit={handleEditQuestion}>
                 <div className="mb-4">
                     <Selection
-                        title="Difficulty"
+                        title={t("common:difficulty")}
                         items={QuestionDifficulty.map((item, index) => ({
                             label: item,
                             value: {
@@ -280,14 +281,13 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
                     />
                     {formErr.difficultyErr && (
                         <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                            <span className="font-medium">Op, snapp!</span>
                             {formErr.difficultyErr}
                         </p>
                     )}
                 </div>
                 <div className="mb-4">
                     <Selection
-                        title="Type"
+                        title={t("common:type")}
                         items={Array.from(QuestionTypes.entries()).map(
                             ([key, value]) => ({ label: value, value: key })
                         )}
@@ -305,7 +305,6 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
                     />
                     {formErr.contentErr.typeErr && (
                         <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                            <span className="font-medium">Op, snapp!</span>
                             {formErr.contentErr.typeErr}
                         </p>
                     )}
@@ -313,7 +312,7 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
 
                 <div className="mb-4 flex gap-4">
                     <Selection
-                        title="Tags"
+                        title={t("common:tags")}
                         placeholder="Example: Frontend, C#, Spring,..."
                         multiple={true}
                         value={formState.tagList.map(tag => tag.name)}
@@ -337,7 +336,7 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
 
                 <div className="mb-6">
                     <label className="text-neutral-700 text-sm font-semibold block mb-2">
-                        Question
+                        {t("common:question")}
                     </label>
                     <QuillEditorNoSSR
                         className="min-h-[200px]"
@@ -358,7 +357,6 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
                     />
                     {formErr.contentErr.nameErr && (
                         <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                            <span className="font-medium">Op, snapp!</span>
                             {formErr.contentErr.nameErr}
                         </p>
                     )}
@@ -367,9 +365,9 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
                 {formState.content.type === "essay" && (
                     <div className="mb-6">
                         <label className="text-neutral-700 text-sm font-semibold block mb-2">
-                            Description{" "}
+                            {t("common:description")}{" "}
                             <span className="text-gray-500 mr-1 font-normal">
-                                (Optional)
+                                ({t("common:optional")})
                             </span>
                         </label>
                         <QuillEditorNoSSR
@@ -424,12 +422,12 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
                                             htmlFor={`answer-${index}`}
                                             className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                                         >
-                                            Answer number {index + 1}
+                                            {t("answer_number")} {index + 1}
                                         </label>
                                     </div>
                                     <QuillEditorNoSSR
                                         className="min-h-[150px]"
-                                        placeholder={`Answer number ${
+                                        placeholder={`${t("answer_number")}${
                                             index + 1
                                         }`}
                                         value={answer.name}
@@ -464,13 +462,11 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
                         })}
                     {formErr.contentErr.answersErr && (
                         <p className="md:col-span-2 mt-2 text-sm text-red-600 dark:text-red-500">
-                            <span className="font-medium">Op, snapp!</span>
                             {formErr.contentErr.answersErr}
                         </p>
                     )}
                     {formErr.contentErr.correctAnswer && (
                         <p className="md:col-span-2 mt-2 text-sm text-red-600 dark:text-red-500">
-                            <span className="font-medium">Op, snapp!</span>
                             {formErr.contentErr.answersErr}
                         </p>
                     )}
@@ -501,7 +497,7 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
                                 });
                             }}
                         >
-                            Add more answer
+                            {t("add_more_answer")}
                         </Button>
                     )}
                     <div>
@@ -510,13 +506,13 @@ const EditQuestionForm: React.FC<EditQuestionFormProps> = ({ questionId }) => {
                             onClick={() => router.back()}
                             className="mr-2"
                         >
-                            Cancel
+                            {t("common:cancel")}
                         </ButtonOutline>
                         <Button
                             type="submit"
                             isLoading={updateMutation.isPending}
                         >
-                            Save changes
+                            {t("common:save_changes")}
                         </Button>
                     </div>
                 </div>

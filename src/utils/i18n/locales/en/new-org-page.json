@@ -19,7 +19,11 @@
         },
         "success": {
             "create_org": "Create org successfully!"
-        }
+        },
+        "subdomain_not_contain_special": "Subdomain cannot contain special characters",
+        "subdomain_not_end_with": "Subdomain cannot end with special characters",
+        "create_new_org": "Create new organization",
+        "create_new_org_warning": "Please review your information. Once you create org you cannot edit the subdomain!"
     },
     "make_mistake": "Make a mistake?",
     "btn": {

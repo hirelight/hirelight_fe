@@ -1,8 +1,8 @@
 "use client";
 
-import React, { FormEvent, useRef, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { useParams } from "next/navigation";
-import { Dialog, Switch, Transition } from "@headlessui/react";
+import { Dialog, Transition } from "@headlessui/react";
 import { UserCircleIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { toast } from "react-toastify";
@@ -15,19 +15,20 @@ import {
     CustomInput,
     CustomTextArea,
     DatePicker,
+    SelectCollaborators,
     TimerPicker,
 } from "@/components";
 import { CloseIcon } from "@/icons";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { ApplicationFormJSON, ICreateMeetings } from "@/services";
-import { AppFormDefaultSection, IAppFormField } from "@/interfaces";
+import { ICreateMeetings } from "@/services";
 import { ICollaboratorDto } from "@/services/collaborators/collaborators.interface";
 import meetingServices from "@/services/meeting/meeting.service";
-import { isInvalidForm } from "@/helpers";
-
-import SelectAttendeeList from "./SelectAttendeeList";
+import { handleError, isInvalidForm } from "@/helpers";
 
 import zoomLogo from "/public/images/zoom-logo.svg";
+
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 interface IActionDrawer {
     title?: string;
@@ -39,21 +40,10 @@ interface IActionDrawer {
     loading?: boolean;
 }
 
-const people = [
-    { name: "Wade Cooper" },
-    { name: "Arlene Mccoy" },
-    { name: "Devon Webb" },
-    { name: "Tom Cook" },
-    { name: "Tanya Fox" },
-    { name: "Hellen Schmidt" },
-];
-
 const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
-    const { assessmentId, candidateId } = useParams();
+    const { assessmentId, candidateId, lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "candidate");
 
-    const { data: applicantAssessmentDetail } = useAppSelector(
-        state => state.applicantAssessmentDetail
-    );
     const queryClient = useQueryClient();
 
     const [formErr, setFormErr] = useState({
@@ -98,15 +88,15 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
         let errors = formErr;
 
         if (name.length === 0) {
-            errors.nameErr = "Subject is required";
+            errors.nameErr = t("subject_required");
         }
         if (isOffline) {
             if (!location) {
-                errors.locationErr = "Location is required";
+                errors.locationErr = t("location_required");
             }
         } else {
             if (meetingLink.length === 0 && !isZoomCreated) {
-                errors.meetingLinkErr = "Meeting link is required";
+                errors.meetingLinkErr = t("meeting_link_required");
             }
         }
 
@@ -115,7 +105,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                 moment(startTime).isSame(endTime, "dates")) ||
             moment(startTime).isAfter(endTime, "dates")
         ) {
-            errors.timeErr = "Start time must not greator than end time";
+            errors.timeErr = t("common:error.start_time_earlier");
         } else if (
             moment(meetingTime.endTime).diff(
                 moment(meetingTime.startTime),
@@ -123,7 +113,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
             ) < 10 &&
             moment(startTime).isSame(endTime, "dates")
         ) {
-            errors.timeErr = "Meeting duration must at least 10 minutes";
+            errors.timeErr = t("meeting_at_least_10_mins");
         }
 
         if (
@@ -135,12 +125,11 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
             ) >
             24 * 60 * 60 * 1000
         ) {
-            errors.timeErr = "Meeting duration must within 24 hours!";
+            errors.timeErr = t("meeting_within_24_hours");
         }
 
         if (selected.length === 0)
-            errors.attendeeErr =
-                "Select at least one employer to attend meeting";
+            errors.attendeeErr = t("selct_at_least_one_employer");
 
         if (isInvalidForm(errors)) {
             setFormErr({ ...errors });
@@ -224,7 +213,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
             handleResetForm();
             onClose();
         } catch (error: any) {
-            // toast.error(error.message ? error.message : "Something went wrong");
+            handleError(error);
         }
 
         setLoading(false);
@@ -268,7 +257,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                 >
                                     <strong className="inline-flex items-center gap-1 text-2xl font-semibold text-neutral-700 dark:text-gray-400 ">
                                         <span id="drawer-label">
-                                            Schedule face-to-face interview
+                                            {t("schedule_ftf_interview")}
                                         </span>
                                     </strong>
                                     <button type="button" onClick={onClose}>
@@ -278,8 +267,10 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                 <div className="p-6 flex-1 overflow-y-auto space-y-6">
                                     <div>
                                         <CustomInput
-                                            title="Subject"
-                                            placeholder="Interview with candidate - Position"
+                                            title={t("common:subject")}
+                                            placeholder={t(
+                                                "subject_placeholder"
+                                            )}
                                             value={formState.name}
                                             onChange={e => {
                                                 setFormState(prev =>
@@ -301,7 +292,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                             className="cursor-pointer"
                                         >
                                             <span className="text-sm font-medium text-gray-900 dark:text-gray-300">
-                                                Meeting offline
+                                                {t("meeting_offline")}
                                             </span>
                                         </label>
                                         <label className="relative cursor-pointer">
@@ -325,7 +316,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                         <React.Fragment>
                                             <div>
                                                 <h3 className="text-sm font-semibold text-neutral-700 mb-2">
-                                                    Zoom enable
+                                                    {t("zoom_enable")}
                                                 </h3>
                                                 <div className="flex items-center">
                                                     <Image
@@ -400,7 +391,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                     ) : (
                                         <div>
                                             <CustomInput
-                                                title="Location"
+                                                title={t("common:location")}
                                                 id="location"
                                                 type="text"
                                                 placeholder="Ho Chi Minh"
@@ -428,13 +419,13 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                     </div>
 
                                     <h4 className="block text-sm font-medium text-neutral-900 dark:text-white">
-                                        Schedule
+                                        {t("schedule")}
                                     </h4>
                                     <div>
                                         <div className="w-full flex flex-col gap-2 mb-6">
                                             <div className="flex items-end gap-2">
                                                 <DatePicker
-                                                    title="From"
+                                                    title={t("common:from")}
                                                     value={formState.startTime}
                                                     minDate={new Date()}
                                                     onChange={date => {
@@ -484,7 +475,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                             </div>
                                             <div className="flex items-end gap-2">
                                                 <DatePicker
-                                                    title="To"
+                                                    title={t("common:to")}
                                                     value={formState.endTime}
                                                     minDate={moment(
                                                         formState.startTime
@@ -546,7 +537,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                             </li>
                                         ))}
                                     </ul>
-                                    <SelectAttendeeList
+                                    <SelectCollaborators
                                         selected={selected}
                                         onSelect={value => {
                                             setSelected(value);
@@ -569,7 +560,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                     </div>
 
                                     <CustomTextArea
-                                        title="Description"
+                                        title={t("common:description")}
                                         className="mt-6 overflow-y-auto ql-editor"
                                         rows={4}
                                         value={formState.description}
@@ -589,7 +580,7 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
                                         disabled={loading}
                                         isLoading={loading}
                                     >
-                                        Create meeting
+                                        {t("create_meeting")}
                                     </Button>
                                 </div>
                             </Dialog.Panel>

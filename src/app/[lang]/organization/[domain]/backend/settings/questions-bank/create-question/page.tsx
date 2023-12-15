@@ -31,7 +31,9 @@ import {
     QuestionDifficulty,
     QuestionTypes,
 } from "@/interfaces/questions.interface";
-import { checkResErr } from "@/helpers";
+import { checkResErr, handleError } from "@/helpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import AddQuestionTagModal from "./components/AddQuestionTagModal";
 
@@ -63,6 +65,8 @@ const CreateQuestionPage = () => {
     const { lang } = useParams();
     const router = useRouter();
 
+    const { t } = useI18NextTranslation(lang as I18Locale, "question-bank");
+
     const queryClient = useQueryClient();
     const createMutation = useMutation({
         mutationFn: (createDto: ICreateQuestionDto) =>
@@ -77,7 +81,7 @@ const CreateQuestionPage = () => {
             router.push(`/${lang}/backend/settings/questions-bank`);
         },
         onError: err => {
-            toast.error(err.message ? err.message : "Create question failure");
+            handleError(err);
         },
     });
     const { data: tagListRes, error } = useQuery({
@@ -109,24 +113,22 @@ const CreateQuestionPage = () => {
             },
         };
         if (data.difficulty === 0)
-            err.difficultyErr = "Difficulty must between 1 and 5";
+            err.difficultyErr = t("difficulty_between_1_to_5");
 
         if (data.content.name === "")
-            err.contentErr.nameErr = "Question name required!";
+            err.contentErr.nameErr = t("question_name_required");
 
         if (data.content.type.toString() === "")
-            err.contentErr.typeErr = "Select at least one type of question!";
+            err.contentErr.typeErr = t("select_at_least_one_type");
 
         if (
             data.content.type === "one-answer" ||
             data.content.type === "multiple-answers"
         ) {
             if (data.content.answers.length < 2)
-                err.contentErr.answersErr =
-                    "At least 2 answer for multiple choice question";
+                err.contentErr.answersErr = t("at_least_two_ans_for_mcq");
             if (data.content.answers.every(ans => ans.correct === false))
-                err.contentErr.correctAnswer =
-                    "Select at least on correct answer";
+                err.contentErr.correctAnswer = t("select_at_least_one_correct");
         }
 
         let isErr = false;
@@ -205,7 +207,7 @@ const CreateQuestionPage = () => {
                     ),
                 },
             }));
-        else alert("Question has at least 4 answers");
+        else alert(t("question_has_at_least_4_ans"));
     };
 
     const handleCreateQuestion = async (e: FormEvent) => {
@@ -228,12 +230,12 @@ const CreateQuestionPage = () => {
             await toast.promise(
                 questionAnswerServices.uploadQuestionsAsync(formData),
                 {
-                    pending: "Uploading question",
-                    success: "Upload question successfully!",
+                    pending: t("uploading_question"),
+                    success: t("upload_question_successfully"),
                 }
             );
         } catch (error: any) {
-            toast.error(error.message ? error.message : "Somthing went wrong");
+            handleError(error);
         }
     };
 
@@ -255,16 +257,9 @@ const CreateQuestionPage = () => {
                 className="w-full bg-white rounded-md shadow-md p-4 xl:px-6"
             >
                 <h1 className="text-xl text-blue_primary_800 font-semibold text-center mb-4 relative">
-                    Create new question
-                    {/* <button
-                        type="button"
-                        className="w-6 h-6 absolute top-1/2 right-0 -translate-y-1/2 cursor-pointer target:"
-                        onClick={customImageHandler}
-                    >
-                        <ArrowUpTrayIcon />
-                    </button> */}
+                    {t("add_new_question")}
                     <div className="flex gap-4 absolute top-1/2 right-0 -translate-y-1/2">
-                        <Tooltip content="Download file template">
+                        <Tooltip content={t("download_file_template")}>
                             <a
                                 href={`http://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/questions-template.xlsx`}
                                 download
@@ -273,7 +268,7 @@ const CreateQuestionPage = () => {
                                 <ArrowDownTrayIcon />
                             </a>
                         </Tooltip>
-                        <Tooltip content="Upload questions file">
+                        <Tooltip content={t("upload_ques_file")}>
                             <label className="w-6 h-6 block cursor-pointer">
                                 <ArrowUpTrayIcon />
                                 <input
@@ -293,7 +288,7 @@ const CreateQuestionPage = () => {
 
                 <div className="mb-4">
                     <Selection
-                        title="Difficulty"
+                        title={t("difficulty")}
                         items={QuestionDifficulty.map((item, index) => ({
                             label: item,
                             value: {
@@ -324,7 +319,7 @@ const CreateQuestionPage = () => {
 
                 <div className="mb-4">
                     <Selection
-                        title="Type"
+                        title={t("type")}
                         items={Array.from(QuestionTypes.entries()).map(
                             ([key, value]) => ({ label: value, value: key })
                         )}
@@ -343,7 +338,6 @@ const CreateQuestionPage = () => {
                     />
                     {formErr.contentErr.typeErr && (
                         <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                            <span className="font-medium">Op, snapp!</span>
                             {formErr.contentErr.typeErr}
                         </p>
                     )}
@@ -351,7 +345,7 @@ const CreateQuestionPage = () => {
 
                 <div className="mb-4 flex gap-4">
                     <Selection
-                        title="Tags"
+                        title={t("tags")}
                         multiple={true}
                         placeholder="Example: Frontend, C#, Spring,..."
                         items={
@@ -374,7 +368,8 @@ const CreateQuestionPage = () => {
 
                 <div className="mb-6">
                     <label className="text-neutral-700 text-sm font-semibold block mb-2">
-                        <span className="text-red-500 mr-1">*</span> Question
+                        <span className="text-red-500 mr-1">*</span>{" "}
+                        {t("common:question")}
                     </label>
                     <QuillEditorNoSSR
                         className="min-h-[200px]"
@@ -395,7 +390,6 @@ const CreateQuestionPage = () => {
                     />
                     {formErr.contentErr.nameErr && (
                         <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                            <span className="font-medium">Op, snapp!</span>
                             {formErr.contentErr.nameErr}
                         </p>
                     )}
@@ -404,9 +398,9 @@ const CreateQuestionPage = () => {
                 {formState.content.type === "essay" && (
                     <div className="mb-6">
                         <label className="text-neutral-700 text-sm font-semibold block mb-2">
-                            Description{" "}
+                            {t("common:description")}{" "}
                             <span className="text-gray-500 mr-1 font-normal">
-                                (Optional)
+                                ({t("common:optional")})
                             </span>
                         </label>
                         <QuillEditorNoSSR
@@ -453,7 +447,7 @@ const CreateQuestionPage = () => {
                                             htmlFor={`answer-${index}`}
                                             className="flex-1 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                                         >
-                                            Answer number {index + 1}
+                                            {t("answer_number")} {index + 1}
                                         </label>
                                         {index > 3 && (
                                             <button
@@ -469,7 +463,7 @@ const CreateQuestionPage = () => {
                                     </div>
                                     <QuillEditorNoSSR
                                         className="min-h-[150px]"
-                                        placeholder={`Answer number ${
+                                        placeholder={`${t("answer_number")}${
                                             index + 1
                                         }`}
                                         value={item.name}
@@ -504,13 +498,11 @@ const CreateQuestionPage = () => {
                         })}
                     {formErr.contentErr.answersErr && (
                         <p className="md:col-span-2 mt-2 text-sm text-red-600 dark:text-red-500">
-                            <span className="font-medium">Op, snapp!</span>
                             {formErr.contentErr.answersErr}
                         </p>
                     )}
                     {formErr.contentErr.correctAnswer && (
                         <p className="md:col-span-2 mt-2 text-sm text-red-600 dark:text-red-500">
-                            <span className="font-medium">Op, snapp!</span>
                             {formErr.contentErr.correctAnswer}
                         </p>
                     )}
@@ -542,7 +534,7 @@ const CreateQuestionPage = () => {
                                 });
                             }}
                         >
-                            Add more answer
+                            {t("add_more_answer")}
                         </Button>
                     )}
                     <div>
@@ -551,14 +543,14 @@ const CreateQuestionPage = () => {
                             className="mr-2"
                             onClick={() => router.back()}
                         >
-                            Cancel
+                            {t("common:save")}
                         </ButtonOutline>
                         <Button
                             type="submit"
                             disabled={createMutation.isPending}
                             isLoading={createMutation.isPending}
                         >
-                            Save
+                            {t("common:save")}
                         </Button>
                     </div>
                 </div>

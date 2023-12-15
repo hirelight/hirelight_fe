@@ -16,7 +16,9 @@ import {
 } from "@/services/evaluation/evaluation.interface";
 import evaluationServices from "@/services/evaluation/evaluation.service";
 import { useAppSelector } from "@/redux/reduxHooks";
-import { isInvalidForm } from "@/helpers";
+import { handleError, isInvalidForm } from "@/helpers";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "./AddEvaluation.module.scss";
 
@@ -29,7 +31,8 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
     applicantAssessmentDetailId,
     close,
 }) => {
-    const { candidateId } = useParams();
+    const { candidateId, lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "candidate");
 
     const applicantAssessmentDetail = useAppSelector(
         state => state.applicantAssessmentDetail.data
@@ -51,12 +54,12 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
     const inValidateAddInput = () => {
         const errors = { ...addErr };
         if (!addState.evaluation)
-            errors.evaluationErr = "Evaluation comment required!";
+            errors.evaluationErr = t("evaluation_comment_required");
         if (addState.rating < 0)
-            errors.ratingErr = "Please select at least one rating!";
+            errors.ratingErr = t("select_at_least_one_rating");
 
         if (isInvalidForm(errors)) {
-            toast.error("Invalid input");
+            toast.error(t("common:error.invalid_input"));
             setAddErr(errors);
             return true;
         }
@@ -79,9 +82,7 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
             });
             toast.success(res.message);
         } catch (error: any) {
-            toast.error(
-                error.message ? error.message : "Something went wrong!"
-            );
+            handleError(error);
         }
         setLoading(false);
         close();
@@ -115,11 +116,11 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
         >
             <section className="p-6">
                 <h4 className="text-neutral-700 font-semibold mb-3">
-                    Should this candidate proceed to next assessment?
+                    {t("should_candidate_proceed_next")}
                 </h4>
                 <div className="flex flex-col border border-gray-300 rounded-md focus-within:border-gray-500 transition-all p-2 min-h-[100px] relative">
                     <textarea
-                        placeholder="Add note"
+                        placeholder={t("add_note")}
                         className="w-full text-sm placeholder:text-sm outline-none border-none focus:border-none focus:outline-none focus:ring-0 resize-none"
                         onChange={e => {
                             e.currentTarget.style.height = 0 + "px";
@@ -183,14 +184,14 @@ const AddEvaluationSection: React.FC<AddEvaluationSectionProps> = ({
                     onClick={close}
                     disabled={loading}
                 >
-                    Cancel
+                    {t("common:cancel")}
                 </button>
                 <Button
                     disabled={loading}
                     isLoading={loading}
                     onClick={handleAddEvaluation}
                 >
-                    Save evaluation
+                    {t("common:save")}
                 </Button>
             </div>
         </m.div>

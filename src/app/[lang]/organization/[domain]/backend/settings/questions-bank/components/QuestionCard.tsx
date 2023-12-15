@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 
 import { IQuestionAnswerDto } from "@/services/questions/questions.interface";
 import {
@@ -19,6 +20,8 @@ import {
 import questionAnswerServices from "@/services/questions/questions.service";
 import { DeleteModal, DifficultyBadge, Portal } from "@/components";
 import { sanitizeHtml } from "@/helpers/sanitizeHTML";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import styles from "./QuestionCard.module.scss";
 
@@ -28,6 +31,9 @@ type QuestionCardProps = {
 };
 
 const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "question-bank");
+
     const { content, tagList, difficulty, id, organizationId } = data;
     const parsedContent = useMemo(
         () => JSON.parse(content),
@@ -56,8 +62,8 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
         <>
             <Portal>
                 <DeleteModal
-                    title="Delete question"
-                    description="Are you sure you want to delete this question? All of your data will be permanently removed. This action cannot be undone."
+                    title={t("delete_question")}
+                    description={t("delete_question_warning")}
                     show={showDeleteAlert}
                     loading={deleteMutation.isPending}
                     onClose={() => setShowDeleteAlert(false)}
@@ -68,7 +74,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                 <div className="flex-1">
                     <h3 className="text-neutral-700 font-semibold mb-4 flex gap-1">
                         <p className="whitespace-nowrap">
-                            Question {index + 1}:{" "}
+                            {t("common:question")} {index + 1}:{" "}
                         </p>
                         <span
                             dangerouslySetInnerHTML={{
@@ -130,13 +136,13 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                 <div className="hidden h-20 w-[1px] mx-6 self-center md:block"></div>
                 <div className="w-[200px] text-sm text-neutral-500 flex flex-col">
                     <p className="font-semibold mb-2">
-                        Type:{" "}
+                        {t("common:type")}:{" "}
                         <span className="font-normal">
                             {QuestionTypes.get(parsedContent.type)}
                         </span>
                     </p>
                     <p className="font-semibold mb-2">
-                        Difficulty:{" "}
+                        {t("common:difficulty")}:{" "}
                         <span className="font-normal">
                             <DifficultyBadge difficulty={data.difficulty} />
                         </span>
@@ -144,7 +150,9 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
 
                     <div>
                         <div className="flex flex-wrap items-center gap-2">
-                            <span className="font-semibold mr-2">Tags:</span>
+                            <span className="font-semibold mr-2">
+                                {t("common:tags")}:
+                            </span>
                             {tagList.map(tag => (
                                 <span
                                     key={tag.id}
@@ -178,7 +186,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({ data, index }) => {
                             </>
                         ) : (
                             <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
-                                Default
+                                {t("common:default")}
                             </span>
                         )}
                     </div>

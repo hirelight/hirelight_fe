@@ -5,6 +5,9 @@ import { Fragment } from "react";
 import moment from "moment";
 import { useParams } from "next/navigation";
 
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
+
 type ScheduleTimeModalProps = {
     show: boolean;
     close: () => void;
@@ -20,6 +23,7 @@ const ScheduleTimeModal: React.FC<ScheduleTimeModalProps> = ({
     scheduleTime,
 }) => {
     const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "candidate");
 
     return (
         <Transition appear show={show} as={Fragment}>
@@ -52,7 +56,7 @@ const ScheduleTimeModal: React.FC<ScheduleTimeModalProps> = ({
                                     as="h3"
                                     className="text-lg font-medium leading-6 text-gray-900"
                                 >
-                                    Free time
+                                    {t("free_time")}
                                 </Dialog.Title>
                                 <div className="mt-2">
                                     <ul>
@@ -72,7 +76,7 @@ const ScheduleTimeModal: React.FC<ScheduleTimeModalProps> = ({
                                                                 .local()
                                                                 .locale(lang)
                                                                 .format(
-                                                                    "MM/DD/yyy hh:mm A"
+                                                                    "MM/DD/yyyy hh:mm A"
                                                                 )}
                                                         </span>
                                                         -
@@ -82,7 +86,7 @@ const ScheduleTimeModal: React.FC<ScheduleTimeModalProps> = ({
                                                                 .local()
                                                                 .locale(lang)
                                                                 .format(
-                                                                    "MM/DD/yyy hh:mm A"
+                                                                    "MM/DD/yyyy hh:mm A"
                                                                 )}
                                                         </span>
                                                     </p>

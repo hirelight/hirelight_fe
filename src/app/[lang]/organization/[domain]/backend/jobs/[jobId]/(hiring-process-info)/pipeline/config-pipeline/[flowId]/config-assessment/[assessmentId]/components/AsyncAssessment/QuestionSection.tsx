@@ -134,7 +134,6 @@ const QuestionSection = ({
                             {numOfTakes.get(
                                 data.content.config?.numOfTakes ?? 0
                             )}{" "}
-                            {t("takes")}
                         </span>
                     </div>
                 </div>

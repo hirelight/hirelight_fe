@@ -2,8 +2,10 @@
 
 import React from "react";
 import { Tab } from "@headlessui/react";
+import { useParams } from "next/navigation";
 
-import { useAppSelector } from "@/redux/reduxHooks";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import ReviewContent from "./ReviewContent";
 import AssessmentContent from "./AssessmentContent";
@@ -13,7 +15,8 @@ function classNames(...classes: any) {
 }
 
 const ReviewSection = () => {
-    const authUser = useAppSelector(state => state.auth.authUser);
+    const { lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "common");
 
     return (
         <div>
@@ -29,7 +32,7 @@ const ReviewSection = () => {
                             )
                         }
                     >
-                        Evaluation
+                        {t("evaluations")}
                     </Tab>
                     <Tab
                         className={({ selected }) =>
@@ -41,7 +44,7 @@ const ReviewSection = () => {
                             )
                         }
                     >
-                        Assessment
+                        {t("assessments")}
                     </Tab>
                 </Tab.List>
                 <Tab.Panels>

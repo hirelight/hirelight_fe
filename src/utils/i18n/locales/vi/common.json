@@ -87,5 +87,21 @@
     "tags": "Tags",
     "questions": "Câu hỏi",
     "all": "Tất cả",
-    "add_attendee": "Thêm người tham gia"
+    "add_attendee": "Thêm người tham gia",
+    "proceed": "Tiếp tục",
+    "subject": "Chủ đề",
+    "location": "Địa điểm",
+    "schedule": "Lịch trình",
+    "details": "Chi tiết",
+    "answers": "Câu trả lời",
+    "evaluations": "Đánh giá",
+    "assessments": "Đánh giá",
+    "report": "Báo cáo",
+    "no_more_actvities_to_view": "Không còn hoạt động nào để xem",
+    "meeting": "Cuộc họp",
+    "role": "Vai trò",
+    "fullname": "Tên đầy đủ",
+    "type": "Loại",
+    "create": "Tạo",
+    "default": "Mặc định"
 }

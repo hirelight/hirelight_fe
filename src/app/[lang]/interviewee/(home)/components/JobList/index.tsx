@@ -16,7 +16,7 @@ const JobList = () => {
     const [showJD, setShowJD] = useState(false);
     const [selectedJob, setSelectedJob] = useState<IJobDto>();
     const [searchString, setSearchString] = useState("");
-    const [curPage, setCurPage] = useState(1);
+    const [curPage, setCurPage] = useState(0);
 
     const { data: jobsRes } = useQuery({
         queryKey: ["jobs"],

@@ -87,5 +87,21 @@
     "tags": "Tags",
     "questions": "Questions",
     "all": "All",
-    "add_attendee": "Add attendee"
+    "add_attendee": "Add attendee",
+    "proceed": "Proceed",
+    "subject": "Subject",
+    "location": "Location",
+    "schedule": "Schedule",
+    "details": "Details",
+    "answers": "Answers",
+    "evaluations": "Evaluations",
+    "assessments": "Assessments",
+    "report": "Report",
+    "no_more_actvities_to_view": "No more activites to view",
+    "meeting": "meeting",
+    "role": "Role",
+    "fullname": "Fullname",
+    "type": "Type",
+    "create": "Create",
+    "default": "Default"
 }

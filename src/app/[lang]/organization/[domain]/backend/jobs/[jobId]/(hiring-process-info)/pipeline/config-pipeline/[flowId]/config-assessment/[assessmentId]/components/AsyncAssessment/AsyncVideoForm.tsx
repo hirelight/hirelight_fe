@@ -223,7 +223,7 @@ const AsyncVideoForm = () => {
 
                         <div>
                             <Selection
-                                title={t("due-date")}
+                                title={t("due_date")}
                                 value={
                                     formState.invitationDuration
                                         ? `${formState.invitationDuration} ${

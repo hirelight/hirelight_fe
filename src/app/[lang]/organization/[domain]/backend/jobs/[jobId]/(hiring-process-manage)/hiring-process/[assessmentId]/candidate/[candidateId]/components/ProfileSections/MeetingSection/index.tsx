@@ -6,12 +6,15 @@ import React from "react";
 import moment from "moment";
 
 import meetingServices from "@/services/meeting/meeting.service";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import MeetingCard from "./MeetingCard";
 import styles from "./MeetingCard.module.scss";
 
 const MeetingSection = () => {
-    const { assessmentId, candidateId } = useParams();
+    const { assessmentId, candidateId, lang } = useParams();
+    const { t } = useI18NextTranslation(lang as I18Locale, "candidate");
 
     const { data: meetingList, isLoading } = useQuery({
         queryKey: ["meeting-list", assessmentId, candidateId],
@@ -53,7 +56,7 @@ const MeetingSection = () => {
 
             <div className="px-6 py-4 flex justify-center items-center">
                 <p className="text-sm text-gray-500">
-                    No more activites to view
+                    {t("no_more_actvities_to_view")}
                 </p>
             </div>
         </div>
