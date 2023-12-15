@@ -26,6 +26,8 @@ import { handleError } from "@/helpers";
 import { DeleteModal, Portal, WarningModal } from "@/components";
 import { ApplicantAssessmentDetailStatus } from "@/interfaces/assessment.interface";
 import applicantProfileServices from "@/services/applicant-profile/applicant-profile.service";
+import { useI18NextTranslation } from "@/utils/i18n/client";
+import { I18Locale } from "@/interfaces/i18.interface";
 
 import MoveCandidateDialog from "./MoveCandidateDialog";
 import styles from "./CandidateActionTabs.module.scss";
@@ -43,6 +45,8 @@ const Tooltip = dynamic(
 const CandidateActionTabs = () => {
     const { assessmentId, jobId, lang, candidateId } = useParams();
     const router = useRouter();
+
+    const { t } = useI18NextTranslation(lang as I18Locale, "candidate");
 
     const queryClient = useQueryClient();
 
@@ -120,7 +124,7 @@ const CandidateActionTabs = () => {
             applicantAssessmentDetail.status ===
             ApplicantAssessmentDetailStatus.INVITED
         )
-            return toast.info("Assessment has already sent!");
+            return toast.info(t("assessment_already_sent"));
         setSendLoading(true);
         try {
             await toast.promise(
@@ -128,8 +132,8 @@ const CandidateActionTabs = () => {
                     applicantAssessmentDetail.id
                 ),
                 {
-                    pending: "Sending assessment to candidate",
-                    success: "Send assessment successfully!",
+                    pending: t("send_assessment_to_candidate"),
+                    success: t("send_assessment_successfully"),
                 }
             );
         } catch (error: any) {
@@ -143,7 +147,7 @@ const CandidateActionTabs = () => {
             applicantAssessmentDetail.status ===
             ApplicantAssessmentDetailStatus.IN_PROGRESS
         )
-            return toast.error("Candidate is taking the assessment");
+            return toast.error(t("candidate_is_taking_assessment"));
         setLoading(true);
         try {
             await toast.promise(
@@ -152,7 +156,7 @@ const CandidateActionTabs = () => {
                     nextAssesment.id
                 ),
                 {
-                    pending: `Moving candidate ${nextAssesment.name}`,
+                    pending: `${t("moving_candidate")} ${nextAssesment.name}`,
                     success: {
                         render({ data }) {
                             return `${data?.message}`;
@@ -180,8 +184,8 @@ const CandidateActionTabs = () => {
                     applicantAssessmentDetail.applicantProfileId
                 ),
                 {
-                    pending: "Disqualifying candidate",
-                    success: "Disqualify candidate success!",
+                    pending: t("disqualifying_candidate"),
+                    success: t("disqualify_candidate_successfully"),
                 }
             );
         } catch (error) {
@@ -196,8 +200,8 @@ const CandidateActionTabs = () => {
                     applicantAssessmentDetail.applicantProfileId
                 ),
                 {
-                    pending: "Reconsider candidate",
-                    success: "Reconsider candidate success!",
+                    pending: t("reconsider_candidate"),
+                    success: t("reconsider_successfully"),
                 }
             );
         } catch (error) {
@@ -209,8 +213,8 @@ const CandidateActionTabs = () => {
         <>
             <Portal>
                 <DeleteModal
-                    title="Disqualify candidate"
-                    description="Are you sure you want to disqualify this candidate? This action cannot be undone."
+                    title={t("disqualify_candidate")}
+                    description={t("warning_disqualify_candidate")}
                     onConfirm={handleDisqualifyCandidate}
                     loading={disqualifyMutate.isPending}
                     show={showDisqualify}
@@ -222,8 +226,8 @@ const CandidateActionTabs = () => {
                 isLoading={loading}
                 closeModal={() => setMoveWarning(false)}
                 onConfirm={handleMoveCandidate}
-                content="You have invited candidate to take assessment but there is no submission yet! Do you want to continue moving this candidate?"
-                title="Move candidate"
+                content={t("warning_move_candidate")}
+                title={t("move_candidate")}
             />
             <ActionDrawer
                 show={showDrawer}
@@ -233,7 +237,7 @@ const CandidateActionTabs = () => {
                 <div className="bg-white absolute top-6 right-3 py-2 px-4 flex items-center gap-4 rounded-md shadow-md text-neutral-600">
                     {applicantAssessmentDetail.assessment.assessmentTypeName ===
                         "LIVE_VIDEO_INTERVIEW_ASSESSMENT" && (
-                        <Tooltip content="Create event">
+                        <Tooltip content={t("create_event")}>
                             <button
                                 type="button"
                                 className={
@@ -247,7 +251,7 @@ const CandidateActionTabs = () => {
                             </button>
                         </Tooltip>
                     )}
-                    <Tooltip content="Send assessment">
+                    <Tooltip content={t("send_assessment")}>
                         <button
                             type="button"
                             className={
@@ -262,7 +266,7 @@ const CandidateActionTabs = () => {
                     </Tooltip>
                     <div className="w-[1px] h-8 bg-gray-300"></div>
                     {!isDisqualified ? (
-                        <Tooltip content="Disqualified candidate">
+                        <Tooltip content={t("disqualify_candidate")}>
                             <button
                                 type="button"
                                 className={
@@ -275,7 +279,7 @@ const CandidateActionTabs = () => {
                             </button>
                         </Tooltip>
                     ) : (
-                        <Tooltip content="Reconsider candidate">
+                        <Tooltip content={t("reconsider_candidate")}>
                             <button
                                 type="button"
                                 className={
@@ -302,7 +306,7 @@ const CandidateActionTabs = () => {
                                         : handleMoveCandidate
                                 }
                             >
-                                Move to {nextAssesment.name}
+                                {t("move_to")} {nextAssesment.name}
                             </button>
                             <MoveCandidateDialog />
                         </div>

@@ -1,0 +1,18 @@
+{
+    "job_title": "Chức danh công việc",
+    "edit_job": "Chỉnh sửa công việc",
+    "reports": "Báo cáo",
+    "feedbacks": "Phản hồi",
+    "activities": "Hoạt động",
+    "assign_assessors": "Giao nhiệm vụ đánh giá",
+    "num_of_candidates": "Số ứng viên",
+    "num_of_evaluations": "Số đánh giá",
+    "in_progress": "Đang tiến hành",
+    "negotiate": "Đàm phán",
+    "update_evaluators_success": "Cập nhật người đánh giá thành công!",
+    "no_candidate_selected": "Không có ứng viên được chọn",
+    "qualified": "Đủ điều kiện",
+    "disqualified": "Không đủ điều kiện",
+    "newest": "Mới nhất",
+    "skill_matched": "kỹ năng phù hợp"
+}
