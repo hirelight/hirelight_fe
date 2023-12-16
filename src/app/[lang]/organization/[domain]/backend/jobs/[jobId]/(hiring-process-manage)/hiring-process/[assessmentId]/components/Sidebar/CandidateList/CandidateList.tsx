@@ -48,7 +48,7 @@ const CandidateList = ({ disqualify }: CandidateListProps) => {
                 {new Array(4).fill("").map((_, index) => (
                     <div
                         key={index}
-                        className="p-4 xl:px-6 flex items-start gap-3 border-b border-gray-300 last:border-none"
+                        className="p-4 xl:px-6 flex items-start gap-3 border-b border-gray-300"
                     >
                         <div className="animate-pulse">
                             <div className="w-5 h-5 rounded bg-slate-200 mr-4"></div>
@@ -97,7 +97,7 @@ const CandidateList = ({ disqualify }: CandidateListProps) => {
                     {new Array(2).fill("").map((_, index) => (
                         <li
                             key={index}
-                            className="p-4 xl:px-6 flex items-start gap-3 border-b border-gray-300 last:border-none"
+                            className="p-4 xl:px-6 flex items-start gap-3 border-b border-gray-300"
                         >
                             <div className="animate-pulse">
                                 <div className="w-5 h-5 rounded bg-slate-200 mr-4"></div>
