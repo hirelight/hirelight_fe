@@ -114,7 +114,7 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
                         ))}
                         {!isLoading && isFetching && (
                             <li className="group border border-gray-300 first:rounded-tl-md first:rounded-tr-md last:rounded-bl-md last:rounded-br-md overflow-hidden animate-pulse p-4">
-                                <div className="h-6 w-full rounded"></div>
+                                <div className="h-6 w-full rounded bg-slate-200"></div>
                             </li>
                         )}
                     </ul>

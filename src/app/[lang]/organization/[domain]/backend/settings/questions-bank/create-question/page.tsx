@@ -239,17 +239,6 @@ const CreateQuestionPage = () => {
         }
     };
 
-    const downloadFileAtUrl = () => {
-        const fileName = templateFile.split("/").pop();
-        const aTag = document.createElement("a");
-        aTag.href = templateFile;
-        aTag.setAttribute("download", fileName!!);
-        document.body.appendChild(aTag);
-
-        aTag.click();
-        aTag.remove();
-    };
-
     return (
         <>
             <form
