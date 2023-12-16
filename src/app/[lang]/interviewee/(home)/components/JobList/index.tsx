@@ -49,10 +49,19 @@ const JobList = () => {
                                     {jobsRes &&
                                         jobsRes.data &&
                                         jobsRes.data
-                                            .filter(job =>
-                                                job.title
-                                                    .toLowerCase()
-                                                    .includes(searchString)
+                                            .filter(
+                                                job =>
+                                                    job.title
+                                                        .toLowerCase()
+                                                        .includes(
+                                                            searchString
+                                                        ) ||
+                                                    (job.keywords &&
+                                                        job.keywords
+                                                            .toLowerCase()
+                                                            .includes(
+                                                                job.title.toLowerCase()
+                                                            ))
                                             )
                                             .slice(curPage, curPage + 10)
                                             .sort((a, b) =>

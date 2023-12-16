@@ -48,19 +48,13 @@ const CandidateDetailWrapper = ({
 
     useEffect(() => {
         if (appProfileDetailRes && templateRes) {
-            if (appProfileDetailRes.data.assessmentId !== assessmentId) {
-                router.push(
-                    `/${lang}/backend/jobs/${jobId}/hiring-process/${assessmentId}`
-                );
-            } else {
-                dispatch(
-                    setAppFormTemplate({
-                        ...templateRes.data,
-                        content: JSON.parse(templateRes.data.content),
-                    })
-                );
-                dispatch(setApplicantDetail(appProfileDetailRes.data));
-            }
+            dispatch(
+                setAppFormTemplate({
+                    ...templateRes.data,
+                    content: JSON.parse(templateRes.data.content),
+                })
+            );
+            dispatch(setApplicantDetail(appProfileDetailRes.data));
         }
     }, [
         appProfileDetailRes,

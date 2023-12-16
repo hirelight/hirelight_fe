@@ -15,7 +15,7 @@ type CandidateListProps = {
 };
 
 const CandidateList = ({ disqualify }: CandidateListProps) => {
-    const { jobId, assessmentId } = useParams();
+    const { jobId, assessmentId, isFetching } = useParams();
 
     const dispatch = useAppDispatch();
 
@@ -89,6 +89,25 @@ const CandidateList = ({ disqualify }: CandidateListProps) => {
                         <CandidateCard profile={profile} />
                     </li>
                 ))}
+            {isFetching && (
+                <>
+                    {new Array(3).fill("").map((_, index) => (
+                        <div
+                            key={index}
+                            className="animate-pulse p-4 xl:px-6 flex items-start gap-3"
+                        >
+                            <div className="w-5 h-5 rounded bg-slate-200 mr-4"></div>
+
+                            <div className="w-12 h-12 rounded-full bg-slate-200 mr-4"></div>
+
+                            <div className="flex flex-col justify-between gap-4">
+                                <div className="h-8 w-44 bg-slate-300"></div>
+                                <div className="h-6 w-32 bg-slate-200"></div>
+                            </div>
+                        </div>
+                    ))}
+                </>
+            )}
         </ul>
     );
 };
