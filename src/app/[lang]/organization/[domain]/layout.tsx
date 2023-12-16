@@ -1,10 +1,7 @@
 import React from "react";
 import dynamic from "next/dynamic";
 
-import LoadingIndicator from "@/components/LoadingIndicator";
 import DoubleRingLoading from "@/components/DoubleRingLoading";
-
-import HeaderBar from "./components/HeaderBar";
 
 const AuthenWrapper = dynamic(() => import("./components/AuthenWrapper"), {
     ssr: false,

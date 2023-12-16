@@ -55,6 +55,16 @@ const JobList = () => {
                                                     .includes(searchString)
                                             )
                                             .slice(curPage, curPage + 10)
+                                            .sort((a, b) =>
+                                                new Date(
+                                                    a.updatedTime
+                                                ).getTime() <
+                                                new Date(
+                                                    b.updatedTime
+                                                ).getTime()
+                                                    ? 1
+                                                    : -1
+                                            )
                                             .map((job, index) => (
                                                 <li
                                                     key={index}
