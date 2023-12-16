@@ -15,13 +15,14 @@ type CandidateListProps = {
 };
 
 const CandidateList = ({ disqualify }: CandidateListProps) => {
-    const { jobId, assessmentId, isFetching } = useParams();
+    const { jobId, assessmentId } = useParams();
 
     const dispatch = useAppDispatch();
 
     const {
         data: applicantDetail,
         isLoading,
+        isFetching,
         isSuccess,
     } = useQuery({
         queryKey: [`job-profiles`, jobId, assessmentId],
@@ -91,7 +92,7 @@ const CandidateList = ({ disqualify }: CandidateListProps) => {
                 ))}
             {isFetching && (
                 <>
-                    {new Array(3).fill("").map((_, index) => (
+                    {new Array(2).fill("").map((_, index) => (
                         <div
                             key={index}
                             className="animate-pulse p-4 xl:px-6 flex items-start gap-3"
