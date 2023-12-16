@@ -99,7 +99,7 @@ const AttendeeSkeleton = () => {
             {new Array(3).fill("").map((_, index) => (
                 <div
                     key={index}
-                    className="animate-pulse h-6 rounded w-40 bg-slate-200"
+                    className="animate-pulse h-6 rounded w-full bg-slate-200"
                 ></div>
             ))}
         </div>
