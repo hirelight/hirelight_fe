@@ -165,9 +165,9 @@ const CandidateActionTabs = () => {
                 }
             );
 
-            // await queryClient.invalidateQueries({
-            //     queryKey: ["job-profiles", jobId],
-            // });
+            queryClient.invalidateQueries({
+                queryKey: ["job-profiles", jobId],
+            });
             router.push(
                 `/${lang}/backend/jobs/${jobId}/hiring-process/${assessmentId}`
             );
