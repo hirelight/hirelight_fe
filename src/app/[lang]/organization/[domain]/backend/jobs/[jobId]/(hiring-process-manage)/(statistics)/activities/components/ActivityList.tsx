@@ -43,10 +43,10 @@ const ActivityListSkeleton = () => {
                 >
                     <div className="flex animate-pulse">
                         <div className="w-2/3">
-                            <div className="w-80 h-5 rounded bg-slate"></div>
+                            <div className="w-80 h-5 rounded bg-slate-300"></div>
                         </div>
                         <div className="w-1/3 pl-2 flex items-center">
-                            <div className="w-8 h-8 rounded-full bg-slate-300"></div>
+                            <div className="w-8 h-8 rounded-full bg-slate-300 mr-2"></div>
                             <div>
                                 <p className="h-5 w-32 rounded bg-slate-200 mb-2"></p>
                                 <p className="w-40 h-5 rounded bg-slate-200"></p>
