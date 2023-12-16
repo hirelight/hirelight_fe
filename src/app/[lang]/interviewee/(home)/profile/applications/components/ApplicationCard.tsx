@@ -24,7 +24,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
 }) => {
     const { lang } = useParams();
     return (
-        <div className="flex gap-4 p-4 sm:p-6 bg-white border border-gray-200 rounded-lg shadow">
+        <div className="flex gap-4 p-4 sm:p-6 bg-white border border-gray-200 rounded-md shadow">
             <div className="hidden md:block rounded-full w-20 h-20 border border-slate-200 overflow-hidden">
                 <Image
                     alt="Company Logo"

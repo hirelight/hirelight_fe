@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import assessmentFlowTemplatesServices from "@/services/assessment-flow-templates/assessment-flow-templates.service";
 import { IAssessmentFlow } from "@/services";
+import { handleError } from "@/helpers";
 
 import data from "../mock-data.json";
 
@@ -23,13 +24,11 @@ const AssessmentsSlider = () => {
         swipeLeft: false,
         swipeRight: false,
     });
-    const [stagesVisible, setStagesVisible] = useState(9999);
-    const [hoverVisible, setHoverVisible] = useState(9999);
 
     const {
         data: res,
         isLoading,
-        error,
+        isError,
     } = useQuery({
         queryKey: ["assessment-flow-template-default"],
         queryFn: assessmentFlowTemplatesServices.getListAsync,
@@ -102,6 +101,10 @@ const AssessmentsSlider = () => {
         };
     }, []);
 
+    if (isLoading) return <SliderSkeleton />;
+
+    if (isError) return <div></div>;
+
     return (
         <div className="relative max-w-full">
             {swipeVisible.swipeLeft && (
@@ -152,3 +155,19 @@ const AssessmentsSlider = () => {
 };
 
 export default AssessmentsSlider;
+
+const SliderSkeleton = () => {
+    return (
+        <div className="relative max-w-full flex justify-between gap-4">
+            {new Array(6).fill("").map((_, index) => (
+                <div
+                    key={index}
+                    className="bg-white rounded-md min-w-[124px] h-24 drop-shadow-lg p-2 flex flex-col items-center justify-center animate-pulse"
+                >
+                    <div className="w-6 h-6 rounded bg-slate-300 mb-2"></div>
+                    <div className="w-20 h-5 rounded bg-slate-200"></div>
+                </div>
+            ))}
+        </div>
+    );
+};

@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import AddJobDetailForm from "./components/AddJobDetailForm";
 
 export const metadata: Metadata = {
-    title: "Create new hiring pipeline",
+    title: "Create new recruitment process",
 };
 
 const NewJob = (props: any) => {

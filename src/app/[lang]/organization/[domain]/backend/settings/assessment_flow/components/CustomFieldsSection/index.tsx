@@ -16,6 +16,7 @@ import {
     domAnimation,
 } from "framer-motion";
 import { toast } from "react-toastify";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Logo } from "@/icons";
 import appFormTemplateServices from "@/services/app-form-template/app-form-template.service";
@@ -63,6 +64,16 @@ export const useAppFormTemplate = (): CustomFieldsSectionState => {
 type CustomFieldsSectionProps = {};
 
 const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
+    const queryClient = useQueryClient();
+    const {
+        data: templateRes,
+        isLoading,
+        isError,
+        error,
+    } = useQuery({
+        queryKey: ["appform-template"],
+        queryFn: appFormTemplateServices.getDefaultAppFormTemplate,
+    });
     const [appFormTemplate, setAppFormTemplate] = useState<
         Omit<IAppFormTemplateDto, "content" | "organizationId"> & {
             content: IAppFormTemplate;
@@ -112,13 +123,18 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
                     ...appFormTemplate,
                     content: JSON.stringify(appFormTemplate.content),
                 });
+                await queryClient.invalidateQueries({
+                    queryKey: ["appform-template"],
+                });
                 toast.success(res.message);
             } else {
                 const res = await appFormTemplateServices.createAsync({
                     name: "Org Default",
                     content: JSON.stringify(appFormTemplate.content),
                 });
-                fetchAppFormTemplate();
+                await queryClient.invalidateQueries({
+                    queryKey: ["appform-template"],
+                });
                 toast.success(res.message);
             }
         } catch (error) {
@@ -128,8 +144,15 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
     };
 
     useEffect(() => {
-        fetchAppFormTemplate();
-    }, [fetchAppFormTemplate]);
+        if (templateRes) {
+            const parsedContent: IAppFormTemplate = JSON.parse(
+                templateRes.data.content
+            );
+            setAppFormTemplate({ ...templateRes.data, content: parsedContent });
+        }
+    }, [templateRes]);
+
+    if (isError) handleError(error);
 
     return (
         <CustomFieldsSectionContext.Provider
@@ -141,30 +164,6 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
                 </h2>
 
                 <div className={pageStyles.section__content__wrapper}>
-                    {/* <div className="p-4 md:p-6">
-                        <div className="mb-6">
-                            <h4 className={`${pageStyles.content__h4} mb-1`}>
-                                Manage your account’s candidate custom fields
-                            </h4>
-                            <p className={pageStyles.content__subheading}>
-                                Edit, disable or change the order of the custom
-                                fields that appear in the candidate profile and
-                                application form.
-                            </p>
-                        </div>
-                        <label className="relative w-full flex items-center cursor-pointer">
-                            <input
-                                type="checkbox"
-                                value=""
-                                className="sr-only peer"
-                            />
-                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                            <span className="inline-block w-full ml-3 font-medium text-sm text-neutral-700 dark:text-gray-300">
-                                Show disabled fields
-                            </span>
-                        </label>
-                    </div> */}
-
                     <section className={styles.fields__container}>
                         <div className={styles.fields__header__container}>
                             <h5 className="text-neutral-700 text-xl font-semibold flex items-center gap-2">
@@ -208,36 +207,42 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
                                 }))
                             }
                         >
-                            {appFormTemplate.content.profile?.map(section => (
-                                <FormSectionCard
-                                    key={section.id}
-                                    data={section}
-                                    reorderFields={newOrder => {
-                                        setAppFormTemplate(prev => ({
-                                            ...prev,
-                                            content: {
-                                                ...prev.content,
-                                                profile:
-                                                    prev.content.profile.map(
-                                                        item => {
-                                                            if (
-                                                                item.id ===
-                                                                section.id
-                                                            ) {
-                                                                return {
-                                                                    ...section,
-                                                                    fields: newOrder,
-                                                                };
-                                                            }
+                            {isLoading ? (
+                                <AppFormTemplateSkeleton size={6} />
+                            ) : (
+                                appFormTemplate.content.profile?.map(
+                                    section => (
+                                        <FormSectionCard
+                                            key={section.id}
+                                            data={section}
+                                            reorderFields={newOrder => {
+                                                setAppFormTemplate(prev => ({
+                                                    ...prev,
+                                                    content: {
+                                                        ...prev.content,
+                                                        profile:
+                                                            prev.content.profile.map(
+                                                                item => {
+                                                                    if (
+                                                                        item.id ===
+                                                                        section.id
+                                                                    ) {
+                                                                        return {
+                                                                            ...section,
+                                                                            fields: newOrder,
+                                                                        };
+                                                                    }
 
-                                                            return item;
-                                                        }
-                                                    ),
-                                            },
-                                        }));
-                                    }}
-                                />
-                            ))}
+                                                                    return item;
+                                                                }
+                                                            ),
+                                                    },
+                                                }));
+                                            }}
+                                        />
+                                    )
+                                )
+                            )}
                         </Reorder.Group>
                         <LazyMotion features={domAnimation}>
                             <AnimatePresence>
@@ -286,40 +291,46 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
                             </div>
                         </div>
 
-                        {appFormTemplate.content.app_form?.map(section => (
-                            <AppFormSection
-                                key={section.id}
-                                data={section}
-                                onReorderFields={newOrder => {
-                                    setAppFormTemplate(prev => ({
-                                        ...prev,
-                                        content: {
-                                            ...prev.content,
-                                            app_form: prev.content.app_form.map(
-                                                item => {
-                                                    if (
-                                                        item.id === section.id
-                                                    ) {
-                                                        return {
-                                                            ...section,
-                                                            fields:
+                        {isLoading ? (
+                            <AppFormTemplateSkeleton size={3} />
+                        ) : (
+                            appFormTemplate.content.app_form?.map(section => (
+                                <AppFormSection
+                                    key={section.id}
+                                    data={section}
+                                    onReorderFields={newOrder => {
+                                        setAppFormTemplate(prev => ({
+                                            ...prev,
+                                            content: {
+                                                ...prev.content,
+                                                app_form:
+                                                    prev.content.app_form.map(
+                                                        item => {
+                                                            if (
                                                                 item.id ===
-                                                                "personal_information"
-                                                                    ? unOrderField.concat(
-                                                                          newOrder
-                                                                      )
-                                                                    : newOrder,
-                                                        };
-                                                    }
+                                                                section.id
+                                                            ) {
+                                                                return {
+                                                                    ...section,
+                                                                    fields:
+                                                                        item.id ===
+                                                                        "personal_information"
+                                                                            ? unOrderField.concat(
+                                                                                  newOrder
+                                                                              )
+                                                                            : newOrder,
+                                                                };
+                                                            }
 
-                                                    return item;
-                                                }
-                                            ),
-                                        },
-                                    }));
-                                }}
-                            />
-                        ))}
+                                                            return item;
+                                                        }
+                                                    ),
+                                            },
+                                        }));
+                                    }}
+                                />
+                            ))
+                        )}
                     </section>
 
                     <div className="p-4 md:p-6 border-t border-gray-300">
@@ -346,3 +357,21 @@ const CustomFieldsSection: React.FC<CustomFieldsSectionProps> = () => {
 };
 
 export default CustomFieldsSection;
+
+const AppFormTemplateSkeleton = ({ size }: { size: number }) => {
+    return (
+        <ul className="w-full">
+            {new Array(size).fill("").map((_, index) => (
+                <li
+                    key={index}
+                    className="py-6 px-4 bg-white border-b border-gray-300 last:border-b-0"
+                >
+                    <div className="animate-pulse">
+                        <div className="inline-block h-5 w-5 rounded bg-slate-200 mr-4"></div>
+                        <div className="inline-block w-3/5 h-5 rounded bg-slate-300"></div>
+                    </div>
+                </li>
+            ))}
+        </ul>
+    );
+};
