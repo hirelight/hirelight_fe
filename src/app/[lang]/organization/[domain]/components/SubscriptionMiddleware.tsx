@@ -35,7 +35,7 @@ const SubscriptionMiddleware = ({
                             `/${lang}/backend/settings/billing?subscriptionEnd=true`
                         );
                     else setPageLoading(false);
-                }
+                } else setPageLoading(false);
             } catch (error) {
                 console.error(error);
                 setPageLoading(false);
