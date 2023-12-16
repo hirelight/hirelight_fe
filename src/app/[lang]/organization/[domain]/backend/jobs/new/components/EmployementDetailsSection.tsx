@@ -3,7 +3,7 @@
 import React from "react";
 import { useParams } from "next/navigation";
 
-import { BadgeInput, CustomInput, Selection } from "@/components";
+import { BadgeInput, Selection } from "@/components";
 import { experienceLevels, workModalities } from "@/utils/shared/initialDatas";
 import { useI18NextTranslation } from "@/utils/i18n/client";
 import { I18Locale } from "@/interfaces/i18.interface";

@@ -134,7 +134,7 @@ const CustomFileInput = (props: ICustomFileInput) => {
             >
                 {props.required && <span className="text-red-500 mr-1">*</span>}
                 {props.title}
-                {!props.required && (
+                {!props.required && props.required !== undefined && (
                     <span className="text-neutral-500 text-sm ml-1">
                         (Optional)
                     </span>
