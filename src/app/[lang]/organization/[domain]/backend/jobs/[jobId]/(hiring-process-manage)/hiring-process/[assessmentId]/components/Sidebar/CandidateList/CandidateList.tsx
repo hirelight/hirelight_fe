@@ -48,7 +48,7 @@ const CandidateList = ({ disqualify }: CandidateListProps) => {
                 {new Array(4).fill("").map((_, index) => (
                     <div
                         key={index}
-                        className="animate-pulse p-4 xl:px-6 flex items-start gap-3"
+                        className="animate-pulse p-4 xl:px-6 flex items-start gap-3 border-b border-gray-300 last:border-none"
                     >
                         <div className="w-5 h-5 rounded bg-slate-200 mr-4"></div>
 
@@ -93,9 +93,9 @@ const CandidateList = ({ disqualify }: CandidateListProps) => {
             {isFetching && (
                 <>
                     {new Array(2).fill("").map((_, index) => (
-                        <div
+                        <li
                             key={index}
-                            className="animate-pulse p-4 xl:px-6 flex items-start gap-3"
+                            className="animate-pulse p-4 xl:px-6 flex items-start gap-3 border-b border-gray-300 last:border-none"
                         >
                             <div className="w-5 h-5 rounded bg-slate-200 mr-4"></div>
 
@@ -105,7 +105,7 @@ const CandidateList = ({ disqualify }: CandidateListProps) => {
                                 <div className="h-8 w-44 bg-slate-300"></div>
                                 <div className="h-6 w-32 bg-slate-200"></div>
                             </div>
-                        </div>
+                        </li>
                     ))}
                 </>
             )}

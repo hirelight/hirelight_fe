@@ -11,6 +11,34 @@ import { Locale } from "../../../../../../i18n.config";
 
 import styles from "./FeatureDescription.module.scss";
 
+const features = [
+    {
+        title: "CV Screening",
+        description:
+            "Effortlessly sift through resumes with our intelligent CV screening feature. Save time and ensure you never miss a qualified candidate by leveraging our advanced algorithms that analyze and match candidate profiles to your job requirements.",
+        details: ["Config cv scan keywords", "Scan matching keywords"],
+    },
+    {
+        title: "Async Video Assessment",
+        description:
+            "Revolutionize your hiring process with asynchronous video assessments. Empower candidates to showcase their skills and personality at their convenience, while your team collaborates on the evaluations. Say goodbye to scheduling conflicts and welcome a more efficient and insightful evaluation process.",
+        details: [
+            "No need to schedule a meeting",
+            "Share recoded interviews",
+            "Greate candidate experience",
+        ],
+    },
+    {
+        title: "Collaborative Hiring Workflows",
+        description:
+            "Enhance team collaboration and communication with our intuitive hiring workflows. From initial screening to final interviews, streamline your hiring process by keeping all stakeholders on the same page. Easily manage and track candidate progress, feedback, and interview schedules in one centralized platform.",
+        details: [
+            "Collaboration on a single place",
+            "Tracking activity for better management",
+            "Share resouces throughout recuitment process",
+        ],
+    },
+];
 interface IFeatureDescription {
     lang: string;
 }
@@ -22,7 +50,7 @@ const FeatureDescription: React.FC<IFeatureDescription> = async ({ lang }) => {
 
     return (
         <div className="max-w-screen-xl w-full mx-auto flex flex-col gap-16 relative px-5">
-            {new Array(3).fill("").map((item, index) => {
+            {features.map((item, index) => {
                 return (
                     <section
                         key={index}
@@ -39,42 +67,28 @@ const FeatureDescription: React.FC<IFeatureDescription> = async ({ lang }) => {
                         </div>
                         <div className="flex-1 flex flex-col items-center md:items-start text-center md:text-left">
                             <h3 className="hidden md:block text-lg text-blue_primary_600 mb-8">
-                                Borem ipsum dolor{" "}
-                            </h3>
-                            <h1 className=" text-4xl md:text-5xl text-neutral-700 font-semibold my-4">
                                 <Trans t={_t} i18nKey={"title"}>
                                     Outstanding features {{ num: index + 1 }}
                                 </Trans>
+                            </h3>
+                            <h1 className=" text-4xl md:text-5xl text-neutral-700 font-semibold my-4">
+                                {item.title}
                             </h1>
                             <p className="text-sm md:text-base font-medium text-neutral-500 w-3/4 md:w-full lg:w-3/4 mb-10">
-                                Vorem ipsum dolor sit amet, consectetur
-                                adipiscing elit. Nunc vulputate libero et velit
-                                interdum, ac aliquet odio mattis. Class aptent
-                                taciti sociosqu ad litora torquent per conubia
-                                nostra, per inceptos himenaeos.
+                                {item.description}
                             </p>
                             <ul className="flex flex-col gap-6">
-                                <li className="flex items-center gap-4">
-                                    <div className="rounded-full bg-slate-200 p-4"></div>
-                                    <p className="text-xs md:text-sm font-semibold text-gray-600">
-                                        Jorem ipsum dolor sit amet, consectetur
-                                        adipiscing elit.
-                                    </p>
-                                </li>
-                                <li className="flex items-center gap-4">
-                                    <div className="rounded-full bg-slate-200 p-4"></div>
-                                    <p className="text-xs md:text-sm font-semibold text-gray-600">
-                                        Jorem ipsum dolor sit amet, consectetur
-                                        adipiscing elit.
-                                    </p>
-                                </li>
-                                <li className="flex items-center gap-4">
-                                    <div className="rounded-full bg-slate-200 p-4"></div>
-                                    <p className="text-xs md:text-sm font-semibold text-gray-600">
-                                        Jorem ipsum dolor sit amet, consectetur
-                                        adipiscing elit.
-                                    </p>
-                                </li>
+                                {item.details.map((i, iL) => (
+                                    <li
+                                        key={iL}
+                                        className="flex items-center gap-4"
+                                    >
+                                        <div className="rounded-full bg-slate-200 p-4"></div>
+                                        <p className="text-xs md:text-sm font-semibold text-gray-600">
+                                            {i}
+                                        </p>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                     </section>

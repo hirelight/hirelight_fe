@@ -27,23 +27,24 @@ const OverviewSection: React.FC<IOverviewSection> = async ({ lang }) => {
             <section className="flex-1 self-stretch flex flex-col  items-center md:items-start justify-between">
                 <div className="flex flex-col items-center gap-9 md:items-start">
                     <p className="text-blue_primary_600 hidden md:block">
-                        Ipsum dolor sit
+                        Recruitment process support platform
                     </p>
                     <div>
                         <h1 className="text-5xl lg:text-6xl xl:text-7xl text-center md:text-left font-semibold text-neutral-800 mb-4">
-                            Worem{" "}
+                            Welcome to{" "}
                             <span className={styles.title__gradient}>
-                                ipsum dolor sit
+                                Hirelight
                             </span>{" "}
-                            amet consectetur
+                            recruitment platform
                         </h1>
                         <p className="text-neutral-400 text-sm xl:text-lg text-center md:text-left">
-                            Gorem ipsum dolor sit amet, consectetur adipiscing
-                            elit.
+                            Streamline your hiring journey with our innovative
+                            tools and features.
                         </p>
                         <p className="text-neutral-400 text-sm xl:text-lg text-center md:text-left">
                             {" "}
-                            Nunc vulputate libero et velit.
+                            Simplify and optimize every step of the recruitment
+                            process.
                         </p>
                     </div>
                     <Link
@@ -88,7 +89,7 @@ const OverviewSection: React.FC<IOverviewSection> = async ({ lang }) => {
                         </div>
                         <span className="text-lg text-neutral-500">
                             <Trans t={_t} i18nKey={"free_trials"}>
-                                {{ days: 15 }} days free trials
+                                {{ days: 14 }} days free trials
                             </Trans>
                         </span>
                     </div>
