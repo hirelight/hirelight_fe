@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import { toast } from "react-toastify";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { ChevronDown } from "@/icons";
@@ -31,6 +31,32 @@ const MoveCandidateDialog = () => {
     const [showDialog, setShowDialog] = React.useState(false);
     const [loading, setLoading] = useState(false);
 
+    const moveCandidateMutation = useMutation({
+        mutationFn: ({
+            profileId,
+            assessmentId,
+        }: {
+            profileId: string;
+            assessmentId: string;
+        }) =>
+            applicantAssessmentDetailServices.moveCandidateToAssessment(
+                profileId,
+                assessmentId
+            ),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({
+                queryKey: ["job-profiles", jobId],
+            });
+            setShowDialog(false);
+            router.push(
+                `/${lang}/backend/jobs/${jobId}/hiring-process/${assessmentId}`
+            );
+        },
+        onError: () => {
+            setShowDialog(false);
+        },
+    });
+
     const handleMoveCandidate = async (stageId: string, profileId: string) => {
         if (
             applicantAssessmentDetail.status ===
@@ -38,31 +64,23 @@ const MoveCandidateDialog = () => {
         )
             return toast.error("Candidate is taking the assessment");
 
-        setLoading(true);
-        try {
-            await toast.promise(
-                applicantAssessmentDetailServices.moveCandidateToAssessment(
-                    profileId,
-                    stageId
-                ),
-                {
-                    pending: "Moving candidate",
-                    success: "Move candidate successfully!",
-                }
-            );
-
-            queryClient.invalidateQueries({
-                queryKey: ["job-profiles", jobId],
-            });
-
-            router.push(
-                `/${lang}/backend/jobs/${jobId}/hiring-process/${assessmentId}`
-            );
-        } catch (error: any) {
-            handleError(error);
-        }
-        setLoading(false);
-        setShowDialog(false);
+        toast.promise(
+            moveCandidateMutation.mutateAsync({
+                profileId: profileId,
+                assessmentId: stageId,
+            }),
+            {
+                pending: "Moving candidate",
+                success: "Move candidate success",
+                error: {
+                    render({ data }: any) {
+                        return data.message
+                            ? data.message
+                            : "Move candidate failure";
+                    },
+                },
+            }
+        );
     };
 
     return (
@@ -93,7 +111,8 @@ const MoveCandidateDialog = () => {
                                 type="button"
                                 className={`group w-full text-left text-sm disabled:cursor-not-allowed`}
                                 disabled={
-                                    assessmentId === assessment.id || loading
+                                    assessmentId === assessment.id ||
+                                    moveCandidateMutation.isPending
                                 }
                                 onClick={handleMoveCandidate.bind(
                                     null,

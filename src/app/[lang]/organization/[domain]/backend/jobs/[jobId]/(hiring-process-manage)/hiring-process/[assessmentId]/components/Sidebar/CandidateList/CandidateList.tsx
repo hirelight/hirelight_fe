@@ -22,7 +22,6 @@ const CandidateList = ({ disqualify }: CandidateListProps) => {
     const {
         data: applicantDetail,
         isLoading,
-        isFetching,
         isSuccess,
     } = useQuery({
         queryKey: [`job-profiles`, jobId, assessmentId],
@@ -48,9 +47,9 @@ const CandidateList = ({ disqualify }: CandidateListProps) => {
                 {new Array(4).fill("").map((_, index) => (
                     <div
                         key={index}
-                        className="p-4 xl:px-6 flex items-start gap-3 border-b border-gray-300"
+                        className="p-4 xl:px-6 border-b border-gray-300"
                     >
-                        <div className="animate-pulse">
+                        <div className="animate-pulse flex items-start gap-3">
                             <div className="w-5 h-5 rounded bg-slate-200 mr-4"></div>
 
                             <div className="w-12 h-12 rounded-full bg-slate-200 mr-4"></div>
@@ -92,27 +91,6 @@ const CandidateList = ({ disqualify }: CandidateListProps) => {
                         <CandidateCard profile={profile} />
                     </li>
                 ))}
-            {isFetching && (
-                <>
-                    {new Array(2).fill("").map((_, index) => (
-                        <li
-                            key={index}
-                            className="p-4 xl:px-6 flex items-start gap-3 border-b border-gray-300"
-                        >
-                            <div className="animate-pulse">
-                                <div className="w-5 h-5 rounded bg-slate-200 mr-4"></div>
-
-                                <div className="w-12 h-12 rounded-full bg-slate-200 mr-4"></div>
-
-                                <div className="flex flex-col justify-between gap-4">
-                                    <div className="h-8 w-44 bg-slate-300"></div>
-                                    <div className="h-6 w-32 bg-slate-200"></div>
-                                </div>
-                            </div>
-                        </li>
-                    ))}
-                </>
-            )}
         </ul>
     );
 };

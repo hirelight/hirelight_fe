@@ -119,6 +119,28 @@ const CandidateActionTabs = () => {
         },
     });
 
+    const moveCandidateMutation = useMutation({
+        mutationFn: ({
+            profileId,
+            assessmentId,
+        }: {
+            profileId: string;
+            assessmentId: string;
+        }) =>
+            applicantAssessmentDetailServices.moveCandidateToAssessment(
+                profileId,
+                assessmentId
+            ),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({
+                queryKey: ["job-profiles", jobId],
+            });
+            router.push(
+                `/${lang}/backend/jobs/${jobId}/hiring-process/${assessmentId}`
+            );
+        },
+    });
+
     const handleSendAssessment = async () => {
         if (
             applicantAssessmentDetail.status ===
@@ -143,38 +165,23 @@ const CandidateActionTabs = () => {
     };
 
     const handleMoveCandidate = async () => {
-        if (
-            applicantAssessmentDetail.status ===
-            ApplicantAssessmentDetailStatus.IN_PROGRESS
-        )
-            return toast.error(t("candidate_is_taking_assessment"));
-        setLoading(true);
-        try {
-            await toast.promise(
-                applicantAssessmentDetailServices.moveCandidateToAssessment(
-                    candidateId as string,
-                    nextAssesment.id
-                ),
-                {
-                    pending: `${t("moving_candidate")} ${nextAssesment.name}`,
-                    success: {
-                        render({ data }) {
-                            return `${data?.message}`;
-                        },
+        toast.promise(
+            moveCandidateMutation.mutateAsync({
+                profileId: candidateId as string,
+                assessmentId: nextAssesment.id,
+            }),
+            {
+                pending: "Moving candidate",
+                success: "Move candidate success",
+                error: {
+                    render({ data }: any) {
+                        return data.message
+                            ? data.message
+                            : "Move candidate failure";
                     },
-                }
-            );
-
-            queryClient.invalidateQueries({
-                queryKey: ["job-profiles", jobId],
-            });
-            router.push(
-                `/${lang}/backend/jobs/${jobId}/hiring-process/${assessmentId}`
-            );
-        } catch (error: any) {
-            handleError(error);
-        }
-        setLoading(false);
+                },
+            }
+        );
     };
 
     const handleDisqualifyCandidate = async () => {
@@ -223,7 +230,7 @@ const CandidateActionTabs = () => {
             </Portal>
             <WarningModal
                 isOpen={moveWarning}
-                isLoading={loading}
+                isLoading={moveCandidateMutation.isPending}
                 closeModal={() => setMoveWarning(false)}
                 onConfirm={handleMoveCandidate}
                 content={t("warning_move_candidate")}
@@ -298,7 +305,7 @@ const CandidateActionTabs = () => {
                             <button
                                 type="button"
                                 className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium text-sm w-auto px-2 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 rounded-tl-md rounded-bl-md border-r border-blue-800 transition-all duration-300 whitespace-nowrap disabled:cursor-not-allowed disabled:opacity-60"
-                                disabled={loading}
+                                disabled={moveCandidateMutation.isPending}
                                 onClick={
                                     applicantAssessmentDetail.status ===
                                     ApplicantAssessmentDetailStatus.INVITED
