@@ -45,7 +45,7 @@ const MoveCandidateDialog = () => {
             ),
         onSuccess: async () => {
             await queryClient.invalidateQueries({
-                queryKey: ["job-profiles", jobId],
+                queryKey: ["job-profiles", jobId, assessmentId],
             });
             setShowDialog(false);
             router.push(
