@@ -133,7 +133,7 @@ const CandidateActionTabs = () => {
             ),
         onSuccess: async () => {
             await queryClient.invalidateQueries({
-                queryKey: ["job-profiles", jobId, assessmentId],
+                queryKey: ["job-profiles", jobId],
             });
             router.push(
                 `/${lang}/backend/jobs/${jobId}/hiring-process/${assessmentId}`
