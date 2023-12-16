@@ -16,7 +16,7 @@ const HiringProcess = () => {
     }, [assessmentFLow.assessments, router]);
 
     return (
-        <div className="p-12 flex items-center justify-center">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <LoadingIndicator />
         </div>
     );

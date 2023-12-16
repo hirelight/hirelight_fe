@@ -12,7 +12,8 @@
         "start_time_earlier": "Start time must be earlier than end time!",
         "end_time_be_future": "End time must be in the future!",
         "maximum_200MB": "Maximum file is 200MB",
-        "file_max_200MB": "File size maximum 200MB"
+        "file_max_200MB": "File size maximum 200MB",
+        "work_email_only": "Only work email can create organization"
     },
     "notification": {
         "success": {

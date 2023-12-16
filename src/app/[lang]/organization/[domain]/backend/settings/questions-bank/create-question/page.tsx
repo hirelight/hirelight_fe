@@ -37,8 +37,6 @@ import { I18Locale } from "@/interfaces/i18.interface";
 
 import AddQuestionTagModal from "./components/AddQuestionTagModal";
 
-const templateFile = `http://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/questions-template.xlsx`;
-
 const initialAnswers = new Array(4).fill({
     name: "",
     correct: false,
@@ -239,17 +237,6 @@ const CreateQuestionPage = () => {
         }
     };
 
-    const downloadFileAtUrl = () => {
-        const fileName = templateFile.split("/").pop();
-        const aTag = document.createElement("a");
-        aTag.href = templateFile;
-        aTag.setAttribute("download", fileName!!);
-        document.body.appendChild(aTag);
-
-        aTag.click();
-        aTag.remove();
-    };
-
     return (
         <>
             <form
@@ -261,7 +248,7 @@ const CreateQuestionPage = () => {
                     <div className="flex gap-4 absolute top-1/2 right-0 -translate-y-1/2">
                         <Tooltip content={t("download_file_template")}>
                             <a
-                                href={`http://${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/questions-template.xlsx`}
+                                href={`/questions-template.xlsx`}
                                 download
                                 className="w-6 h-6 block"
                             >

@@ -95,7 +95,7 @@ export default SelectCollaborators;
 
 const AttendeeSkeleton = () => {
     return (
-        <div className="space-y-2">
+        <div className="space-y-2 px-4">
             {new Array(3).fill("").map((_, index) => (
                 <div
                     key={index}

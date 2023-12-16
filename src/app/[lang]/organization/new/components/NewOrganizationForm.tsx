@@ -207,7 +207,7 @@ const NewOrganizationForm = () => {
                         onClick={() => setShowWarning(true)}
                     >
                         <Trans t={t} i18nKey={"btn.submit"}>
-                            Start a {{ days: 15 }}-day trial
+                            Start a {{ days: 14 }}-day trial
                         </Trans>
                     </Button>
                 </div>

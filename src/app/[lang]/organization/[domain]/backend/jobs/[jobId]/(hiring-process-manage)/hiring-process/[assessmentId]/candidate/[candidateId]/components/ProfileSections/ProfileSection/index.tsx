@@ -36,6 +36,7 @@ const ProfileSection = () => {
             ? JSON.parse(applicantAssessmentDetail.applicantProfile.content)
             : null
     );
+    const appFromTemplate = useAppSelector(state => state.appFormTemplate.data);
 
     const getDetailByField = (field: IAppFormTemplateField) => {
         let value = field.value;
@@ -126,10 +127,13 @@ const ProfileSection = () => {
     React.useEffect(() => {
         const fetchLayout = async () => {
             try {
-                const res =
-                    await appFormTemplateServices.getDefaultAppFormTemplate();
-                let profileLayout = JSON.parse(res.data.content)
-                    .profile as IAppFormTemplateProfileSection[];
+                // const res =
+                //     await appFormTemplateServices.getDefaultAppFormTemplate();
+                // let profileLayout = JSON.parse(res.data.content)
+                //     .profile as IAppFormTemplateProfileSection[];
+
+                let profileLayout = appFromTemplate.content.profile;
+
                 const fieldMap = new Map<string, any>();
                 if (formDetails.current)
                     formDetails.current.form_structure

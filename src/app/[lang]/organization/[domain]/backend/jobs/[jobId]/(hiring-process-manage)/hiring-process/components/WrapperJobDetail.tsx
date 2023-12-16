@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
@@ -15,6 +15,7 @@ import { ApplicationFormJSON } from "@/services";
 
 const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
     const { jobId } = useParams();
+    const router = useRouter();
     const dispatch = useAppDispatch();
     const { data: flow, loading: flowLoading } = useAppSelector(
         state => state.assessmentFlow
@@ -61,16 +62,37 @@ const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
                     applicationForm: JSON.parse(queryRes.applicationForm),
                 })
             );
-            dispatch(fetchAssessmentFlowById(queryRes.assessmentFlowId!!));
+            if (queryRes.assessmentFlowId) {
+                dispatch(fetchAssessmentFlowById(queryRes.assessmentFlowId));
+            }
         }
     }, [isSuccess, queryRes, dispatch]);
 
-    if (isLoading || flowLoading || !queryRes || !flow.id)
+    if (isLoading || flowLoading)
         return (
-            <div className="p-12 flex items-center justify-center">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                 <LoadingIndicator />
             </div>
         );
+
+    if (!flow.id) {
+        return (
+            <div className="flex flex-col items-center justify-center p-52">
+                <h3 className="text-2xl whitespace-nowrap mb-4">
+                    You are not allowed to access this recruitment process
+                </h3>
+                <button
+                    type="button"
+                    className="text-lg text-blue_primary_600 hover:text-blue_primary_800 hover:underline"
+                    onClick={() => {
+                        router.back();
+                    }}
+                >
+                    Back
+                </button>
+            </div>
+        );
+    }
 
     return <>{children}</>;
 };

@@ -43,8 +43,8 @@ const Login = async ({
                     href={`signup`}
                     className="block max-w-[280px] font-semibold text-blue-600 hover:cursor-pointer hover:underline"
                 >
-                    <Trans i18nKey={"btn.signup"} t={t} days={15}>
-                        Sign up now for a {{ days: 15 }}-day free trial
+                    <Trans i18nKey={"btn.signup"} t={t} days={14}>
+                        Sign up now for a {{ days: 14 }}-day free trial
                     </Trans>
                 </Link>
             </div>

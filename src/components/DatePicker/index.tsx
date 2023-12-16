@@ -249,7 +249,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                 >
                     {required && <span className="text-red-500 mr-1">*</span>}
                     {title}
-                    {!required && (
+                    {!required && required !== undefined && (
                         <span className="text-neutral-500 text-sm ml-1">
                             (Optional)
                         </span>

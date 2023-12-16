@@ -5,9 +5,8 @@ import { PlayIcon } from "@heroicons/react/24/solid";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
-import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
+import { useAppDispatch } from "@/redux/reduxHooks";
 import { setAssessment } from "@/redux/slices/assessment.slice";
-import { fetchAssessmentById } from "@/redux/thunks/assessment.thunk";
 import assessmentsServices from "@/services/assessments/assessments.service";
 
 import Sidebar from "../Sidebar";

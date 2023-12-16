@@ -8,6 +8,7 @@ import logo from "/public/images/logo.svg";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
+import { toast } from "react-toastify";
 
 import { Bell } from "@/icons";
 import { useOutsideClick } from "@/hooks/useClickOutside";
@@ -15,6 +16,7 @@ import { LocaleSwitcher, UserAvatar } from "@/components";
 import { useAppDispatch, useAppSelector } from "@/redux/reduxHooks";
 import { logout } from "@/redux/slices/auth.slice";
 import { useI18NextTranslation } from "@/utils/i18n/client";
+import { validWorkEmail } from "@/helpers";
 
 import { Locale } from "../../../../../../i18n.config";
 
@@ -182,17 +184,32 @@ const HeaderBar = () => {
                                     >
                                         {t("avatar_menu.help")}
                                     </a>
-                                    <Link
-                                        href={`${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/organization/new`}
+                                    <button
+                                        type="button"
                                         className={styles.avatar__dropdown__btn}
                                         role="menuitem"
                                         tabIndex={-1}
-                                        onClick={() =>
-                                            setShowAvatarDropdown(false)
-                                        }
+                                        onClick={() => {
+                                            if (
+                                                authUser &&
+                                                validWorkEmail(
+                                                    authUser.emailAddress
+                                                )
+                                            ) {
+                                                setShowAvatarDropdown(false);
+                                                router.push(
+                                                    `${window.location.protocol}//${process.env.NEXT_PUBLIC_ROOT_DOMAIN}/${lang}/organization/new`
+                                                );
+                                            } else
+                                                toast.error(
+                                                    t(
+                                                        "common:error.work_email_only"
+                                                    )
+                                                );
+                                        }}
                                     >
                                         {t("avatar_menu.add_company")}
-                                    </Link>
+                                    </button>
                                     <button
                                         type="button"
                                         className={styles.avatar__dropdown__btn}

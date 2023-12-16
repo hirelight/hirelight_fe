@@ -32,7 +32,11 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
 
     const { authUser } = useAppSelector(state => state.auth);
 
-    const { data: res, error } = useQuery({
+    const {
+        data: res,
+        isFetching,
+        isLoading,
+    } = useQuery({
         queryKey: ["joined-owned-organizations"],
         queryFn: organizationsServices.getOwnedJoinedOrganizations,
     });
@@ -73,7 +77,7 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
             </Portal>
             <div className="flex flex-col gap-4">
                 <h1 className={styles.title}>{_t("h1.organization_list")}</h1>
-
+                {isLoading && <OrgListSkeleton num={3} />}
                 {res &&
                     (res.data.length > 0 ? (
                         <ul>
@@ -109,20 +113,40 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
                             ))}
                         </ul>
                     ) : (
-                        <div className="w-full flex flex-col items-center">
-                            <BuildingOffice2Icon className="w-24 h-24 text-neutral-700 mb-2" />
-                            <div className="text-sm text-gray-500 max-w-[80%] mb-6">
-                                <p>{_t("p.empty_list")}</p>
+                        !isFetching && (
+                            <div className="w-full flex flex-col items-center">
+                                <BuildingOffice2Icon className="w-24 h-24 text-neutral-700 mb-2" />
+                                <div className="text-sm text-gray-500 max-w-[80%] mb-6">
+                                    <p>{_t("p.empty_list")}</p>
+                                </div>
                             </div>
-
-                            <Button onClick={handleRedirectNewOrg}>
-                                {_t("button.create_new")}
-                            </Button>
-                        </div>
+                        )
                     ))}
+
+                <Button
+                    disabled={isLoading || isFetching}
+                    onClick={handleRedirectNewOrg}
+                >
+                    {_t("button.create_new")}
+                </Button>
             </div>
         </div>
     );
 };
 
 export default JoinedOrgList;
+
+const OrgListSkeleton = ({ num }: { num: number }) => {
+    return (
+        <ul className="w-full">
+            {new Array(num).fill("").map((_, index) => (
+                <li
+                    key={index}
+                    className="group border border-gray-300 first:rounded-tl-md first:rounded-tr-md last:rounded-bl-md last:rounded-br-md overflow-hidden animate-pulse p-4"
+                >
+                    <div className="h-6 w-full rounded bg-slate-200"></div>
+                </li>
+            ))}
+        </ul>
+    );
+};

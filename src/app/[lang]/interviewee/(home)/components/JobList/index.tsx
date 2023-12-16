@@ -54,7 +54,7 @@ const JobList = () => {
                                                     .toLowerCase()
                                                     .includes(searchString)
                                             )
-                                            .slice(curPage, curPage + 4)
+                                            .slice(curPage, curPage + 10)
                                             .map((job, index) => (
                                                 <li
                                                     key={index}

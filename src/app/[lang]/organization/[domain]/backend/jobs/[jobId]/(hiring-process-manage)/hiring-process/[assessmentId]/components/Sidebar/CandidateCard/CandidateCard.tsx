@@ -112,7 +112,9 @@ const CandidateCard: React.FC<CandidateCardProps> = ({ profile }) => {
                                     .fromNow()}
                             </span>
                         </div>
-                        {profile.applicantProfile.keywordsMatch &&
+                        {profile.assessment.assessmentTypeName !==
+                            "SOURCED_ASSESSMENT" &&
+                            profile.applicantProfile.keywordsMatch &&
                             profile.applicantProfile.keywordsMatch.length >
                                 0 && (
                                 <button

@@ -4,19 +4,10 @@ import moment from "moment";
 
 import {
     ApplicationFormJSON,
-    ICreateJobDto,
-    IJobDetailError,
     IJobDto,
     JobContentJson,
 } from "@/services/job/job.interface";
-import {
-    IAddAppFormField,
-    IAppFormField,
-    IAppFormSection,
-    ICustomField,
-    IDelteCustomField,
-    IEditAppFormField,
-} from "@/interfaces";
+import { IAppFormField, IEditAppFormField } from "@/interfaces";
 import { handleError } from "@/helpers";
 
 import { createNewJobPost, getJobById, updateJob } from "../thunks/job.thunk";

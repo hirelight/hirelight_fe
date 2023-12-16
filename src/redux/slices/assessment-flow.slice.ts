@@ -1,5 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
+import { createSlice } from "@reduxjs/toolkit";
 
 import { IAssessmentFlowDto } from "@/services";
 
@@ -8,6 +7,7 @@ import { fetchAssessmentFlowById } from "../thunks/assessment-flow.thunk";
 export interface IAssessmentFlowState {
     data: Omit<IAssessmentFlowDto, "id"> & { id?: string };
     loading: boolean;
+    error: string | null;
 }
 
 const initialState: IAssessmentFlowState = {
@@ -21,6 +21,7 @@ const initialState: IAssessmentFlowState = {
         updatedTime: new Date(),
     },
     loading: false,
+    error: null,
 };
 
 const assessmentFlowSlice = createSlice({
@@ -36,6 +37,7 @@ const assessmentFlowSlice = createSlice({
         builder
             .addCase(fetchAssessmentFlowById.pending, state => {
                 state.loading = true;
+                state.error = null;
             })
             .addCase(fetchAssessmentFlowById.fulfilled, (state, action) => {
                 const { data, message } = action.payload;
@@ -45,10 +47,11 @@ const assessmentFlowSlice = createSlice({
                     endTime: data.endTime,
                 };
                 state.loading = false;
+                state.error = null;
             })
             .addCase(fetchAssessmentFlowById.rejected, (state, action) => {
-                toast.error(action.error.message);
-                state.loading = true;
+                // state.error = action.error.message
+                state.loading = false;
             });
     },
 });
