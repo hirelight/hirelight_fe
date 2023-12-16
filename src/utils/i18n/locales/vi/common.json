@@ -12,8 +12,7 @@
         "start_time_earlier": "Thời gian bắt đầu phải trước thời gian kết thúc!",
         "end_time_be_future": "Thời gian kết thúc phải ở tương lai!",
         "maximum_200MB": "Dung lượng file tối đa là 200MB",
-        "file_max_200MB": "Dung lượng file tối đa là 200MB",
-        "work_email_only": "Chỉ email doanh nghiệp có thể tạo mới tài khoản công ty"
+        "file_max_200MB": "Dung lượng file tối đa là 200MB"
     },
     "notification": {
         "success": {

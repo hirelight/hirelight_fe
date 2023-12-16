@@ -65,7 +65,7 @@ const Timer: React.FC<TimerProps> = ({
                 >
                     {required && <span className="text-red-500 mr-1">*</span>}
                     {title}
-                    {!required && required !== undefined && (
+                    {!required && (
                         <span className="text-neutral-500 text-sm ml-1">
                             (Optional)
                         </span>

@@ -9,8 +9,5 @@
     "invited_members_will_automatically": "Invited members will automatically become collaborators for this job, once they sign up.",
     "capabilities": "Capabilities",
     "remove_collaborator": "Remove collaborator",
-    "are_you_sure_remove_collaborator": "Are you sure you want to remove this collaborator? This action cannot be undone.",
-    "team_collaborators": "Team collaborators",
-    "what_is_this": "What is this?",
-    "want_your_colleagues": "Want your colleagues to help you out or give you their opinion? Specify the collaborators for this job. You may pick one or more of the account members from the list below. Can't find some colleagues in the list? Invite them to join the account. Once they sign up, they will automatically have access to this job."
+    "are_you_sure_remove_collaborator": "Are you sure you want to remove this collaborator? This action cannot be undone."
 }

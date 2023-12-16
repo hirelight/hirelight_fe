@@ -32,7 +32,7 @@ const AuthenWrapper = ({ children }: { children: React.ReactNode }) => {
                     setPageLoading(false);
                 }
             } else setPageLoading(false);
-        } else setPageLoading(false);
+        }
     }, [authEnd, dispatch, handleLogout, lang, router, token]);
 
     return (

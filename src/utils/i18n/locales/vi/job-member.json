@@ -9,8 +9,5 @@
     "invited_members_will_automatically": "Những thành viên được mời sẽ tự động trở thành cộng tác viên cho công việc này, khi họ đăng ký.",
     "capabilities": "Khả năng",
     "remove_collaborator": "Xóa cộng tác viên",
-    "are_you_sure_remove_collaborator": "Bạn có chắc muốn xóa cộng tác viên này không? Hành động này không thể được hoàn tác.",
-    "team_collaborators": "Cộng tác viên",
-    "what_is_this": "Đây là gì?",
-    "want_your_colleagues": "Muốn cộng tác viên của bạn giúp bạn hoặc đưa ra ý kiến của họ không? Chỉ định những người cộng tác cho công việc này. Bạn có thể chọn một hoặc nhiều thành viên tài khoản từ danh sách dưới đây. Không tìm thấy một số đồng nghiệp trong danh sách? Mời họ tham gia tài khoản. Khi họ đăng ký, họ sẽ tự động có quyền truy cập vào công việc này."
+    "are_you_sure_remove_collaborator": "Bạn có chắc muốn xóa cộng tác viên này không? Hành động này không thể được hoàn tác."
 }

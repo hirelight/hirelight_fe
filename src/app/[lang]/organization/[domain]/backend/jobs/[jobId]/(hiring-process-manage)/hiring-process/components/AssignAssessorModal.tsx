@@ -230,7 +230,6 @@ const AssignAssessorModal: React.FC<AssignAssessorModalProps> = ({
                                         type="button"
                                         onClick={handleAssignAssessors}
                                         disabled={loading}
-                                        isLoading={loading}
                                     >
                                         {t("common:save_changes")}
                                     </Button>

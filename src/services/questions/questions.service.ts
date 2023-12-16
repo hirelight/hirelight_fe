@@ -48,19 +48,6 @@ const uploadQuestionsAsync = async (
     }
 };
 
-const getQuestionFileTemplate = async (): Promise<IResponse<any>> => {
-    try {
-        const res = await interceptor.get(
-            endpoints.QUESTION_ANSWERS + "/template-files"
-        );
-
-        checkResErr(res.data);
-        return res.data;
-    } catch (error) {
-        throw error;
-    }
-};
-
 const getListAsync = async (): Promise<IResponse<IQuestionAnswerDto[]>> => {
     try {
         const res = await interceptor.get(endpoints.QUESTION_ANSWERS);
@@ -195,7 +182,6 @@ const questionAnswerServices = {
     createTagAsync,
     editTagAsync,
     deleteTagByIdAsync,
-    getQuestionFileTemplate,
     uploadQuestionsAsync,
 };
 
