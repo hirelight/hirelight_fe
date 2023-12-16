@@ -3,6 +3,8 @@ import dynamic from "next/dynamic";
 
 import DoubleRingLoading from "@/components/DoubleRingLoading";
 
+import SubscriptionMiddleware from "./components/SubscriptionMiddleware";
+
 const AuthenWrapper = dynamic(() => import("./components/AuthenWrapper"), {
     ssr: false,
     loading: () => (
@@ -15,7 +17,9 @@ const AuthenWrapper = dynamic(() => import("./components/AuthenWrapper"), {
 const OrganizationLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <div className="w-full min-h-screen relative bg-slate-100 flex flex-col">
-            <AuthenWrapper>{children}</AuthenWrapper>
+            <AuthenWrapper>
+                <SubscriptionMiddleware>{children}</SubscriptionMiddleware>
+            </AuthenWrapper>
         </div>
     );
 };

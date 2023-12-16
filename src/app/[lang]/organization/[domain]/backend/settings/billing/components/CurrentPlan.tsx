@@ -1,16 +1,19 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 import { useAppSelector } from "@/redux/reduxHooks";
 import transactionServices from "@/services/transaction/transaction.service";
+import { WarningModal } from "@/components";
 
 const CurrentPlan = () => {
     const { lang } = useParams();
     const authUser = useAppSelector(state => state.auth.authUser!!);
+    const subscriptionEnd = useSearchParams().get("subscriptionEnd");
+    const [showInfo, setShowInfo] = useState(false);
 
     const {
         data: latestPlan,
@@ -25,14 +28,36 @@ const CurrentPlan = () => {
             ),
     });
 
+    useEffect(() => {
+        if (subscriptionEnd && subscriptionEnd == "true") {
+            setShowInfo(true);
+        }
+    }, [subscriptionEnd]);
+
     if (isLoading) return <PlanSkeleton />;
 
     if (isError || (latestPlan && latestPlan.data.status !== "ACTIVE"))
-        return <DefaultPlan />;
+        return (
+            <>
+                <WarningModal
+                    isOpen={showInfo}
+                    closeModal={() => setShowInfo(false)}
+                    title="Your plan is expired"
+                    content="Please purchase new subscription before your trial ended!"
+                />
+                <DefaultPlan />
+            </>
+        );
 
     if (isSuccess)
         return (
             <div className="flex items-stretch">
+                <WarningModal
+                    isOpen={showInfo}
+                    closeModal={() => setShowInfo(false)}
+                    title="Your plan is expired"
+                    content="Please purchase new subscription before your trial ended!"
+                />
                 <div className="w-full md:w-2/3 bg-white rounded-md drop-shadow-md">
                     <div className="p-4 md:p-6">
                         <div>
@@ -88,6 +113,7 @@ const CurrentPlan = () => {
                                                     .subscriptionExpiredTime
                                             )
                                             .locale(lang)
+                                            .local()
                                             .format("MMMM DD, yyyy")}
                                     </p>
 
@@ -118,7 +144,17 @@ const CurrentPlan = () => {
                 <div className="pl-6 hidden md:block"></div>
             </div>
         );
-    else return null;
+    else
+        return (
+            <>
+                <WarningModal
+                    isOpen={showInfo}
+                    closeModal={() => setShowInfo(false)}
+                    title="Your plan is expired"
+                    content="Please purchase new subscription before your trial ended!"
+                />
+            </>
+        );
 };
 
 export default CurrentPlan;

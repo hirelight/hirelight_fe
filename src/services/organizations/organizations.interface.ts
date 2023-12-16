@@ -24,6 +24,7 @@ export interface IOrganizationDto {
         avatarUrl?: string;
         status: string;
     };
+    subscriptionExpiredTime: Date | string;
     createdTime: Date | string;
     updatedTime: Date | string;
     status: string;

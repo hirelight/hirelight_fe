@@ -51,9 +51,9 @@ const MoveCandidateDialog = () => {
                 }
             );
 
-            await queryClient.invalidateQueries({
-                queryKey: ["job-profiles", jobId],
-            });
+            // await queryClient.invalidateQueries({
+            //     queryKey: ["job-profiles", jobId],
+            // });
 
             router.push(
                 `/${lang}/backend/jobs/${jobId}/hiring-process/${assessmentId}`
