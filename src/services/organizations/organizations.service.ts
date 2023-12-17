@@ -32,6 +32,8 @@ const createNewOrganization = async (createNewOrgDto: ICreateOrgDto) => {
             createNewOrgDto
         );
 
+        checkResErr(res.data);
+
         return res.data;
     } catch (error) {
         throw error;

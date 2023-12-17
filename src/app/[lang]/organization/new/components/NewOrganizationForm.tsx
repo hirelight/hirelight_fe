@@ -204,6 +204,7 @@ const NewOrganizationForm = () => {
                     )}
                     <Button
                         disabled={loading}
+                        isLoading={loading}
                         onClick={() => setShowWarning(true)}
                     >
                         <Trans t={t} i18nKey={"btn.submit"}>
