@@ -168,7 +168,6 @@ const ActionDrawer = ({ onClose, show }: IActionDrawer) => {
 
         if (isInvalidFormInput()) return;
 
-        return;
         setLoading(true);
         try {
             const dto = { ...formState };
