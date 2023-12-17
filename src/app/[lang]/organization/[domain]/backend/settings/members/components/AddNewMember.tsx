@@ -132,7 +132,7 @@ const AddNewMember = () => {
                                                         id={role.id}
                                                         type="radio"
                                                         value={role.id}
-                                                        checked={
+                                                        defaultChecked={
                                                             formState.roleId ===
                                                             role.id
                                                         }
