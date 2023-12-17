@@ -80,10 +80,19 @@ const EventInfoPage = () => {
     });
 
     const handleAccept = () => {
+        if (meeting && moment.utc(meeting.data.endTime).isBefore(moment()))
+            return toast.error("Meeting already ended!");
+        if (meeting && moment.utc(meeting.data.startTime).isBefore(moment()))
+            return toast.error("Meeting already started!");
+
         acceptMeetingMutate.mutate(eventId as string);
     };
 
     const handleDecline = () => {
+        if (meeting && moment.utc(meeting.data.endTime).isBefore(moment()))
+            return toast.error("Meeting already ended!");
+        if (meeting && moment.utc(meeting.data.startTime).isBefore(moment()))
+            return toast.error("Meeting already started!");
         declineMeetingMutate.mutate(eventId as string);
     };
 
@@ -139,7 +148,7 @@ const EventInfoPage = () => {
                                     .utc(meeting.data.startTime)
                                     .local()
                                     .locale(lang)
-                                    .format("dddd MMMM Do HH:mm A")}
+                                    .format("dddd, MMMM Do, yyyy HH:mm A")}
                             </strong>
                             <span> to </span>
                             <strong>
@@ -147,7 +156,7 @@ const EventInfoPage = () => {
                                     .utc(meeting.data.endTime)
                                     .local()
                                     .locale(lang)
-                                    .format("dddd MMMM Do HH:mm A")}`}
+                                    .format("dddd, MMMM Do, yyyy HH:mm A")}`}
                             </strong>
                         </p>
 
@@ -299,7 +308,28 @@ const EventInfoPage = () => {
                                         ? "bg-yellow-400 text-white"
                                         : "bg-white text-neutral-900"
                                 }`}
-                                onClick={() => setShowSchedule(true)}
+                                onClick={() => {
+                                    if (
+                                        meeting &&
+                                        moment
+                                            .utc(meeting.data.endTime)
+                                            .isBefore(moment())
+                                    )
+                                        return toast.error(
+                                            "Meeting already ended!"
+                                        );
+                                    if (
+                                        meeting &&
+                                        moment
+                                            .utc(meeting.data.startTime)
+                                            .isBefore(moment())
+                                    )
+                                        return toast.error(
+                                            "Meeting already started!"
+                                        );
+
+                                    setShowSchedule(true);
+                                }}
                             >
                                 Reschedule
                             </button>

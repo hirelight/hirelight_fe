@@ -121,9 +121,18 @@ const AssessmentInfoHeader = () => {
                             </li>
                         </ul>
 
-                        <ButtonOutline onClick={() => setAssignModal(true)}>
-                            {t("assign_assessors")}
-                        </ButtonOutline>
+                        {assessmentFlow.assessments.find(
+                            item =>
+                                item.id === assessmentId &&
+                                ![
+                                    "HIRED_ASSESSMENT",
+                                    "SOURCED_ASSESSMENT",
+                                ].includes(item.assessmentTypeName)
+                        ) && (
+                            <ButtonOutline onClick={() => setAssignModal(true)}>
+                                {t("assign_assessors")}
+                            </ButtonOutline>
+                        )}
                     </div>
                 </div>
                 <div className="mb-8 w-full flex items-center">

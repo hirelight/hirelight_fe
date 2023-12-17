@@ -75,12 +75,12 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
                     </motion.div>
                 )}
             </Portal>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col items-center gap-4">
                 <h1 className={styles.title}>{_t("h1.organization_list")}</h1>
                 {isLoading && <OrgListSkeleton num={3} />}
                 {res &&
                     (res.data.length > 0 ? (
-                        <ul>
+                        <ul className="w-full">
                             {res.data.map(org => (
                                 <li
                                     key={org.id}
@@ -113,19 +113,18 @@ const JoinedOrgList: React.FC<JoinedOrgListProps> = () => {
                             ))}
                         </ul>
                     ) : (
-                        !isFetching && (
-                            <div className="w-full flex flex-col items-center">
-                                <BuildingOffice2Icon className="w-24 h-24 text-neutral-700 mb-2" />
-                                <div className="text-sm text-gray-500 max-w-[80%] mb-6">
-                                    <p>{_t("p.empty_list")}</p>
-                                </div>
+                        <div className="w-full flex flex-col items-center">
+                            <BuildingOffice2Icon className="w-24 h-24 text-neutral-700 mb-2" />
+                            <div className="text-sm text-gray-500 max-w-[80%] mb-6">
+                                <p>{_t("p.empty_list")}</p>
                             </div>
-                        )
+                        </div>
                     ))}
 
                 <Button
                     disabled={isLoading || isFetching}
                     onClick={handleRedirectNewOrg}
+                    className="!w-fit"
                 >
                     {_t("button.create_new")}
                 </Button>
