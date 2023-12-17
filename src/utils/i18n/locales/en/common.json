@@ -11,6 +11,7 @@
         "jobpost_is_publishing": "Job post is publishing! Please unpublish before perform any changes!",
         "start_time_earlier": "Start time must be earlier than end time!",
         "end_time_be_future": "End time must be in the future!",
+        "time_after_present": "Selected time must after current date time",
         "maximum_200MB": "Maximum file is 200MB",
         "file_max_200MB": "File size maximum 200MB",
         "work_email_only": "Only work email can create organization"

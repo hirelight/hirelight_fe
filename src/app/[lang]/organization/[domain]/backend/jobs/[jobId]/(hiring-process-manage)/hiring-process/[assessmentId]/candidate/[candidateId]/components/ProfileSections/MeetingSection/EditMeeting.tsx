@@ -101,32 +101,24 @@ const EditMeeting = ({ onClose, show, data }: IEditMeeting) => {
             }
         }
 
-        if (
-            (moment(meetingTime.startTime).isAfter(meetingTime.endTime) &&
-                moment(startTime).isSame(endTime, "dates")) ||
-            moment(startTime).isAfter(endTime, "dates")
-        ) {
-            errors.timeErr = t("common:error.start_time_earlier");
-        } else if (
-            moment(meetingTime.endTime).diff(
-                moment(meetingTime.startTime),
-                "minute"
-            ) < 10
-        ) {
-            errors.timeErr = t("meeting_at_least_10_mins");
-        }
+        const sTime = moment(startTime)
+            .hours(moment(meetingTime.startTime).hours())
+            .minutes(moment(meetingTime.startTime).minutes());
+        const eTime = moment(endTime)
+            .hours(moment(meetingTime.endTime).hours())
+            .minutes(moment(meetingTime.endTime).minutes());
 
-        if (
-            Math.abs(
-                moment(meetingTime.startTime).diff(
-                    meetingTime.endTime,
-                    "milliseconds"
-                )
-            ) >
+        if (sTime.isAfter(eTime)) {
+            errors.timeErr = t("common:error.start_time_earlier");
+        } else if (eTime.diff(sTime, "minutes") < 15) {
+            errors.timeErr = t("meeting_at_least_10_mins");
+        } else if (
+            Math.abs(sTime.diff(eTime, "milliseconds")) >
             24 * 60 * 60 * 1000
         ) {
             errors.timeErr = t("meeting_within_24_hours");
-        }
+        } else if (sTime.isBefore(moment()))
+            errors.timeErr = t("common:error.time_after_present");
 
         if (!selected.length)
             errors.attendeeErr = t("selct_at_least_one_employer");

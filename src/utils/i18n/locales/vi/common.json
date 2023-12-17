@@ -11,6 +11,7 @@
         "jobpost_is_publishing": "Tin tuyển dụng đang được đăng! Vui lòng gỡ bài đăng trước khi thực hiện bất kỳ thay đổi nào!",
         "start_time_earlier": "Thời gian bắt đầu phải trước thời gian kết thúc!",
         "end_time_be_future": "Thời gian kết thúc phải ở tương lai!",
+        "time_after_present": "Thời gian chọn phải sau thời gian hiện tại",
         "maximum_200MB": "Dung lượng file tối đa là 200MB",
         "file_max_200MB": "Dung lượng file tối đa là 200MB",
         "work_email_only": "Chỉ email doanh nghiệp có thể tạo mới tài khoản công ty"

@@ -18,7 +18,7 @@
     "subject_required": "Subject is required",
     "location_required": "Location is required",
     "meeting_link_required": "Meeting link is required",
-    "meeting_at_least_10_mins": "Meeting duration must at least 10 minutes",
+    "meeting_at_least_10_mins": "Meeting duration must at least 15 minutes",
     "meeting_within_24_hours": "Meeting duration must within 24 hours!",
     "selct_at_least_one_employer": "Select at least one employer to attend meeting",
     "schedule_ftf_interview": "Schedule face-to-face interview",
