@@ -23,7 +23,7 @@ const Pagination: React.FC<PaginationProps> = ({
         const subarrays: number[][] = [];
         let currentSubarray: number[] = [];
 
-        for (let i = 1; i <= numOfPages; i++) {
+        for (let i = 0; i <= numOfPages; i++) {
             currentSubarray.push(i);
 
             if (currentSubarray.length === 5 || i === numOfPages) {

@@ -78,7 +78,7 @@ const JobList = () => {
                                                                     )
                                                             ))
                                             )
-                                            .slice(curPage, curPage + 10)
+                                            .slice(curPage * 10, curPage + 10)
                                             .sort((a, b) =>
                                                 new Date(
                                                     a.updatedTime
@@ -173,7 +173,7 @@ const JobList = () => {
                         ).length > 10 && (
                             <div className="flex justify-center items-center mt-6">
                                 <Pagination
-                                    numOfPages={Math.floor(
+                                    numOfPages={Math.ceil(
                                         jobsRes.data.filter(
                                             job =>
                                                 job.title
