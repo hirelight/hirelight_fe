@@ -81,7 +81,6 @@ const JobList = () => {
                                                                     )
                                                             ))
                                             )
-                                            .slice(curPage * 10, curPage + 10)
                                             .sort((a, b) =>
                                                 new Date(
                                                     a.updatedTime
@@ -92,6 +91,7 @@ const JobList = () => {
                                                     ? 1
                                                     : -1
                                             )
+                                            .slice(curPage * 9, curPage + 9)
                                             .map((job, index) => (
                                                 <li
                                                     key={index}
