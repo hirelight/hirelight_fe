@@ -81,7 +81,7 @@ const ChangePipeline = ({ datas }: IChangePipeline) => {
         if (moment(startTime).isAfter(endTime))
             errors.flowTimelineErr = t("common:error.start_time_earlier");
 
-        if (moment(startTime).isBefore(job.startTime))
+        if (moment(startTime).isSameOrBefore(job.startTime, "dates"))
             errors.flowTimelineErr = t("create-flow:flow_start_after_job");
 
         if (moment().isAfter(endTime))
