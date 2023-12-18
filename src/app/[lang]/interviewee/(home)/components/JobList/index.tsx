@@ -54,7 +54,7 @@ const JobList = () => {
                                                     job.title
                                                         .toLowerCase()
                                                         .includes(
-                                                            searchString
+                                                            searchString.toLowerCase()
                                                         ) ||
                                                     (job.keywords &&
                                                         job.keywords
@@ -67,7 +67,6 @@ const JobList = () => {
                                                                     )
                                                             ))
                                             )
-                                            .slice(curPage, curPage + 10)
                                             .sort((a, b) =>
                                                 new Date(
                                                     a.updatedTime
@@ -144,7 +143,7 @@ const JobList = () => {
                         </AnimatePresence>
                     </div>
 
-                    {jobsRes && jobsRes.data && jobsRes.data.length > 10 && (
+                    {/* {jobsRes && jobsRes.data && jobsRes.data.length > 10 && (
                         <div className="flex justify-center items-center mt-6">
                             <Pagination
                                 numOfPages={Math.floor(
@@ -153,7 +152,7 @@ const JobList = () => {
                                 onChangePage={page => setCurPage(page)}
                             />
                         </div>
-                    )}
+                    )} */}
                 </div>
             </div>
         </>
