@@ -27,7 +27,10 @@ const JobList = () => {
         <>
             <JobListHeader
                 searchString={searchString}
-                onChange={value => setSearchString(value)}
+                onChange={value => {
+                    setSearchString(value);
+                    setCurPage(0);
+                }}
             />
             <div className="max-w-screen-xl mx-auto px-4 md:px-10 flex flex-col lg:flex-row gap-6 py-6 relative">
                 <div className="flex-1 md:px-8 md:py-6 max-w-full bg-white rounded-lg shadow-lg border border-slate-200">
@@ -173,7 +176,7 @@ const JobList = () => {
                         ).length > 10 && (
                             <div className="flex justify-center items-center mt-6">
                                 <Pagination
-                                    numOfPages={Math.ceil(
+                                    numOfPages={Math.floor(
                                         jobsRes.data.filter(
                                             job =>
                                                 job.title
