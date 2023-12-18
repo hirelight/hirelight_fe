@@ -35,10 +35,21 @@ const JobList = () => {
                         <div className="w-full max-w-full overflow-hidden">
                             <div className="w-full flex justify-between">
                                 <h3 className="text-neutral-700 font-semibold text-xl mb-6">
-                                    {jobsRes?.data?.filter(job =>
-                                        job.title
-                                            .toLowerCase()
-                                            .includes(searchString)
+                                    {jobsRes?.data?.filter(
+                                        job =>
+                                            job.title
+                                                .toLowerCase()
+                                                .includes(searchString) ||
+                                            (job.keywords &&
+                                                job.keywords
+                                                    .split(",")
+                                                    .some(item =>
+                                                        searchString
+                                                            .toLowerCase()
+                                                            .includes(
+                                                                item.toLowerCase()
+                                                            )
+                                                    ))
                                     ).length ?? 0}{" "}
                                     jobs associated
                                 </h3>
@@ -54,7 +65,7 @@ const JobList = () => {
                                                     job.title
                                                         .toLowerCase()
                                                         .includes(
-                                                            searchString.toLowerCase()
+                                                            searchString
                                                         ) ||
                                                     (job.keywords &&
                                                         job.keywords
@@ -67,6 +78,7 @@ const JobList = () => {
                                                                     )
                                                             ))
                                             )
+                                            .slice(curPage, curPage + 10)
                                             .sort((a, b) =>
                                                 new Date(
                                                     a.updatedTime
@@ -143,7 +155,7 @@ const JobList = () => {
                         </AnimatePresence>
                     </div>
 
-                    {/* {jobsRes && jobsRes.data && jobsRes.data.length > 10 && (
+                    {jobsRes && jobsRes.data && jobsRes.data.length > 10 && (
                         <div className="flex justify-center items-center mt-6">
                             <Pagination
                                 numOfPages={Math.floor(
@@ -152,7 +164,7 @@ const JobList = () => {
                                 onChangePage={page => setCurPage(page)}
                             />
                         </div>
-                    )} */}
+                    )}
                 </div>
             </div>
         </>

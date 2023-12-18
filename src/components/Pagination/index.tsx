@@ -16,7 +16,7 @@ const Pagination: React.FC<PaginationProps> = ({
     onChangePage,
 }) => {
     const [pages, setPages] = useState<number[][]>([]);
-    const [curPage, setCurPage] = useState(1);
+    const [curPage, setCurPage] = useState(0);
     const [range, setRange] = useState(0);
 
     useEffect(() => {
@@ -84,7 +84,7 @@ const Pagination: React.FC<PaginationProps> = ({
                                 setRange(Math.floor(item / 5));
                             }}
                         >
-                            {item}
+                            {item + 1}
                         </button>
                     </li>
                 ))}
