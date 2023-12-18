@@ -104,10 +104,15 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
             );
 
         const newdupMap = new Map();
+        let isDupplicate = false;
         formState.assessments.forEach(item => {
             if (!newdupMap.has(item.name)) newdupMap.set(item.name, item.name);
-            else return toast.error("Assessment name dupplicated!");
+            else {
+                isDupplicate = true;
+                return;
+            }
         });
+        if (isDupplicate) return toast.error("Assessment name dupplicated!");
 
         setIsLoading(true);
         try {
