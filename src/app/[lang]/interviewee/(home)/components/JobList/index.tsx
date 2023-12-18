@@ -60,10 +60,10 @@ const JobList = () => {
                                                         job.keywords
                                                             .split(",")
                                                             .some(item =>
-                                                                job.title
+                                                                searchString
                                                                     .toLowerCase()
                                                                     .includes(
-                                                                        item
+                                                                        item.toLowerCase()
                                                                     )
                                                             ))
                                             )
