@@ -58,9 +58,13 @@ const JobList = () => {
                                                         ) ||
                                                     (job.keywords &&
                                                         job.keywords
-                                                            .toLowerCase()
-                                                            .includes(
-                                                                job.title.toLowerCase()
+                                                            .split(",")
+                                                            .some(item =>
+                                                                job.title
+                                                                    .toLowerCase()
+                                                                    .includes(
+                                                                        item
+                                                                    )
                                                             ))
                                             )
                                             .slice(curPage, curPage + 10)

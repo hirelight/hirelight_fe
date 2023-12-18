@@ -126,7 +126,7 @@ const NewOrganizationForm = () => {
                     <h1 className={styles.title}>{t("title.highlight")}</h1>
                     <p className="text-sm text-gray-500">
                         <Trans t={t} i18nKey={"subtitle"}>
-                            Start your {{ days: 15 }}-day trial, no credit card
+                            Start your {{ days: 14 }}-day trial, no credit card
                             required.
                         </Trans>
                     </p>
