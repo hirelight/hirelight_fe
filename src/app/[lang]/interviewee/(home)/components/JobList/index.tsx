@@ -159,7 +159,22 @@ const JobList = () => {
                         <div className="flex justify-center items-center mt-6">
                             <Pagination
                                 numOfPages={Math.floor(
-                                    jobsRes.data.length / 10
+                                    jobsRes.data.filter(
+                                        job =>
+                                            job.title
+                                                .toLowerCase()
+                                                .includes(searchString) ||
+                                            (job.keywords &&
+                                                job.keywords
+                                                    .split(",")
+                                                    .some(item =>
+                                                        searchString
+                                                            .toLowerCase()
+                                                            .includes(
+                                                                item.toLowerCase()
+                                                            )
+                                                    ))
+                                    ).length / 10
                                 )}
                                 onChangePage={page => setCurPage(page)}
                             />
