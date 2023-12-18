@@ -81,6 +81,12 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
         e.preventDefault();
         if (inValidInput()) return;
 
+        const newdupMap = new Map();
+        formState.assessments.forEach(item => {
+            if (!newdupMap.has(item.name)) newdupMap.set(item.name, item.name);
+            else return toast.error("Assessment name dupplicated!");
+        });
+
         setIsLoading(true);
         try {
             const res = await assessmentFlowsServices.editAsync({
@@ -117,8 +123,6 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
     };
 
     const handleUpdateStage = (updateStage: any, pos: number) => {
-        if (formState.assessments.find(item => item.name === updateStage.name))
-            return toast.error(t("assessment_name_already_existed"));
         setFormState(prev => ({
             ...prev,
             assessments: prev.assessments.map((assessment, assessmentPos) =>
@@ -128,8 +132,6 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
     };
 
     const handleAddNewStage = async (newStage: IAssessmentFlow) => {
-        if (formState.assessments.find(item => item.name === newStage.name))
-            return toast.error(t("assessment_name_already_existed"));
         try {
             const res = await assessmentsServices.addAssessment({
                 jobPostId: jobId as string,

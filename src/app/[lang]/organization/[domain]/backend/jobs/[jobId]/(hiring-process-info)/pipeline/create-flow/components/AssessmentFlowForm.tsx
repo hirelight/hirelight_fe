@@ -102,6 +102,13 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
                     <p>{t("common:error.check_red_places")}</p>
                 </div>
             );
+
+        const newdupMap = new Map();
+        formState.assessments.forEach(item => {
+            if (!newdupMap.has(item.name)) newdupMap.set(item.name, item.name);
+            else return toast.error("Assessment name dupplicated!");
+        });
+
         setIsLoading(true);
         try {
             const res = await assessmentFlowsServices.createAsync({
@@ -135,8 +142,6 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
     };
 
     const handleUpdateStage = (updateStage: any, index: number) => {
-        if (formState.assessments.find(item => item.name === updateStage.name))
-            return toast.error(t("assessment_name_already_existed"));
         setFormState(prev => ({
             ...prev,
             assessments: prev.assessments.map((assessment, assessmentPos) =>
@@ -146,9 +151,6 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
     };
 
     const handleAddNewStage = (newStage: any) => {
-        if (formState.assessments.find(item => item.name === newStage.name))
-            return toast.error(t("assessment_name_already_existed"));
-
         if (formState.assessments.length >= 10)
             return toast.error(t("maximum_assessments"));
 
