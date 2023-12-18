@@ -202,15 +202,7 @@ const JobCard: React.FC<JobCardProps> = ({
                                         {t("action_list.edit_job")}
                                     </Link>
                                 </li>
-                                <li>
-                                    <Link
-                                        href={"#"}
-                                        className="w-full px-4 py-2 block hover:bg-orange-100"
-                                        onClick={() => setShowActions(false)}
-                                    >
-                                        {t("action_list.leave_job")}
-                                    </Link>
-                                </li>
+
                                 <li className="list-item lg:hidden">
                                     <button
                                         type="button"
