@@ -155,31 +155,46 @@ const JobList = () => {
                         </AnimatePresence>
                     </div>
 
-                    {jobsRes && jobsRes.data && jobsRes.data.length > 10 && (
-                        <div className="flex justify-center items-center mt-6">
-                            <Pagination
-                                numOfPages={Math.floor(
-                                    jobsRes.data.filter(
-                                        job =>
-                                            job.title
+                    {jobsRes &&
+                        jobsRes.data &&
+                        jobsRes.data.filter(
+                            job =>
+                                job.title
+                                    .toLowerCase()
+                                    .includes(searchString) ||
+                                (job.keywords &&
+                                    job.keywords
+                                        .split(",")
+                                        .some(item =>
+                                            searchString
                                                 .toLowerCase()
-                                                .includes(searchString) ||
-                                            (job.keywords &&
-                                                job.keywords
-                                                    .split(",")
-                                                    .some(item =>
-                                                        searchString
-                                                            .toLowerCase()
-                                                            .includes(
-                                                                item.toLowerCase()
-                                                            )
-                                                    ))
-                                    ).length / 10
-                                )}
-                                onChangePage={page => setCurPage(page)}
-                            />
-                        </div>
-                    )}
+                                                .includes(item.toLowerCase())
+                                        ))
+                        ).length > 10 && (
+                            <div className="flex justify-center items-center mt-6">
+                                <Pagination
+                                    numOfPages={Math.floor(
+                                        jobsRes.data.filter(
+                                            job =>
+                                                job.title
+                                                    .toLowerCase()
+                                                    .includes(searchString) ||
+                                                (job.keywords &&
+                                                    job.keywords
+                                                        .split(",")
+                                                        .some(item =>
+                                                            searchString
+                                                                .toLowerCase()
+                                                                .includes(
+                                                                    item.toLowerCase()
+                                                                )
+                                                        ))
+                                        ).length / 10
+                                    )}
+                                    onChangePage={page => setCurPage(page)}
+                                />
+                            </div>
+                        )}
                 </div>
             </div>
         </>
