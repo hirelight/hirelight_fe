@@ -12,7 +12,7 @@ const NewOrganization = async ({ params }: { params: { lang: Locale } }) => {
     return (
         <div className="max-w-[400px] min-h-[400px] relative bg-white shadow-lg rounded-md mx-0 md:mx-6 text-center">
             <NewOrganizationForm />
-            <div className="mt-2 mb-8 text-sm text-center relative">
+            {/* <div className="mt-2 mb-8 text-sm text-center relative">
                 <span className="text-gray-500 mr-1">{t("make_mistake")}</span>
                 <Link
                     href={"/signup"}
@@ -20,7 +20,7 @@ const NewOrganization = async ({ params }: { params: { lang: Locale } }) => {
                 >
                     {t("btn.start_again")}
                 </Link>
-            </div>
+            </div> */}
         </div>
     );
 };
