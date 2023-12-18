@@ -117,6 +117,8 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({ data }) => {
     };
 
     const handleUpdateStage = (updateStage: any, pos: number) => {
+        if (formState.assessments.find(item => item.name === updateStage.name))
+            return toast.error(t("assessment_name_already_existed"));
         setFormState(prev => ({
             ...prev,
             assessments: prev.assessments.map((assessment, assessmentPos) =>

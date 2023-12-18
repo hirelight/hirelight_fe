@@ -135,6 +135,8 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
     };
 
     const handleUpdateStage = (updateStage: any, index: number) => {
+        if (formState.assessments.find(item => item.name === updateStage.name))
+            return toast.error(t("assessment_name_already_existed"));
         setFormState(prev => ({
             ...prev,
             assessments: prev.assessments.map((assessment, assessmentPos) =>
@@ -144,6 +146,9 @@ const AssessmentFlowForm: React.FC<AssessmentFlowFormProps> = ({
     };
 
     const handleAddNewStage = (newStage: any) => {
+        if (formState.assessments.find(item => item.name === newStage.name))
+            return toast.error(t("assessment_name_already_existed"));
+
         if (formState.assessments.length >= 10)
             return toast.error(t("maximum_assessments"));
 
