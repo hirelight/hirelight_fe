@@ -3,7 +3,7 @@ import { match as matchLocale } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 import acceptLanguage from "accept-language";
 
-import { fallbackLng, i18n, languages } from "../i18n.config";
+import { i18n, languages } from "../i18n.config";
 
 acceptLanguage.languages(languages);
 
