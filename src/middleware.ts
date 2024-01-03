@@ -39,8 +39,10 @@ export default async function middleware(req: NextRequest) {
             !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
     );
 
-    const locale = getLocale(req);
-    const curLocale = getCurLocale(req);
+    // const locale = getLocale(req);
+    // const curLocale = getCurLocale(req);
+    const locale = "en";
+    const curLocale = "en";
 
     // Redirect if there is unsupport locale
     if (pathnameIsMissingLocale) {
