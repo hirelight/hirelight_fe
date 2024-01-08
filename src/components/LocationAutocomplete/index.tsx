@@ -29,7 +29,6 @@ const LocationAutocomplete = (props: ILocationAutocomplete) => {
         (place: any) => {
             // Handle the selected place data here
             // console.log("Selected Place:", place);
-            console.log(place);
             // You can access various details about the selected place, for example:
             const { formatted_address } = place;
 

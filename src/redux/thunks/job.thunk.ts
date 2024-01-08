@@ -51,7 +51,6 @@ export const updateJob = createAsyncThunk(
 
             return { ...res, data: editJobDto };
         } catch (error) {
-            console.log(error);
             return rejectWithValue(error);
         }
     }

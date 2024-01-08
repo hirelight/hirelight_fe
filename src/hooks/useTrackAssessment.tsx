@@ -9,7 +9,6 @@ const useTrackAssessment = (
 
     const startAutoTask = () => {
         if (intervalRef.current === null) {
-            console.log("Start track");
             // Start the interval
             intervalRef.current = setInterval(() => {
                 functionRef.current();
@@ -20,7 +19,6 @@ const useTrackAssessment = (
     const stopAutoTask = () => {
         // Stop the interval
         if (intervalRef.current !== null) {
-            console.log("Stop track");
             clearInterval(intervalRef.current);
             intervalRef.current = null;
         }

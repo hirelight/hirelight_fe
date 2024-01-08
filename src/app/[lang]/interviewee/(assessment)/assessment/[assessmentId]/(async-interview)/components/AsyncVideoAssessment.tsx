@@ -228,7 +228,7 @@ const AsyncVideoAssessment: React.FC<AsyncVideoAssessmentProps> = ({
 
                 setAnswers(updatedAnswers);
             } catch (error: any) {
-                console.log(error);
+                // console.log(error);
             }
             setAssessmentLoading(false);
         },

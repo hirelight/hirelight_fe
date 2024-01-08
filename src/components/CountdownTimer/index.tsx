@@ -28,7 +28,6 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
 
     useEffect(() => {
         if (isOut === 0 && onEnd) {
-            console.log("End");
             onEnd();
         }
     }, [isOut, onEnd]);

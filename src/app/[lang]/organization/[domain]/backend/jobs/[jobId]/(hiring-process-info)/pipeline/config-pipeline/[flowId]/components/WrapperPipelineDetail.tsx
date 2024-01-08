@@ -62,7 +62,6 @@ const WrapperPipelineDetail = ({ children }: { children: React.ReactNode }) => {
         );
 
     if (isError) {
-        console.log(error);
         return (
             <div className="flex flex-col items-center justify-center p-52">
                 <h3 className="text-2xl whitespace-nowrap mb-4">

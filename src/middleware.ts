@@ -3,7 +3,7 @@ import { match as matchLocale } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 import acceptLanguage from "accept-language";
 
-import { i18n, languages } from "../i18n.config";
+import { fallbackLng, i18n, languages } from "../i18n.config";
 
 acceptLanguage.languages(languages);
 
@@ -12,13 +12,16 @@ function getLocale(request: NextRequest): string | undefined {
     request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
 
     // @ts-ignore locales are readonly
-    const locales: string[] = i18n.locales;
+    const locales: string[] = languages;
     const languages = new Negotiator({
         headers: negotiatorHeaders,
     }).languages();
-
-    const locale = matchLocale(languages, locales, i18n.defaultLocale);
-    return locale;
+    try {
+        const locale = matchLocale(languages, locales, fallbackLng);
+        return locale;
+    } catch (error) {
+        return fallbackLng;
+    }
 }
 
 function getCurLocale(req: NextRequest): string {

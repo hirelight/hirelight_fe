@@ -86,8 +86,6 @@ const WrapperJobDetail = ({ children }: { children: React.ReactNode }) => {
         );
     }
 
-    if (error) console.log(error);
-
     return <>{children}</>;
 };
 

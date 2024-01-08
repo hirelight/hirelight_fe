@@ -18,8 +18,6 @@ const createPayment = async (
             createPaymentDto
         );
 
-        console.log(res);
-
         return res.data;
     } catch (error) {
         throw error;
