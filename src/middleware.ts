@@ -13,11 +13,11 @@ function getLocale(request: NextRequest): string | undefined {
 
     // @ts-ignore locales are readonly
     const locales: string[] = languages;
-    const languages = new Negotiator({
+    const negotiateLanguages = new Negotiator({
         headers: negotiatorHeaders,
     }).languages();
     try {
-        const locale = matchLocale(languages, locales, fallbackLng);
+        const locale = matchLocale(negotiateLanguages, locales, fallbackLng);
         return locale;
     } catch (error) {
         return fallbackLng;
