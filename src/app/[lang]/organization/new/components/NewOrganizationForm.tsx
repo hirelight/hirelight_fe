@@ -151,7 +151,7 @@ const NewOrganizationForm = () => {
                     </p>
                 </div>
                 <hr className="flex-1 h-[1.5px] bg-gray-300" />
-                <div className="px-6 flex flex-col gap-4">
+                <div className="px-6 pb-6 flex flex-col gap-4">
                     <div className="mb-2 text-left">
                         <CustomInput
                             title={t("label.org_name")}
