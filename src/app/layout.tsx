@@ -14,6 +14,7 @@ import "nprogress/nprogress.css";
 
 import ReduxProvider from "@/components/ReduxProvider/ReduxProvider";
 import ReactQueryProvider from "@/components/ReactQueryProvider";
+import InformModal from "@/components/InformModal";
 
 import { i18n } from "../../i18n.config";
 
@@ -59,6 +60,26 @@ export default function RootLayout({
                             pauseOnHover
                             theme="light"
                         />
+                        {process.env.NODE_ENV === "production" && (
+                            <InformModal
+                                content={
+                                    <span>
+                                        <b>Hirelight</b> is now deploying using{" "}
+                                        <b>Azure Cloud Services free tier</b>.
+                                        <br /> The application might encounter
+                                        time out issue on server due to Azure
+                                        free tier service will stop{" "}
+                                        <b>
+                                            after a period of time without any
+                                            users access to the application
+                                        </b>
+                                        .<br />
+                                        Please retry serveral time so that the
+                                        server can start for services.
+                                    </span>
+                                }
+                            />
+                        )}
                         {children}
                         <div id="hirelight__portal"></div>
                     </ReduxProvider>
