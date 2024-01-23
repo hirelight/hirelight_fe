@@ -1,6 +1,8 @@
 import React from "react";
 import type { Metadata } from "next";
 
+import InformModal from "@/components/InformModal";
+
 import { Locale } from "../../../../i18n.config";
 
 import OverviewSection from "./components/OverView/Overview";
@@ -23,6 +25,7 @@ export default async function Home({
 }) {
     return (
         <div className="w-full flex flex-col gap-20">
+            <InformModal />
             <HomeHeader />
             <main className="w-full flex flex-col gap-20">
                 <OverviewSection lang={lang} />

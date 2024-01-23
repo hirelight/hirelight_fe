@@ -184,7 +184,7 @@ const LoginForm: React.FC<ILoginForm> = () => {
                             <p>{loginFormErr.emailErr}</p>
                         </motion.div>
                     )}
-                    <Link href={`${lang}/signup`}>
+                    <Link href={`/${lang}/signup`}>
                         <p className="text-right text-xs text-blue_primary_600 font-semibold underline">
                             {_t("login_form.btn.forgot_password")}
                         </p>

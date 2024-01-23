@@ -2,21 +2,12 @@
 
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
-import { useParams } from "next/navigation";
-
-import { useI18NextTranslation } from "@/utils/i18n/client";
-import { I18Locale } from "@/interfaces/i18.interface";
 
 import { Button } from "..";
 
-type InformModalProps = {
-    title?: string;
-    content?: string | React.ReactNode;
-};
+type InformModalProps = {};
 
-const InformModal: React.FC<InformModalProps> = ({ title, content }) => {
-    const { lang } = useParams();
-    const { t } = useI18NextTranslation(lang as I18Locale);
+const InformModal: React.FC<InformModalProps> = () => {
     const [isOpen, setIsOpen] = useState(true);
 
     const handleCloseModal = async () => {
@@ -58,14 +49,30 @@ const InformModal: React.FC<InformModalProps> = ({ title, content }) => {
                                     as="h3"
                                     className="text-xl font-medium leading-6 text-gray-900"
                                 >
-                                    {title ?? t("common:information")}
+                                    Try out information
                                 </Dialog.Title>
                                 <div className="mt-2">
                                     <p className="text-base text-gray-600">
-                                        {content ??
-                                            `Your payment has been successfully
-                                        submitted. We’ve sent you an email with
-                                        all of the details of your order.`}
+                                        <span>
+                                            <b>Hirelight</b> is now deploying
+                                            using{" "}
+                                            <b>
+                                                Azure Cloud Services free tier
+                                            </b>
+                                            .
+                                            <br /> The application might
+                                            encounter time out issue on server
+                                            due to Azure free tier service will
+                                            stop{" "}
+                                            <b>
+                                                after a period of time without
+                                                any users access to the
+                                                application
+                                            </b>
+                                            .<br />
+                                            Please retry serveral time so that
+                                            the server can start for services.
+                                        </span>
                                     </p>
                                 </div>
 
@@ -74,7 +81,7 @@ const InformModal: React.FC<InformModalProps> = ({ title, content }) => {
                                         type="button"
                                         onClick={handleCloseModal}
                                     >
-                                        {t("common:confirm")}
+                                        Close
                                     </Button>
                                 </div>
                             </Dialog.Panel>
